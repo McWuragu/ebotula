@@ -4,7 +4,6 @@
 #include <errno.h>
 
 #include "messages.h"
-//#include "network.h"
 #include "irc.h"
 #include "command.h"
 #include "dbaccess.h"

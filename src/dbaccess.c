@@ -1,4 +1,3 @@
-#include <gdbm.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -279,13 +278,13 @@ char ** list_db(int db){
 	if (!(dbf=get_dbf(db))) {
 		return NULL;
 	}
-
+	
 	pthread_mutex_lock(&dbaccess_mutex);
 	key=gdbm_firstkey(dbf);
 	pthread_mutex_unlock(&dbaccess_mutex);
 	
 	if (key.dptr) {
-		// calculat the  size of  database
+        // calculat the  size of  database
 		do {
 			count++;
 			pthread_mutex_lock(&dbaccess_mutex);
@@ -296,7 +295,6 @@ char ** list_db(int db){
 	
 		} while ( key.dptr );
 	}
-
 
 
 	DEBUG("%d channels found",count);

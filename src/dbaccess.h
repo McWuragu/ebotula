@@ -2,7 +2,7 @@
 #define DBACCESS_H
 
 #include <gdbm.h>
-
+					
 #define USER_DB			1
 #define CHANNEL_DB		2
 #define ACCESS_DB		3
