@@ -113,7 +113,7 @@ void help(MsgItem_t *pMsg) {
 
                 /* the head for help */
                 pMsgPart=_("Help for");
-                pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdList[i])+3)*sizeof(char));
+                pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdList[i])+4)*sizeof(char));
                 sprintf(pTmp,"%s %s:",pMsgPart,pParameter);
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pTmp);
                 free(pTmp);
@@ -701,6 +701,7 @@ void say(MsgItem_t *pMsg) {
     }
 
     privmsg(pMsg->pAccessChannel,pParameter);
+    free(pParameter);
 }
 /* #########################################################################
    Bot comand: !allsay text
