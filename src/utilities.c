@@ -11,26 +11,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <ctype.h>
 
+#include "type.h"
 #include "messages.h"
-#include "irc.h"
-#include "command.h"
-#include "dbaccess.h"
-#include "config.h"
 #include "utilities.h"
 
-void stopParser(int sig) {
-	extern int stop;
-	if (!stop) {
-		quit();
-	}
-
-	stop=true;
-	DEBUG("Stop IRCBot");
-}
-
-
-
+// ############################################################################# 
 void trim(char* line) {
 	int alpha,i,j;
 	int line_len;
@@ -39,6 +26,7 @@ void trim(char* line) {
 	// remove multispace
 	// remove newline
 	// remove carge return
+	// remove tabs
 	alpha=j=0;
 	line_len=strlen(line);
 	for (i=0;i<=line_len;i++) {
@@ -46,7 +34,7 @@ void trim(char* line) {
 			line[j]=line[i];
 			alpha=0;
 			j++;
-		} else if ((line[i]!='\n') && (line[i]!='\r') && (line[i]!=' ')) {
+		} else if ((line[i]!='\n') && (line[i]!='\r') && (line[i]!=' ') && (line[i]!='\t')) {
 			line[j]=line[i];
 			alpha=1;
 			j++;
@@ -58,7 +46,6 @@ void trim(char* line) {
 		line[j]='\0';
 	}
 }
-
 // ############################################################################# 
 void clearspace(char *line) {
 	int i,j,noclr;
@@ -95,4 +82,17 @@ void print_msg(const char *msg[]) {
 		printf("%s",msg[i]);
 	}
 	exit(true);
+}
+// ############################################################################# 
+void StrToLower(char *str) {
+	 unsigned int str_length,i;
+
+	 str_length=strlen(str);
+
+	 for (i=0;i<str_length;i++) {
+		 if (isalpha(str[i])) {
+   			str[i]=tolower(str[i]);
+		 }
+	
+	 }
 }

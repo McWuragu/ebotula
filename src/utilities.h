@@ -11,9 +11,7 @@
 #define UTILITIES_H
 
 
-#define		bool	int
-#define		true	1
-#define		false	0
+
 
 // Macro for debugging msg
 #ifdef _DEBUG
@@ -32,8 +30,7 @@
 * @param line a pointer of a string for modify
 */	  
 void trim(char *line);
-
-void stopParser(int sig);
+void StrToLower(char *str);
 void print_msg(const char *msg[]);
 
 /**
