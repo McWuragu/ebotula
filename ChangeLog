@@ -1,3 +1,7 @@
+ebotula-0.1.16
+--------------------
+- Bugfix: fixed the crash of the bot by the command topic with empty parameter
+
 ebotula-0.1.15
 --------------------
 - Bugfix: fixed the command !logoff
