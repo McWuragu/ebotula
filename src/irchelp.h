@@ -72,7 +72,7 @@ static const char *irchelp_msg[]={
 	"",
 	
 	"!logoff",
-	"log off at the bot",
+	"logoff at the bot",
 	"You must have be identified before",
 	"",
 	"",
