@@ -24,5 +24,6 @@ ToDo Liste
 - code cleanup
 - debuggen
 - Bei fehlenden OP channel cyle
-- Bei fehlenden OP Rechten nachfragen
-- Status Loggign mit syslog
+- Anforderung der Rechte als ACTION
+- Hervorhebung von Messages per bold
+- Status Logging mit syslog
