@@ -243,10 +243,6 @@ QueueData * getnextitrQueue(PQueue pqueueIn)
     /* protect the queue access */
 	pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
 	
-    /* condition handling */
-    if (pqueueIn->sentinel->longCount<=0) {
-        pthread_cond_wait(pqueueIn->sentinel->StopThreadCond,pqueueIn->sentinel->queue_mutex);
-    }
 
     /* check for valid Queue */
 	if (pqueueWork)
