@@ -100,7 +100,6 @@ void RemoveBanCb(char *pNetmask,void * data){
 }
 
 void KickCb(char *pNetmask, void *data) {
-    DEBUG("Callback for user kicking");
     boolean doKick;
     char **ppDataPart;
     char *pAccessKey;
@@ -110,6 +109,8 @@ void KickCb(char *pNetmask, void *data) {
     char *pLogin;
     char *pPos;
     char *pCmdNick;
+    
+    DEBUG("Callback for user kicking");
 
 
     /* split Datums */
