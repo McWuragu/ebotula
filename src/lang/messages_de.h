@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #ifndef MESSAGE_GER_H
 #define MESSAGE_GER_H
@@ -104,7 +104,8 @@
 	#define MSG_MASTER_ERR			"Kann den Account nicht als Master anlegen"
 	#define MSG_USERLIST_EMPTY		"Die Benutzerliste ist leer"
 	#define MSG_UNKNOW_MODE			"Unbekannter Parameter"
-	
+	#define MSG_NOTSELF_KICK_ERR    "Kann mich nicht selbst kicken." 
+    
 	// other informations
 	#define MSG_HELP_END			"Ende der Hilfe."
 	#define MSG_HELP_FOR			"Hilfe für"
@@ -125,7 +126,7 @@
 	#define MSG_NICK_ERR			"Ungültiges Kommando: !nick <nickname>"			
 	#define MSG_SAY_ERR			"Ungültiges Kommando: !say [#channel] <message>"			
 	#define MSG_KICK_ERR			"Ungültiges Kommando: !kick [#channel] <nickname> [reason]"
-	#define MSG_USERMODE_ERR		"Ungültiges Kommando: !usermode [#channel] <login> <+/-><mod>"
+    #define MSG_USERMODE_ERR		"Ungültiges Kommando: !usermode [#channel] <login> <+/-><mod>"
 	#define MSG_CHANMODE_ERR		"Ungültiges Kommando: !chamode [#channel] <+/-><mods>"
 	
 	// Messages for the master dialog

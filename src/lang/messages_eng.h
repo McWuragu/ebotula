@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #ifndef MESSAGES_ENG_H
 #define MESSAGES_ENG_H
@@ -103,7 +103,8 @@
 	#define MSG_MASTER_ERR			"Can't set this account as master."
 	#define MSG_USERLIST_EMPTY		"The userlist is empty"
 	#define MSG_UNKNOW_MODE			"Unknown mode parameter"
-	
+    #define MSG_NOTSELF_KICK_ERR    "Can't kick myself" 
+    
 	// other informations
 	#define MSG_HELP_END			"End of help."
 	#define MSG_HELP_FOR			"Help for"
