@@ -76,7 +76,7 @@ void clearspace(char *pStr) {
 	}
 }
 // ############################################################################# 
-void printMsg(const char **pMsg) {
+void printMsg( char *const pMsg[]) {
     int i;
 	for (i=0;pMsg[i][0]!=EOM;i++) {
 		printf("%s",pMsg[i]);

@@ -77,7 +77,7 @@ ChannelDataType *StrToChannelData(char *pChannelSet);
 */
 char *ChannelDataToStr(ChannelDataType *pChannelData);
 
-void printMsg(const char **pMsg);
+void printMsg(char *const pMsg[]);
 
 /**
 * This function remove all spaces in a string until from double quote include spaces.
