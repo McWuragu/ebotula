@@ -36,7 +36,8 @@ void *synchron(void *argv){
 	DEBUG("Synchronize Thread is running");
 
 	while (1) {
-        sleep(90);
+        msleep((sSetup.iTimeout*1000)/2);
+		
 		time(&newTime);
 
 		ping(sSetup.server);
