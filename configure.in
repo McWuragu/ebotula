@@ -20,6 +20,7 @@ AM_SANITY_CHECK
 
 AC_PROG_CC
 CFLAGS=`echo $CFLAGS | sed 's/-O2//'`
+CFLAGS=`echo $CFLAGS | sed 's/-g//'`
 
 AC_PROG_INSTALL
 
