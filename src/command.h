@@ -12,6 +12,8 @@
 
 #define USERLIST_TAB	20
 #define HELP_TAB		12
+
+#define CHANNEL_MODES	"kltnmsprqi"	
 				  
 // ######################### Bot commands ################################
 
@@ -27,7 +29,7 @@ void joinChannel(char *pLine);
 void partChannel(char *pLine);
 void die(char *pLine);
 void setNick(char *pLine);
-void listChannels(char *pLine);
+void chanlist(char *pLine);
 void setGreating(char *pLine);
 void setTopic(char *pLine);
 void greating(char *pLine);
