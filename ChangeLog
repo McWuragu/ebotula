@@ -1,0 +1,25 @@
+ebotula-0.1.7-dev
+-----------------
+- Bugfix: fixed the security bug in the user mode protect system
+- Bugfix: fixed the restart problem
+- Bugfix: fixed the stoping  problem
+- Bugfix: maked theprotection for kick by excess flood better
+- modify the output by the commands help, userlist and chanlist
+- added  two new configuration parameter for excess flood protection
+- maked speed up
+- maked the kic commando safly
+
+ebotula-0.1.6-dev
+-----------------
+- Bugfix: fixed wrong parameter handling at !rmuser command
+- Bugfix: fixed the status lost by nick changing
+
+ebotula-0.1.5-dev
+-----------------
+- Bugfix: fixed the blocking after the command !pass
+- Bugfix: fixed the blocking after start the autologoff
+- Bugfix: fixed the SIGSEGV by the calling of the command !rmuser
+
+ebotula-0.1.4-dev
+-----------------
+- first public develop release
