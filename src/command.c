@@ -213,13 +213,14 @@ void logoff(char *pLine) {
 
    	if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 	    log_out(pLogin);
-
+/*
     	// remove the mod  for  this account
 	    ppChannels=list_db(CHANNEL_DB);
     	for (i=0;ppChannels[i]!=NULL;i++) {
         	mode(ppChannels[i],"-o",pNick);
 	        mode(ppChannels[i],"-v",pNick);
     	}
+*/
 	}
     notice(pNick,MSG_LOGOFF);
 }
