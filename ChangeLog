@@ -1,19 +1,19 @@
 ebotula-0.1.15
 --------------------
-- fixed memory leaks
+- Bugfix: fixed the command !logoff
+- Bugfix: fixed memory leaks
+- Bugfix: fixed the identification of a unkown option at the command line
 - removed the sending thread
 - maked the reaction time of commands shorter
-- fixed the identification of a unkown option at the command line
 - added the cleanup of the zombies in the callback list
 - spell checking
-- fixed the command !logoff
 
 
 ebotula-0.1.14
 --------------------
+- Bugfix: fixed the line parser
 - fixed the pong return string
 - cleanup the command and event  parser
-- fixed the line parser
 
 ebotula-0.1.13
 --------------------
