@@ -27,6 +27,7 @@
 #include "messages.h"
 #include "irc.h"
 #include "command.h"
+#include "handles.h"
 #include "network.h"
 
 int sockid;
@@ -194,6 +195,9 @@ struct MSGBUF_DS preParser(char *line) {
 			} else if (!strncmp(str,"channels",strlen("channels"))) {
 				msg.mtype=1;
 				msg.identify=CMD_CHANNELS;
+			} else if (!strncmp(str,"greating",strlen("greating"))) {
+				msg.mtype=1;
+				msg.identify=CMD_GREATING;
 			}
 		}
 	}
@@ -266,6 +270,9 @@ void *action_thread(void *argv) {
 			break;
 		case CMD_JOIN_GREATING:
 			print_greating(msg.msg_line);
+			break;
+		case CMD_GREATING:
+			greating(msg.msg_line);
 			break;
 		default:
             break;
