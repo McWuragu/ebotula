@@ -30,7 +30,7 @@ typedef struct tag_Callback_DList {
 	void (*destroy)(CallbackItem_t *data);
 	CallbackDListItem *head;
 	CallbackDListItem *tail;
-	pthread_mutex_t *callbacklist_mutex;
+	pthread_mutex_t callbacklist_mutex;
 }CallbackDList;
 
 /* -----------------------Functions  --------------------------------------- */
