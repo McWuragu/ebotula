@@ -85,7 +85,7 @@ typedef enum CmdEnum {
 	CMD_RMUSER,
 	CMD_VIEWGREAT,
 	CMD_USERLIST,
-	CMD_SAYALL
+	CMD_ALLSAY
 }CmdType;
 
 /// This is the structur for the entries in the message queue
