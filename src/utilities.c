@@ -81,7 +81,7 @@ void printMsg(const char **pMsg) {
 	for (i=0;pMsg[i][0]!=EOM;i++) {
 		printf("%s",pMsg[i]);
 	}
-	exit(true);
+
 }
 // ############################################################################# 
 void StrToLower(char *pStr) {
@@ -130,9 +130,12 @@ ChannelModeType * StrToChannelMode(char *pModeStr) {
 
 	// init  the struct
 	pMode=(ChannelModeType *)malloc(sizeof(ChannelModeType));
-	memset(pMode->pModeStr,' ',_MAX_MODES);
-    pMode->pModeStr[_MAX_MODES-1]='\0';
-	pMode->pKeyword=pMode->pLimit="";
+	pMode->pKeyword=(char*)malloc(sizeof(char));
+	pMode->pLimit=(char*)malloc(sizeof(char));
+
+    strcpy(pMode->pModeStr,"            ");
+	strcpy(pMode->pKeyword,"");
+    strcpy(pMode->pLimit,"");
 
 	// split the mode line in three parts
 	pPos=pModeStr;
