@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-10-08 13:30+0200\n"
+"POT-Creation-Date: 2004-11-23 22:41+0100\n"
 "PO-Revision-Date: 2004-10-08 13:31+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -507,7 +507,8 @@ msgstr "Der Bot hat den Benutzer %s in den Channel %s eingeladen."
 #: src/command.c:1497
 #, c-format
 msgid "The bot need a channel parameter for inviting of the user %s"
-msgstr "Der Bot benötigt einen Channel als Parameter zum einladen des Benutzers %s."
+msgstr ""
+"Der Bot benötigt einen Channel als Parameter zum einladen des Benutzers %s."
 
 #: src/dbaccess.c:57
 msgid "Initialization of the database"
@@ -611,7 +612,7 @@ msgstr "Debug-Level-Option gefunden"
 msgid "\"%s\" need a parameter value.\n"
 msgstr "\"%s\" benötigt einen Parameterwert.\n"
 
-#: src/ircbot.c:208 src/parameter.c:468
+#: src/ircbot.c:208
 #, c-format
 msgid "The log level %i is invalid.\n"
 msgstr "Das Log-Level %i ist ungültig.\n"
@@ -758,7 +759,8 @@ msgstr "\t-b Name\t\tSetzt den Namen des Boots im.\n"
 
 #: src/messages.c:18
 msgid "\t-c sec\t\tSet the ping timeout of the network connection.\n"
-msgstr "\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
+msgstr ""
+"\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
 
 #: src/messages.c:19
 msgid "\t-d path\t\tSet the path of the database direcotry\n"
@@ -796,10 +798,12 @@ msgstr ""
 
 #: src/messages.c:26
 msgid "\t-k days\t\tSet the account live time in days.\n"
-msgstr "\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Konto inaktiv sein kann.\n"
+msgstr ""
+"\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Konto inaktiv sein kann.\n"
 
 #: src/messages.c:27
-msgid "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
+msgid ""
+"\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
 msgstr ""
 "\t-l Char/min\tSetzt das Limit in Zeichen je Minute für das beschleunigte "
 "Senden.\n"
@@ -832,7 +836,8 @@ msgstr "\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n"
 
 #: src/messages.c:34
 msgid "\t-u user\t\tSet the user under which the bot run (root only).\n"
-msgstr "\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
+msgstr ""
+"\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
 
 #: src/messages.c:35
 msgid "\t-v\t\tPrint version.\n"
@@ -902,45 +907,44 @@ msgstr "Kommandozeilenparameter gefunden und werden gelesen."
 msgid "Check option \"%s\""
 msgstr "Überprüfe Option %s"
 
-#: src/parameter.c:55 src/parameter.c:352
+#: src/parameter.c:55
 msgid "The hostname is irregular.\n"
 msgstr "Der Servername ist ungültig.\n"
 
-#: src/parameter.c:73 src/parameter.c:372
+#: src/parameter.c:73
 msgid "The botname is irregular.\n"
 msgstr "Der Botname ist ungültig.\n"
 
-#: src/parameter.c:127 src/parameter.c:362
+#: src/parameter.c:127
 #, c-format
 msgid "The portnumber %i value is out of range.\n"
 msgstr "Die Portnummer %i ist ausserhalb des Bereichs.\n"
 
-#: src/parameter.c:148 src/parameter.c:388
+#: src/parameter.c:148
 msgid "The thread limit is out of range.\n"
 msgstr "Das Limit für die Threads ist ungültig.\n"
 
-#: src/parameter.c:165 src/parameter.c:402
+#: src/parameter.c:165
 msgid "The automatic logoff time is invalid.\n"
 msgstr "Die automatische Abmeldezeit ist ungültig.\n"
 
-#: src/parameter.c:182 src/parameter.c:199 src/parameter.c:411
-#: src/parameter.c:420
+#: src/parameter.c:182 src/parameter.c:199
 msgid "The send delay time is invalid.\n"
 msgstr "Die Zeitverzögerung für das Senden ist ungültig.\n"
 
-#: src/parameter.c:215 src/parameter.c:429
+#: src/parameter.c:215
 msgid "The limit for sending with the fast send delay is invalid.\n"
 msgstr "Das Limit für das schnelle Senden ist ungültig.\n"
 
-#: src/parameter.c:231 src/parameter.c:438
+#: src/parameter.c:231
 msgid "The delay of the startup initialization is invalid.\n"
 msgstr "Die Verzögerung für die Startinitialisierung ist ungültig.\n"
 
-#: src/parameter.c:248 src/parameter.c:447
+#: src/parameter.c:248
 msgid "The account living time is invalid.\n"
 msgstr "Die Lebenszeit eines Kontos ist ungültig.\n"
 
-#: src/parameter.c:277 src/parameter.c:456
+#: src/parameter.c:277
 msgid "The ping timeout is invalid.\n"
 msgstr "Das Pingtimeout ist ungültig.\n"
 
@@ -959,31 +963,7 @@ msgstr "Tippe %s -h für mehr Hilfe ein.\n"
 msgid "Invalid option \"%s\"\n"
 msgstr "Ungültige Option \"%s\"\n"
 
-#: src/parameter.c:311
-#, c-format
-msgid "Try to read the configuration file %s"
-msgstr "Versuche die Konfigurationsdatei %s zu lesen."
-
-#: src/parameter.c:314
-#, c-format
-msgid "Couldn't open the configuration file %s - %s"
-msgstr "Konnte die Konfigurationsdatei%s nicht öffnen. - %s"
-
-#: src/parameter.c:317
-#, c-format
-msgid "Couldn't write the base config %s - %s"
-msgstr "Könnte die Basiskonfiguration %s nicht schreiben. - %s"
-
-#: src/parameter.c:325
-msgid "File is open"
-msgstr "Datei ist offen."
-
-#: src/parameter.c:334
-#, c-format
-msgid "Found config line %s"
-msgstr "Konfigurationszeile %s gefunden"
-
-#: src/parameter.c:500
+#: src/parameter.c:309
 msgid ""
 "Create a new master account\n"
 "\n"
@@ -991,19 +971,19 @@ msgstr ""
 "Anlegen eines neuen Master-Kontos \n"
 "\n"
 
-#: src/parameter.c:501
+#: src/parameter.c:310
 msgid "Type the login (max. 8): "
 msgstr "Eingabe des Logins (max. 8): "
 
-#: src/parameter.c:509 src/parameter.c:544
+#: src/parameter.c:318 src/parameter.c:353
 msgid "Forbidden characters used.\n"
 msgstr "Untersage Zeichen benutzt.\n"
 
-#: src/parameter.c:527
+#: src/parameter.c:336
 msgid "Enter the password: "
 msgstr "Eingabe des Passworts: "
 
-#: src/parameter.c:529
+#: src/parameter.c:338
 msgid ""
 "\n"
 "Reenter the password: "
@@ -1011,16 +991,16 @@ msgstr ""
 "\n"
 "Wiederholung des Passworts: "
 
-#: src/parameter.c:541
+#: src/parameter.c:350
 msgid "Typing error... passwords not equal\n"
 msgstr "Schreibfehler...Passwörter ist nicht identisch.\n"
 
-#: src/parameter.c:552
+#: src/parameter.c:361
 #, c-format
 msgid "A account %s already exists."
 msgstr "Ein Konto %s existiert schon."
 
-#: src/parameter.c:559
+#: src/parameter.c:368
 msgid "Couldn't set this account to master."
 msgstr "Konnte das Konto nicht auf Master setzen."
 
@@ -1078,6 +1058,21 @@ msgstr "Entfernt die toten Konten."
 msgid "The timing thread is stopped"
 msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
 
+#~ msgid "Try to read the configuration file %s"
+#~ msgstr "Versuche die Konfigurationsdatei %s zu lesen."
+
+#~ msgid "Couldn't open the configuration file %s - %s"
+#~ msgstr "Konnte die Konfigurationsdatei%s nicht öffnen. - %s"
+
+#~ msgid "Couldn't write the base config %s - %s"
+#~ msgstr "Könnte die Basiskonfiguration %s nicht schreiben. - %s"
+
+#~ msgid "File is open"
+#~ msgstr "Datei ist offen."
+
+#~ msgid "Found config line %s"
+#~ msgstr "Konfigurationszeile %s gefunden"
+
 #~ msgid "Restart..."
 #~ msgstr "Neustart..."
 
@@ -1107,4 +1102,3 @@ msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
 
 #~ msgid "Empty list!"
 #~ msgstr "Liste ist leer."
-
