@@ -66,6 +66,7 @@ Kommandos
 !kick [channel] <nick>
 	- kicket ein  user
 	- darf master, owner
+	- ein User des gleichen Levels kann nicht  gekickt werden
 
 !allban [channel] <nick>
 	- bannt einen User in allen Channels  wo der Bot ist
@@ -156,19 +157,21 @@ Kommandozeilenoptionen
 ircbot [Options]
 
         Options:
-	-a days		Set the time in days for the automatic logoff.
+        -a days         Set the time in days for the automatic logoff.
         -b name         Set the name of the bot.
-        -c sec		Set the ping timeout of the connection.
-	-d path         Use this path for the database
+        -c sec          Set the ping timeout of the connection.
+        -d path         Use this path for the database
+        -e ms           Set the second delay time in millisecond for sending.
         -f file         Use this config file.
-        -h              Print this help info.
-	-k days		Set the  account live time in days.
+        -h              Print this help information.
+        -l lines        Set the line limit for the first sending delay level.
+        -k days         Set the  account live time in days.
         -m              Create a bot master.
-	-n ms		Set the delay time in millisecond for sending.
+        -n ms           Set the first delay time in millisecond for sending.
         -p port         Set the port of the irc server.
         -r string       Set the output  for a request of the real name.
         -s server       Set the irc server name.
-        -t number       Set the number of creating  threads.
+        -t count        Set the number of creating  threads.
         -v              Print version.
 
 Konfigurationsfileeinträge
