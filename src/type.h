@@ -38,7 +38,7 @@ typedef struct ConfStruct{
     /** the delay time for sending in  millisecond */
     int iSendDelay;
     /** the secondary delay for sending in millisecond */
-    int iSendSafeDelay;
+    int nSlowSendDelay;
     /** number of line whiche send with the normal delay */
     int nFastSendingCharLimit;
     /** the connection timeout in second */
