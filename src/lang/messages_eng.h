@@ -17,11 +17,7 @@
 static MsgStruct_t Msg[] = {
   
 	// command acknowledgment
-	{ OK_HELLO,			"Nice to meet you."},
-	{ OK_HELLO2,			"You have got a new account now."},
-	{ OK_PASSWD,			"Password is changed."},
-	{ OK_IDENT,			"You're now identified." },
-	{ OK_JOIN,			"The bot has joined the channel."},
+    { OK_JOIN,			"The bot has joined the channel."},
 	{ OK_PART,			"The bot has left the channel."},
 	{ OK_RMCHANNEL,			"The channel is removed from the channel list."},
 	{ OK_ADDCHANNEL,		"The channel is added to the channel list"},
