@@ -97,13 +97,14 @@ char *getArgument(char *line) {
 	return str;
 }
 
+/* ################################ BOT commandos ########################## */
 void help(char *line) {
 	char *netmask=getNetmask(line);
 	char *nick=getNickname(line);
 	char *parameter;
 
 	// checking the  login status
-	if (check_login(netmask)) {
+	if (exist_db(LOGIN_DB,netmask)) {
 		DEBUG("Access to the help system");
 		// Help for user whiche are login
 		if (!(parameter=getArgument(line))) {
@@ -123,7 +124,7 @@ void hello(char *line) {
 	char *netmask=getNetmask(line);
 	char *nick=getNickname(line);
 
-	if (!add_user(nick,"")) {
+	if (!add_db(USER_DB,nick,"")) {
 		notice(nick,MSG_NICK_EXIST);
 		return;
 	}
@@ -143,7 +144,7 @@ void password(char *line) {
 	char *parameter;
 	
 	// get  the  login name
-	if ((login=get_login(netmask))==NULL) {
+	if ((login=get_db(LOGIN_DB,netmask))==NULL) {
 		notice(getNickname(line),MSG_NOT_LOGON);
 		return;
 	}
@@ -162,25 +163,25 @@ void password(char *line) {
 
 
 	// set password
-	replace_passwd(login,passwd);
+	replace_db(USER_DB,login,passwd);
 
 	notice(getNickname(line),MSG_PASSWD);
 }
 
 void logoff(char *line) {
 	char *netmask;
+	char *nick;
 
 	netmask=getNetmask(line);
+	nick=getNickname(line);
 
-	if (!check_login(netmask)) {
-		DEBUG("User is not login");
+	if (!exist_db(LOGIN_DB,netmask)) {
 		return;
 	} else {
 		// user ausloggen
-		del_login(netmask);
+		del_db(LOGIN_DB,netmask);
+		notice(nick,MSG_LOGOFF);
 	}
-
-
 }
 
 void ident(char *line) {
@@ -188,7 +189,7 @@ void ident(char *line) {
 	char *netmask=getNetmask(line);
 	char *parameter;
 
-	if (check_login(netmask)) {
+	if (exist_db(LOGIN_DB,netmask)) {
 		notice(getNickname(line),MSG_ALREADY_LOGON);
 		return;
 	}
@@ -219,8 +220,8 @@ void ident(char *line) {
 	strcpy(login,parameter);
 	DEBUG("Parse login");
 
-	if(check_user(login,passwd)) {
-		add_login(netmask,login);
+	if(check_db(USER_DB,login,passwd)) {
+		add_db(LOGIN_DB,netmask,login);
 		notice(getNickname(line),MSG_IDENT_OK);
 		return;
 	}
@@ -235,16 +236,16 @@ void channel_add(char *line) {
 
 
 	// checking of login
-	if (!check_login(netmask)) {
+	if (!exist_db(LOGIN_DB,netmask)) {
 		notice(nick,MSG_NOT_LOGON);
 		return;
 	} else {
-		login=get_login(netmask);
+		login=get_db(LOGIN_DB,netmask);
 	}
 
 	
     // checking of master
-	if (!check_channel_access(login)) {
+	if (!exist_db(ACCESS_DB,login)) {
 		notice(nick,MSG_NOT_MASTER);
 		return;
 	}
@@ -260,13 +261,13 @@ void channel_add(char *line) {
 	}
 
 	//checking of channel exists
-	if (check_channel(parameter)) {
+	if (exist_db(CHANNEL_DB,parameter)) {
 		notice(nick,MSG_ADDCHANNEL_ALREADY);
 	} else {
 		// add channel
 		channelmod=malloc(sizeof(char)*3);
 		sprintf(channelmod,"\t\t");
-		add_channel(parameter,channelmod);
+		add_db(CHANNEL_DB,parameter,channelmod);
 		notice(nick,MSG_ADDCHANNEL_OK);
 	}
 
@@ -284,23 +285,23 @@ char *netmask=getNetmask(line);
 
 
 	// checking of login
-	if (!check_login(netmask)) {
+	if (!exist_db(LOGIN_DB,netmask)) {
 		notice(nick,MSG_NOT_LOGON);
 		return;
 	} else {
-		login=get_login(netmask);
+		login=get_db(LOGIN_DB,netmask);
 	}
 
 	
     // checking of master
-	if (!check_channel_access(login)) {
+	if (!exist_db(ACCESS_DB,login)) {
 		notice(nick,MSG_NOT_MASTER);
 		return;
 	}
 
 	// read parameters
 	if (!(parameter=getArgument(line))) {
-		notice(nick,MSG_ADDCHANNEL_ERR);
+		notice(nick,MSG_RMCHANNEL_ERR);
 		return;
 	} else if ((parameter[0]!='#') && (parameter[0]!='&')) {
 		notice(nick,MSG_CHANNEL_INVALID);
@@ -309,10 +310,10 @@ char *netmask=getNetmask(line);
 	}
 
 	//checking of channel exists
-	if (check_channel(parameter)) {
-		notice(nick,MSG_ADDCHANNEL_ALREADY);
+	if (!exist_db(CHANNEL_DB,parameter)) {
+		notice(nick,MSG_RMCHANNEL_FAIL);
 	} else {
-		del_channel(parameter);
+		del_db(CHANNEL_DB,parameter);
 		notice(nick,MSG_RMCHANNEL_OK);
 	}
 
@@ -322,6 +323,14 @@ char *netmask=getNetmask(line);
 }
 
 void join_all_channels(void) {
+	char **channelliste;
+	unsigned int i;
+
+	channelliste=list_db(CHANNEL_DB);
+
+	for (i=0;channelliste[i]!=NULL;i++) {
+		join(channelliste[i]);
+	}
 }
 
 void join_channel(char *line) {
@@ -331,16 +340,16 @@ void join_channel(char *line) {
 
 
 	// checking of login
-	if (!check_login(netmask)) {
+	if (!exist_db(LOGIN_DB,netmask)) {
 		notice(nick,MSG_NOT_LOGON);
 		return;
 	} else {
-		login=get_login(netmask);
+		login=get_db(LOGIN_DB,netmask);
 	}
 
 	
     // checking of master
-	if (!check_channel_access(login)) {
+	if (!exist_db(ACCESS_DB,login)) {
 		notice(nick,MSG_NOT_MASTER);
 		return;
 	}
@@ -366,16 +375,16 @@ void part_channel(char *line) {
 
 
 	// checking of login
-	if (!check_login(netmask)) {
+	if (!exist_db(LOGIN_DB,netmask)) {
 		notice(nick,MSG_NOT_LOGON);
 		return;
 	} else {
-		login=get_login(netmask);
+		login=get_db(LOGIN_DB,netmask);
 	}
 
 	
     // checking of master
-	if (!check_channel_access(login)) {
+	if (!exist_db(ACCESS_DB,login)) {
 		notice(nick,MSG_NOT_MASTER);
 		return;
 	}
@@ -395,10 +404,10 @@ void part_channel(char *line) {
 }
 
 void login(char *netmask,char *login) {
-	if (check_login(netmask)) {
+	if (exist_db(LOGIN_DB,netmask)) {
 		notice(getNickname(netmask),MSG_ALREADY_LOGON);
 		return;
 	}
     
-	add_login(netmask,login);
+	add_db(LOGIN_DB,netmask,login);
 }
