@@ -12,7 +12,9 @@ ToDo List
 - join in channel after a inviting by the owner or master
 - join in channel with keyword
 - make the answer type (msg/notice) dependent from the type of the request
-- support von CTCP
-	- ping
-	- time
-	- version
+- support von for other CTCP functions like:
+	- userinfo
+	- clientinfo
+	- finger
+	- xdcc list
+	- cdcc list
