@@ -39,6 +39,10 @@ typedef enum {
     CMD_ONNAMES,
     CMD_ONTOPIC,
     CMD_ONWHOIS,
+    /* CTCP commands */
+    CMD_CTCPPING,
+    CMD_CTCPVERSION,
+    CMD_CTCPTIME,
 
 
     /* others */
@@ -77,12 +81,8 @@ typedef enum {
     CMD_RMCHANNEL,
     CMD_ADDCHANNEL,
     CMD_JOIN,
-    CMD_PART,
+    CMD_PART
 
-    /* CTCP commands */
-    CMD_CTCPPING,
-    CMD_CTCPVERSION,
-    CMD_CTCPTIME
 }Cmd_t;
 
 #define CMDCOUNT    (CMD_PART-CMD_NONE+1)
@@ -105,6 +105,8 @@ static char * const CmdList[]= {
     "none",
     /* Events */
     "PING","QUIT","NICK","MODE","KICK","JOIN","353","TOPIC","311",
+    /* CTCP commands */
+    "\001PING","\001VERSION\001","\001TIME\001",
     /* any commands */
     "viewgreet","help","version","hello","ident",
     /* logged user commands */
@@ -114,9 +116,7 @@ static char * const CmdList[]= {
     /* channel owner commands */
     "chanmode","userlist","usermode","say","kick","topic","greeting","ban","deban",
     /* master commands */
-    "restart","allsay","rmuser","nick","die","chanlist","rmchannel","addchannel","join","part",
-    /* CTCP commands */
-    "\001PING","\001VERSION\001","\001TIME\001"
+    "restart","allsay","rmuser","nick","die","chanlist","rmchannel","addchannel","join","part"
 };
 
 /** This is the structure for the entries in the message queue */
