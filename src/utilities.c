@@ -286,27 +286,20 @@ boolean NickStringCheck(char *const pStr) {
 // ############################################################################# 
 int logger(int priority, char *format, ...)
 {
-	char *buf;
+	char buf[1<<12];
 	va_list az;
 	
-	/* alocating tempory buffer*/
-	if ((buf=(char *)malloc(4096*sizeof(char)))==NULL)
-	{
-		fprintf(stderr,"Error: while allocating memory\n");
-		return -1;
-	}
 	/**/
 	va_start(az,format);
 	/* put message in to data*/
-	vsprintf(buf,format,az);
+	vsprintf(&buf,format,az);
 #ifndef NDEBUG
-	syslog(priority,buf);
+	syslog(priority,&buf);
 #else
-	DEBUG(buf);
+	DEBUG(&buf);
 #endif
 	/**/
 	va_end(az);
-	free(buf);
 	return 0;
 }
 
