@@ -45,8 +45,8 @@ int main(int argc,const char *argv[]) {
 	int i;
 	int msgid;
 	char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;
-	pthread_t *thread;
-	pthread_t *timing;
+	pthread_t *threads;
+	pthread_t timeThread;
 	
 	// init config
 	setup.newMaster=false;
@@ -153,6 +153,8 @@ int main(int argc,const char *argv[]) {
 	signal(SIGINT,stopParser);
 	signal(SIGTERM,stopParser);
 	signal(SIGABRT,stopParser);
+	signal(SIGQUIT,stopParser);
+
 
 	#ifndef _DEBUG
 	// make a daemon 
@@ -160,10 +162,10 @@ int main(int argc,const char *argv[]) {
 	#endif
 
 	// create the threads
-	//pthread_create(timing,NULL,synchron,NULL);
-	thread=(pthread_t *)malloc(setup.thread_limit*sizeof(pthread_t));
+	pthread_create(&timeThread,NULL,synchron,NULL);
+	threads=(pthread_t *)malloc(setup.thread_limit*sizeof(pthread_t));
 	for (i=0;i<setup.thread_limit;i++) {
-		pthread_create(&thread[i],NULL,action_thread,NULL);
+		pthread_create(&threads[i],NULL,action_thread,NULL);
 		DEBUG("Thread %d is running",i);
 	}
 
@@ -213,15 +215,16 @@ int main(int argc,const char *argv[]) {
 		
 
 	}
-	DEBUG("Stopped");
 
-	
-	
+	DEBUG("Stop the timing thread");
+	pthread_cancel(timeThread);
+	pthread_join(timeThread,NULL);
+
 	// wait of  terminat all threads
 	for (i=0;i<setup.thread_limit;i++) {
 		DEBUG("Stop thread %d",i);
-		pthread_cancel(thread[i]);
-		pthread_join(thread[i],NULL);
+		pthread_cancel(threads[i]);
+		pthread_join(threads[i],NULL);
 	}
 
 
