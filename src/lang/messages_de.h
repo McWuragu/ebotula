@@ -19,21 +19,6 @@
 // excute error
 static MsgStruct_t Msg[] ={
 
-    // output of strerr
-	{ ERR_MISSING_PARAM,	"Parameter fehlt" },
-	{ ERR_PORT_PARAMETER,	"Portnummer liegt ausserhalb des Bereiches" },
-	{ ERR_WRONG_SERVERNAME,	"Servername ist unzulässig" },
-	{ ERR_WRONG_BOTNAME,	"Botname ist unzulässig" },
-	{ ERR_ALT_RANGE,	"Die Accountlebenserwartung ist ungültig" },
-	{ ERR_PINGTIMEOUT_RANGE,"Die Pingtimeoutzeit ist ungültig" },
-	{ ERR_LOGLEVEL_RANGE,    "Das Loglevel ist ungültig"},
-    { ERR_SENDDELAY_RANGE,	"Die Sendeverzögerung ist ungültig" },
-    { ERR_SENDLINE_RANGE,	"Das Limit für das Senden mit der 1. Verzögerung ist ungültig" },
-	{ ERR_INIT_DELAY,       "Die Verzögerung für das Einrichten der Channels ist ungültig"},
-    { ERR_LOGOFF_RANGE,	"Die Auslogzeit ist ungültig" },
-	{ ERR_THREAD_RANGE,	"Das Threadlimit liegt ausserhalb des Bereiches" },
-
-
     // command acknowledgment
 	{ OK_HELLO,		"Schön dich zu treffen" },
 	{ OK_HELLO2,		"Du hast einen neuen Account erhalten" },

@@ -15,23 +15,7 @@
 
 
 static MsgStruct_t Msg[] = {
-	// Messages for the master dialog
-    
-    // output of strerr
-	{ ERR_MISSING_PARAM,		"Missing value"},
-	{ ERR_PORT_PARAMETER,		"The portvalue is out of range."},
-	{ ERR_WRONG_SERVERNAME,		"The servername is irregular."},
-	{ ERR_WRONG_BOTNAME,		"The botname is irregular."},
-	{ ERR_ALT_RANGE,		"The account living time is invalid."},
-	{ ERR_PINGTIMEOUT_RANGE,	"The ping time is invalid."},
-	{ ERR_LOGLEVEL_RANGE,        "The log level is invalid."},
-    { ERR_SENDDELAY_RANGE,		"The send delay time is invalid."},
-	{ ERR_SENDLINE_RANGE,		"The limit for sending with the first send delay is invalid." },
-    { ERR_INIT_DELAY,           "The delay of the startup initialization is invalid."},
-    { ERR_LOGOFF_RANGE,			"The auto logoff time is invalid."},
-	{ ERR_THREAD_RANGE,		"The threadlimit is out of range." },
-
-
+  
 	// command acknowledgment
 	{ OK_HELLO,			"Nice to meet you."},
 	{ OK_HELLO2,			"You have got a new account now."},
