@@ -65,7 +65,7 @@ void connectServer(void) {
         syslog(LOG_ERR,getSyslogString(SYSLOG_RESOLVE_HOSTNAME));
         exit(errno);
     }
-    DEBUG("Connecting to %s",hostaddr->h_name);
+    DEBUG("Connecting to %s\n",hostaddr->h_name);
     
     memcpy(&socketaddr.sin_addr,hostaddr->h_addr,hostaddr->h_length);
 
@@ -101,7 +101,7 @@ void disconnectServer(void){
     shutdown(sockid,0);
 }
 /* ############################################################################ */
-void  send_direct(char *pLine) {    
+void  send_direct(char *pLine) {
     extern int stop;
 
     /* send the line */

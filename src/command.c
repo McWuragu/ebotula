@@ -53,7 +53,7 @@ void help(char *pLine) {
 
     /* check for parameters */
     if (!pParameter) {
-        DEBUG("Default information");
+        DEBUG("Default information\n");
 
         /* Header of help message */
 
@@ -93,7 +93,7 @@ void help(char *pLine) {
         /* the tail */
         privmsg(pNick,getMsgString(INFO_HELP_END));
     } else {
-        DEBUG("Spezial information for a command");
+        DEBUG("Spezial information for a command\n");
 
         /* cut the first word */
         strtok(pParameter," ");
@@ -106,12 +106,12 @@ void help(char *pLine) {
             pParameter=pTmp;
         }
 
-        DEBUG("Looking for information about \"%s\"",pParameter);
+        DEBUG("Looking for information about \"%s\"\n",pParameter);
 
         /* Help for a command */
         for (i=CMD_OTHERS+1;i<CMDCOUNT;i++) {
             if (!strcmp((char*)CmdList[i],&pParameter[1])) {
-                DEBUG("Command found %d",i);
+                DEBUG("Command found %d\n",i);
 
                 /* the headi for help */
                 pMsgPart=getMsgString(INFO_HELP_FOR);
@@ -150,7 +150,7 @@ void hello(char *pLine) {
     pNick=getNickname(pLine);
     pLogin=(char*)malloc((strlen(pNick)+1)*sizeof(char));
 
-    DEBUG("Try to create an new account for %s",pNick);
+    DEBUG("Try to create an new account for %s\n",pNick);
 
     strcpy(pLogin,pNick);
 
@@ -185,7 +185,7 @@ void password(char *pLine) {
     
     if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 
-	    DEBUG("Check the  password for the account %s",pLogin);
+	    DEBUG("Check the  password for the account %s\n",pLogin);
 
 	    /* get  the  login name */
 	    if (strlen(pLogin)) {
@@ -272,7 +272,7 @@ void ident(char *pLine) {
     pNetmask=getNetmask(pLine);
     pNick=getNickname(pLine);
 
-    DEBUG("try to identify %s",pNick);
+    DEBUG("try to identify %s\n",pNick);
 
     
     if (!exist_db(NICKTOUSER_DB,pNetmask)) {
@@ -298,11 +298,11 @@ void ident(char *pLine) {
             strcpy(pLogin,pParameter);
             StrToLower(pLogin);
         
-            DEBUG("Look for the account %s",pLogin);
+            DEBUG("Look for the account %s\n",pLogin);
         
             /* check the account */
             if (check_db(USER_DB,pLogin,pPasswd)) {
-                DEBUG("User %s found",pLogin);
+                DEBUG("User %s found\n",pLogin);
                 log_on(pNetmask,pLogin);
                 notice(pNick,getMsgString(OK_IDENT));
         
@@ -312,7 +312,7 @@ void ident(char *pLine) {
                 pChannelQueue=list_db(CHANNEL_DB);
                 login_len=strlen(pLogin);
         
-                DEBUG("Reconstruct the access rights for the channels");
+                DEBUG("Reconstruct the access rights for the channels\n");
                 while (isfullQueue(pChannelQueue)) {
                     pChannel=popQueue(pChannelQueue);
 
@@ -363,7 +363,7 @@ void addChannel(char *pLine) {
         return;
     }
 
-    DEBUG("Join and  try to add the channnel %s",pChannel);
+    DEBUG("Join and  try to add the channnel %s\n",pChannel);
 
     /* checking of channel exist */
     if (exist_db(CHANNEL_DB,pChannel)) {
@@ -395,7 +395,7 @@ void rmChannel(char *pLine){
         return;
     }
 
-    DEBUG("Part and  try to remove the channnel %s",pChannel);
+    DEBUG("Part and  try to remove the channnel %s\n",pChannel);
 
 
     /* checking of channel exists */
@@ -434,7 +434,7 @@ void joinChannel(char *pLine) {
         return;
     }
 
-    DEBUG("Join the channel %s",pChannel);
+    DEBUG("Join the channel %s\n",pChannel);
     /* join the channel */
     join(pChannel);
     notice(pNick,getMsgString(OK_JOIN));
@@ -452,7 +452,7 @@ void partChannel(char *pLine) {
     if (!(pChannel=getAccessChannel(pLine))){
         notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
     } else {
-        DEBUG("Part the channel %s",pChannel);
+        DEBUG("Part the channel %s\n",pChannel);
 
         /* part the channel */
         part(pChannel);
@@ -512,7 +512,7 @@ void chanlist(char *pLine){
 	PQueue pChannelQueue;
 	QueueData *pChannel;
 
-    DEBUG("Build channel list...");
+    DEBUG("Build channel list...\n");
 
     pNick=getNickname(pLine);
 
@@ -529,7 +529,7 @@ void chanlist(char *pLine){
 	        pChannelData=StrToChannelData(pChannelSet);
     	    pMode=ChannelModeToStr(pChannelData->pModes);
 
-        	DEBUG("...for channel %s",(char*)pChannel->data);
+        	DEBUG("...for channel %s\n",(char*)pChannel->data);
 	        privmsg(pNick,(char*)pChannel->data);
 
             pMsgPart=getMsgString(INFO_CHANNELLIST_MODE);
@@ -592,7 +592,7 @@ void setGreeting(char *pLine) {
         return;
     }
 
-    DEBUG("Greeting seting for %s",pChannel);
+    DEBUG("Greeting seting for %s\n",pChannel);
 
 
     /* check of  existenz of the channel */
@@ -639,7 +639,7 @@ void setTopic(char *pLine) {
         return;
     }
 
-    DEBUG("Topic seting for %s",pChannel);
+    DEBUG("Topic seting for %s\n",pChannel);
     
 
     if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
@@ -688,7 +688,7 @@ void greeting(char *pLine) {
             return;
         }
 
-        DEBUG("Greeting for %s",pChannel);
+        DEBUG("Greeting for %s\n",pChannel);
 
         if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
     	    if ((greeting=getGreeting(pChannelSet))) {
@@ -954,7 +954,7 @@ void usermode(char *pLine){
         }
 
     	/* user mod */
-	    DEBUG("Modify user mod");
+	    DEBUG("Modify user mod\n");
 
     	/* look for the space and separat the login for the user which want modify */
 	    if (!(pPos=strchr(pParameter,' '))) {
@@ -1000,7 +1000,7 @@ void usermode(char *pLine){
 
 	    }
 
-    	DEBUG("Modify account %s in channel %s",pLogin,pChannel);
+    	DEBUG("Modify account %s in channel %s\n",pLogin,pChannel);
 
 	    /* check for add or remove  mod */
     	if (pPos[0]!='+' && pPos[0]!='-') {
@@ -1030,7 +1030,7 @@ void usermode(char *pLine){
     	/* set the end mark */
 	    mod[2]='\0';
 
-	    DEBUG("Found mod %s",mod);
+	    DEBUG("Found mod %s\n",mod);
 
 		/* look for old master rights */
 		if (mod[1]!='m' && oldmod) {
@@ -1058,13 +1058,13 @@ void usermode(char *pLine){
 	    
 		/* add or remove the mod */
    		if (mod[0]=='+') {
-        	DEBUG("Set new mode");
+        	DEBUG("Set new mode\n");
 
 	        if (!(add_db(ACCESS_DB,pKey,mod))) {
             replace_db(ACCESS_DB,pKey,mod);
     	    }
 	  	} else {
-    	DEBUG("Remove new mode");
+    	DEBUG("Remove new mode\n");
 	        /* remove mod */
         	del_db(ACCESS_DB,pKey);
 
@@ -1073,7 +1073,7 @@ void usermode(char *pLine){
 
 	    /* identify the  login and set the rights */
 		if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
-    	    	DEBUG("Modify the current mode");
+    	    	DEBUG("Modify the current mode\n");
 				usernick=getNickname(pNetmask);
 
 		        if (mod[0]=='-') {
@@ -1137,9 +1137,9 @@ void chanmode(char *pLine) {
 
 	    /* read the new channel parameters */
 	    pNewMode=StrToChannelMode(pParameters);
-    	DEBUG("Found the new channel modes \"%s\"",ChannelModeToStr(pNewMode));
+    	DEBUG("Found the new channel modes \"%s\"\n",ChannelModeToStr(pNewMode));
 
-	    DEBUG("Build the new modes for the channel %s",pChannel);
+	    DEBUG("Build the new modes for the channel %s\n",pChannel);
     	/* build the new channel parameters */
 	    for (i=1;i<MAX_MODES;i++) {
     	    if (pNewMode->pModeStr[MOD_TYPE]=='+') {
@@ -1187,14 +1187,14 @@ void chanmode(char *pLine) {
     	    pChannelData->pModes->pModeStr[0]=' ';
 	    }
 
-    	DEBUG("Write the new modes channel \"%s\"",ChannelModeToStr(pChannelData->pModes))
+    	DEBUG("Write the new modes channel \"%s\"\n",ChannelModeToStr(pChannelData->pModes))
 	    /* set the new mode in database */
     	free(pChannelSet);
 	    pChannelSet=ChannelDataToStr(pChannelData);
     	replace_db(CHANNEL_DB,pChannel,pChannelSet);
 
 
-	    DEBUG("Set the new channel modes")
+	    DEBUG("Set the new channel modes\n")
     	/* set the mods */
 	    mode(pChannel,ChannelModeToStr(pNewMode),NULL);
     } else {
@@ -1241,7 +1241,7 @@ void rmuser(char *pLine) {
 			deleteQueue(pChannelQueue);
         }
         notice(pNick,getMsgString(OK_RMUSER));        
-    	DEBUG("Remove %s from the user list",pLogin);
+    	DEBUG("Remove %s from the user list\n",pLogin);
     } else {
     	notice(pNick,getMsgString(ERR_NOT_ACCOUNT));
     }
@@ -1278,7 +1278,7 @@ void userlist(char *pLine){
         /* Bot masters */
         privmsg(pNick,getMsgString(INFO_USERLIST_BEGIN));
         
-        DEBUG("Genrate the Userlist for a master");
+        DEBUG("Genrate the Userlist for a master\n");
 
         /* get the kist of all channels */
         pChannelQueue=list_db(CHANNEL_DB);
@@ -1362,7 +1362,7 @@ void userlist(char *pLine){
         privmsg(pNick,getMsgString(INFO_USERLIST_END));
     } else {
         
-        DEBUG("Genrate the Userlist for a owner");
+        DEBUG("Genrate the Userlist for a owner\n");
 
         if (!(pAccessChannel=getAccessChannel(pLine))) {
             notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));

@@ -13,6 +13,8 @@
 
 #include "type.h"
 
+
+
 #define msleep(m)   usleep((m)*1000)
 
 #define COMMON_NOT_ALLOW_CHAR       "\t\r\n, \a\0"
@@ -21,11 +23,23 @@
 #define CommonStringCheck(m) ((strpbrk((m),COMMON_NOT_ALLOW_CHAR))?false:true)
 
 
+#ifdef HAVE_CONFIG_H
+    #include "config.h"
+#endif
 
 #ifndef NDEBUG
-    #include <syslog.h>
+    #include <time.h>
+    #include <stdio.h>
+    
     /** Macro for debugging messages */
-    #define DEBUG(str...) syslog(LOG_DEBUG,str);
+    #define DEBUG(str...){ \
+         struct timespec stamp; \
+         struct tm *td; \
+         clock_gettime(CLOCK_REALTIME,&stamp); \
+         td=localtime(&stamp.tv_sec);\
+         fprintf(stderr,"%d:%d:%d.^%d ",td->tm_hour,td->tm_min,td->tm_sec,(stamp.tv_nsec/1000000)); \
+         fprintf(stderr,str); \
+         }
 #else
     /** Macro for debugging messages */
     #define DEBUG(str...)

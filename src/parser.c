@@ -80,7 +80,7 @@ MsgBuf_t* preParser(char *pLine) {
             for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
                 if (!strncmp(pStr,CmdList[i],strlen(CmdList[i]))){
                     pMsg->identify=i;
-                    DEBUG("Found Command %s",CmdList[i]);
+                    DEBUG("Found Command %s\n",CmdList[i]);
                     i=CMDCOUNT;
                 }
             }
@@ -321,5 +321,5 @@ void stopParser(int sig) {
     }
 
     stop=true;
-    DEBUG("Stop IRCBot");
+    DEBUG("Stop IRCBot\n");
 }

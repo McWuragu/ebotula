@@ -15,16 +15,12 @@
 #include "messages.h"
 
 char * getMsgString(eMsgID_t const MsgID){
-#ifndef NDEBUG
     assert(MsgID==Msg[MsgID].MsgID);
-#endif
     return Msg[MsgID].MsgString;   
 }
 
 char * getSyslogString(eSyslogID_t const MsgID){
-#ifndef NDEBUG
     assert(MsgID==Msg[MsgID].MsgID);
-#endif
     return Syslog[MsgID].MsgString;
 }
 

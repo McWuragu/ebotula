@@ -9,6 +9,7 @@
  */
 
 #include <errno.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,43 +28,37 @@
 #include "messages.h"
 #include "dbaccess.h"
 
-static GDBM_FILE dbf_user;
-static GDBM_FILE dbf_channel;
-static GDBM_FILE dbf_access;
-static GDBM_FILE dbf_usertonick;
-static GDBM_FILE dbf_nicktouser;
-static GDBM_FILE dbf_banlist;
-static GDBM_FILE dbf_timelog;
+static GDBM_FILE dbf[MAX_DB];
 
-static pthread_mutex_t dbaccess_mutex[MAX_DB];
+static pthread_mutex_t dbaccess_mutex[MAX_DB]; 
+      
+typedef struct DatabaseStruct {
+    DatabaseID_t  id;
+    char *pName;
+    int Access;
+} Database_t;
+
+static Database_t pDB[MAX_DB]= {
+    {USER_DB,"user.dbf",GDBM_WRCREAT}, 
+	{CHANNEL_DB,"channel.dbf",GDBM_WRCREAT},
+	{ACCESS_DB,"access.dbf", GDBM_WRCREAT},
+	{BANLIST_DB,"banlist.dbf",GDBM_WRCREAT},
+	{USERTONICK_DB,"usertonick.dbf",GDBM_NEWDB},
+	{TIMELOG_DB,"timelog.dbf",GDBM_WRCREAT},
+	{NICKTOUSER_DB,"nicktouser.dbf",GDBM_NEWDB}
+};
 
 // ############################################################################# 
 void initDatabases(void) {
     extern ConfigSetup_t sSetup;
     DIR *pDir;
 	int i;
-    char *user,*channel,*access,*nicktouser,*usertonick,*banlist,*timelog;
-            
-    // generate the filenames
-    user=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/user.dbf")+1)*sizeof(char));
-    channel=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/channel.dbf")+1)*sizeof(char));
-    usertonick=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/usertonick.dbf")+1)*sizeof(char));
-    nicktouser=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/nicktouser.dbf")+1)*sizeof(char));
-    access=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/access.dbf")+1)*sizeof(char));
-    banlist=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/banlist.dbf")+1)*sizeof(char));
-    timelog=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/timelog.dbf")+1)*sizeof(char));
+    char *pDBPath;
 
-    // create filenames
-    sprintf(user,"%s/user.dbf",sSetup.pDatabasePath);
-    sprintf(channel,"%s/channel.dbf",sSetup.pDatabasePath);
-    sprintf(usertonick,"%s/usertonick.dbf",sSetup.pDatabasePath);
-    sprintf(nicktouser,"%s/nicktouser.dbf",sSetup.pDatabasePath);
-    sprintf(access,"%s/access.dbf",sSetup.pDatabasePath);
-    sprintf(banlist,"%s/banlist.dbf",sSetup.pDatabasePath);
-    sprintf(timelog,"%s/timelog.dbf",sSetup.pDatabasePath);
 
     // check directory
     // if  this not existe then try to create
+    // this  create only the lowest  subdir
     if (!(pDir=opendir(sSetup.pDatabasePath))) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
@@ -75,29 +70,27 @@ void initDatabases(void) {
         }
     }
     closedir(pDir);
-                                            
-    // open the databases
-    dbf_user=gdbm_open(user,512,GDBM_WRCREAT,0600,NULL);
-    dbf_channel=gdbm_open(channel,512,GDBM_WRCREAT,0600,NULL);
-    dbf_usertonick=gdbm_open(usertonick,512,GDBM_NEWDB,0600,NULL);
-    dbf_nicktouser=gdbm_open(nicktouser,512,GDBM_NEWDB,0600,NULL);
-    dbf_access=gdbm_open(access,512,GDBM_WRCREAT,0600,NULL);
-    dbf_banlist=gdbm_open(banlist,512,GDBM_WRCREAT,0600,NULL);
-    dbf_timelog=gdbm_open(timelog,512,GDBM_WRCREAT,0600,NULL);
-    
-    if (!dbf_user || !dbf_channel || !dbf_usertonick || !dbf_nicktouser || !dbf_access || !dbf_banlist || !dbf_timelog) {
-        //errno=EBUSY;
-        syslog(LOG_ERR,getSyslogString(SYSLOG_DATABASE_ERR));
-        perror(getSyslogString(SYSLOG_DATABASE_ERR));
-        exit(errno);
-        
-    }
 
-	// init the mutexs
-	for (i=0;i<MAX_DB;i++){
-		pthread_mutex_init(&dbaccess_mutex[i],NULL);
-	}
-	
+    // open the databases
+    for (i=0;i<MAX_DB;i++) {
+        assert(i==pDB[i].id);
+        
+        pDBPath=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen(pDB[i].pName)+1)*sizeof(char));
+        sprintf(pDBPath,"%s/%s",sSetup.pDatabasePath,pDB[i].pName);
+        dbf[i]=gdbm_open(pDBPath,512,pDB[i].Access,0600,NULL);
+        
+        if (!dbf[i]) {
+            //errno=EBUSY;
+            syslog(LOG_ERR,getSyslogString(SYSLOG_DATABASE_ERR));
+            perror(getSyslogString(SYSLOG_DATABASE_ERR));
+            exit(errno);
+        }
+
+        // init the mutexs
+        pthread_mutex_init(&dbaccess_mutex[i],NULL);
+
+        free(pDBPath);
+    }
     syslog(LOG_INFO,getSyslogString(SYSLOG_INIT_DB));
 }
 // ############################################################################# 
@@ -107,49 +100,22 @@ void closeDatabase(void) {
 	// destroy the mutex
 	for (i=0;i<MAX_DB;i++){
 		pthread_mutex_destroy(&dbaccess_mutex[i]);
+        // close the databases
+        gdbm_close(dbf[i]);
 	}
-	
-	// close the databases
-    gdbm_close(dbf_user);
-    gdbm_close(dbf_channel);
-    gdbm_close(dbf_usertonick);
-    gdbm_close(dbf_nicktouser);
-    gdbm_close(dbf_access);
-    gdbm_close(dbf_banlist);
-    gdbm_close(dbf_timelog);
-    DEBUG("Close databases");
+    DEBUG("Close databases\n");
 }
 
 //######################### database access ##############################
 static GDBM_FILE get_dbf(int db) {
-
-    switch (db) {
-    case USER_DB:
-        return dbf_user;
-        break;
-    case CHANNEL_DB:
-        return dbf_channel;
-        break;
-    case ACCESS_DB:
-        return dbf_access;
-        break;
-    case BANLIST_DB:
-        return dbf_banlist;
-        break;
-    case USERTONICK_DB:
-        return dbf_usertonick;
-        break;
-    case NICKTOUSER_DB:
-        return dbf_nicktouser;
-        break;
-    case TIMELOG_DB:
-        return dbf_timelog;
-        break;
-    default:
-        DEBUG("Unkown database");
+    
+    if (db>=MAX_DB || db <0) {
+        DEBUG("Unkown database %d\n",db);
         return 0;
-
+    } else {
+        return dbf[db];
     }
+
 }
 // ############################################################################# 
 boolean add_db(int db,char *_key, char *_value) {

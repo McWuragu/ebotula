@@ -41,6 +41,6 @@ ebotula_SOURCES= \
 	callbacklist.h
 
 
-ebotula_LDADD= $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB)
+ebotula_LDADD= $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB) $(RT_LIB)
 ebotula_LDFLAGS=$(DFLAGS) $(PFLAGS)
 ebotula_CFLAGS= $(DFLAGS) $(PFLAGS)

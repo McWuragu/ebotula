@@ -357,7 +357,7 @@ char * getBanmask(char const *pLine){
 		// copy from '!' to pStr
 		if ((pBanmask=(char*) malloc(strlen(pChar)+3))==NULL)
 		{
-			DEBUG("getBanmask: Error: Not enoug Memory!");
+			DEBUG("getBanmask: Error: Not enoug Memory!\n");
 			return NULL;
 		}
 		strcpy(pBanmask,"*");

@@ -65,7 +65,7 @@ void hNickChange(char *pLine) {
 			log_out(pLogin);
 			log_on(pNewNetmask,pLogin);
 
-    		DEBUG("Change the netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
+    		DEBUG("Change the netmask \"%s\" to \"%s\"\n",pNetmask,pNewNetmask);
 	    	
 			free(pNetmaskCopy);
 	    	free(pNewNetmask);
@@ -125,7 +125,7 @@ void hSetModUser(char *pLine) {
 
     if (strcmp(pNick,sSetup.botname)) {
         if ((pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
-    	    DEBUG("Set the mod for Account %s with nickname %s",pLogin,pNick);
+    	    DEBUG("Set the mod for Account %s with nickname %s\n",pLogin,pNick);
 
             if (!(pChannel=getAccessChannel(pLine)))
                 return;
@@ -181,7 +181,7 @@ void hResetModes(char *pLine) {
           
             // check of bot new mods or  other user
             if (!strcmp(pNick,sSetup.botname)) {
-                DEBUG("Bot get new mods");
+                DEBUG("Bot get new mods\n");
                 // mode set for the bot from other user of operator
                 // then initiallize this  channel
                 if (strcmp(pMode,"+o")==0) {
@@ -191,7 +191,7 @@ void hResetModes(char *pLine) {
                 }
             } else {
                 // add callback for reset the modes for a user    
-                DEBUG("Added Callback for Mode Reset");
+                DEBUG("Added Callback for Mode Reset\n");
                 
                 // built the data for callback
                 pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
@@ -211,7 +211,7 @@ void hResetModes(char *pLine) {
                 whois(pNick);
             }
         } else if (pMode[1]='b') {
-            DEBUG("Ban reset not implemented jet");
+            DEBUG("Ban reset not implemented jet\n");
         } else {
             // reset other mods
             pPos=strstr(pLine,pMode);
@@ -220,7 +220,7 @@ void hResetModes(char *pLine) {
             DEBUG("Reset the modes from the channel %s",pChannel);
         }
     } else if (strcmp(getNickname(ppLinePart[0]),sSetup.botname)!=0) {
-        DEBUG("Bot get new mods");
+        DEBUG("Bot get new mods\n");
         // mode set for the bot from other user of operator
         // then initiallize this  channel
         if (strcmp(pMode,"+o")==0) {
@@ -256,7 +256,7 @@ void hResetTopic(char *pLine){
 	            topic(pChannel,"");
     	    }
 
-            DEBUG("Reset the topic in the channel %s",pChannel);
+            DEBUG("Reset the topic in the channel %s\n",pChannel);
         	free(pChannelSet);
 		}	
         free(pChannel);
@@ -298,7 +298,7 @@ static void channelInit(char *pChannel) {
         }
 
         privmsg(pChannel,getMsgString(INFO_INIT_CHANNEL));
-        DEBUG("Initialize the channel %s", pChannel);
+        DEBUG("Initialize the channel %s\n", pChannel);
     }
 }
 
@@ -339,7 +339,7 @@ void hCallback(char *pLine) {
                 sprintf(pNetmask,"%s!%s@%s",ppLinePart[3],ppLinePart[4],ppLinePart[5]);
         
                 // execute the callback
-                DEBUG("Callback");
+                DEBUG("Callback\n");
                 CB_Data->CallbackFkt(pNetmask,CB_Data->data);
         
                 /* destroy  callback item */

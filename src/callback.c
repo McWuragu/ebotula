@@ -34,14 +34,14 @@ void ModeResetCb(char *pNetmask,void* data){
     char *pNick;
     char *pMod;
 
-	DEBUG("Callback for ResetMode");
+	DEBUG("Callback for ResetMode\n");
 
     // split the  input datums
     ppDataPart=splitString((char*)data,2);
     pNick=getNickname(pNetmask);
 
     if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-        DEBUG("Reset the mode for the identified User %s",pLogin);
+        DEBUG("Reset the mode for the identified User %s\n",pLogin);
 
         // built the  key for the access_db
         pAccessKey=(char*)malloc((strlen(ppDataPart[0])+strlen(pLogin)+1)*sizeof(char));
@@ -64,7 +64,7 @@ void ModeResetCb(char *pNetmask,void* data){
             }
 
         }  else if ((get_db(ACCESS_DB,pLogin))) {
-            DEBUG("Reset the master");
+            DEBUG("Reset the master\n");
             // master mod reset
             if (strcmp(ppDataPart[1],"+o")!=0){
                 // reset all mod other mod until op
@@ -74,7 +74,7 @@ void ModeResetCb(char *pNetmask,void* data){
         }
 
     } else if (ppDataPart[1][0]=='+' && strcmp(pNick,sSetup.botname)) {
-        DEBUG("Reset the mode for %s",pNick);
+        DEBUG("Reset the mode for %s\n",pNick);
         // reset the mode for not identify user
         ppDataPart[1][0]='-';
         mode(ppDataPart[0],ppDataPart[1],pNick);
@@ -92,7 +92,7 @@ void SetBanCb(char *pNetmask,void * data){
     char *pCmdNick;
     
 
-    DEBUG("Callback for user banning");
+    DEBUG("Callback for user banning\n");
 
     /* get user information */
     pDataVec=splitString((char*)data,3);
@@ -124,7 +124,7 @@ void KickCb(char *pNetmask, void *data) {
     char *pLogin;
     char *pCmdNick;
     
-    DEBUG("Callback for user kicking");
+    DEBUG("Callback for user kicking\n");
 
 
     /* split Datums */

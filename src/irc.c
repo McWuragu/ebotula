@@ -41,7 +41,7 @@ void user(void) {
 
     // calculat the command size
     buffer_size=strlen("USER")+strlen(pw->pw_name)+strlen(hostname)+strlen(sSetup.server)+strlen(sSetup.realname)+8;
-    buffer=(char *)calloc(sizeof(char),buffer_size);
+    buffer=(char *)malloc(sizeof(char)*buffer_size);
 
     // create the  commando string
     sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.server,sSetup.realname);
@@ -60,14 +60,14 @@ void action(char *pTarget, char *pMsgStr){
 // #############################################################################
 void privmsg(char *pTarget, char *pMsgStr){
     char *buffer;
-    buffer=(char *)calloc(strlen("PRIVMSG ")+strlen(pTarget)+strlen(pMsgStr)+5,sizeof(char));
+    buffer=(char *)malloc((strlen("PRIVMSG ")+strlen(pTarget)+strlen(pMsgStr)+5)*sizeof(char));
     sprintf(buffer,"PRIVMSG %s :%s\r\n",pTarget,pMsgStr);
     send_line(buffer);
 }
 // #############################################################################
 void notice(char *pNick,char *pMsgStr) {
     char *buffer;
-    buffer=(char *)calloc(strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5,sizeof(char));
+    buffer=(char *)malloc((strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5)*sizeof(char));
     sprintf(buffer,"NOTICE %s :%s\r\n",pNick,pMsgStr);
     send_line(buffer);
     free (buffer);
@@ -80,7 +80,7 @@ void notice(char *pNick,char *pMsgStr) {
 // #############################################################################
 void join(char *pChannel) {
     char *buffer;
-    buffer=(char *)calloc(strlen("JOIN ")+strlen(pChannel)+3,sizeof(char));
+    buffer=(char *)malloc((strlen("JOIN ")+strlen(pChannel)+3)*sizeof(char));
     sprintf(buffer,"JOIN %s\r\n",pChannel);
     send_direct(buffer);
     free (buffer);
@@ -88,7 +88,7 @@ void join(char *pChannel) {
 // #############################################################################
 void part(char *pChannel) {
     char *buffer;
-    buffer=(char *)calloc(strlen("PART ")+strlen(pChannel)+3,sizeof(char));
+    buffer=(char *)malloc((strlen("PART ")+strlen(pChannel)+3)*sizeof(char));
     sprintf(buffer,"PART %s\r\n",pChannel);
     send_direct(buffer);
     free (buffer);
@@ -100,7 +100,7 @@ void pong(void) {
     // get  hostname
     gethostname(hostname,HOSTNAME_BUFFER_SIZE);
 
-    buffer=(char *)calloc(strlen("PONG ")+strlen(hostname)+3,sizeof(char));
+    buffer=(char *)malloc((strlen("PONG ")+strlen(hostname)+3)*sizeof(char));
     sprintf(buffer,"PONG %s\r\n",hostname);
     send_direct(buffer);
     free (buffer);
@@ -108,7 +108,7 @@ void pong(void) {
 // #############################################################################
 void ping(char *pTarget) {
     char *buffer;
-    buffer=(char *)calloc(strlen("PING ")+strlen(pTarget)+3,sizeof(char));
+    buffer=(char *)malloc((strlen("PING ")+strlen(pTarget)+3)*sizeof(char));
     sprintf(buffer,"PING %s\r\n",pTarget);
     send_direct(buffer);
     free (buffer);
@@ -116,7 +116,7 @@ void ping(char *pTarget) {
 // #############################################################################
 void nick(char *pNick) {
     char *buffer;
-    buffer=(char *)calloc(strlen("NICK ")+strlen(pNick)+3,sizeof(char));
+    buffer=(char *)malloc((strlen("NICK ")+strlen(pNick)+3)*sizeof(char));
     sprintf(buffer,"NICK %s\r\n",pNick);
     send_direct(buffer);
     free (buffer);
@@ -124,7 +124,7 @@ void nick(char *pNick) {
 // #############################################################################
 void topic(char *pChannel, char* pMsgStr) {
     char *buffer;
-    buffer=(char*)calloc(strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5,sizeof(char));
+    buffer=(char*)malloc((strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5)*sizeof(char));
     sprintf(buffer,"TOPIC %s :%s\r\n",pChannel,pMsgStr);
     send_line(buffer);
     free (buffer);
@@ -137,7 +137,7 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
     if (pMsgStr==NULL) {
         pMsgStr=getMsgString(INFO_DEFAULT_REASON);;
     }
-    buffer=(char*)calloc(strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6,sizeof(char));
+    buffer=(char*)malloc((strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6)*sizeof(char));
     sprintf(buffer,"KICK %s %s :%s\r\n",pChannel,pNick,pMsgStr);
     send_direct(buffer);
     free (buffer);
@@ -145,7 +145,7 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
 // #############################################################################
 void ban(char *pChannel,char *pMask){
     char *buffer;
-    buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6,sizeof(char));
+    buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char));
     sprintf(buffer,"MODE %s +b %s\r\n",pChannel,pMask);
     send_direct(buffer);
     free (buffer);
@@ -153,7 +153,7 @@ void ban(char *pChannel,char *pMask){
 // #############################################################################
 void deban(char *pChannel,char *pMask){
     char *buffer;
-    buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6,sizeof(char));
+    buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char));
     sprintf(buffer,"MODE %s -b %s\r\n",pChannel,pMask);
     send_direct(buffer);
     free (buffer);
@@ -166,7 +166,7 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
     if (pModParameter==NULL) {
         pModParameter="";
     }
-    buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMod)+strlen(pModParameter)+5,sizeof(char));
+    buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMod)+strlen(pModParameter)+5)*sizeof(char));
     sprintf(buffer,"MODE %s %s %s\r\n",pChannel,pMod,pModParameter);
     send_line(buffer);
     free (buffer);
@@ -174,7 +174,7 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
 // #############################################################################
 void whois(char *pNickname) {
     char *buffer;
-    buffer=(char*)calloc(strlen("WHOIS ")+strlen(pNickname)+3,sizeof(char));
+    buffer=(char*)malloc((strlen("WHOIS ")+strlen(pNickname)+3)*sizeof(char));
     sprintf(buffer,"WHOIS %s\r\n",pNickname);
     send_direct(buffer);
     free (buffer);

@@ -40,7 +40,7 @@ void ComandLineParser(int argc,char *const argv[]) {
         if (argv[i][0]==PARAMETER_CHAR) {
             switch  (argv[i][1]) {
             case 's':
-                DEBUG("Found server option");
+                DEBUG("Found server option\n");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -59,7 +59,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'b':
-                DEBUG("Found botname option");
+                DEBUG("Found botname option\n");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -78,7 +78,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'r':
-                DEBUG("Found realname option");
+                DEBUG("Found realname option\n");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -91,7 +91,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'p':
-                DEBUG("Found port option");
+                DEBUG("Found port option\n");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -110,7 +110,7 @@ void ComandLineParser(int argc,char *const argv[]) {
     
                 break;
             case 't':
-                DEBUG("Found thread limit option");
+                DEBUG("Found thread limit option\n");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -128,7 +128,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 sSetup.thread_limit=tmp;
                 break;
             case 'a':
-                DEBUG("Found auto logoff time option");
+                DEBUG("Found auto logoff time option\n");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -146,7 +146,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 sSetup.AutoLoggoff=tmp;
                 break;
             case 'n':
-                DEBUG("Found first sending delay option");
+                DEBUG("Found first sending delay option\n");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -164,7 +164,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 sSetup.iSendDelay=tmp;
                 break;
             case 'e':
-                DEBUG("Found secondary sending delay option");
+                DEBUG("Found secondary sending delay option\n");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -182,7 +182,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 sSetup.iSendSafeDelay=tmp;
                 break;
             case 'l':
-                DEBUG("Found send line limit option");
+                DEBUG("Found send line limit option\n");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -199,7 +199,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 sSetup.iSendSafeLine=tmp;
                 break;
             case 'k':
-                DEBUG("Found account live time option");
+                DEBUG("Found account live time option\n");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -217,11 +217,11 @@ void ComandLineParser(int argc,char *const argv[]) {
                 sSetup.AccountLiveTime=tmp;
                 break;
             case 'm':
-                DEBUG("Found bot master option");
+                DEBUG("Found bot master option\n");
                 sSetup.newMaster=true;
                 break;
             case 'd':
-                DEBUG("Found  database path option");
+                DEBUG("Found  database path option\n");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -232,7 +232,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 strcpy(sSetup.pDatabasePath,argv[i]);
                 break;
             case 'c':
-                DEBUG("Found ping timeout option");
+                DEBUG("Found ping timeout option\n");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -270,7 +270,7 @@ void ConfigFileParser(void) {
         exit(errno);
     }
 
-    DEBUG("Config file is open");
+    DEBUG("Config file is open\n");
 
     while((fgets(buffer,MAX_READ_BUFFER_SIZE,fd)!=NULL) && (errno==0)){
         // remove newline and leading spaces
@@ -279,7 +279,7 @@ void ConfigFileParser(void) {
         
         // ignore space lines and comments
         if ((buffer[0]!=COMMENT_CHAR) && (buffer[0]!='\0')) {
-            DEBUG("Found config line %s",buffer);
+            DEBUG("Found config line %s\n",buffer);
             
 
             c=strchr(buffer,'=');
@@ -445,7 +445,7 @@ boolean dialogMaster(void){
         return false;
     }
 
-
+    // make him to the master
     if (!add_db(ACCESS_DB,name,"+m")) {
         del_db(USER_DB,name);
         fprintf(stderr,"%s\n",getMsgString(ERR_MASTER));

@@ -18,16 +18,17 @@
 #define CHECK_EXIST(_db,__key)          if (exist_db(_db,__key)){return false;}
 #define CHECK_NO_EXIST(_db,__key)       if (!exist_db(_db,__key)){return false;}
 
-enum database_id_e {
-	USER_DB, 
-	CHANNEL_DB,
-	ACCESS_DB,
+typedef enum DatabaseID_e {
+	USER_DB,
+    CHANNEL_DB,
+    ACCESS_DB,
 	BANLIST_DB,
 	USERTONICK_DB,
 	TIMELOG_DB,
 	NICKTOUSER_DB,
 	MAX_DB
-};
+} DatabaseID_t;
+
 void initDatabases(void);
 void closeDatabase(void);
 

@@ -51,7 +51,7 @@ void rmDeadLogins(long lCheckTime) {
                 /* check the time */
         	    if (lCheckTime>atol(pTime)) {
     	            log_out((char*)pLogin->data);
-                	DEBUG("The account %s was automatically logged off",(char*)pLogin->data);
+                	DEBUG("The account %s was automatically logged off\n",(char*)pLogin->data);
             	}
             }
     	    free(pTime);
@@ -69,9 +69,10 @@ void log_on(char *pNetmask,char *pLogin) {
 
     pthread_mutex_lock(&account_mutex);
     if (exist_db(USERTONICK_DB,pLogin)) {
+        // relog on
         if ((pOldNetmask=get_db(USERTONICK_DB,pLogin))) {
         	
-				del_db(NICKTOUSER_DB,pOldNetmask);
+			del_db(NICKTOUSER_DB,pOldNetmask);
         	add_db(NICKTOUSER_DB,pNetmask,pLogin);
 
         	replace_db(USERTONICK_DB,pLogin,pNetmask);
@@ -82,7 +83,7 @@ void log_on(char *pNetmask,char *pLogin) {
     }
     pthread_mutex_unlock(&account_mutex);
 
-    DEBUG("User log in");
+    DEBUG("User log in\n");
 
     /* build the timestamp */
     time(&timestamp);
@@ -91,10 +92,10 @@ void log_on(char *pNetmask,char *pLogin) {
     /* set the last login timestamp */
     if (exist_db(TIMELOG_DB,pLogin)) {
         replace_db(TIMELOG_DB,pLogin,pTime);
-        DEBUG("Update timestamp %s for %s",pTime,pLogin);
+        DEBUG("Update timestamp %s for %s\n",pTime,pLogin);
     } else {
         add_db(TIMELOG_DB,pLogin,pTime);
-        DEBUG("Add timepstamp %s for %s",pTime,pLogin);
+        DEBUG("Add timepstamp %s for %s\n",pTime,pLogin);
     }
 }
 /* ############################################################################# */
@@ -115,14 +116,14 @@ void __log_out(char *pLogin) {
     if ((pNetmask=get_db(USERTONICK_DB,pLogin))){
 	    del_db(NICKTOUSER_DB,pNetmask);
     	del_db(USERTONICK_DB,pLogin);
-    	DEBUG("%s logged off",pLogin);
+    	DEBUG("%s logged off\n",pLogin);
 	}
 }
 /* ############################################################################# */
 void rmAccount(char *pLogin) {
     extern pthread_mutex_t account_mutex;
     
-	DEBUG("Remove the account %s",pLogin);
+	DEBUG("Remove the account %s\n",pLogin);
 
     pthread_mutex_lock(&account_mutex);
 	/* logoff the user */
@@ -145,7 +146,7 @@ void rmAccessRights(char *pLogin){
     char *pKey;
     int iLoginLen;
 
-    DEBUG("Remove access rights from %s",pLogin);
+    DEBUG("Remove access rights from %s\n",pLogin);
 
     /* remove as master */
     del_db(ACCESS_DB,pLogin);

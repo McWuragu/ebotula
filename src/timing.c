@@ -44,7 +44,7 @@ void *TimingThread(void *argv){
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
     */
 
-    DEBUG("Synchronize Thread is running");
+    DEBUG("Synchronize Thread is running\n");
 
     while (!stop) {
         time(&newTime);
@@ -58,14 +58,14 @@ void *TimingThread(void *argv){
 
         /* remove dead logins  */
         if ((newTime-lastRemoveDeadLogins)>=3600) {
-            DEBUG("Remove dead logins");
+            DEBUG("Remove dead logins\n");
             rmDeadLogins(newTime-sSetup.AutoLoggoff*86400);
             lastRemoveDeadLogins=newTime;
         }
 
         /* remove dead accounts  */
         if ((newTime-lastRemoveDeadAccounts)>=3600) {
-            DEBUG("Remove dead accounts");
+            DEBUG("Remove dead accounts\n");
             rmDeadAccounts(newTime-sSetup.AccountLiveTime*86400);
             lastRemoveDeadAccounts=newTime;
         }

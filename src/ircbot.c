@@ -78,13 +78,7 @@ int main(int argc,char * const argv[]) {
     
     // versions ausgabe
     printf(VERSIONSTR);
-
-    #ifdef NDEBUG
     openlog(PACKAGE,0,LOG_DAEMON);
-    #else
-    openlog(PACKAGE,LOG_PERROR,LOG_DAEMON);
-    #endif
-    
     
     // Look for simple parameter and  custom config file
     for (i=1;i<argc;i++) {
@@ -109,7 +103,7 @@ int main(int argc,char * const argv[]) {
         }
 
     }
-    DEBUG("File %s",sSetup.configfile);
+    DEBUG("File %s\n",sSetup.configfile);
 
     // read config file
     ConfigFileParser();
@@ -131,20 +125,20 @@ int main(int argc,char * const argv[]) {
         sSetup.iSendSafeDelay=sSetup.iSendDelay;
     }
 
-    DEBUG("----------------------------------------------");
-    DEBUG("Server %s",sSetup.server);
-    DEBUG("Port %s",sSetup.port);
-    DEBUG("Nickname %s", sSetup.botname);
-    DEBUG("Realname %s", sSetup.realname);
-    DEBUG("Threads %d",sSetup.thread_limit);
-    DEBUG("Config file %s",sSetup.configfile);
-    DEBUG("Database path %s",sSetup.pDatabasePath);
-    DEBUG("Ping timeout %ds",sSetup.iTimeout);
-    DEBUG("Sending delay %dms",sSetup.iSendDelay);
-    DEBUG("Sending safe delay %dms",sSetup.iSendSafeDelay);
-    DEBUG("Sending  line limit %d",sSetup.iSendSafeLine);
-    DEBUG("Account live time %dd",sSetup.AccountLiveTime);
-    DEBUG("Autolog of after %dd",sSetup.AutoLoggoff);
+    DEBUG("----------------------------------------------\n");
+    DEBUG("Server %s\n",sSetup.server);
+    DEBUG("Port %s\n",sSetup.port);
+    DEBUG("Nickname %s\n", sSetup.botname);
+    DEBUG("Realname %s\n", sSetup.realname);
+    DEBUG("Threads %d\n",sSetup.thread_limit);
+    DEBUG("Config file %s\n",sSetup.configfile);
+    DEBUG("Database path %s\n",sSetup.pDatabasePath);
+    DEBUG("Ping timeout %ds\n",sSetup.iTimeout);
+    DEBUG("Sending delay %dms\n",sSetup.iSendDelay);
+    DEBUG("Sending safe delay %dms\n",sSetup.iSendSafeDelay);
+    DEBUG("Sending  line limit %d\n",sSetup.iSendSafeLine);
+    DEBUG("Account live time %dd\n",sSetup.AccountLiveTime);
+    DEBUG("Autolog of after %dd\n",sSetup.AutoLoggoff);
     DEBUG("-----------------------------------------------");
 
     syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));
@@ -215,7 +209,7 @@ int main(int argc,char * const argv[]) {
     threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
     for (i=0;i<sSetup.thread_limit;i++) {
         pthread_create(&threads[i],NULL,ComandExecutionThread,(void*)pCommandQueue);
-        DEBUG("Thread %d is running",i);
+        DEBUG("Thread %d is running\n",i);
     }
     
 	// join the channels
@@ -241,7 +235,7 @@ int main(int argc,char * const argv[]) {
             strcpy(str,tmp);
 
             /* parse the part line */
-            DEBUG("Parse \"%s\"",str);
+            DEBUG("Parse \"%s\"\n",str);
             pMsg=preParser(str);
 
             /* put the identified line  on the  queue */
@@ -273,12 +267,12 @@ int main(int argc,char * const argv[]) {
 
     syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));
     pthread_join(timeThread,NULL);
-    DEBUG("The timing thread stopped");
+    DEBUG("The timing thread stopped\n");
 
     // wait of  terminat all threads
     for (i=0;i<sSetup.thread_limit;i++) { 
         pthread_join(threads[i],NULL);
-        DEBUG("Thread %d stopped",i);
+        DEBUG("Thread %d stopped\n",i);
     }
 
 

@@ -27,7 +27,7 @@ PQueue initQueue()
 	if (!(pqueueInit=(PQueue)malloc(sizeof(Queue))))
 	{
 		/** Error not enough memory **/
-		DEBUG("initQueue() - Can't allocate memory!");
+		DEBUG("initQueue() - Can't allocate memory!\n");
 		return NULL;
 	}
 	
@@ -78,7 +78,7 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	if ((pqueueNew=(PQueue)malloc(sizeof(Queue)))==NULL)
 	{
 		/** Error not enough memory **/
-		DEBUG("pushQueue() - Can't allocate memory!");
+		DEBUG("pushQueue() - Can't allocate memory!\n");
 			pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 		return QUEUE_MEMORY_ALLOC_ERROR;
 	}
@@ -107,7 +107,7 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	if(( pqueueNew->queuedataData=(QueueData*) malloc(sizeof(QueueData)))==NULL)
 	{
 		/** Error not enough memory **/
-		DEBUG("pushQueue() - Can't allocate memory!");
+		DEBUG("pushQueue() - Can't allocate memory!\n");
 		pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 		return QUEUE_MEMORY_ALLOC_ERROR;
 
@@ -161,7 +161,7 @@ QueueData * popQueue(PQueue pqueueIn)
 			return (QueueData *)queuedataElement;
 		}	
 	} else {
-		DEBUG("ERROR: popQueue() - empty Queue!");
+		DEBUG("ERROR: popQueue() - empty Queue!\n");
 	}
 
 	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
