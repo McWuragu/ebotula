@@ -307,7 +307,7 @@ void hCallback(char *pLine) {
     pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
 	 
     // remove  entrie and read the  callback datum
-    if (removeCallbackDList(&CallbackList,pCallbackItemReturn,CB_Data)) {
+    if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
         // built netmask
         pNetmask=(char*)malloc((strlen(ppLinePart[3])+strlen(ppLinePart[4])+strlen(ppLinePart[5])+3)*sizeof(char));
         sprintf(pNetmask,"%s!%s@%s",ppLinePart[3],ppLinePart[4],ppLinePart[5]);
