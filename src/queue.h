@@ -21,6 +21,9 @@
 #define QUEUE_NO_ELEMENT_LEFT			3
 #define QUEUE_NULL_POINTER_AS_IN_PARAMETER	4
 
+/** MAX_ELEMENTS_IN_QUEUE_FOR_THREADS */
+#define  MAX_ELEMENTS_IN_QUEUE_FOR_THREADS 256
+
 /** types **/
 /** Setting QueueType **/
 /** Sentinel ist the beginning and the and of the queue **/
@@ -40,7 +43,10 @@ typedef struct tag_Queue
 	QueueType queuetypeT; /** Type of Queue **/
 	QueueData *queuedataData; /**Data Elements **/
 	pthread_mutex_t *queue_mutex;
-	long longCount;
+	unsigned long long longCount;
+	/* Thread control */
+	unsigned long long ElementsInQueueForThreads;
+	pthread_cond_t *StopThreadCond;
 }Queue,*PQueue;
 
 
