@@ -178,7 +178,8 @@ void write_baseconfig()
 		i++;
 		fprintf(fd,"%s%d\n",bstr[i],sSetup.nFastSendingCharLimit);
 		i++;
-        /* KEY_INITDELAY"=", */
+		i++;
+	        /* KEY_INITDELAY"=", */
 		fprintf(fd,"%s",bstr[i]);
 		i++;
 		fprintf(fd,"%s%d\n",bstr[i],sSetup.nSettling);
