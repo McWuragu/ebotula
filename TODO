@@ -4,6 +4,7 @@ ToDo List
 	- !timeban
 	- !banlist
 	- !allban
+	- !state
 - Implement the banlist (set and execute)
 - global bot master message (is like global greeting)
 - Emphasize per bold the messages
@@ -16,9 +17,6 @@ ToDo List
 	- finger
 	- xdcc list
 	- cdcc list
-- NLS Support
 - checking of all commands
-- ask for inviting in a invitei mode channel
-- remove memory leaks
-- NLS-Support
+- ask for inviting in a channel with the mode +i
 - Plugin System
