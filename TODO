@@ -5,7 +5,7 @@ ToDo List
 	- !banlist
 	- !allban
 - Implement the banlist (set and execute)
-- global bot master message
+- global bot master message (is like global greeting)
 - Emphasize per bold the messages
 - Complete the  documentation
 - global channel messages as ACTIONs
