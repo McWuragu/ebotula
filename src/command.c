@@ -1191,7 +1191,7 @@ void userlist(MsgItem_t *pMsg){
     /* build the  login list  for output */
     if (pMsg->UserLevel==MasterLevel && !pArgv) {
         /* Bot masters */
-        privmsg(pMsg->pCallingNick,getMsgString(INFO_USERLIST_BEGIN));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_BEGIN));
         
         DEBUG("Genrate the Userlist for a master\n");
         pChannelQueue=list_db(CHANNEL_DB);
@@ -1222,7 +1222,7 @@ void userlist(MsgItem_t *pMsg){
                     strcat(pMsgStr,"OFF");
                 }
 
-                privmsg(pMsg->pCallingNick,pMsgStr);
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
                 free(pMsgStr);
             } else {
                 /* normal user */
@@ -1269,7 +1269,7 @@ void userlist(MsgItem_t *pMsg){
                     strcat(pMsgStr,"OFF");
                 }
                 /* send notice out */
-                privmsg(pMsg->pCallingNick,pMsgStr);
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
                 free(pMsgStr);
     			free(pKey);
     		}
@@ -1278,7 +1278,7 @@ void userlist(MsgItem_t *pMsg){
 	}
 	flushQueue(pChannelQueue);
 	deleteQueue(pChannelQueue);
-        privmsg(pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
     } else {
         
         DEBUG("Genrate the Userlist for a owner\n");
@@ -1288,7 +1288,7 @@ void userlist(MsgItem_t *pMsg){
             return;
         }
         
-        privmsg(pMsg->pCallingNick,getMsgString(INFO_USERLIST_BEGIN));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_BEGIN));
         
         /* look for  rights of  user for  the channel */
 		iChanLen=strlen(pMsg->pAccessChannel);
@@ -1330,13 +1330,13 @@ void userlist(MsgItem_t *pMsg){
                     strcat(pMsgStr,"OFF");
                 }
                 /* send notice out */
-                privmsg(pMsg->pCallingNick,pMsgStr);
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
                 free(pMsgStr);
             }
 			free(pKey);
 
         }
-        privmsg(pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
     }
 	deleteQueue(pLoginQueue);
 }
