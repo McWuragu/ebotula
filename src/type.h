@@ -14,7 +14,7 @@
 /** This is definetion of boolean datatype */
 typedef enum boolEnum {false,true} boolean;
 
-/// This stuctur is a data container for  all setup parameters.
+/** This stuctur is a data container for  all setup parameters.*/
 typedef struct ConfStruct{
     /** the nickname of the bot */
     char *botname;
@@ -36,22 +36,22 @@ typedef struct ConfStruct{
     unsigned int AutoLoggoff;
     /** the delay time for sending in  millisecond */
     int iSendDelay;
-    /// the secondary delay for sending in millisecond
+    /** the secondary delay for sending in millisecond */
     int iSendSafeDelay;
-    /// number of line whiche send with the normal delay
+    /** number of line whiche send with the normal delay */
     int iSendSafeLine;
-    /// the connection timeout in second
+    /** the connection timeout in second */
     int iTimeout;
     /** a flag to signal that a new master want create */
     boolean newMaster;
 } ConfigSetup_t;
 
 
-/// the number of channel mode options
+/** the number of channel mode options */
 #define MAX_MODES               11
 #define _MAX_MODES              MAX_MODES+2
 
-/// This  enum is  used as index for value pModeStr from the struct ChannelModeStruct
+/** This  enum is  used as index for value pModeStr from the struct ChannelModeStruct */
 enum ChanModeEnum {
     MOD_TYPE,
     MOD_KEYWORD,
@@ -68,14 +68,14 @@ enum ChanModeEnum {
 };
 
 
-/// a structure as container for the channel modes
+/** a structure as container for the channel modes */
 typedef struct ChannelModeStruct {
     char pModeStr[_MAX_MODES];
     char *pKeyword;
     char *pLimit;
 } ChannelMode_t;
 
-/// This container is used for  the values from a channel
+/** This container is used for  the values from a channel */
 typedef struct ChannelDataStruct {
     ChannelMode_t* pModes;
     char *pTopic;
