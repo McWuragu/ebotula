@@ -40,8 +40,6 @@ static MsgStruct_t Syslog[]= {
 	{ SYSLOG_CREATE_DIR,		"Lege Verzeichnis für die Datenbank an"},
 	{ SYSLOG_CREATE_DIR_ERR,	"Kann kein Verzeichnis für die Datenbank anlegen"},
 	{ SYSLOG_DATABASE_ERR,		"Kann Datenbank nicht öffnen"},
-	{ SYSLOG_USER_NOT_FOUND,	"User nicht gefunden"},
-	{ SYSLOG_USER_NOT_FOUND,	"Gruppe nicht gefunden"},
 	{ SYSLOG_RESTART,		"Neustart..."},
 	{ SYSLOG_STOPPED,		"Angehalten..."}
 };

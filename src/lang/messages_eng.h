@@ -38,9 +38,7 @@ static MsgStruct_t  Syslog[] = {
 	{ SYSLOG_CREATE_DIR,		"Create the directory for the database." },
 	{ SYSLOG_CREATE_DIR_ERR, 	"Can't create the directory for the database." },
 	{ SYSLOG_DATABASE_ERR,		"Can't open the databases." },
-    { SYSLOG_USER_NOT_FOUND,    "User not found"},
-    { SYSLOG_USER_NOT_FOUND,    "Group not found"},
-	{ SYSLOG_RESTART,		"Restart..." },
+    { SYSLOG_RESTART,		"Restart..." },
 	{ SYSLOG_STOPPED,		"Bot down..." }
 };
 
