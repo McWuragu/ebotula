@@ -11,7 +11,7 @@
 #define IRC_H
 
 #define USER_NOT_ALLOW_CHAR			": \t\r\a"
-#define CHANNEL_NOT_ALLOW_CHAR	" \a\r\n,"
+#define CHANNEL_NOT_ALLOW_CHAR		" \a\r\n,"
 
 
 void user(void);
