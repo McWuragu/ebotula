@@ -176,9 +176,6 @@ int main(int argc,char * const argv[]) {
     
 
     // connect to the server and init the mutex  for sending
-    //pthread_mutex_init(&account_mutex, NULL);
-
-    
     ConnectToIrc();
     printf(SYSLOG_BOT_RUN);
     printf("\n");
