@@ -198,7 +198,7 @@ char *getAccessChannel(char const *pLine) {
 		if (ChannelStringCheck(pParameter)) {
 			pChannel=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
 			strcpy(pChannel,pParameter);
-        } else {
+	        } else {
 			pChannel=NULL;
 		}
     }
