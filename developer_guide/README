@@ -171,6 +171,7 @@ ircbot [Options]
         -d path         Use this path for the database
         -e ms           Set the second delay time in millisecond for sending.
         -f file         Use this config file.
+	-g group	Setzt die Group unter der gestartet werden soll (nur root).
         -h              Print this help information.
         -l lines        Set the line limit for the first sending delay level.
         -k days         Set the  account live time in days.
