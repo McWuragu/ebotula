@@ -4,7 +4,7 @@
  * It is distributed under the GNU General Public License
  * See the file COPYING for details.
  *
- * (c)2003 Steffen Laube <realebula@gmx.de>
+ * (c)2003 Steffen Laube <Laube.Steffen@gmx.de>
  * #############################################################
  */
 
@@ -109,6 +109,7 @@ void help(MsgItem_t *pMsg) {
                 pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdList[i])+3)*sizeof(char));
                 sprintf(pTmp,"%s %s:",pMsgPart,pParameter);
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pTmp);
+
 
                 /* print  the  help text */
                 for (j=1;pIrcHelp[nCmdHelpID][j][0]!=EOM;j++) {
@@ -479,7 +480,7 @@ void chanlist(MsgItem_t *pMsg){
     char *pMsgPart;
 	char *pChannelSet;
     int i=0,buffer_size=0;
-    ChannelData_t *pChannelData;
+    ChannelData_t sChannelData;
 	PQueue pChannelQueue;
 	QueueData *pChannel;
 
@@ -496,8 +497,8 @@ void chanlist(MsgItem_t *pMsg){
         pChannel=popQueue(pChannelQueue);
 
 		if ((pChannelSet=get_db(CHANNEL_DB,(char*)pChannel->data))) {
-	        pChannelData=StrToChannelData(pChannelSet);
-    	    pMode=ChannelModeToStr(pChannelData->pModes);
+	        StrToChannelData(pChannelSet,&sChannelData);
+    	    pMode=ChannelModeToStr(&(sChannelData.sModes));
 
         	DEBUG("...for channel %s\n",(char*)pChannel->data);
 	        //sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pChannel->data);
@@ -509,25 +510,24 @@ void chanlist(MsgItem_t *pMsg){
 	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
     	    free(pMsgStr);
 
-        	if (pChannelData->pTopic) {
+        	if (sChannelData.pTopic) {
                 pMsgPart=getMsgString(INFO_CHANNELLIST_TOPIC);
-            	pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(pChannelData->pTopic)+2)*sizeof(char));
-	            sprintf(pMsgStr,"%s %s",pMsgPart,pChannelData->pTopic);
+            	pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(sChannelData.pTopic)+2)*sizeof(char));
+	            sprintf(pMsgStr,"%s %s",pMsgPart,sChannelData.pTopic);
     	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
         	    free(pMsgStr);
 	        }
 
-    	    if (pChannelData->pGreeting) {
+    	    if (sChannelData.pGreeting) {
                 pMsgPart=getMsgString(INFO_CHANNELLIST_GREET);
-        	    pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(pChannelData->pGreeting)+2)*sizeof(char));
-            	sprintf(pMsgStr,"%s %s",pMsgPart,pChannelData->pGreeting);
+        	    pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(sChannelData.pGreeting)+2)*sizeof(char));
+            	sprintf(pMsgStr,"%s %s",pMsgPart,sChannelData.pGreeting);
 	            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
     	        free(pMsgStr);
         	}
 
 
 	        free(pMode);
-    	    free(pChannelData);
 			free(pChannelSet);
 		}
 		free(pChannel);
@@ -552,7 +552,7 @@ void setGreeting(MsgItem_t *pMsg) {
     char *pChannelSet;
     char *pMode;
 
-    ChannelData_t *pChannelData;
+    ChannelData_t sChannelData;
 
     if (!pMsg->pAccessChannel){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
@@ -564,34 +564,32 @@ void setGreeting(MsgItem_t *pMsg) {
 
     /* check of  existenz of the channel */
     if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
-	    pChannelData=StrToChannelData(pChannelSet);
+	    StrToChannelData(pChannelSet,&sChannelData);
     	free(pChannelSet);
 	    
 		/* remove old greeting */
-		if (pChannelData->pGreeting) {
-    	    free(pChannelData->pGreeting);
+		if (sChannelData.pGreeting) {
+    	    free(sChannelData.pGreeting);
 	    }
-	    pChannelData->pGreeting=getParameters(pMsg->pRawLine);
+	    sChannelData.pGreeting=getParameters(pMsg->pRawLine);
 
     
         /* set the new greeting in the database */
-		pChannelSet=ChannelDataToStr(pChannelData);
+		pChannelSet=ChannelDataToStr(&sChannelData);
 	    replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
         free(pChannelSet);
 
     	/* message */
-	    if (!pChannelData->pGreeting) {
+	    if (!sChannelData.pGreeting) {
      	   sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RM_GREETING));
 	    } else {
     	   sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_GREETING));
 	    }
-        if (pChannelData->pModes->pKeyword) {free(pChannelData->pModes->pKeyword);}
-        if (pChannelData->pModes->pLimit) {free(pChannelData->pModes->pLimit);}
-        if (pChannelData->pGreeting) {free(pChannelData->pGreeting);}
-        if (pChannelData->pTopic) {free(pChannelData->pTopic);}
         
-        free(pChannelData->pModes); 
-        free(pChannelData);
+        free(sChannelData.sModes.pKeyword);
+        free(sChannelData.sModes.pLimit);
+        free(sChannelData.pGreeting);
+        free(sChannelData.pTopic);
 	} else {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
 	}
@@ -603,7 +601,7 @@ void setTopic(MsgItem_t *pMsg) {
     char *pChannelSet;
 
 
-    ChannelData_t *pChannelData;
+    ChannelData_t sChannelData;
 
     
     if (!pMsg->pAccessChannel) {
@@ -616,27 +614,27 @@ void setTopic(MsgItem_t *pMsg) {
 
     if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
 
-	    pChannelData=StrToChannelData(pChannelSet);
+	    StrToChannelData(pChannelSet,&sChannelData);
     	free(pChannelSet);
 
 		/* remove old topic */
-        if (pChannelData->pTopic) {
-            free(pChannelData->pTopic);
+        if (sChannelData.pTopic) {
+            free(sChannelData.pTopic);
         }
-        pChannelData->pTopic=getParameters(pMsg->pRawLine);
+        sChannelData.pTopic=getParameters(pMsg->pRawLine);
 
-	    pChannelSet=ChannelDataToStr(pChannelData);
+	    pChannelSet=ChannelDataToStr(&sChannelData);
     	replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
 
 
 	    /* message */
-    	if (!pChannelData->pTopic) {
+    	if (!sChannelData.pTopic) {
 	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RM_TOPIC));
     	} else {
         	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_TOPIC));
     	}
 
-	    topic(pMsg->pAccessChannel,pChannelData->pTopic);
+	    topic(pMsg->pAccessChannel,sChannelData.pTopic);
 	} else {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
 	}
@@ -1062,8 +1060,8 @@ void chanmode(MsgItem_t *pMsg) {
 
     int i;
 
-    ChannelMode_t *pNewMode;
-    ChannelData_t *pChannelData;
+    ChannelMode_t sNewMode;
+    ChannelData_t sChannelData;
 
 
     if (!pMsg->pAccessChannel) {
@@ -1080,45 +1078,45 @@ void chanmode(MsgItem_t *pMsg) {
     /* read the old channel parameters */
     
     if (pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-        pChannelData=StrToChannelData(pChannelSet);
+        StrToChannelData(pChannelSet,&sChannelData);
 
 	    /* read the new channel parameters */
-	    pNewMode=StrToChannelMode(pParameters);
-    	DEBUG("Found the new channel modes \"%s\"\n",ChannelModeToStr(pNewMode));
+	    StrToChannelMode(pParameters,&sNewMode);
+    	DEBUG("Found the new channel modes \"%s\"\n",ChannelModeToStr(&sNewMode));
 
 	    DEBUG("Build the new modes for the channel %s\n",pMsg->pAccessChannel);
     	/* build the new channel parameters */
 	    for (i=1;i<MAX_MODES;i++) {
-    	    if (pNewMode->pModeStr[MOD_TYPE]=='+') {
-        	    /* add  the new mode in the pChannelData */
-            	if (pNewMode->pModeStr[i]!=' ') {
+    	    if (sNewMode.pModeStr[MOD_TYPE]=='+') {
+        	    /* add  the new mode in the sChannelData */
+            	if (sNewMode.pModeStr[i]!=' ') {
                 	/* set the new flag */
-	                pChannelData->pModes->pModeStr[i]=pNewMode->pModeStr[i];
+	                sChannelData.sModes.pModeStr[i]=sNewMode.pModeStr[i];
 	
     	            /* set keyword and limit */
-        	        if (pNewMode->pModeStr[i]=='k') {
-            	        free(pChannelData->pModes->pKeyword);
-                	    pChannelData->pModes->pKeyword=(char*)malloc((strlen(pNewMode->pKeyword)+1)*sizeof(char));
-                    	strcpy(pChannelData->pModes->pKeyword,pNewMode->pKeyword);
-	                } else if (pNewMode->pModeStr[i]=='l') {
-    	                free(pChannelData->pModes->pLimit);
-        	            pChannelData->pModes->pLimit=(char*)malloc((strlen(pNewMode->pLimit)+1)*sizeof(char));
-            	        strcpy(pChannelData->pModes->pLimit,pNewMode->pLimit);
+        	        if (sNewMode.pModeStr[i]=='k') {
+            	        free(sChannelData.sModes.pKeyword);
+                	    sChannelData.sModes.pKeyword=(char*)malloc((strlen(sNewMode.pKeyword)+1)*sizeof(char));
+                    	strcpy(sChannelData.sModes.pKeyword,sNewMode.pKeyword);
+	                } else if (sNewMode.pModeStr[i]=='l') {
+    	                free(sChannelData.sModes.pLimit);
+        	            sChannelData.sModes.pLimit=(char*)malloc((strlen(sNewMode.pLimit)+1)*sizeof(char));
+            	        strcpy(sChannelData.sModes.pLimit,sNewMode.pLimit);
                 	}
 	            }
 
-    	    } else if (pNewMode->pModeStr[MOD_TYPE]=='-') {
+    	    } else if (sNewMode.pModeStr[MOD_TYPE]=='-') {
         	    /* remove  flags from the pChanneldata */
-            	if (pNewMode->pModeStr[i]!=' ') {
+            	if (sNewMode.pModeStr[i]!=' ') {
 
 	                /* remove the  mode flag */
-    	            pChannelData->pModes->pModeStr[i]=' ';
+    	            sChannelData.sModes.pModeStr[i]=' ';
 
         	        /* remove keyword and limit */
-            	    if (pChannelData->pModes->pModeStr[i]=='k') {
-                	    pChannelData->pModes->pKeyword[0]='\0';
-	                } else if (pChannelData->pModes->pModeStr[i]=='l') {
-    	                pChannelData->pModes->pLimit[0]='\0';
+            	    if (sChannelData.sModes.pModeStr[i]=='k') {
+                	    sChannelData.sModes.pKeyword[0]='\0';
+	                } else if (sChannelData.sModes.pModeStr[i]=='l') {
+    	                sChannelData.sModes.pLimit[0]='\0';
         	        }
             	}
 
@@ -1128,22 +1126,22 @@ void chanmode(MsgItem_t *pMsg) {
 
 	    /* check the exit  of channell modes */
     	/* set or remove the leading plus */
-	    if (strpbrk(pChannelData->pModes->pModeStr,CHANNEL_MODES)) {
-    	    pChannelData->pModes->pModeStr[0]='+';
+	    if (strpbrk(sChannelData.sModes.pModeStr,CHANNEL_MODES)) {
+    	    sChannelData.sModes.pModeStr[0]='+';
 	    } else {
-    	    pChannelData->pModes->pModeStr[0]=' ';
+    	    sChannelData.sModes.pModeStr[0]=' ';
 	    }
 
-    	DEBUG("Write the new modes channel \"%s\"\n",ChannelModeToStr(pChannelData->pModes))
+    	DEBUG("Write the new modes channel \"%s\"\n",ChannelModeToStr(&(sChannelData.sModes)))
 	    /* set the new mode in database */
     	free(pChannelSet);
-	    pChannelSet=ChannelDataToStr(pChannelData);
+	    pChannelSet=ChannelDataToStr(&sChannelData);
     	replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
 
 
 	    DEBUG("Set the new channel modes\n")
     	/* set the mods */
-	    mode(pMsg->pAccessChannel,ChannelModeToStr(pNewMode),NULL);
+	    mode(pMsg->pAccessChannel,ChannelModeToStr(&sNewMode),NULL);
     } else {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
     }

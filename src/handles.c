@@ -4,7 +4,7 @@
  * It is distributed under the GNU General Public License
  * See the file COPYING for details.
  *
- * (c)2003 Steffen Laube <realebula@gmx.de>
+ * (c)2003 Steffen Laube <Laube.Steffen@gmx.de>
  * ############################################################# 
  */
 
@@ -317,33 +317,35 @@ void hInitAfterOp(char *pLine) {
 // Event helper: Channel intializalisation
 // #########################################################################
 static void channelInit(char *pChannel) {
-    ChannelData_t *pChannelData;
+    ChannelData_t sChannelData;
     char *pMode,*pChannelSet;
 
       
     if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
-        pChannelData=StrToChannelData(pChannelSet);
+        StrToChannelData(pChannelSet,&sChannelData);
         free(pChannelSet);
 
         // clean up the memory
-        if (pChannelData->pGreeting) {
-            free(pChannelData->pGreeting);
+        if (sChannelData.pGreeting) {
+            free(sChannelData.pGreeting);
         }
 
         // set Topic
-        if (pChannelData->pTopic) {
-            topic(pChannel,pChannelData->pTopic);
-            free(pChannelData->pTopic);
+        if (sChannelData.pTopic) {
+            topic(pChannel,sChannelData.pTopic);
+            free(sChannelData.pTopic);
         }
 
         // set Modes
-        pMode=ChannelModeToStr(pChannelData->pModes);
-        if (strlen(pMode)) {
+        pMode=ChannelModeToStr(&(sChannelData.sModes));
+	if (strlen(pMode)) {
             mode(pChannel,pMode,NULL);
         }
         free(pMode);
 
-
+        free (sChannelData.sModes.pKeyword);
+        free (sChannelData.sModes.pLimit);
+	
         privmsg(pChannel,getMsgString(INFO_INIT_CHANNEL));
         DEBUG("Initialize the channel %s\n", pChannel);
     }

@@ -4,7 +4,7 @@
  * It is distributed under the GNU General Public License
  * See the file COPYING for details.
  *
- * (c)2003 Steffen Laube <realebula@gmx.de>
+ * (c)2003 Steffen Laube <Laube.Steffen@gmx.de>
  * ############################################################# 
  */
 
@@ -146,6 +146,7 @@ void *CommandExecutionThread(void *argv) {
 
     // execute loop
     while(!stop) {
+
 
         pCommand=popQueue(pCommandQueue);
         

@@ -4,7 +4,7 @@
  * It is distributed under the GNU General Public License
  * See the file COPYING for details.
  *
- * (c)2003 Steffen Laube <realebula@gmx.de>
+ * (c)2003 Steffen Laube <Laube.Steffen@gmx.de>
  * ############################################################# 
  */
 
@@ -88,7 +88,7 @@ typedef struct ChannelModeStruct {
 
 /** This container is used for  the values from a channel */
 typedef struct ChannelDataStruct {
-    ChannelMode_t* pModes;
+    ChannelMode_t sModes;
     char *pTopic;
     char *pGreeting;
 } ChannelData_t;

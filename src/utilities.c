@@ -4,7 +4,7 @@
  * It is distributed under the GNU General Public License
  * See the file COPYING for details.
  *
- * (c)2003 Steffen Laube <realebula@gmx.de>
+ * (c)2003 Steffen Laube <Laube.Steffen@gmx.de>
  * ############################################################# 
  */
 
@@ -124,14 +124,14 @@ char *ChannelModeToStr(ChannelMode_t *pMode){
     return pModeStr;
 }
 // ############################################################################# 
-ChannelMode_t * StrToChannelMode(char *pModeStr) {
-    ChannelMode_t *pMode;
+void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
     char *ppArgv[3];
     char *pPos,*pPos2;
     int i,j,iLength;
 
+    if (!pMode) {return;}
+
     // init  the struct
-    pMode=(ChannelMode_t *)malloc(sizeof(ChannelMode_t));
     pMode->pKeyword=(char*)malloc(sizeof(char));
     pMode->pLimit=(char*)malloc(sizeof(char));
 
@@ -211,19 +211,17 @@ ChannelMode_t * StrToChannelMode(char *pModeStr) {
             break;
         }
     }
-    return pMode;
+    return;
 }
 // ############################################################################# 
-ChannelData_t *StrToChannelData(char *pChannelSet) {
+void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData) {
     char *pMode;
-    ChannelData_t *pChannelData;
-    pChannelData=(ChannelData_t *)malloc(sizeof(ChannelData_t));
 
     pChannelData->pGreeting=getGreeting(pChannelSet);
     pChannelData->pTopic=getTopic(pChannelSet);
     
     pMode=getChannelMode(pChannelSet);
-    pChannelData->pModes=StrToChannelMode(pMode);
+    StrToChannelMode(pMode,&(pChannelData->sModes));
     free(pMode);
 
     return pChannelData;
@@ -234,7 +232,7 @@ char *ChannelDataToStr(ChannelData_t *pChannelData) {
     char *pMode;
     int iLenght;
 
-    pMode=ChannelModeToStr(pChannelData->pModes);
+    pMode=ChannelModeToStr(&(pChannelData->sModes));
     iLenght=strlen(pMode);
 
     if (pChannelData->pGreeting) {
@@ -293,7 +291,7 @@ int logger(int priority, char *format, ...)
 	va_start(az,format);
 	/* put message in to data*/
 	vsprintf(&buf,format,az);
-#ifndef NDEBUG
+#ifdef NDEBUG
 	syslog(priority,&buf);
 #else
 	DEBUG(&buf);

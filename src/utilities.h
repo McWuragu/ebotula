@@ -4,7 +4,7 @@
  * It is distributed under the GNU General Public License
  * See the file COPYING for details.
  *
- * (c)2003 Steffen Laube <realebula@gmx.de>
+ * (c)2003 Steffen Laube <Laube.Steffen@gmx.de>
  * ############################################################# 
  */
 
@@ -69,20 +69,22 @@ void StrToLower(char *pStr);
 char *ChannelModeToStr(ChannelMode_t *pMode);
 
 /**
-* This convert a string to a structure for the channel mode
-*
-* @param pModeStr input string
-* @return pointer of the accuring structure
-*/
-ChannelMode_t * StrToChannelMode(char *pModeStr);
+ * This convert a string to a structure for the channel mode
+ * 
+ * @param pModeStr input string
+ * @param pMode    pointer of return value
+ */
+void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode);
 
 /**
-* This convert a string to a structure for the channel data
-*
-* @param pModeStr input string
-* @return pointer of the accuring structure
-*/
-ChannelData_t *StrToChannelData(char *pChannelSet);
+ * This convert a string to a structure for the channel data
+ * 
+ * @param pChannelSet
+ *               a pointer  of the input  data as string
+ * @param pChannelData
+ *               this is a pointer of  a struct for the return values
+ */
+void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData);
 
 /**
 * This convert the struct for a channel to a string

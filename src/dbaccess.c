@@ -4,7 +4,7 @@
  * It is distributed under the GNU General Public License
  * See the file COPYING for details.
  *
- * (c)2003 Steffen Laube <realebula@gmx.de>
+ * (c)2003 Steffen Laube <Laube.Steffen@gmx.de>
  * ############################################################# 
  */
 
@@ -56,6 +56,7 @@ void initDatabases(void) {
     char *pDBPath;
 
 
+    
     // check directory
     // if  this not existe then try to create
     // this  create only the lowest  subdir
@@ -72,7 +73,7 @@ void initDatabases(void) {
         }
     }
     closedir(pDir);
-
+    
     // open the databases
     for (i=0;i<MAX_DB;i++) {
         assert(i==pDB[i].id);
