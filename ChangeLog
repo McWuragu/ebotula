@@ -1,3 +1,7 @@
+ebotula-devel-0.1.11
+--------------------
+- Bugfix: fixed SIGSEGV from the commands !addchannel and !join
+
 ebotula-devel-0.1.10
 --------------------
 - renamed the version
