@@ -40,6 +40,10 @@ void hNickChange(char *pLine) {
 		replace_db(USERTONICK_DB,pLogin,pNewNetmask);
 	}
 
+	free(pNetmask);
+	free(pLogin);
+
+
 	DEBUG("Changethe netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
 
 }
@@ -65,11 +69,13 @@ void hBotNeedOp(char *pLine){
 	sprintf(pSearchStr,"@%s",sSetup.botname);
 
 	DEBUG("Look for OP right for %s",pSearchStr);
-	if (strstr(pNickList,pSearchStr)) {
-		return;
+	if (!strstr(pNickList,pSearchStr)) {
+		privmsg(pChannel,MSG_NEED_OP);
 	}
 
-  	privmsg(pChannel,MSG_NEED_OP);
+	free(pSearchStr);
+	free(pNickList);
+	free(pChannel);
 }
 // ######################################################################### 
 // Event handler: JOIN 
@@ -103,7 +109,13 @@ void hSetModUser(char *pLine) {
 		} else if (exist_db(ACCESS_DB,pLogin)) {
 			mode(pChannel,"+o",pNick);
 		}
+		free(pChannel);
+		free(pKey);
+		free(pMod);
 	}
+
+	free(pLogin);
+	free(pNick);
 }
 // ######################################################################### 
 // Event handler: MODE 
@@ -139,8 +151,12 @@ void hResetModUser(char *pLine) {
 			strtok(pNick," ");
 			
 			// remove
-			mode(pChannel,pMod,pNick);
+			if (strcmp(pNick,sSetup.botname)) {
+				mode(pChannel,pMod,pNick);
+			}
 		}
+
+		free(pChannel);
 	}
 }
 // ######################################################################### 
@@ -162,5 +178,9 @@ void hResetTopic(char *pLine){
 
 		// reset the topic
 		topic(pChannel,pTopic);
+		
+		free(pChannel);
+		free(pTopic);
+		free(pChannelSet);
 	}
 }
