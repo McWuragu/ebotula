@@ -24,15 +24,13 @@
 #include "account.h"
 // #############################################################################
 void rmDeadLogins(long lCheckTime) {
-    extern pthread_mutex_t account_mutex;
     char **ppLogins=NULL;
     char *pTime=NULL;
     int i;
 
-    pthread_mutex_lock(&account_mutex);
     // get the  list
-    ppLogins=list_db(TIMELOG_DB);
-    
+	ppLogins=list_db(USER_DB);
+		
     for (i=0;ppLogins[i]!=NULL;i++) {
 
         // read time
@@ -46,7 +44,6 @@ void rmDeadLogins(long lCheckTime) {
     	    free(pTime);
 		}
     }
-    pthread_mutex_unlock(&account_mutex);
 }
 // #############################################################################
 void log_on(char *pNetmask,char *pLogin) {
