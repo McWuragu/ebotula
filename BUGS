@@ -2,5 +2,4 @@
 - The bot can't join a keyword  protected channel
 - The bot don't join a channel after the  inviting from a other user
 - The bot don't have ctcp support
-- crash by compilation with gcc 2.9x
 
