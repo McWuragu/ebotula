@@ -40,10 +40,12 @@
 	#define SYSLOG_SOCKET		"Can't create a tcp socket."
 	#define SYSLOG_CONNECT		"Connection failed."
 	#define SYSLOG_CONFIG_FILE	"Can't open the config file."
-	#define SYSLOG_SEND		"Can't send a command."
-	#define SYSLOG_RECV		"Can't receive a line."
+	#define SYSLOG_SEND		"	Can't send a command."
+	#define SYSLOG_RECV			"Can't receive a line."
 	#define SYSLOG_TIMEOUT		"Receiving timeout"
 	#define SYSLOG_DATABASE_ERR	"Can't open the databases."
+	#define SYSLOG_RESTART		"Restart..."
+	#define SYSLOG_STOPPED		"Bot down..."
 	
 	// excute error
 	// output of strerr
@@ -81,6 +83,7 @@
 	#define MSG_RMUSER_OK			"The account is removed"
 	#define MSG_MASTER				"You are a bot master"
 	#define MSG_DIE_OK				"The bot is going  down"
+	#define MSG_RESTART_OK			"The bot make a restart"
 	
 	// Informations for invalid input or using of the bot
 	#define MSG_NOT_LOGON			"You're not identified."
@@ -117,6 +120,7 @@
 	#define MSG_CHANNELLIST_TOPIC	"Topic:"
 	#define MSG_CHANNELLIST_GREAT	"Greating:"
 	#define MSG_DEFAULT_REASON		"You are kicked from the bot."
+	#define MSG_INIT_CHANNEL		"I have initialize this channnel"
 	
 	// command  format erros
 	#define MSG_ADDCHANNEL_ERR		"Invalid command: !addchannel <#channel>"
