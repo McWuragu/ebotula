@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #ifndef IRCHELP_GER_H
 #define IRCHELP_GER_H
@@ -116,6 +116,14 @@ static char *pIrcHelp[][15] = {
         "gibt eine Liste von Channels",
         "Damit kann man sich einer Liste der Channels mit den gesetzten",
         "Rechten, Topics und Begrüssungen ausgeben lassen",
+    },
+    // BAN
+    {
+        "bannt einen User aus dem  Channel",
+    },
+    // DEBAN
+    {
+        "hebt einen Ban wieder auf",
     },
     
     // Master commands

@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #ifndef IRCHELP_ENG_H
 #define IRCHELP_ENG_H
@@ -110,6 +110,14 @@ static char *pIrcHelp[][15] = {
     {
         "Print out a list of all channels from the bot",
 	"Only channels the bot is within are listed.",
+    },
+    // BAN
+    {
+        "ban a user from the channnel",
+    },
+    // DEBAN
+    {
+        "reset the ban from a user",
     },
     
     // Master commands
