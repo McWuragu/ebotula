@@ -3,6 +3,10 @@ ebotula-devel-0.1.10
 - renamed the version
 - maked better performance by seperate outgoing  thread
 - added the  rejoining after kicking
+- added the  command !invite
+- added  ebotula.spec file
+- maked the  first rpm release of this version
+- modified the access level checking  implementation
 
 ebotula-0.1.9-dev
 -----------------
