@@ -217,7 +217,7 @@ static char *pIrcHelp[][15] = {
     // PART
     {
         "verlässt einen Channel",
-        "Hiermit kann man einen Channel verlassen ohne ihn aus der Liste",
+        "Hiermit kann man den Bot einen Channel verlassen ohne ihn aus der Liste",
         "zu löschen.",
         ".",
     }
