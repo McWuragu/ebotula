@@ -63,7 +63,7 @@ void initDatabases(void) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
             syslog(LOG_ERR,getSyslogString(SYSLOG_CREATE_DIR_ERR));
-            perror(getSyslogString(SYSLOG_CONFIG_FILE));
+            perror(getSyslogString(SYSLOG_CREATE_DIR_ERR));
             exit(errno);
         } else {
             syslog(LOG_INFO,getSyslogString(SYSLOG_CREATE_DIR));
@@ -75,7 +75,7 @@ void initDatabases(void) {
     for (i=0;i<MAX_DB;i++) {
         assert(i==pDB[i].id);
         
-        pDBPath=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen(pDB[i].pName)+1)*sizeof(char));
+        pDBPath=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen(pDB[i].pName)+2)*sizeof(char));
         sprintf(pDBPath,"%s/%s",sSetup.pDatabasePath,pDB[i].pName);
         dbf[i]=gdbm_open(pDBPath,512,pDB[i].Access,0600,NULL);
         
