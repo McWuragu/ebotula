@@ -11,6 +11,8 @@
 #ifndef TYPE_H
 #define TYPE_H
 
+#define MAX_READ_BUFFER_SIZE    256
+#define SERVER_NOT_ALLOW_CHAR           " :;<>*#/\"\'\\{}[]()=?§$"
 
 /** This is definetion of boolean datatype */
 typedef enum {false,true} boolean;
@@ -81,6 +83,45 @@ enum ChanModeEnum {
     MOD_QUIET,
     MOD_REOP,
     MOD_INVITE
+};
+/* 
+ * modiefier for param list
+ */
+typedef enum {
+	  PARAM_CHAR,
+	  PARAM_SHORT,
+	  PARAM_INT,
+	  PARAM_LONG,
+	  PARAM_HEX,
+	  PARAM_FLOAT,
+	  PARAM_DOUBLE,
+	  PARAM_STRING
+} Input_t,Output_t; 
+typedef enum {
+	MOD_NONE=0,
+	MOD_QUOTED
+	} Modefier_t;
+/*
+ * Value Structure
+ */
+enum Values_e{
+	VAL_BOTNAME=0,
+	VAL_REALNAME,
+	VAL_EXEUSER,
+	VAL_EXEGROUP,
+	VAL_THREADLIMIT,
+	VAL_SERVER,
+	VAL_PORT,
+	VAL_DATABASEPATH,
+	VAL_FASTSENDDELAY,
+	VAL_SLOWSENDDELAY,
+	VAL_FASTSENDLIMIT,
+	VAL_INITDELAY,
+	VAL_ALT,
+	VAL_AUTOLOGOFF,
+	VAL_PINGTIMEOUT,
+	VAL_LOGLEVEL,
+	VAL_COUNT
 };
 
 
