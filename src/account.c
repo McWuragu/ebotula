@@ -50,10 +50,12 @@ void rmDeadLogins(long lCheckTime) {
 }
 // #############################################################################
 void log_on(char *pNetmask,char *pLogin) {
+    extern pthread_mutex_t account_mutex;
     time_t timestamp;
     char pTime[32];
     char *pOldNetmask;
 
+    pthread_mutex_lock(&account_mutex);
     if (exist_db(USERTONICK_DB,pLogin)) {
         if ((pOldNetmask=get_db(USERTONICK_DB,pLogin))) {
         	
@@ -66,6 +68,7 @@ void log_on(char *pNetmask,char *pLogin) {
         add_db(NICKTOUSER_DB,pNetmask,pLogin);
         add_db(USERTONICK_DB,pLogin,pNetmask);
     }
+    pthread_mutex_unlock(&account_mutex);
 
     DEBUG("User log in");
 
@@ -84,15 +87,18 @@ void log_on(char *pNetmask,char *pLogin) {
 }
 // #############################################################################
 void log_out(char *pLogin) {
+    extern pthread_mutex_t account_mutex;
     char *pNetmask;
 
     DEBUG("%s logged off",pLogin);
 
     
+    pthread_mutex_lock(&account_mutex);
     if ((pNetmask=get_db(USERTONICK_DB,pLogin))){
 	    del_db(NICKTOUSER_DB,pNetmask);
     	del_db(USERTONICK_DB,pLogin);
 	}
+    pthread_mutex_unlock(&account_mutex);
 }
 
 // #############################################################################

@@ -151,7 +151,6 @@ void hello(char *pLine) {
 
     StrToLower(pLogin);
 
-    pthread_mutex_lock(&account_mutex);
     if (add_db(USER_DB,pLogin,"")) {
         
         // autoidentify after create an new account
@@ -165,14 +164,12 @@ void hello(char *pLine) {
     } else {
 	    notice(pNick,MSG_NICK_EXIST);
 	} 
-    pthread_mutex_unlock(&account_mutex);
 
 }
 // #########################################################################
 // Bot comand: !pass <password>
 // #########################################################################
 void password(char *pLine) {
-    extern pthread_mutex_t account_mutex;
     char *pLogin;
     char *pPasswd;
     char *pNick;
@@ -181,7 +178,6 @@ void password(char *pLine) {
     pNetmask=getNetmask(pLine);
     pNick=getNickname(pLine);
     
-    pthread_mutex_lock(&account_mutex);
     if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 
 	    DEBUG("Check the  password for the account %s",pLogin);
@@ -200,13 +196,11 @@ void password(char *pLine) {
         	notice(pNick,MSG_PASSWD);        
 	    }
     }
-    pthread_mutex_unlock(&account_mutex);
 }
 // #########################################################################
 // Bot comand: !logoff
 // #########################################################################
 void logoff(char *pLine) {
-    extern pthread_mutex_t account_mutex;
     char *pLogin;
     char *pNick;
     char *pNetmask;
@@ -217,7 +211,6 @@ void logoff(char *pLine) {
     pNetmask=getNetmask(pLine);
     pNick=getNickname(pLine);
 
-    pthread_mutex_lock(&account_mutex);
    	if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 	    log_out(pLogin);
 
@@ -228,14 +221,12 @@ void logoff(char *pLine) {
 	        mode(ppChannels[i],"-v",pNick);
     	}
 	}
-    pthread_mutex_unlock(&account_mutex);
     notice(pNick,MSG_LOGOFF);
 }
 // #########################################################################
 // Bot comand: !ident login <password>
 // #########################################################################
 void ident(char *pLine) {
-    extern pthread_mutex_t account_mutex;
     char *pLogin;
     char *pPasswd;
     char *pPos;
@@ -254,7 +245,6 @@ void ident(char *pLine) {
 
     DEBUG("try to identify %s",pNick);
 
-    pthread_mutex_lock(&account_mutex);
     
     if (!exist_db(NICKTOUSER_DB,pNetmask)) {
         pParameter=getParameters(pLine);
@@ -314,7 +304,6 @@ void ident(char *pLine) {
     } else {
         notice(pNick,MSG_ALREADY_LOGON);
     }
-    pthread_mutex_unlock(&account_mutex);
 }
 // #########################################################################
 // Bot comand: !addchannel #channel
@@ -717,7 +706,6 @@ void kickuser(char *pLine) {
 // Bot comand: !usermode [#channel] <login> <mod>
 // #########################################################################
 void usermode(char *pLine){
-    extern pthread_mutex_t account_mutex;
     char *pChannel;
     char *pNick;
     char *pNetmask;
@@ -734,11 +722,9 @@ void usermode(char *pLine){
     pChannel=getAccessChannel(pLine);
     
     if ((accesslogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
-    	pthread_mutex_lock(&account_mutex);
 
 	    // check the channel
     	if (!(exist_db(CHANNEL_DB,pChannel))) {
-	        pthread_mutex_unlock(&account_mutex);
         	notice(pNick,MSG_NOT_CHANNEL);
     	    return;
 	    }
@@ -751,7 +737,6 @@ void usermode(char *pLine){
 
     	// look for the space and separat the login for the user which want modify
 	    if (!(pPos=strchr(pParameter,' '))) {
-    	    pthread_mutex_unlock(&account_mutex);
 	        notice(pNick,MSG_USERMODE_ERR);
         	return;
     	}
@@ -768,11 +753,9 @@ void usermode(char *pLine){
 
     	// check login in the user db
 	    if (!(exist_db(USER_DB,pLogin))) {
-    	    pthread_mutex_unlock(&account_mutex);
 	        notice(pNick,MSG_NOT_ACCOUNT);
         	return;
     	} else if (!strcmp(pLogin,accesslogin)) {
-	        pthread_mutex_unlock(&account_mutex);
         	notice(pNick,MSG_NOT_SELF);
     	    return;
 	    }
@@ -788,7 +771,6 @@ void usermode(char *pLine){
 	        if ((oldmod=get_db(ACCESS_DB,pLogin))) {
 		   	    // only a master  can modify  a other master
     		    if (strchr(oldmod,'m') && !exist_db(ACCESS_DB,accesslogin)) {
-	        	    pthread_mutex_unlock(&account_mutex);
             		notice(pNick,MSG_NOT_MASTER);
 	        	    return;
     		    }
@@ -802,7 +784,6 @@ void usermode(char *pLine){
 	    //check for add or remove  mod
     	if (pPos[0]!='+' && pPos[0]!='-') {
 	        notice(pNick,MSG_USERMODE_ERR);
-        	pthread_mutex_unlock(&account_mutex);
     	    return;
 	    } else {
     	    mod[0]=pPos[0];
@@ -898,7 +879,6 @@ void usermode(char *pLine){
 	       	    }
     	    }
 		}
-		pthread_mutex_unlock(&account_mutex);
 	    notice(pNick,MSG_USERMODE_OK);
 	} 
 }
@@ -997,7 +977,6 @@ void chanmode(char *pLine) {
 // Bot comand: !rmuser <login>
 // #########################################################################
 void rmuser(char *pLine) {
-    extern pthread_mutex_t account_mutex;
     char *pLogin;
     char *pNick;
     char *rmnick;
@@ -1007,7 +986,6 @@ void rmuser(char *pLine) {
     pNick=getNickname(pLine);
     pLogin=getParameters(pLine);
     
-    pthread_mutex_lock(&account_mutex);
 
 
     DEBUG("Remove %s from the user list",pLogin);
@@ -1028,7 +1006,6 @@ void rmuser(char *pLine) {
         }
         notice(pNick,MSG_RMUSER_OK);        
     }
-    pthread_mutex_unlock(&account_mutex);
     notice(pNick,MSG_NOT_ACCOUNT);
 }
 // #########################################################################
