@@ -10,6 +10,13 @@
 #ifndef HANDLES_H
 #define HANDLES_H
 
+/**
+ * This  fiunction is a  helper for the initialization of a channel
+ *
+ * @param pChannel the name  of the channel
+ */
+static void channelInit(char *pChannel);
+
 /**	
 *	This is  the handle  for setting  a new nickname by the user.
 *   The function change the netmask inclusive  the nickname in the login databases.
@@ -35,7 +42,7 @@ void hSetModUser(char *pLine);
  * This is a handle function for MODE
  * This reset the user mod if this  change not from the bot self
  */
-void hResetModUser(char *pLine);
+void hResetModes(char *pLine);
 
 /**
  * This is the handle for rest the topic. he is call by chang the topic
@@ -44,4 +51,15 @@ void hResetModUser(char *pLine);
  * @param pline the  pointer of the  receiving line  from the server
  */
 void hResetTopic(char *pLine);
+
+/**
+ * This is the handler for  initialize of a channel after  become
+ * operator rights. He reade  the information about the channel out the
+ * database and set the  topic and the mode oft the channel.
+ *
+ * @param pLine a pointer  of the receiving line from the server
+ */
+void hInitAfterOp(char *pLine);
+
+
 #endif

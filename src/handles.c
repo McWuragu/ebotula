@@ -20,6 +20,7 @@
 #include "dbaccess.h"
 #include "messages.h"
 #include "irc.h"
+#include "type.h"
 #include "handles.h"
 
 
@@ -61,7 +62,7 @@ void hBotNeedOp(char *pLine){
 	char *pPos;
 	char *pSearchStr;
 
-	pChannel=getChannel(pLine);
+	pChannel=getAccessChannel(pLine);
 	
 	// extrakt Namelist
 	pPos=strchr(&pLine[1],':');
@@ -74,7 +75,10 @@ void hBotNeedOp(char *pLine){
 	DEBUG("Look for OP right for %s",pSearchStr);
 	if (!strstr(pNickList,pSearchStr)) {
 		privmsg(pChannel,MSG_NEED_OP);
+	} else {
+		channelInit(pChannel);
 	}
+
 
 	free(pSearchStr);
 	free(pNickList);
@@ -124,15 +128,17 @@ void hSetModUser(char *pLine) {
 // Event handler: MODE 
 // Action: reset the mod  for the user if this chang not by bot self
 // ######################################################################### 
-void hResetModUser(char *pLine) {
+void hResetModes(char *pLine) {
 	extern ConfType sSetup;
 	char *pPos;
 	char *pChannel;
-	char pMod[3];
+	char *pMod;
 	char *pNick;
 
-	if (strcmp(getNickname(pLine),sSetup.botname)) {
-		DEBUG("Reset the Mod");
+	pChannel=getAccessChannel(pLine);
+
+	if (!strstr(pLine,sSetup.botname)) {
+		DEBUG("Reset the Modes");
 		
 		// set pPos of the position of changed mode
 		pPos=strstr(pLine,"MODE");
@@ -141,24 +147,10 @@ void hResetModUser(char *pLine) {
 		pPos=strchr(pPos,' ');
 		pPos++;
 
-		pChannel=getAccessChannel(pLine);
-		if (pPos[1]=='o' || pPos[1]=='v') {
-			// build the replacing mod string
-			pMod[0]=(pPos[0]=='+')?'-':'+';
-			pMod[1]=pPos[1];
-			pMod[3]='\0';
+		pPos[0]=(pPos[0]=='+')?'-':'+';
 
-			// set the pointer of  the nick name
-			pNick=strchr(pPos,' ');
-			pNick++;
-			strtok(pNick," ");
-			
-			// remove
-			if (strcmp(pNick,sSetup.botname)) {
-				mode(pChannel,pMod,pNick);
-			}
-		}
-
+		// reset
+		mode(pChannel,pPos,NULL);
 		free(pChannel);
 	}
 }
@@ -175,9 +167,11 @@ void hResetTopic(char *pLine){
 	if (strcmp(getNickname(pLine),sSetup.botname)) {
 		
 		// get the  right topic for this channel
-		pChannel=getChannel(pLine);
+		pChannel=getAccessChannel(pLine);
+		
+		
 		pChannelSet=get_db(CHANNEL_DB,pChannel);
-		if ((pTopic=getTopic(pChannelSet))) {
+        if ((pTopic=getTopic(pChannelSet))) {
 			// reset the topic
 			topic(pChannel,pTopic);
 			free(pTopic);
@@ -187,5 +181,42 @@ void hResetTopic(char *pLine){
 		
 		free(pChannel);
 		free(pChannelSet);
+	}
+}
+// ######################################################################### 
+// Event handler: MODE 
+// Action: initialize the channel after  become operator access
+// #########################################################################
+void hInitAfterOp(char *pLine) {
+	char *pChannel;
+
+	pChannel=getAccessChannel(pLine);
+
+	channelInit(pChannel);
+
+	privmsg(pChannel,MSG_INIT_CHANNEL);
+}
+
+// #########################################################################
+// Event helper: Channel intializalisation
+// #########################################################################
+static void channelInit(char *pChannel) {
+	ChannelDataType *pChannelData;
+	char *pMode;
+		
+	// check of  existenz of the channel
+	if (exist_db(CHANNEL_DB,pChannel)) {
+		
+		pChannelData=StrToChannelData(get_db(CHANNEL_DB,pChannel));
+
+		// set Topic
+		if (pChannelData->pTopic) {
+			topic(pChannel,pChannelData->pTopic);
+		}
+		
+		// set Modes		   
+		if ((pMode=ChannelModeToStr(pChannelData->pModes))) {
+			mode(pChannel,pMode,NULL);
+		}
 	}
 }
