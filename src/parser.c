@@ -42,10 +42,16 @@ MsgBuf_t* preParser(char *pLine) {
     // get the first part of the  answer from server
     pPreamble=getCommand(pLine);
 
+    // look for  command position
     if (!(pPos=strchr(pPreamble,' '))){
         return pMsg;
+    } else {
+        //set the pointr to the comaman start
+        pPos++;
     }
+
     // preparse the line
+    
     // identify events and commands
 
     if (!strncmp(pPreamble,CmdList[CMD_ONPING],strlen(CmdList[CMD_ONPING]))) {
@@ -56,61 +62,60 @@ MsgBuf_t* preParser(char *pLine) {
          *
          * pMsg->identify=CMD_ONPING;
          */
-		if ((pStr=strstr(pPreamble," "))==NULL)
-		{
+		if (!(pStr=strstr(pPreamble," "))) {		
 			pong(NULL);
-		}else
-		{
+		}else {		
 			pStr++; /* get next symbol */
-        	pong(pStr);
+			pong(pStr);
 		}
-    } else if (strstr(pPos,CmdList[CMD_ONQUIT])) {
+	} else if (!strncmp(pPos,CmdList[CMD_ONQUIT],strlen(CmdList[CMD_ONQUIT]))) {
         pMsg->identify=CMD_ONQUIT;
-    } else if (strstr(pPos,CmdList[CMD_ONJOIN])) {
+    } else if (!strncmp(pPos,CmdList[CMD_ONJOIN],strlen(CmdList[CMD_ONJOIN]))) {
         pMsg->identify=CMD_ONJOIN;
-    } else if (strstr(pPos,CmdList[CMD_ONNICKCHG])) {
+    } else if (!strncmp(pPos,CmdList[CMD_ONNICKCHG],strlen(CmdList[CMD_ONNICKCHG]))) {
         pMsg->identify= CMD_ONNICKCHG;
-    } else if (strstr(pPos,CmdList[CMD_ONMODE])) {
+    } else if (!strncmp(pPos,CmdList[CMD_ONMODE],strlen(CmdList[CMD_ONMODE]))) {
         pMsg->identify= CMD_ONMODE;
-    } else if (strstr(pPos,CmdList[CMD_ONKICK])) {
+    } else if (!strncmp(pPos,CmdList[CMD_ONKICK],strlen(CmdList[CMD_ONKICK]))) {
         pMsg->identify= CMD_ONKICK;
-    } else if (strstr(pPos,CmdList[CMD_ONTOPIC])) {
+    } else if (!strncmp(pPos,CmdList[CMD_ONTOPIC],strlen(CmdList[CMD_ONTOPIC]))) {
         pMsg->identify= CMD_ONTOPIC;
-    } else if (strstr(pPos,CmdList[CMD_ONNAMES])) {
+    } else if (!strncmp(pPos,CmdList[CMD_ONNAMES],strlen(CmdList[CMD_ONNAMES]))) {
         pMsg->identify=CMD_ONNAMES;
-    } else if (strstr(pPos,CmdList[CMD_ONWHOIS])) {
+    } else if (!strncmp(pPos,CmdList[CMD_ONWHOIS],strlen(CmdList[CMD_ONWHOIS]))) {
         pMsg->identify=CMD_ONWHOIS;
-    } else if ((pStr=strstr(pLine," :!"))!=NULL) {
-
-        if (strlen(pStr)>=3) {
-            pStr+=3;
-            // command parser
-            for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
-                if (!strncmp(pStr,CmdList[i],strlen(CmdList[i]))){
-                    pMsg->identify=i;
-                    DEBUG("Found Command %s\n",CmdList[i]);
-                    i=CMDCOUNT;
+    } else if (!strncmp(pPos,CmdList[CMD_ONPRIVMSG],strlen(CmdList[CMD_ONPRIVMSG])) ||
+               !strncmp(pPos,CmdList[CMD_ONNOTICE],strlen(CmdList[CMD_ONNOTICE]))) {
+        if ((pStr=strstr(pLine," :!"))!=NULL) {
+            /* bot command parser */
+            if (strlen(pStr)>=3) {
+                pStr+=3;
+                
+                for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
+                    if (!strncmp(pStr,CmdList[i],strlen(CmdList[i]))){
+                        pMsg->identify=i;
+                        DEBUG("Found Command %s\n",CmdList[i]);
+                        i=CMDCOUNT;
+                    }
+                }
+            }
+        } else if ((pStr=strstr(pLine," :\001"))!=NULL) {
+            /* ctcp command parser */
+            if (strlen(pStr)>=3) {
+                pStr+=2;
+                // command parser
+               if (!strncmp(pStr,CmdList[CMD_CTCPPING],strlen(CmdList[CMD_CTCPPING]))){
+                         pMsg->identify=CMD_CTCPPING;
+                     DEBUG("Found Command %s\n",CmdList[CMD_CTCPPING]);
+                } else if (!strncmp(pStr,CmdList[CMD_CTCPVERSION],strlen(CmdList[CMD_CTCPVERSION]))){
+                         pMsg->identify=CMD_CTCPVERSION;
+                     DEBUG("Found Command %s\n",CmdList[CMD_CTCPVERSION]);
+                } else if (!strncmp(pStr,CmdList[CMD_CTCPTIME],strlen(CmdList[CMD_CTCPTIME]))){
+                            pMsg->identify=CMD_CTCPTIME;
+                    DEBUG("Found Command %s\n",CmdList[CMD_CTCPTIME]);
                 }
             }
         }
-    } else if ((pStr=strstr(pLine," :\001"))!=NULL) {
-	/* ctcp commands */
-	if (strlen(pStr)>=3) {
-            pStr+=2;
-     // command parser
-	        if (!strncmp(pStr,CmdList[CMD_CTCPPING],strlen(CmdList[CMD_CTCPPING]))){
-        	     pMsg->identify=CMD_CTCPPING;
-		     DEBUG("Found Command %s\n",CmdList[CMD_CTCPPING]);
-		}
-	        if (!strncmp(pStr,CmdList[CMD_CTCPVERSION],strlen(CmdList[CMD_CTCPVERSION]))){
-	             pMsg->identify=CMD_CTCPVERSION;
-		     DEBUG("Found Command %s\n",CmdList[CMD_CTCPVERSION]);
-		}
-        	if (!strncmp(pStr,CmdList[CMD_CTCPTIME],strlen(CmdList[CMD_CTCPTIME]))){
-	                pMsg->identify=CMD_CTCPTIME;
-			DEBUG("Found Command %s\n",CmdList[CMD_CTCPTIME]);
-		}
-	}
     }
 	
 	pMsg->pMsgLine=(char*)malloc((strlen(pLine)+1)*sizeof(char));
