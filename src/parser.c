@@ -16,7 +16,7 @@
 #include <pthread.h>
 #include <syslog.h>
 
-#include "config.h"
+#include "ircbot.h"
 #include "extract.h"
 #include "irc.h"
 #include "dbaccess.h"
