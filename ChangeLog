@@ -6,6 +6,7 @@ ebotula-0.1.18
 - renamed the command line parameter -D to -V
 - changed the domain of the command line parameter -V
 - reimplementation of the configuration file loader
+- removed the copyright item from the version string
 
 ebotula-0.1.17
 --------------------
