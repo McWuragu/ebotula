@@ -11,7 +11,7 @@
 #ifndef IRCBOT_H
 #define IRCBOT_H
 
-#define VERSIONSTR 	"%s v%s Built [%s - %s] (C) 2003-2004 Steffen Laube",PACKAGE,PACKAGE_VERSION,__DATE__,__TIME__
+#define VERSIONSTR 	"%s v%s Built [%s - %s] (C) 2003-2005 Steffen Laube",PACKAGE,PACKAGE_VERSION,__DATE__,__TIME__
 
 #define DEFAULT_USER_DATABASEDIR        "/db"
 #define DEFAULT_USER_CONFDIR            "/.ebotula"
