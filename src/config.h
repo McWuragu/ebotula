@@ -11,7 +11,11 @@
 
 #define MAX_NICKS				3
 #define MAX_THREADS_LIMIT       25
-#define NOT_ALLOW_CHAR 			" :;<>*#/\"\'"
+#define NOT_ALLOW_CHAR 			" :;<>*#/\"\'\\{}[]()=?§$"
+
+
+#define USER_ALLOW_CHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-[]\\`^{}~"
+#define CHANNEL_NOT_ALLOW_CHAR	" \a\r\n,"
 		
 typedef struct CONFIG_STRUCT {
 	char *botname;
