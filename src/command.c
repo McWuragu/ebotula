@@ -987,8 +987,9 @@ void rmuser(char *pLine) {
 
     pNick=getNickname(pLine);
     pLogin=getParameters(pLine);
+
+	StrToLower(pLogin);
     
-    DEBUG("Remove %s from the user list",pLogin);
     // extract the first parameter
     strtok(pLogin," ");
 
@@ -1006,6 +1007,7 @@ void rmuser(char *pLine) {
             }
         }
         notice(pNick,MSG_RMUSER_OK);        
+    	DEBUG("Remove %s from the user list",pLogin);
     } else {
     	notice(pNick,MSG_NOT_ACCOUNT);
     }
