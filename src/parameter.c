@@ -281,11 +281,15 @@ void ComandLineParser(int argc,char *const argv[]) {
             i++;
             break;
         default:
-            printf("%s\n",argv[i]);
+                printf("%s ",argv[i]);
                 printMsg(getCmdLineError());
                 exit(-1);
                 break;
             }
+        } else {
+                printf("%s ",argv[i]);
+                printMsg(getCmdLineError());
+                exit(-1);
         }
     }
 }
