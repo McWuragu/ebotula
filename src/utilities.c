@@ -309,7 +309,7 @@ int logger(int priority, char *format, ...)
 #else
     clock_gettime(CLOCK_REALTIME,&stamp);
     td=localtime(&stamp.tv_sec);
-    fprintf(stderr,"%02d:%02d:%02d.%03d %s\n",td->tm_hour,td->tm_min,td->tm_sec,(stamp.tv_nsec/1000000),buf); 
+    fprintf(stderr,"%02d:%02d:%02d.%03d %s\n",(int)td->tm_hour,(int)td->tm_min,(int)td->tm_sec,(int)(stamp.tv_nsec/1000000),buf); 
 #endif
 	/**/
 	va_end(az);

@@ -31,8 +31,8 @@
 
 
 void preParser(char *pLine,MsgBuf_t *pMsg) {
-    char *pStr,*pPreamble,*pPos;
-    int i;
+    char *pStr=NULL,*pPreamble=NULL,*pPos=NULL;
+    int i=0;
 
     /* reset the buffer */
     pMsg->identify=CMD_NONE;

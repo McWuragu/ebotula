@@ -68,7 +68,7 @@ char *getNetmask(char const *pLine){
 }
 /* ############################################################################# */
 char *getCommand(char const *pLine) {
-	char *pStr=NULL,*pTmp;
+	char *pStr=NULL,*pTmp=NULL;
 
     if (!pLine) {return "";}
 
@@ -312,7 +312,7 @@ char *getFirstPart(char const *pLine,char **pRest) {
     char *pPos;
 
     if (!pLine) {
-        if  (pRest){*pRest=pLine;};
+        if  (pRest!=NULL){*pRest=(char*)pLine;};
         return NULL;
     }
     

@@ -323,4 +323,5 @@ void * JoinAllChannelsThread(void * args) {
 		free(pChannel);
 	}
 	deleteQueue(pChannelQueue);
+	return NULL;
 }

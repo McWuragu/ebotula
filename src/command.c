@@ -1100,12 +1100,12 @@ void chanmode(MsgItem_t *pMsg) {
     } else {
         /* read the old channel parameters */
         
-        if (pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel)) {
+        if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))!=NULL) {
             StrToChannelData(pChannelSet,&sChannelData);
     
     	    /* read the new channel parameters */
     	    StrToChannelMode(pParameters,&sNewMode);
-        	logger(LOG_DEBUG,_("Found the new channel modes \"%s\" for the channel %s.",ChannelModeToStr(&sNewMode)),pMsg->pAccessChannel);
+        	logger(LOG_DEBUG,_("Found the new channel modes \"%s\" for the channel %s."),ChannelModeToStr(&sNewMode),pMsg->pAccessChannel);
     
         	/* build the new channel parameters */
     	    for (i=1;i<MAX_MODES;i++) {
@@ -1303,7 +1303,7 @@ void accountlist(MsgItem_t *pMsg){
                 SetIterToFirstQueue(pChannelQueue);
                 bIsOther=true;
 
-                while (pChannel=getNextitrQueue(pChannelQueue)) {
+                while ((pChannel=getNextitrQueue(pChannelQueue))!=NULL) {
                     iChanLen=pChannel->t_size;
     
 

@@ -68,6 +68,7 @@ void *TimingThread(void *argv){
         msleep(100);
     }
     logger(LOG_DEBUG,_("The timing thread is stopped"));
+    return NULL;
 }
 
 /*####################################################################### */
