@@ -11,7 +11,6 @@
 #define QUEUE_NULL_POINTER_AS_IN_PARAMETER	4
 
 /** types **/
-typedef enum {False=0,True=1} BOOL;
 /** Setting QueueType **/
 /** Sentinel ist the beginning and the and of the queue **/
 typedef enum {QUEUENONE=0,QUEUESENTINEL=1} QueueType;

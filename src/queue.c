@@ -6,6 +6,7 @@
 
 #include "queue.h"
 #include "utilities.h"
+#include "type.h"
 
 /**							**
  ** Function: 		initQueue			**
@@ -163,9 +164,9 @@ int isemptyQueue(PQueue *pqueueIn)
 	if ((*pqueueIn)->longCount==0)
 	{
 		/** SHOULD be empty **/
-		return True;
+		return true;
 	}
-	return False;
+	return false;
 }
 /**							**
  ** Function:		isfullQueue			**
