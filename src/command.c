@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <pthread.h>
+#include <time.h>
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -1371,3 +1372,46 @@ void inviteuser(MsgItem_t *pMsg){
     // invite
     invite(pMsg->pAccessChannel,pInviteNick);
 }
+/* #########################################################################
+   Bot comand: \001PING <ID>\001
+   ######################################################################### */
+void ctcpping(MsgItem_t *pMsg) {
+    char *pPing;
+    char *pPong;
+   if ((pPing=strstr(pMsg->pRawLine," :\001"))==NULL) {
+ 	/* ignoring errors */
+        return;
+    }    
+   pPing+=2;
+   sprintf(pPong,"%s\r\n",pPing);
+   printf("%s\n",pPing);
+    notice(pMsg->pCallingNick,pPong);
+}
+/* #########################################################################
+   Bot comand: \001VERSION\001
+   ######################################################################### */
+void ctcpversion(MsgItem_t *pMsg) {
+    char pMsgStr[256];
+    /* creat Versions String */
+    sprintf(pMsgStr,VERSIONSTR);
+    strcat(pMsgStr,"\r\n");
+    notice(pMsg->pCallingNick,pMsgStr);
+    return;
+}
+/* #########################################################################
+   Bot comand: \001TIME\001
+   ######################################################################### */
+void ctcptime(MsgItem_t *pMsg) {
+	char pMsgStr[64];
+	time_t t;
+	struct tm *pTm;
+	time(&t);
+	/* UTC-TIME */
+	/* pTm=gmtime(&t);*/
+	/* localtime */
+	pTm=localtime(&t);
+	strftime(pMsgStr,63,"\001TIME %a %b %d %H:%M:%S\001\r\n",pTm);
+	notice(pMsg->pCallingNick,pMsgStr);
+	return;
+}
+
