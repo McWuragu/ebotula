@@ -50,6 +50,7 @@
 	#define ERR_ALT_RANGE			"Die Accountlebenserwartung ist ungültig"
 	#define ERR_PINGTIMEOUT_RANGE		"Die Pingtimeoutzeit ist ungültig"
 	#define ERR_SENDDELAY_RANGE     	"Die Sendeverzögerung ist ungültig"
+    #define ERR_SENDLINE_RANGE      "Das Limit für das Senden mit der 1. Verzögerung ist ungültig"
 	#define ERR_LOGOFF_RANGE		"Die Auslogzeit ist ungültig"
 	#define ERR_THREAD_RANGE		"Das Threadlimit liegt ausserhalb des Bereiches"
 	#define ERR_NICK			"Kann Nicknamen nicht setzen"
