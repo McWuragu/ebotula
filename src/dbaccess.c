@@ -274,7 +274,6 @@ char * get_db(int db,char *_key){
 	    if (value.dptr) {
     		str=(char *)malloc(value.dsize*sizeof(char));
 	    	strcpy(str,value.dptr);
-    
     		free(value.dptr);
 	    }
     	return str;
