@@ -192,6 +192,9 @@ void *ComandExecutionThread(void *argv) {
                 case CMD_ONWHOIS:
                     hCallback(pMsg->pMsgLine);
                     break;
+                case CMD_ONNONICK:
+                    hWhoisFailed(pMsg->pMsgLine);
+                    break;
                 case CMD_ONNAMES:
                     hBotNeedOp(pMsg->pMsgLine);
                     break;

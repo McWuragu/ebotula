@@ -388,7 +388,43 @@ void hCallback(char *pLine) {
             destroyCallbackItem(CB_Data);
 
             free(pNetmask);
+        }                                          
+    }
+    free(pNick);
+}
+
+// #########################################################################
+// Event handler: 401
+// Action: handle a whois failed
+// #########################################################################
+void hWhoisFailed(char *pLine) {
+    extern CallbackDList CallbackList;
+    CallbackItem_t *CB_Data;
+    CallbackDListItem *pCallbackItem;
+    CallbackDListItem *pCallbackItemReturn;
+    char *pNetmask;
+    char **ppLinePart;
+    char *pNick;
+
+    ppLinePart=splitString(pLine,7);
+
+    /* identify nick name only small charakter */
+    pNick=(char*)malloc((strlen(ppLinePart[3])+1)*sizeof(char*));
+    strcpy(pNick,ppLinePart[3]);
+    StrToLower(pNick);
+
+   /** lock for the Callback item for the nick **/
+    if ((pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,pNick))) {
+        /* 
+         * remove  entrie and read the  callback datum
+         * if  this item not more in the  queue then look for  the next
+         */
+        if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
+            /* destroy  callback item */
+            destroyCallbackItem(CB_Data);
+            DEBUG("Callback zombie removed\n");
         }
     }
     free(pNick);
 }
+

@@ -201,9 +201,11 @@ void logoff(MsgItem_t *pMsg,int nRemoveMode) {
 	/* check login status */
    	if ((pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
 	    log_out(pLogin);
+
    
 		/* only by manuel logoff then remove  the modes */
-		if (nRemoveMode) {	
+		if (nRemoveMode) { 
+            
 			/* get channel list */
 			pChannelQueue=list_db(CHANNEL_DB);
 			nLength=strlen(pLogin);
@@ -216,10 +218,10 @@ void logoff(MsgItem_t *pMsg,int nRemoveMode) {
 				/* look for the  access rights and  remove this */
 				if ((pMode=get_db(ACCESS_DB,pKey))){
 					pMode[0]='-';
-					mode(pChannel->data,pMode,pLogin);	
+					mode(pChannel->data,pMode,pMsg->pCallingNick);	
 					free(pMode);
 				} else if (pMsg->UserLevel==MasterLevel){
-                    mode(pChannel->data,"-o",pLogin);
+                    mode(pChannel->data,"-o",pMsg->pCallingNick);
                 }
 				free(pKey);
 				free(pChannel->data);

@@ -76,4 +76,7 @@ void hInitAfterOp(char *pLine);
  */
 void hCallback(char *pLine);
 
+
+void hWhoisFailed(char *pLine);
+
 #endif
