@@ -4,9 +4,9 @@ DATABASEPATH=./
 CONFDIR=./
 
 SRC_DIR=./
-MAKEFLAGS+= -j2
+#MAKEFLAGS+= -j2
 CC=gcc
-CFLAGS=	-Wall -D_DEBUG -g -DVERSION=\"$(VERSION)\" \
+CFLAGS=	-Wall -g -D_DEBUG -DVERSION=\"$(VERSION)\" \
 	-DDATABASEPATH=\"$(DATABASEPATH)\" \
 	-DCONFDIR=\"$(CONFDIR)\" 
 LDFLAGS= -lpthread -lgdbm -lcrypt
