@@ -140,8 +140,7 @@ int main(int argc,char * const argv[]) {
         if (argv[i][0]==PARAMETER_CHAR) {
             switch (argv[i][1]) {
             case 'f':
-		    i++;
-                if (argv[i]!=NULL)
+                if (argv[++i]!=NULL)
 		{
 			free(sSetup.configfile);
 			sSetup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
