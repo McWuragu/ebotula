@@ -1430,7 +1430,7 @@ void ctcpversion(MsgItem_t *pMsg) {
     uname(&env);
     /* creat Versions String */
     /* sprintf(pVerStr,VERSIONSTR); */
-    sprintf(pMsgStr,"\001VERSION %s:v%s:%s %s %s\001",PACKAGE,VERSION,env.sysname,env.release,env.machine);
+    sprintf(pMsgStr,"\001VERSION %s:v%s:%s %s %s\001",PACKAGE,PACKAGE_VERSION,env.sysname,env.release,env.machine);
     notice(pMsg->pCallingNick,pMsgStr);
     return;
 }
