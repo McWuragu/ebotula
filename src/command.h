@@ -119,7 +119,7 @@ static char * const CmdList[]= {
     /* channel owner commands */
     "chanmode","accountlist","accountmode","say","kick","topic","greeting","ban","deban",
     /* master commands */
-    "restart","allsay","rmuser","nick","die","chanlist","rmchannel","addchannel","join","part"
+    "restart","allsay","rmaccount","nick","die","chanlist","rmchannel","addchannel","join","part"
 };
 
 /** This is the structure for the entries in the message queue */
@@ -178,7 +178,7 @@ void debanuser(MsgItem_t *pMsg);
 void kickuser(MsgItem_t *pMsg);
 void accountmode(MsgItem_t *pMsg);
 void chanmode(MsgItem_t *pMsg);
-void rmuser(MsgItem_t *pMsg);
+void rmaccount(MsgItem_t *pMsg);
 void accountlist(MsgItem_t *pMsg);
 void inviteuser(MsgItem_t *pMsg);
 /* CTCP command functions */

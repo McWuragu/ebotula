@@ -261,7 +261,7 @@ void *CommandExecutionThread(void *argv) {
                     accountmode(&sMsgItem);
                     break;
                 case CMD_RMUSER:
-                    rmuser(&sMsgItem);
+                    rmaccount(&sMsgItem);
                     break;
                 case CMD_ACCOUNTLIST:
                     accountlist(&sMsgItem);

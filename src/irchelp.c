@@ -212,7 +212,7 @@ static IrcHelp_t   sIrcHelp[CMD_COUNT]={
             NULL
         },
         "removes a user account of the bot",
-        "!rmuser [Login]"
+        "!rmaccount [Login]"
     },{
         CMD_NICK,
         {

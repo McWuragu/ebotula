@@ -1194,9 +1194,9 @@ void chanmode(MsgItem_t *pMsg) {
     }
 }
 /* #########################################################################
-   Bot comand: !rmuser <login>
+   Bot comand: !rmaccount <login>
    ######################################################################### */
-void rmuser(MsgItem_t *pMsg) {
+void rmaccount(MsgItem_t *pMsg) {
     char *pLogin;
     char *pNetmask;
     char *rmnick;
