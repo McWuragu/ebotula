@@ -51,7 +51,7 @@ void user(void) {
     sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.server,sSetup.realname);
 
     // send commando
-    send_direct(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -77,7 +77,7 @@ void privmsg(char *pTarget, char *pMsgStr){
     }	   
 
     sprintf(buffer,"PRIVMSG %s :%s\r\n",pTarget,pMsgStr);
-    send_line(buffer);
+    SendLine(buffer);
     free(buffer);
 }
 // #############################################################################
@@ -90,7 +90,7 @@ void notice(char * pNick,char *pMsgStr) {
     }	   
 
     sprintf(buffer,"NOTICE %s :%s\r\n",pNick,pMsgStr);
-    send_line(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -103,7 +103,7 @@ void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr){
 }
 // #############################################################################
 //void quit(void) {
-//    send_direct("QUIT\r\n");
+//    SendLine("QUIT\r\n");
 //}
 // #############################################################################
 void join(char *pChannel) {
@@ -115,7 +115,7 @@ void join(char *pChannel) {
     }	   
 
     sprintf(buffer,"JOIN %s\r\n",pChannel);
-    send_line(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -128,7 +128,7 @@ void part(char *pChannel) {
     }	   
 
     sprintf(buffer,"PART %s\r\n",pChannel);
-    send_direct(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -157,7 +157,7 @@ void pong(char *pPong) {
 
 	    sprintf(buffer,"PONG %s\r\n",pPong);
 	}
-    send_direct(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -170,7 +170,7 @@ void ping(char *pTarget) {
     }	   
 
     sprintf(buffer,"PING %s\r\n",pTarget);
-    send_direct(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -183,7 +183,7 @@ void invite(char *pChannel,char *pNick) {
     }	   
 
     sprintf(buffer,"INVITE %s %s\r\n",pNick,pChannel);
-    send_line(buffer);
+    SendLine(buffer);
     free(buffer);
 }
 // #############################################################################
@@ -196,7 +196,7 @@ void nick(char *pNick) {
     }	   
 
     sprintf(buffer,"NICK %s\r\n",pNick);
-    send_direct(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -209,7 +209,7 @@ void topic(char *pChannel, char* pMsgStr) {
     }	   
 
     sprintf(buffer,"TOPIC %s :%s\r\n",pChannel,pMsgStr);
-    send_line(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -227,7 +227,7 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
     }	   
 
     sprintf(buffer,"KICK %s %s :%s\r\n",pChannel,pNick,pMsgStr);
-    send_direct(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -240,7 +240,7 @@ void ban(char *pChannel,char *pMask){
     }	   
 
     sprintf(buffer,"MODE %s +b %s\r\n",pChannel,pMask);
-    send_direct(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -253,7 +253,7 @@ void deban(char *pChannel,char *pMask){
     }	   
 
     sprintf(buffer,"MODE %s -b %s\r\n",pChannel,pMask);
-    send_direct(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -271,7 +271,7 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
     }	   
 
     sprintf(buffer,"MODE %s %s %s\r\n",pChannel,pMod,pModParameter);
-    send_line(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -284,7 +284,7 @@ void whois(char *pNickname) {
     }	   
 
     sprintf(buffer,"WHOIS %s\r\n",pNickname);
-    send_direct(buffer);
+    SendLine(buffer);
     free (buffer);
 }
 

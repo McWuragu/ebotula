@@ -11,7 +11,7 @@
 #ifndef IRC_H
 #define IRC_H
 
-#define  quit()  send_direct("QUIT\r\n");
+#define  quit()  SendLine("QUIT\r\n");
 
 #include "type.h"
 

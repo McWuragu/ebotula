@@ -44,7 +44,8 @@ ConfigSetup_t sSetup;    // global config structure
 volatile boolean stop;       // singal for stop the endless loop
 boolean again;
 
-pthread_mutex_t account_mutex;      // mutex for synchronize the access of the login db 
+pthread_mutex_t mutexAccount;      // mutex for synchronize the access of the login db 
+pthread_mutex_t mutexSend;
 
 
 CallbackDList CallbackList;
@@ -56,7 +57,6 @@ int main(int argc,char * const argv[]) {
     char buffer[RECV_BUFFER_SIZE],*pStrPos,*pCurrLine,*pCurrString,*pCurrStringPos,*pUnparsed;
     pthread_t *threads;
     pthread_t timeThread;
-    pthread_t sendThread;
     MsgBuf_t *pMsg;
     QueueData Command;	
     PQueue pCommandQueue;
@@ -285,7 +285,8 @@ int main(int argc,char * const argv[]) {
     daemon(true,true);
     #endif
    
-	pthread_mutex_init(&account_mutex,NULL);
+	pthread_mutex_init(&mutexAccount,NULL);
+    pthread_mutex_init(&mutexSend,NULL);
 	 
 	// init the command queue
 	pCommandQueue=initQueue();
@@ -298,7 +299,6 @@ int main(int argc,char * const argv[]) {
 
 	// create the threads
     pthread_create(&timeThread,NULL,TimingThread,NULL);
-    pthread_create(&sendThread,NULL,SendingThread,NULL);
 
     threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
     for (i=0;i<sSetup.thread_limit;i++) {
@@ -315,7 +315,7 @@ int main(int argc,char * const argv[]) {
     while (!stop) {
         
         // read line from tcp stack
-        recv_line(buffer,RECV_BUFFER_SIZE);
+        RecvLine(buffer,RECV_BUFFER_SIZE);
 
         // added the new string to the  unparsed string
         pCurrStringPos=(char*)malloc((strlen(buffer)+strlen(pUnparsed)+1)*sizeof(char));
@@ -374,7 +374,6 @@ int main(int argc,char * const argv[]) {
     syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));
     pthread_join(timeThread,NULL);
     
-    pthread_join(sendThread,NULL);
 
     // wait of  terminat all threads
     for (i=0;i<sSetup.thread_limit;i++) { 
@@ -383,7 +382,8 @@ int main(int argc,char * const argv[]) {
 
 
     // destroy the mutex
-    pthread_mutex_destroy(&account_mutex);
+    pthread_mutex_destroy(&mutexAccount);
+    pthread_mutex_destroy(&mutexSend);
 
     // clear the wait queue and  callback list
 	deleteQueue(pCommandQueue);
