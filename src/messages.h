@@ -20,6 +20,9 @@
 #define ERR_PORT_PARAMETER		"The portvalue is out of range."
 #define ERR_WRONG_SERVERNAME	"The servername is irregular."
 #define ERR_WRONG_BOTNAME		"The botname is irregular."
+#define ERR_ALT_RANGE			"The account live time is invalid."
+#define ERR_SENDDELAY_RANGE     "The send delay time is invalid."
+#define ERR_LOGOFF_RANGE		"The auto log off time is invalid."
 #define ERR_THREAD_RANGE		"The threadlimit is out of range."
 #define ERR_READ_CONFIG_FILE	"Can't read the config file."
 #define ERR_READ_PARAMETER		"Can't parse the commando line."
@@ -48,38 +51,51 @@
 #define MSG_ADDCHANNEL_OK		"The channel is added to the channel list"
 #define MSG_NICK_SET			"The bot tries to set the new nickname."
 #define MSG_LOGOFF				"You're now logged off."
-
+#define MSG_SET_GREATING		"The new greating is set"
+#define MSG_RM_GREATING			"The greating is removed"
+#define MSG_SET_TOPIC			"The new topic is set"
+#define MSG_RM_TOPIC			"The topic is removed"
+#define MSG_KICK_OK				"The user are kicked by the bot"
+#define MSG_USERMODE_OK			"The user mods are changed"
 
 // Informations for invalid input or using of the bot
-#define MSG_NICK_EXIST			"A account with this nickname already exists."
-#define MSG_ALREADY_LOGON		"You're already identified."
 #define MSG_NOT_LOGON			"You're not identified."
 #define MSG_NOT_MASTER			"You're not a irc bot master."
-#define MSG_NOT_OWNER			"You're not the bot owner of thiis channel."
+#define MSG_NOT_OWNER			"You're not the bot owner of this channel."
 #define MSG_NOT_CHANNELOPT		"This command need a channel name."
 #define MSG_NOT_PASS			"You've set a empty password."
 #define MSG_NOT_COMMAND			"No help found for this command."
 #define MSG_NOT_ACCOUNT			"Account isn't found."
 #define MSG_NOT_CHANNEL			"This channel isn't in the channel list."
 
+// Errors
 #define MSG_ADDCHANNEL_ALREADY	"This channel is already in the channel list."
 #define MSG_CHANNEL_INVALID		"Channel name is invalid."
 #define MSG_NICK_INVALID		"Nickname is invalid."
+#define MSG_NICK_EXIST			"A account with this nickname already exists."
+#define MSG_ALREADY_LOGON		"You're already identified."
+#define MSG_NEED_OP				"I need operator access rights."
+#define MSG_UNKNOWN_MODS		"This mods are invalid."
 
+// other informations
 #define MSG_HELP_END			"End of help."
 #define MSG_HELP_FOR			"Help for"
 #define MSG_CHANNELS			"Channel list:"
-#define MSG_NEED_OP				"I need operator access rights."
-#define MSG_SET_GREATING		"The new greating is set"
-#define MSG_RM_GREATING			"The greating is removed"
 
 
 // command  format erros
-#define MSG_ADDCHANNEL_ERR		"Invalid command: !addchannel #CHANNEL"
-#define MSG_RMCHANNEL_ERR		"Invalid command: !rmchannel #CHANNEL"
-#define MSG_IDENT_ERR			"Invalid command: !ident LOGIN PASSWORD"
-#define MSG_NICK_ERR			"Invalid command: !nick NICKNAME"			
-#define MSG_GREATING_ERR		"Invalid command: !greating <#channel> MESSAGE"			
+#define MSG_ADDCHANNEL_ERR		"Invalid command: !addchannel <#channel>"
+#define MSG_RMCHANNEL_ERR		"Invalid command: !rmchannel [#channel]"
+#define MSG_JOIN_ERR			"Invalid command: !join <#channel>"
+#define MSG_PART_ERR			"Invalid command: !part [#channel]"
+#define MSG_IDENT_ERR			"Invalid command: !ident <login password>"
+#define MSG_NICK_ERR			"Invalid command: !nick <nickname>"			
+#define MSG_GREATING_ERR		"Invalid command: !greating [#channel] <message>"			
+#define MSG_TOPIC_ERR			"Invalid command: !topic [#channel] <topic>"			
+#define MSG_SAY_ERR			    "Invalid command: !say [#channel] <message>"			
+#define MSG_VIEWGREAT_ERR	    "Invalid command: !viewgreat [#channel]"			
+#define MSG_KICK_ERR			"Invalid command: !kick [#channel] <nickname> [reason]"
+#define MSG_USERMODE_ERR		"Invalid command: !usermode [#channel] <login> <+/-><mods>"
 
 // Messages for the master dialog
 #define MSG_MASTER_TITLE		"Create a master account\n\n"
@@ -89,7 +105,7 @@
 #define MSG_MASTER_PASS_ERR		"Typing error..not equal passwords\n"
 #define MSG_MASTER_EXISTS		"User is already exists.\n"
 #define MSG_MASTER_ERR			"Can't set this account as master.\n"
-
+#define MSG_MASTER				"You are bot master."
 
 
 #ifdef	CMD_MSG
@@ -100,21 +116,21 @@ static const char *unknow_parameter[]=
 	"."
 };
 
-static const char *version_msg[]=
-{
-	PROGNAME," Vers. ",VERSION," (C) 2003 Steffen Laube \n",
-	"."
-};
+
 
 static const char *help_msg[]=
 {
+	"\n",
 	PROGNAME," [Options]\n",
 	"\n\tOptions:\n",
+	"\t-a days\t\tSet the time in days for the automatic logoff.\n",
 	"\t-b name\t\tSet  the name  of the bot.\n",
 	"\t-d path\t\tUse this path for the database\n",
 	"\t-f file\t\tUse this config file.\n",
 	"\t-h\t\tPrint this help info.\n",
+	"\t-k days\t\tSet the  account live time in days.\n",
 	"\t-m\t\tCreate a bot master.\n",
+	"\t-n ms\t\tSet the delay time in millisecond for sending.\n",
 	"\t-p port\t\tSet the port of the irc server.\n"
 	"\t-r string\tSet the output  for a request of the real name.\n",
 	"\t-s server\tSet the irc server name.\n",
