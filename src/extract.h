@@ -17,7 +17,6 @@
 * This function extract the nickname from the network identify or complete
 * string from the irc server
 *.
-* @author Steffen Laube
 * @param pLine the input string
 * @return the nickname
 */			 
@@ -37,7 +36,7 @@ char *getChannelMode(char const *pLine);
 
 /**
 * This function splits a giving string  in seprate strings.
-* @author Steffen Laube
+* author Steffen Laube
 *
 * @param pString the input string
 * @param nRetArraySize the number of  wished parts
@@ -46,7 +45,6 @@ char *getChannelMode(char const *pLine);
 char **splitString(char const *pString,int nRetArraySize);
 /**
  * This functions gets the Banmask from a Netmask
- * @author Uwe Strempel
  *
  * @param pLine the input string
  * @return the banmask

@@ -18,17 +18,8 @@
 #include "utilities.h"
 #include "type.h"
 
-/* init_extendedCallbackDList
- *
- * Description: initing List
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- * 		void (*destroy)(CallbackItem_t *data)
- * 		- funkction pointer to function which destroys the data
- *
- * Return:	void
- *
+/*
+ *  init_extendedCallbackDList
  */
 void init_extended_CallbackDList(CallbackDList *list, void (*destroy)(CallbackItem_t *data))
 {
@@ -43,15 +34,8 @@ void init_extended_CallbackDList(CallbackDList *list, void (*destroy)(CallbackIt
 	return;
 }
 
-/* destroyCallbackDList
- *
- * Description: destroying List
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- *
- * Return:	void
- *
+/* 
+ * destroyCallbackDList
  */
 void destroyCallbackDList(CallbackDList *list)
 {
@@ -77,20 +61,8 @@ void destroyCallbackDList(CallbackDList *list)
 	return;	
 }
 
-/* insert_next_CallbackDList
- *
- * Description: inserting a new item after element with data into list
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- * 		CallbackDListItem *element
- * 		- Pointer of element after that the data should be put
- * 		CallbackItem_t *data
- * 		- Data for the next element
- * 	
- * Return:	int Success
- * 		- returns 0 if OK
- *
+/*
+ * insert_next_CallbackDList
  */
 int insert_next_CallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data)
 {
@@ -143,20 +115,8 @@ int insert_next_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
 	return 0;
 }
 
-/* insert_prev_CallbackDList
- *
- * Description: inserting a new item before element with data into list
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- * 		CallbackDListItem *element
- * 		- Pointer of element before that the data should be put
- * 		CallbackItem_t *data
- * 		- Data for the next element
- * 	
- * Return:	int Success
- * 		- returns 0 if OK
- *
+/*
+ * insert_prev_CallbackDList
  */
 int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data)
 {
@@ -210,20 +170,8 @@ int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
 
 }
 
-/* renoveCallbackDList
- *
- * Description: remove element from list and put Data into data
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- * 		CallbackDListItem *element
- * 		- element to remove
- * 		CallbackItem_t *data
- * 		- Data of the element that was removed
- * 	
- * Return:	int Success
- * 		- returns 0 if OK
- *
+/*
+ * renoveCallbackDList
  */
 int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t **data)
 {
@@ -270,20 +218,8 @@ int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, Callbac
 	return 0;
 }
 
-/* searchNicknameFromCallbackDList
- *
- * Description: searching the the Nickname from given element
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- * 		CallbackDListItem *element
- * 		- element to search from
- * 		char *nickname
- * 		- the Nickname we are searching for
- * 		 	
- * Return:	CallbackItem_t *
- * 		- returns Null for error or elment were nickname is
- *
+/*
+ * searchNicknameFromCallbackDList
  */
 CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDListItem *element,char *nickname)
 {

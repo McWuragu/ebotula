@@ -26,7 +26,7 @@
 * parser and the threads for execution the  commands or handle the events. The ids identify
 * the comands or events in the message queue.
 */
-typedef enum CmdEnum {
+typedef enum {
     CMD_NONE,
 
     /*  Event handler ids */
@@ -92,6 +92,10 @@ typedef enum CmdEnum {
 #define CmdIdToHelpId(m)        ((m)-CMD_OTHERS+1)
 #define HelpIdToCmdId(m)        ((m)+CMD_OTHERS-1)
 
+/**
+ * Here define the commando strings. It must synchronously
+ * with the enum cmd_t.
+ */
 static char * const CmdList[]= {
     "none",
     /* Events */

@@ -12,119 +12,84 @@
 #define _CALLBACK_LIST_H
 #include <stdlib.h>
 #include "callback.h"
-/** Setting up Callback_List-Base-Item to hold all Elements **/
+
+/** 
+ * Setting up Callback_List-Base-Item to hold all Elements 
+ */
 typedef struct tag_Callback_DList_Item {
 	CallbackItem_t *data;
 	struct tag_Callback_DList_Item *prev;
 	struct tag_Callback_DList_Item *next;
 } CallbackDListItem;
 
-/** Setting up Callback_List Base to hold head, tail, size and match keys **/
+/** 
+ * Setting up Callback_List Base to hold head, tail, size and match keys 
+ */
 typedef struct tag_Callback_DList {
 	int size;
-//	int (*match)(const void *key1, const void key2);
 	void (*destroy)(CallbackItem_t *data);
 	CallbackDListItem *head;
 	CallbackDListItem *tail;
 	pthread_mutex_t *callbacklist_mutex;
 }CallbackDList;
 
-/* -------------------------------------------------------------***********************************/
-/* -------------------------------------------------------------***********************************/
-/************************ Functions  -------------------------------------------------------------*/
-/* -------------------------------------------------------------***********************************/
-/* -------------------------------------------------------------***********************************/
-/* initCallbackDList
- *
- * Description: initing List
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- * 		 void (*destroy)(CallbackItem_t *data)
- *              - funkction pointer to function which destroys the data
- *
- * Return:	void
- *
+/* -----------------------Functions  --------------------------------------- */
+
+/**
+ * initing List
+ * 
+ * @param list    a pointer to Callback list
+ * @param destroy
  */
 void init_extended_CallbackDList(CallbackDList *list ,void (*destroy)(CallbackItem_t *data));
 
-/* destroyCallbackDList
+/**
+ * destroying List
  *
- * Description: destroying List
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- *
- * Return:	void
- *
+ * @param list a pointer to Callback list
  */
 void destroyCallbackDList(CallbackDList *list);
 
-/* insert_next_CallbackDList
+/**
+ * inserting a new item after element with data into list
  *
- * Description: inserting a new item after element with data into list
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- * 		CallbackDListItem *element
- * 		- Pointer of element after that the data should be put
- * 		CallbackItem_t *data
- * 		- Data for the next element
+ * @param list a pointer to Callback list
+ * @param element a pointer of element after that the data should be put
+ * @param data the data for the next element
  * 	
- * Return:	int Success
- * 		- returns 0 if OK
- *
+ * @return 0 if OK
  */
 int insert_next_CallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data);
 
-/* insert_prev_CallbackDList
+/**
+ * inserting a new item before element with data into list
  *
- * Description: inserting a new item before element with data into list
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- * 		CallbackDListItem *element
- * 		- Pointer of element before that the data should be put
- * 		CallbackItem_t *data
- * 		- Data for the next element
+ * @param list a pointer to Callback list
+ * @param element a pointer of element before that the data should be put
+ * @param data the data for the next element
  * 	
- * Return:	int Success
- * 		- returns 0 if OK
- *
+ * @return 0 if OK
  */
 int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data);
 
-/* renoveCallbackDList
- *
- * Description: remove element from list and put Data into data
- *
- * Parameter: 	CallbackDList *list
- * 		- Pointer to Callback list
- * 		CallbackDListItem *element
- * 		- element to remove
- * 		CallbackItem_t *data
- * 		- Data of the element that was removed
- * 	
- * Return:	int Success
- * 		- returns 0 if OK
- *
+/**
+ * remove element from list and put Data into data
+ * 
+ * @param list    a pointer to Callback list
+ * @param element element to remove
+ * @param data    the data of the element that was removed
+ *                
+ * @return 0 if OK
  */
 int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t **data);
 
-/* searchNicknameFromCallbackDList
- *
- * Description: searching the the Nickname from given element
- *
- * Parameter:   CallbackDList *list
- *              - Pointer to Callback list
- *              CallbackDListItem *element
- *              - element to search from
- *              char *nickname
- *              - the Nickname we are searching for
- *                      
- * Return:      CallbackItem_t *
- *              - returns Null for error or elment were nickname is
- *
+/**
+ * searching the the Nickname from given element
+ * 
+ * @param list     a pointer to Callback list
+ * @param element  element to search from
+ * @param nickname the Nickname we are searching for
+ * @return returns Null for error or elment were nickname is
  */
 CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDListItem *element,char *nickname);
 
