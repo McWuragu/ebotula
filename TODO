@@ -17,3 +17,4 @@ ToDo List
 - reconnect after connection lost
 - join in invite channel
 - join in channel with keyword
+- convert defines to constantes
