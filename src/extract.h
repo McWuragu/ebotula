@@ -25,4 +25,6 @@ char *getTopic(char *pChannelSet);
 char *getGreeting(char *pChannelSet);
 char *getChannelMode(char *pChannelSet);
 
+char **splitString(char *pLine);
+
 #endif

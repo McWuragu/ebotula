@@ -283,4 +283,39 @@ char *getParameters(char *pLine){
 		return pParameter;
 	}
 }
+// #############################################################################
+char ** splitString(char* pLine) {
+    char **ppStrings;
+    char *pPos,*pPos2;
+    unsigned int iCount=0,i;
 
+    // check of NULL pointer
+    if (!pLine) {
+        return NULL;
+    }
+
+    pPos2=pLine;
+
+    // word count
+    do {
+        pPos=++pPos2;
+        iCount++;
+    } while ( pPos2=strchr(pPos,' ' ));
+
+    ppStrings=(char**)malloc(iCount*sizeof(char*));
+
+    // built the array
+    for (i=iCount;i>0;i--) {
+        pPos=strrchr(pLine,' ');
+        if (pPos) {
+            pPos[0]='\0';
+            pPos++;
+        } else {
+            pPos=pLine;
+        }
+        
+        ppStrings[i-1]=(char*)malloc((strlen(pPos)+1)*sizeof(char));
+        strcpy(ppStrings[i-1],pPos);
+    }
+    return ppStrings;
+}
