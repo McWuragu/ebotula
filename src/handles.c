@@ -110,27 +110,23 @@ void hSetModUser(char *pLine) {
             
         pthread_mutex_lock(&account_mutex);
         if ((pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
+    	    pChannel=getAccessChannel(pLine);
 
-	        if (strlen(pLogin)) {
-    	        pChannel=getAccessChannel(pLine);
+        	// build key for access.dbf
+            pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
+	        sprintf(pKey,"%s%s",pLogin,pChannel);
+   	        
+			// read  the  mod
+       	    if ((pMod=get_db(ACCESS_DB,pKey))) {
+        	    // set the mod  for this nick
+       	       	mode(pChannel,pMod,pNick);
+                free(pMod);
+	        } else if (exist_db(ACCESS_DB,pLogin)) {
+   		        mode(pChannel,"+o",pNick);
+       		}
 
-        	    // build key for access.dbf
-            	pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
-	            sprintf(pKey,"%s%s",pLogin,pChannel);
-
-    	        // read  the  mod
-        	    if ((pMod=get_db(ACCESS_DB,pKey))) {
-	        	    // set the mod  for this nick
-    	        	if (strlen(pMod)) {
-        	        	mode(pChannel,pMod,pNick);
-	            	    free(pMod);
-		            } else if (exist_db(ACCESS_DB,pLogin)) {
-    		            mode(pChannel,"+o",pNick);
-        		    }
-				}
-            	free(pChannel);
-	            free(pKey);
-			}
+           	free(pChannel);
+            free(pKey);
 
         }
         pthread_mutex_unlock(&account_mutex);
