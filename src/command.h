@@ -21,10 +21,7 @@
 									}
 
 
-char *getNickname(char *line);
-char *getNetmask(char *line);
-char *getArgument(char *line);
-char *getCommand(char *line);
+
 
 // ######################### Bot commands ################################
 void help(char *line);
@@ -40,6 +37,8 @@ void part_channel(char *line);
 void die(char *line);
 void change_nick(char *line);
 void channel_list(char *line);
+void bot_op(char *line);
+void print_greating(char *line);
 
 void join_all_channels(void);
 void log_on(char *netmask,char *login);
