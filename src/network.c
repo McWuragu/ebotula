@@ -27,6 +27,7 @@
     #include "config.h"
 #endif
 
+#include "queue.h"
 #include "ircbot.h"
 #include "dbaccess.h"
 #include "type.h"
@@ -181,13 +182,15 @@ void ConnectToIrc(void){
 }
 // ############################################################################# 
 void join_all_channels(void) {
-    char **ppChannelList;
+    PQueue pChannelQueue;
+	QueueData *pChannel;
     unsigned int i;
-    ppChannelList=list_db(CHANNEL_DB);
+    pChannelQueue=list_db(CHANNEL_DB);
     
     // join_Channels
-    for (i=0;ppChannelList[i]!=NULL;i++) {
-        join(ppChannelList[i]);
-    }
-    
+	while ((pChannel=popQueue(pChannelQueue))) {
+        join((char*)pChannel->data);
+		free(pChannel);
+	}
+	deleteQueue(pChannelQueue);
 }

@@ -234,7 +234,8 @@ void ident(char *pLine) {
     char *pNick;
     char *pNetmask;
     char *pParameter;
-    char **ppChannels;
+    PQueue pChannelQueue;
+	QueueData *pChannel;
     char *pKey;
     char *pMod;
     boolean isMaster;
@@ -280,22 +281,24 @@ void ident(char *pLine) {
                 isMaster=exist_db(ACCESS_DB,pLogin);
         
                 // set the mod  for  this account
-                ppChannels=list_db(CHANNEL_DB);
+                pChannelQueue=list_db(CHANNEL_DB);
                 login_len=strlen(pLogin);
         
-                for (i=0;ppChannels[i]!=NULL;i++) {
+                while ((pChannel=popQueue(pChannelQueue))) {
                     if (isMaster) {
-                        mode(ppChannels[i],"+o",pNick);
+                        mode((char*)pChannel->data,"+o",pNick);
                     } else {
-                        pKey=(char*)malloc((strlen(ppChannels[i])+login_len+1)*sizeof(char));
-                        sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
+                        pKey=(char*)malloc((pChannel->t_size+login_len+1)*sizeof(char));
+                        sprintf(pKey,"%s%s",pLogin,(char*)pChannel->data);
                         if ((pMod=get_db(ACCESS_DB,pKey))) {
-   	                        mode(ppChannels[i],pMod,pNick);
+   	                        mode((char*)pChannel->data,pMod,pNick);
       	                    free(pMod);
           	            }
                        	free(pKey);
                     }
+					free(pChannel);
                 }
+				deleteQueue(pChannelQueue);
             } else {
                 notice(pNick,MSG_NOT_ACCOUNT);
             }    
@@ -452,12 +455,13 @@ void setNick(char *pLine){
 // #########################################################################
 void chanlist(char *pLine){
     char *pNick,*buffer;
-    char **ppChannels;
     char *pMode;
     char *pMsgStr;
 	char *pChannelSet;
     int i=0,buffer_size=0;
     ChannelData_t *pChannelData;
+	PQueue pChannelQueue;
+	QueueData *pChannel;
 
     DEBUG("Build channel list...");
 
@@ -466,16 +470,16 @@ void chanlist(char *pLine){
     notice(pNick,MSG_CHANNELLIST_BEGIN);
 
     // get  the channel list form the DB
-    ppChannels=list_db(CHANNEL_DB);
+    pChannelQueue=list_db(CHANNEL_DB);
 
 
-    for (i=0;ppChannels[i]!=NULL;i++) {
-		if ((pChannelSet=get_db(CHANNEL_DB,ppChannels[i]))) {
+    while ((pChannel=popQueue(pChannelQueue))) {
+		if ((pChannelSet=get_db(CHANNEL_DB,(char*)pChannel->data))) {
 	        pChannelData=StrToChannelData(pChannelSet);
     	    pMode=ChannelModeToStr(pChannelData->pModes);
 
-        	DEBUG("...for channel %s",ppChannels[i]);
-	        notice(pNick,ppChannels[i]);
+        	DEBUG("...for channel %s",(char*)pChannel->data);
+	        notice(pNick,(char*)pChannel->data);
 
     	    pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_MODE)+strlen(pMode)+2)*sizeof(char));
         	sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_MODE,pMode);
@@ -501,8 +505,9 @@ void chanlist(char *pLine){
     	    free(pChannelData);
 			free(pChannelSet);
 		}
+		free(pChannel);
     }
-
+	deleteQueue(pChannelQueue);
     notice(pNick,MSG_CHANNELLIST_END);
 }
 // #########################################################################
@@ -651,15 +656,19 @@ void say(char *pLine) {
 // #########################################################################
 void allsay(char *pline) {
     char *pMsgStr;
-    char **ppChannels;
-    int i;
+    PQueue pChannelQueue;
+	QueueData *pChannel;
     pMsgStr=getParameters(pline);
 
-    ppChannels=list_db(CHANNEL_DB);
+	// get the channel list
+    pChannelQueue=list_db(CHANNEL_DB);
 
-    for (i=0;ppChannels[i]!=NULL;i++) {
-        privmsg(ppChannels[i],pMsgStr);
+	// send privmsg to all channels
+    while ((pChannel=popQueue(pChannelQueue))) {
+        privmsg((char*)pChannel->data,pMsgStr);
+		free(pChannel);
     }
+	deleteQueue(pChannelQueue);
 }
 // #########################################################################
 // Bot comand: !kick <#channel> nick reason
@@ -982,9 +991,9 @@ void rmuser(char *pLine) {
     char *pNick;
     char *pNetmask;
     char *rmnick;
-    char **ppChannels;
-    int i;
-
+    PQueue pChannelQueue;
+	QueueData *pChannel;
+	
     pNick=getNickname(pLine);
     pLogin=getParameters(pLine);
 
@@ -998,13 +1007,16 @@ void rmuser(char *pLine) {
         rmAccount(pLogin);
     
         // remove the mod  for  this account
-        ppChannels=list_db(CHANNEL_DB);
         if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
 			rmnick=getNickname(pNetmask);
-            for (i=0;ppChannels[i]!=NULL;i++) {
-                mode(ppChannels[i],"-o",rmnick);
-                mode(ppChannels[i],"-v",rmnick);
+        	
+			pChannelQueue=list_db(CHANNEL_DB);
+            while ((pChannel=popQueue(pChannelQueue))) {
+                mode((char*)pChannel->data,"-o",rmnick);
+                mode((char*)pChannel->data,"-v",rmnick);
+				free(pChannel);
             }
+			deleteQueue(pChannelQueue);
         }
         notice(pNick,MSG_RMUSER_OK);        
     	DEBUG("Remove %s from the user list",pLogin);
@@ -1022,8 +1034,10 @@ void userlist(char *pLine){
     char *pAccessChannel;
     char *pArgv;
     char *pKey;
-    char **ppLogins;
-    char **ppChannels;
+    PQueue pLoginQueue;
+	QueueData *pLoginItem;
+    PQueue pChannelQueue;
+	QueueData *pChannel;
     char *pMod;
     char *pMsgStr;
 
@@ -1035,7 +1049,7 @@ void userlist(char *pLine){
     pArgv=getArgument(pLine);
 
     // read the list of Logins
-    ppLogins=list_db(USER_DB);
+    pLoginQueue=list_db(USER_DB);
 
     notice(pNick,MSG_USERLIST_BEGIN);
 
@@ -1045,15 +1059,15 @@ void userlist(char *pLine){
         // Bot masters
 
         // get the kist of all channels
-        ppChannels=list_db(CHANNEL_DB);
-        for (i=0;ppLogins[i]!=NULL;i++) {
-            iLoginLen=strlen(ppLogins[i]);
+        pChannelQueue=list_db(CHANNEL_DB);
+        while ((pLoginItem=popQueue(pLoginQueue))) {
+            iLoginLen=pLoginItem->t_size;
 
             // check for master or normal user
-            if (exist_db(ACCESS_DB,ppLogins[i])) {
+            if (exist_db(ACCESS_DB,(char*)pLoginItem->data)) {
                 // user is master
                 pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Master   Status:")+5)*sizeof(char));
-                strcpy(pMsgStr,ppLogins[i]);
+                strcpy(pMsgStr,(char*)pLoginItem->data);
 
                 // fill
                 for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
@@ -1064,7 +1078,7 @@ void userlist(char *pLine){
 
                 // insert  online status
                 // set  online Status
-                if (exist_db(USERTONICK_DB,ppLogins[i])) {
+                if (exist_db(USERTONICK_DB,(char*)pLoginItem->data)) {
                     strcat(pMsgStr,"ON ");
                 } else {
                     strcat(pMsgStr,"OFF");
@@ -1074,103 +1088,101 @@ void userlist(char *pLine){
                 free(pMsgStr);
             } else {
                 // normal user
-                if (ppChannels) {
-                    for (j=0;ppChannels[j]!=NULL;j++) {
-                        iChanLen=strlen(ppChannels[j]);
+				while ((pChannel=popQueue(pChannelQueue))) {
+					iChanLen=pChannel->t_size;
 
-                        // build key for access.dbf
-                        pKey=(char*)malloc((iLoginLen+iChanLen+1)*sizeof(char));
-                        sprintf(pKey,"%s%s",ppLogins[i],ppChannels[j]);
+					// build key for access.dbf
+					pKey=(char*)malloc((iLoginLen+iChanLen+1)*sizeof(char));
+					sprintf(pKey,"%s%s",(char*)pLoginItem->data,(char*)pChannel->data);
 
-                        if ((pMod=get_db(ACCESS_DB,pKey))) {
-                            pMsgStr=(char*)malloc((USERLIST_TAB+iChanLen+strlen("Status:")+16)*sizeof(char));
-                            strcpy(pMsgStr,ppLogins[i]);
+					if ((pMod=get_db(ACCESS_DB,pKey))) {
+						pMsgStr=(char*)malloc((USERLIST_TAB+iChanLen+strlen("Status:")+16)*sizeof(char));
+						strcpy(pMsgStr,(char*)pLoginItem->data);
 
-                            // fill
-                            for (k=0;k<(USERLIST_TAB-iLoginLen);k++) {
-                                strcat(pMsgStr," ");
-                            }
+						// fill
+						for (k=0;k<(USERLIST_TAB-iLoginLen);k++) {
+							strcat(pMsgStr," ");
+						}
 
-                            strcat(pMsgStr,ppChannels[j]);
+						strcat(pMsgStr,(char*)pChannel->data);
 
-                            // set access rights
-                            if (pMod[1]=='o') {
-                                strcat(pMsgStr,"->Owner ");
-                            } else if (pMod[1]=='v') {
-                                strcat(pMsgStr,"->Friend");
-                            } else {
-                                free(pMsgStr);
-                                break;
-                            }
+						// set access rights
+						if (pMod[1]=='o') {
+							strcat(pMsgStr,"->Owner ");
+						} else if (pMod[1]=='v') {
+							strcat(pMsgStr,"->Friend");
+						} else {
+							free(pMsgStr);
+							break;
+						}
 
-                            // set  online Status
-                            strcat(pMsgStr,"   Status: ");
-                            if (exist_db(USERTONICK_DB,ppLogins[i])) {
-                                strcat(pMsgStr,"ON ");
-                            } else {
-                                strcat(pMsgStr,"OFF");
-                            }
+						// set  online Status
+						strcat(pMsgStr,"   Status: ");
+						if (exist_db(USERTONICK_DB,(char*)pLoginItem->data)) {
+							strcat(pMsgStr,"ON ");
+						} else {
+							strcat(pMsgStr,"OFF");
+						}
 
-                            // send notice out
-                            notice(pNick,pMsgStr);
-                            free(pMsgStr);
-                        }
-                        free(pKey);
-                    }
-                }
+						// send notice out
+						notice(pNick,pMsgStr);
+						free(pMsgStr);
+					}
+					free(pKey);
+					free(pChannel);
+				}
             }
-        }
+    		free(pLoginItem);    
+		}
+		deleteQueue(pChannelQueue);
     } else {
         DEBUG("Genrate the Userlist for a owner");
 
         // look for  rights of  user for  the channel
-        if (ppLogins) {
-            iChanLen=strlen(pAccessChannel);
+		iChanLen=strlen(pAccessChannel);
 
-            for (i=0;ppLogins[i]!=NULL;i++) {
-                iLoginLen=strlen(ppLogins[i]);
+		 while ((pLoginItem=popQueue(pLoginQueue))) {
+			iLoginLen=pLoginItem->t_size;
 
-                // build the key  for  access.dbf
-                pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
-                sprintf(pKey,"%s%s",ppLogins[i],pAccessChannel);
+			// build the key  for  access.dbf
+			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
+			sprintf(pKey,"%s%s",(char*)pLoginItem->data,pAccessChannel);
 
-                if ((pMod=get_db(ACCESS_DB,pKey))) {
-                    pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Status:")+14)*sizeof(char));
-                    strcpy(pMsgStr,ppLogins[i]);
+			if ((pMod=get_db(ACCESS_DB,pKey))) {
+				pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Status:")+14)*sizeof(char));
+				strcpy(pMsgStr,(char*)pLoginItem->data);
 
-                    // fill
-                    for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
-                        strcat(pMsgStr," ");
-                    }
+				// fill
+				for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
+					strcat(pMsgStr," ");
+				}
 
-                    // set access rights
-                    if (pMod[1]=='o') {
-                        strcat(pMsgStr,"Owner ");
-                    } else if (pMod[1]=='v') {
-                        strcat(pMsgStr,"Friend");
-                    } else {
-                        free(pMsgStr);
-                        break;
-                    }
+				// set access rights
+				if (pMod[1]=='o') {
+					strcat(pMsgStr,"Owner ");
+				} else if (pMod[1]=='v') {
+					strcat(pMsgStr,"Friend");
+				} else {
+					free(pMsgStr);
+					break;
+				}
 
-                    // set  online Status
-                    strcat(pMsgStr,"   Status: ");
-                    if (exist_db(USERTONICK_DB,ppLogins[i])) {
-                        strcat(pMsgStr,"ON ");
-                    } else {
-                        strcat(pMsgStr,"OFF");
-                    }
+				// set  online Status
+				strcat(pMsgStr,"   Status: ");
+				if (exist_db(USERTONICK_DB,(char*)pLoginItem->data)) {
+					strcat(pMsgStr,"ON ");
+				} else {
+					strcat(pMsgStr,"OFF");
+				}
 
-                    // send notice out
-                    notice(pNick,pMsgStr);
-                    free(pMsgStr);
-                }
-                free(pKey);
+				// send notice out
+				notice(pNick,pMsgStr);
+				free(pMsgStr);
+			}
+			free(pKey);
 
-            }
-        } else {
-            notice(pNick,MSG_USERLIST_EMPTY);
         }
     }
+	deleteQueue(pLoginQueue);
     notice(pNick,MSG_USERLIST_END);
 }

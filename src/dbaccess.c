@@ -21,6 +21,7 @@
     #include "config.h"
 #endif
 
+
 #include "utilities.h"
 #include "messages.h"
 #include "dbaccess.h"
@@ -315,57 +316,37 @@ char * get_db(int db,char *_key){
     return NULL;
 }
 // ############################################################################# 
-char ** list_db(int db){
-    char **ppList;
-    GDBM_FILE dbf;
+PQueue list_db(int db){
+    PQueue pList;
+	QueueData QueueItem;
+	GDBM_FILE dbf;
     datum key,nextkey,firstkey;
-    unsigned int count=0,i;
+	
+	// initialize the  queue
+	pList=initQueue();
 
     // get the database handle
-    if (!(dbf=get_dbf(db))) {
-        ppList=(char **)malloc(sizeof(char *));
-        ppList[0]=NULL;
-        return ppList;
-    }
-    
-    pthread_mutex_lock(&dbaccess_mutex[db]);
-    firstkey=gdbm_firstkey(dbf);
-    
-    key=firstkey;
-    if (key.dptr) {
-        // calculat the  size of  database
-        do {
-            count++;
-            
-            nextkey=gdbm_nextkey(dbf,key);
-            
-            free(key.dptr);
-            key=nextkey;
-    
-        } while ( key.dptr );
-    }
+    if ((dbf=get_dbf(db))) {
+	pthread_mutex_lock(&dbaccess_mutex[db]);
+		firstkey=gdbm_firstkey(dbf);
+		key=firstkey;
 
+		// iterate the date base
+		while (key.dptr) {
+			// buidl  queue element
+			QueueItem.t_size=key.dsize;
+			QueueItem.data=(void*)key.dptr;
 
+			// push in the  queue
+			pushQueue(pList,QueueItem);
+			
+			// read next key
+			nextkey=gdbm_nextkey(dbf,key);
+			key=nextkey;
+		}
 
-    // allocat the memory and set  end mark
-    ppList=(char **)malloc((count+1)*sizeof(char *));
-    ppList[count]=NULL;
-
-    firstkey=gdbm_firstkey(dbf);
-    key=firstkey;
-
-    for (i=0;i<count;i++) {
-        ppList[i]=(char *)malloc(key.dsize*sizeof(char));
-        strcpy(ppList[i],key.dptr);
-        
-        nextkey=gdbm_nextkey(dbf,key);
-
-        free(key.dptr);
-        key=nextkey;
-
-    }
-
-    pthread_mutex_unlock(&dbaccess_mutex[db]);
-    return ppList;
+		pthread_mutex_unlock(&dbaccess_mutex[db]);
+	}
+    return pList;
 }
 

@@ -12,7 +12,7 @@
 
 #include <gdbm.h>
 #include "type.h"
-
+#include "queue.h"
 
 #define CHECK_EXIST(_db,__key)          if (exist_db(_db,__key)){return false;}
 #define CHECK_NO_EXIST(_db,__key)       if (!exist_db(_db,__key)){return false;}
@@ -38,7 +38,7 @@ boolean del_db(int db,char *_key);
 boolean check_db(int db,char *_key,char *_value);
 boolean exist_db(int db,char *_key);
 char * get_db(int db,char *_key);
-char ** list_db(int db);
+PQueue list_db(int db);
 static  GDBM_FILE get_dbf(int db);
 
 

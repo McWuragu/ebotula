@@ -24,26 +24,28 @@
 #include "account.h"
 // #############################################################################
 void rmDeadLogins(long lCheckTime) {
-    char **ppLogins=NULL;
+   	PQueue pLoginQueue;
+	QueueData *pLogin; 
     char *pTime=NULL;
-    int i;
 
     // get the  list
-	ppLogins=list_db(USER_DB);
+	pLoginQueue=list_db(USER_DB);
 		
-    for (i=0;ppLogins[i]!=NULL;i++) {
+    while ((pLogin=popQueue(pLoginQueue))) {
 
         // read time
-   	    if ((pTime=get_db(TIMELOG_DB,ppLogins[i]))) {
+   	    if ((pTime=get_db(TIMELOG_DB,(char*)pLogin->data))) {
 	
 	        // check the time
     	    if (lCheckTime>atol(pTime)) {
-	            log_out(ppLogins[i]);
-            	syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,ppLogins[i]);
+	            log_out((char*)pLogin->data);
+            	syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,(char*)pLogin->data);
         	}
     	    free(pTime);
 		}
+		free(pLogin);
     }
+	deleteQueue(pLoginQueue);
 }
 // #############################################################################
 void log_on(char *pNetmask,char *pLogin) {
@@ -117,53 +119,59 @@ void rmAccount(char *pLogin) {
 }
 // #############################################################################
 void rmAccessRights(char *pLogin){
-    char **ppChannels;
+    PQueue pChannelQueue;
+	QueueData *pChannel;
     char *pKey;
-    int i,iLoginLen;
+    int iLoginLen;
 
     DEBUG("Remove access rights from %s",pLogin);
 
     // remove as master
     del_db(ACCESS_DB,pLogin);
 
-    ppChannels=list_db(CHANNEL_DB);
+    pChannelQueue=list_db(CHANNEL_DB);
 
     iLoginLen=strlen(pLogin);
     // remove access rights from the user
-    for (i=0;ppChannels[i]!=NULL;i++) {
+    while ((pChannel=popQueue(pChannelQueue))) {
 
         // build  the key for access.dbf
-        pKey=(char *)malloc((strlen(ppChannels[i])+iLoginLen+1)*sizeof(char));
-        sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
+        pKey=(char *)malloc((pChannel->t_size+iLoginLen+1)*sizeof(char));
+        sprintf(pKey,"%s%s",pLogin,(char*)pChannel->data);
 
         del_db(ACCESS_DB,pKey);
 
         free(pKey);
+		free(pChannel);
     }
+	deleteQueue(pChannelQueue);
 }
 // #############################################################################
 void rmDeadAccounts(long lCheckTime) {
     extern pthread_mutex_t account_mutex;
-    char **ppLogins;
-    char *pTime;
-    int i;
+    PQueue pLoginQueue;
+	QueueData *pLogin;
+	char *pTime;
 
     pthread_mutex_lock(&account_mutex);
-    ppLogins=list_db(TIMELOG_DB);
     
-
+	// get the list of all Logins
+	pLoginQueue=list_db(TIMELOG_DB);
+    
     // get the  list
-    for (i=0;ppLogins[i]!=NULL;i++) {
+    while ((pLogin=popQueue(pLoginQueue))) {
 
         // read time
-        if ((pTime=get_db(TIMELOG_DB,ppLogins[i]))) {
+        if ((pTime=get_db(TIMELOG_DB,(char*)pLogin->data))) {
         	// check the time
     	    if (lCheckTime>atol(pTime)) {
-	            rmAccount(ppLogins[i]);
-            	syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,ppLogins[i]);
+	            rmAccount((char*)pLogin->data);
+            	syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,(char*)pLogin->data);
         	}
         	free(pTime);
 		}
+		free(pLogin);
     }
     pthread_mutex_unlock(&account_mutex);
+	deleteQueue(pLoginQueue);
 }

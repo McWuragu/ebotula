@@ -93,10 +93,9 @@ static char * const CmdList[]= {
 
 /// This is the structure for the entries in the message queue
 typedef struct MsgBufStruct {
-    long    mtype;
     Cmd_t identify;
     /// the complete string which receive from the irc server
-    char    pMsgLine[RECV_BUFFER_SIZE];
+    char   *pMsgLine;
 } MsgBuf_t;
 
 // ######################### Bot commands ################################
