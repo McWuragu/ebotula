@@ -104,12 +104,12 @@ void help(MsgItem_t *pMsg) {
             pParameter=pTmp;
         }
 
-        logger(LOG_DEBUG,_("Looking for the information about \"%s\"",pParameter));
+        logger(LOG_DEBUG,_("Looking for the information about \"%s\""),pParameter);
 
         /* Help for a command */
         for (i=CMD_FIRST;i<CMD_COUNT;i++) {
             if (!strcmp((char*)CmdList[i],&pParameter[1])) {
-                logger(LOG_DEBUG,_("Command found %d",i));
+                logger(LOG_DEBUG,_("Command found %d"),i);
 
                 /* the head for help */
                 pMsgPart=_("Help for");
@@ -141,7 +141,7 @@ void help(MsgItem_t *pMsg) {
    Bot comand: !hello
    ######################################################################### */
 void hello(MsgItem_t *pMsg) {
-    logger(LOG_DEBUG,_("Try to create an new account for %s",pMsg->pCallingNick));
+    logger(LOG_DEBUG,_("Try to create an new account for %s"),pMsg->pCallingNick);
 
     if (pMsg->UserLevel>LoggedLevel) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You're already identified."));
@@ -171,7 +171,7 @@ void password(MsgItem_t *pMsg) {
 
     if ((pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
 
-	    logger(LOG_DEBUG,_("Check the  password for the account %s",pLogin));
+	    logger(LOG_DEBUG,_("Check the  password for the account %s"),pLogin);
 
 	    /* get  the  login name */
 	    if (strlen(pLogin)) {
@@ -257,7 +257,7 @@ void ident(MsgItem_t *pMsg) {
     int i,login_len;
 
 
-    logger(LOG_DEBUG,_("try to identify %s",pMsg->pCallingNick));
+    logger(LOG_DEBUG,_("try to identify %s"),pMsg->pCallingNick);
 
     
     if (!exist_db(NICKTOUSER_DB,pMsg->pNetmask)) {
@@ -283,11 +283,11 @@ void ident(MsgItem_t *pMsg) {
             strcpy(pLogin,pParameter);
             StrToLower(pLogin);
         
-            logger(LOG_DEBUG,_("Look for the account %s",pLogin));
+            logger(LOG_DEBUG,_("Look for the account %s"),pLogin);
         
             /* check the account */
             if (check_db(USER_DB,pLogin,(pPasswd)?pPasswd:"")) {
-                logger(LOG_DEBUG,_("User %s found",pLogin));
+                logger(LOG_DEBUG,_("User %s found"),pLogin);
                 log_on(pMsg->pNetmask,pLogin);
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You're now identified."));
         
@@ -356,7 +356,7 @@ void addChannel(MsgItem_t *pMsg) {
 	if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
 		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s is already on the channel list."),pMsg->pAccessChannel);
 	} else {
-    	logger(LOG_DEBUG,_("Join and add the channnel %s",pMsg->pAccessChannel));
+    	logger(LOG_DEBUG,_("Join and add the channnel %s"),pMsg->pAccessChannel);
 		/* add channel */
 		channelmod=(char *)malloc(3*sizeof(char));
 		strcpy(channelmod,"\t\t");
@@ -418,7 +418,7 @@ void joinChannel(MsgItem_t *pMsg) {
 		}
 		free(pCmdChannel);
 	}
-	logger(LOG_DEBUG,_("Join the channel %s",pMsg->pAccessChannel));
+	logger(LOG_DEBUG,_("Join the channel %s"),pMsg->pAccessChannel);
 	
 	/* join the channel */
 	join(pMsg->pAccessChannel);
@@ -515,7 +515,7 @@ void chanlist(MsgItem_t *pMsg){
 	        StrToChannelData(pChannelSet,&sChannelData);
     	    pMode=ChannelModeToStr(&(sChannelData.sModes));
 
-        	logger(LOG_DEBUG,_("...for channel %s",(char*)pChannel->data));
+        	logger(LOG_DEBUG,_("...for channel %s"),(char*)pChannel->data);
 	        //sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pChannel->data);
 
             //pMsgPart=getMsgString(INFO_CHANNELLIST_MODE);
@@ -566,7 +566,7 @@ void setGreeting(MsgItem_t *pMsg) {
     if (!pMsg->pAccessChannel){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
     } else {
-        logger(LOG_DEBUG,_("Greeting seting for %s",pMsg->pAccessChannel));
+        logger(LOG_DEBUG,_("Greeting seting for %s"),pMsg->pAccessChannel);
         
         /* check of  existenz of the channel */
         if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
@@ -614,7 +614,7 @@ void setTopic(MsgItem_t *pMsg) {
     if (!pMsg->pAccessChannel) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
     } else if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
-        logger(LOG_DEBUG,_("Topic seting for %s",pMsg->pAccessChannel));
+        logger(LOG_DEBUG,_("Topic seting for %s"),pMsg->pAccessChannel);
 	    
         StrToChannelData(pChannelSet,&sChannelData);
 
@@ -673,7 +673,7 @@ void greeting(MsgItem_t *pMsg) {
         /* only greeting  send  to other user */
         if (strcmp(pMsg->pCallingNick,pTmpBotName)) {
             if (pMsg->pAccessChannel){
-                logger(LOG_DEBUG,_("Greeting for %s",pMsg->pAccessChannel));
+                logger(LOG_DEBUG,_("Greeting for %s"),pMsg->pAccessChannel);
         
                 if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
                     if ((greeting=getGreeting(pChannelSet))) {
@@ -1007,7 +1007,7 @@ void accountmode(MsgItem_t *pMsg){
     	/* set the end mark */
 	    mod[2]='\0';
 
-	    logger(LOG_DEBUG,_("Found account modes %s",mod));
+	    logger(LOG_DEBUG,_("Found account modes %s"),mod);
 
 		/* look for old master rights */
 		if (mod[1]!='m' && oldmod) {
@@ -1110,7 +1110,7 @@ void chanmode(MsgItem_t *pMsg) {
     
     	    /* read the new channel parameters */
     	    StrToChannelMode(pParameters,&sNewMode);
-        	logger(LOG_DEBUG,_("Found the new channel modes \"%s\" for the channel %s.",ChannelModeToStr(&sNewMode),pMsg->pAccessChannel));
+        	logger(LOG_DEBUG,_("Found the new channel modes \"%s\" for the channel %s.",ChannelModeToStr(&sNewMode)),pMsg->pAccessChannel);
     
         	/* build the new channel parameters */
     	    for (i=1;i<MAX_MODES;i++) {
@@ -1495,7 +1495,7 @@ void inviteuser(MsgItem_t *pMsg){
         } else {
             // invite
             invite(pMsg->pAccessChannel,pInviteNick);
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user %s to the channel %s.",pInviteNick,pMsg->pAccessChannel));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user %s to the channel %s."),pInviteNick,pMsg->pAccessChannel);
         }
         free(pTmp);
     }

@@ -62,9 +62,9 @@ boolean initDatabases(void) {
     if (!(pDir=opendir(sSetup.pDatabasePath))) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
-            logger(LOG_ERR,_("Couldn't create the directory %s for the database.",sSetup.pDatabasePath ));
+            logger(LOG_ERR,_("Couldn't create the directory %s for the database."),sSetup.pDatabasePath );
             #ifdef NDEBUG
-            fprintf(stderr,_("Couldn't create the directory %s for the database.",sSetup.pDatabasePath ));
+            fprintf(stderr,_("Couldn't create the directory %s for the database."),sSetup.pDatabasePath );
             fprintf(stderr,"\n");
             #endif
             return false;
@@ -84,9 +84,9 @@ boolean initDatabases(void) {
         
         if (!dbf[i]) {
             //errno=EBUSY;
-            logger(LOG_ERR,_("Couldn't open the databases %s.",pDBPath));
+            logger(LOG_ERR,_("Couldn't open the databases %s."),pDBPath);
             #ifdef NDEBUG
-            fprintf(stderr,_("Couldn't open the databases %s.",pDBPath));
+            fprintf(stderr,_("Couldn't open the databases %s."),pDBPath);
             fprintf(stderr,"\n");
             #endif
             return false;
