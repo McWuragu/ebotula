@@ -156,20 +156,20 @@ static MsgStruct_t Msg[] = {
 		"\t-b name\t\tSet the name of the bot.\n",
 		"\t-c sec\t\tSet the ping timeout of the connection.\n",
 		"\t-d path\t\tUse this path for the database\n",
-		"\t-e ms\t\tSet the second delay time in millisecond for sending.\n",
-        	"\t-f file\t\tUse this config file.\n",
-		"\t-g group\tSet the group under wich the bot run (only root).\n",
-        	"\t-h\t\tPrint this help information.\n",
-        	"\t-l lines\tSet the line limit for the first sending delay level.\n",
+		"\t-e ms\t\tSet the delay time in millisecond for the slow sending.\n",
+       	"\t-f file\t\tUse this config file.\n",
+	    "\t-g group\tSet the group under wich the bot run (only root).\n",
+        "\t-h\t\tPrint this help information.\n",
+        "\t-l lines\tSet the line limit for the first sending delay level.\n",
 		"\t-k days\t\tSet the  account live time in days.\n",
 		"\t-m\t\tCreate a bot master.\n",
-		"\t-n ms\t\tSet the first delay time in millisecond for sending.\n",
+		"\t-n ms\t\tSet the delay time in millisecond for the fast sending.\n",
 		"\t-p port\t\tSet the port of the irc server.\n"
 		"\t-r string\tSet the output  for a request of the real name.\n",
 		"\t-s server\tSet the irc server name.\n",
 		"\t-t count\tSet the number of creating  threads.\n",
 		"\t-u user\t\tSet the user under which the bot run (root only).\n",
-        	"\t-v\t\tPrint version.\n",
+        "\t-v\t\tPrint version.\n",
 		"."
 	};
 #endif
