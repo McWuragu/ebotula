@@ -126,7 +126,7 @@ boolean connectServer(void) {
     }
 
     #ifdef NDEBUG
-    printf("%s\n"gettext("The bot is connect to %s"),sSetup.server);
+    printf("%s\n",gettext("The bot is connect to %s"),sSetup.server);
     #endif
     
     logger(LOG_NOTICE,gettext("The bot is connect to %s"),sSetup.server);
