@@ -234,10 +234,11 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
         if (!exist_db(NICKTOUSER_DB,pNetmask)) {
             notice(pNick,MSG_NOT_LOGON);
         } else {
-            pLogin=get_db(NICKTOUSER_DB,pNetmask);
-            if (exist_db(ACCESS_DB,pLogin)) {
-                return true;
-            }
+            if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
+	            if (exist_db(ACCESS_DB,pLogin)) {
+        	        return true;
+	            }
+			}
         }
     }  else if (cmd_id >= CMD_OWNER) {
         // check the  login status
@@ -246,24 +247,23 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
         } else {
             // check the existe of a channel parameter
             if (strlen(pChannel)) {
-                pLogin=get_db(NICKTOUSER_DB,pNetmask);
-                pChannel=getAccessChannel(pLine);
+				if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
+					pChannel=getAccessChannel(pLine);
 
-                pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char*));
-                sprintf(pKey,"%s%s",pLogin,pChannel);
+					pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char*));
+					sprintf(pKey,"%s%s",pLogin,pChannel);
 
-                pMod=get_db(ACCESS_DB,pKey);
+					if ((pMod=get_db(ACCESS_DB,pKey))) {
+						if (strchr(pMod,'o')) {	return true;}
+					} else if (exist_db(ACCESS_DB,pLogin)) {
+						notice(pNick,MSG_MASTER);
+						return true;
+					}
 
-                if (strchr(pMod,'o')) {
-                        return true;
-                } else {
-                    if (exist_db(ACCESS_DB,pLogin)) {
-                        notice(pNick,MSG_MASTER);
-                        return true;
-                    }
-                }
-            }
-            notice(pNick,MSG_NOT_CHANNELOPT);
+				}
+            } else {
+				notice(pNick,MSG_NOT_CHANNELOPT);
+			}
         }
 
         notice(pNick,MSG_NOT_OWNER);

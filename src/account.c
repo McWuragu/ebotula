@@ -32,17 +32,19 @@ void rmDeadLogins(long lCheckTime) {
     pthread_mutex_lock(&account_mutex);
     // get the  list
     ppLogins=list_db(TIMELOG_DB);
+    
     for (i=0;ppLogins[i]!=NULL;i++) {
 
         // read time
-        pTime=get_db(TIMELOG_DB,ppLogins[i]);
-
-        // check the time
-        if (lCheckTime>atol(pTime)) {
-            log_out(ppLogins[i]);
-            syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,ppLogins[i]);
-        }
-        free(pTime);
+   	    if ((pTime=get_db(TIMELOG_DB,ppLogins[i]))) {
+	
+	        // check the time
+    	    if (lCheckTime>atol(pTime)) {
+	            log_out(ppLogins[i]);
+            	syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,ppLogins[i]);
+        	}
+    	    free(pTime);
+		}
     }
     pthread_mutex_unlock(&account_mutex);
 }
@@ -53,12 +55,13 @@ void log_on(char *pNetmask,char *pLogin) {
     char *pOldNetmask;
 
     if (exist_db(USERTONICK_DB,pLogin)) {
-        pOldNetmask=get_db(USERTONICK_DB,pLogin);
-        
-        del_db(NICKTOUSER_DB,pOldNetmask);
-        add_db(NICKTOUSER_DB,pNetmask,pLogin);
+        if ((pOldNetmask=get_db(USERTONICK_DB,pLogin))) {
+        	
+				del_db(NICKTOUSER_DB,pOldNetmask);
+        	add_db(NICKTOUSER_DB,pNetmask,pLogin);
 
-        replace_db(USERTONICK_DB,pLogin,pNetmask);
+        	replace_db(USERTONICK_DB,pLogin,pNetmask);
+		}
     } else {
         add_db(NICKTOUSER_DB,pNetmask,pLogin);
         add_db(USERTONICK_DB,pLogin,pNetmask);
@@ -86,10 +89,10 @@ void log_out(char *pLogin) {
     DEBUG("%s logged off",pLogin);
 
     
-    pNetmask=get_db(USERTONICK_DB,pLogin);
-
-    del_db(NICKTOUSER_DB,pNetmask);
-    del_db(USERTONICK_DB,pLogin);
+    if ((pNetmask=get_db(USERTONICK_DB,pLogin))){
+	    del_db(NICKTOUSER_DB,pNetmask);
+    	del_db(USERTONICK_DB,pLogin);
+	}
 }
 
 // #############################################################################
@@ -147,14 +150,14 @@ void rmDeadAccounts(long lCheckTime) {
     for (i=0;ppLogins[i]!=NULL;i++) {
 
         // read time
-        pTime=get_db(TIMELOG_DB,ppLogins[i]);
-        
-        // check the time
-        if (lCheckTime>atol(pTime)) {
-            rmAccount(ppLogins[i]);
-            syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,ppLogins[i]);
-        }
-        free(pTime);
+        if ((pTime=get_db(TIMELOG_DB,ppLogins[i]))) {
+        	// check the time
+    	    if (lCheckTime>atol(pTime)) {
+	            rmAccount(ppLogins[i]);
+            	syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,ppLogins[i]);
+        	}
+        	free(pTime);
+		}
     }
     pthread_mutex_unlock(&account_mutex);
 }

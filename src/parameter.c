@@ -362,7 +362,7 @@ boolean dialogMaster(void){
     StrToLower(name);
 
     // check loging
-    if (NickStringCheck(name) || !strlen(name)) {
+    if (!NickStringCheck(name) || !strlen(name)) {
         fprintf(stderr,ERR_NOT_ALLOW_CHAR);
         fprintf(stderr,"\n");
         return false;

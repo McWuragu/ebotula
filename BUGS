@@ -1,2 +1,2 @@
 - restart not correct work 
-- command line option -m not work
+- crash in the rmDeadLogins()

@@ -41,19 +41,19 @@ void hNickChange(char *pLine) {
         strtok(pNewNetmask,"\r");
 
     pthread_mutex_lock(&account_mutex);
-    pLogin=get_db(NICKTOUSER_DB,pNetmask);
+    if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 
-    // replace  the netmask
-    if (del_db(NICKTOUSER_DB,pNetmask)) {
-        add_db(NICKTOUSER_DB,pNewNetmask,pLogin);
-        replace_db(USERTONICK_DB,pLogin,pNewNetmask);
-    }
+	    // replace  the netmask
+    	if (del_db(NICKTOUSER_DB,pNetmask)) {
+        	add_db(NICKTOUSER_DB,pNewNetmask,pLogin);
+	        replace_db(USERTONICK_DB,pLogin,pNewNetmask);
+    	}
+
+    	free(pNetmask);
+
+    	DEBUG("Changethe netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
+	}
     pthread_mutex_unlock(&account_mutex);
-
-    free(pNetmask);
-
-
-    DEBUG("Changethe netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
 
 }
 // #########################################################################
@@ -109,27 +109,28 @@ void hSetModUser(char *pLine) {
         DEBUG("Set the mod for Account %s with nickname %s",pLogin,pNick);
             
         pthread_mutex_lock(&account_mutex);
-        pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine));
+        if ((pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
 
-        if (strlen(pLogin)) {
-            pChannel=getAccessChannel(pLine);
+	        if (strlen(pLogin)) {
+    	        pChannel=getAccessChannel(pLine);
 
-            // build key for access.dbf
-            pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
-            sprintf(pKey,"%s%s",pLogin,pChannel);
+        	    // build key for access.dbf
+            	pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
+	            sprintf(pKey,"%s%s",pLogin,pChannel);
 
-            // read  the  mod
-            pMod=get_db(ACCESS_DB,pKey);
-
-            // set the mod  for this nick
-            if (strlen(pMod)) {
-                mode(pChannel,pMod,pNick);
-                free(pMod);
-            } else if (exist_db(ACCESS_DB,pLogin)) {
-                mode(pChannel,"+o",pNick);
-            }
-            free(pChannel);
-            free(pKey);
+    	        // read  the  mod
+        	    if ((pMod=get_db(ACCESS_DB,pKey))) {
+	        	    // set the mod  for this nick
+    	        	if (strlen(pMod)) {
+        	        	mode(pChannel,pMod,pNick);
+	            	    free(pMod);
+		            } else if (exist_db(ACCESS_DB,pLogin)) {
+    		            mode(pChannel,"+o",pNick);
+        		    }
+				}
+            	free(pChannel);
+	            free(pKey);
+			}
 
         }
         pthread_mutex_unlock(&account_mutex);
@@ -191,19 +192,17 @@ void hResetTopic(char *pLine){
         pChannel=getAccessChannel(pLine);
 
 
-        pChannelSet=get_db(CHANNEL_DB,pChannel);
-
-
-        if ((pTopic=getTopic(pChannelSet))) {
-            // reset the topic
-            topic(pChannel,pTopic);
-            free(pTopic);
-        } else {
-            topic(pChannel,"");
-        }
-
+        if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
+        	if ((pTopic=getTopic(pChannelSet))) {
+            	// reset the topic
+	            topic(pChannel,pTopic);
+    	        free(pTopic);
+        	} else {
+	            topic(pChannel,"");
+    	    }	
+        	free(pChannelSet);
+		}	
         free(pChannel);
-        free(pChannelSet);
     }
 }
 // #########################################################################
@@ -231,17 +230,18 @@ static void channelInit(char *pChannel) {
     if (exist_db(CHANNEL_DB,pChannel)) {
         
         
-        pChannelSet=get_db(CHANNEL_DB,pChannel);
-        pChannelData=StrToChannelData(pChannelSet);
+        if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
+	        pChannelData=StrToChannelData(pChannelSet);
 
-        // set Topic
-        if (pChannelData->pTopic) {
-            topic(pChannel,pChannelData->pTopic);
-        }
+    	    // set Topic
+        	if (pChannelData->pTopic) {
+	            topic(pChannel,pChannelData->pTopic);
+    	    }
 
-        // set Modes
-        if ((pMode=ChannelModeToStr(pChannelData->pModes))) {
-            mode(pChannel,pMode,NULL);
-        }
+        	// set Modes
+	        if ((pMode=ChannelModeToStr(pChannelData->pModes))) {
+    	        mode(pChannel,pMode,NULL);
+        	}
+		}
     }
 }

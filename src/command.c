@@ -183,25 +183,25 @@ void password(char *pLine) {
     pNick=getNickname(pLine);
     
     pthread_mutex_lock(&account_mutex);
-    pLogin=get_db(NICKTOUSER_DB,pNetmask);
+    if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 
-    DEBUG("Check the  password for the account %s",pLogin);
+	    DEBUG("Check the  password for the account %s",pLogin);
 
-    // get  the  login name
-    if (strlen(pLogin)) {
-        pPasswd=getParameters(pLine);
+	    // get  the  login name
+	    if (strlen(pLogin)) {
+        	pPasswd=getParameters(pLine);
 
-        // parse the  password  form  parameter list
-        if (!strlen(pPasswd)) {
-            notice(pNick,MSG_NOT_PASS);
-        }
+	        // parse the  password  form  parameter list
+	        if (!strlen(pPasswd)) {
+        	    notice(pNick,MSG_NOT_PASS);
+	        }
 
-        // set password
-        replace_db(USER_DB,pLogin,pPasswd);
-        notice(pNick,MSG_PASSWD);        
+        	// set password
+	        replace_db(USER_DB,pLogin,pPasswd);
+        	notice(pNick,MSG_PASSWD);        
+	    }
     }
     pthread_mutex_lock(&account_mutex);
-    notice(pNick,MSG_NOT_LOGON);
 }
 // #########################################################################
 // Bot comand: !logoff
@@ -219,16 +219,17 @@ void logoff(char *pLine) {
     pNick=getNickname(pLine);
 
     pthread_mutex_lock(&account_mutex);
-    pLogin=get_db(NICKTOUSER_DB,pNetmask);
-    log_out(pLogin);
-    pthread_mutex_unlock(&account_mutex);
+   	if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
+	    log_out(pLogin);
 
-    // remove the mod  for  this account
-    ppChannels=list_db(CHANNEL_DB);
-    for (i=0;ppChannels[i]!=NULL;i++) {
-        mode(ppChannels[i],"-o",pNick);
-        mode(ppChannels[i],"-v",pNick);
-    }
+    	// remove the mod  for  this account
+	    ppChannels=list_db(CHANNEL_DB);
+    	for (i=0;ppChannels[i]!=NULL;i++) {
+        	mode(ppChannels[i],"-o",pNick);
+	        mode(ppChannels[i],"-v",pNick);
+    	}
+	}
+    pthread_mutex_unlock(&account_mutex);
     notice(pNick,MSG_LOGOFF);
 }
 // #########################################################################
@@ -256,7 +257,7 @@ void ident(char *pLine) {
 
     pthread_mutex_lock(&account_mutex);
     
-    if (exist_db(NICKTOUSER_DB,pNetmask)) {
+    if (!exist_db(NICKTOUSER_DB,pNetmask)) {
         pParameter=getParameters(pLine);
     
         // no parameter found
@@ -298,13 +299,11 @@ void ident(char *pLine) {
                     } else {
                         pKey=(char*)malloc((strlen(ppChannels[i])+login_len+1)*sizeof(char));
                         sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
-                        pMod=get_db(ACCESS_DB,pKey);
-        
-                        if (strlen(pMod)) {
-                            mode(ppChannels[i],pMod,pNick);
-                            free(pMod);
-                        }
-                        free(pKey);
+                        if ((pMod=get_db(ACCESS_DB,pKey))) {
+   	                        mode(ppChannels[i],pMod,pNick);
+      	                    free(pMod);
+          	            }
+                       	free(pKey);
                     }
                 }
             } else {
@@ -313,7 +312,7 @@ void ident(char *pLine) {
         } else {
             notice(pNick,MSG_IDENT_ERR);
         }
-    }else {
+    } else {
         notice(pNick,MSG_ALREADY_LOGON);
     }
     pthread_mutex_unlock(&account_mutex);
@@ -467,6 +466,7 @@ void chanlist(char *pLine){
     char **ppChannels;
     char *pMode;
     char *pMsgStr;
+	char *pChannelSet;
     int i=0,buffer_size=0;
     ChannelData_t *pChannelData;
 
@@ -481,35 +481,37 @@ void chanlist(char *pLine){
 
 
     for (i=0;ppChannels[i]!=NULL;i++) {
-        pChannelData=StrToChannelData(get_db(CHANNEL_DB,ppChannels[i]));
-        pMode=ChannelModeToStr(pChannelData->pModes);
+		if ((pChannelSet=get_db(CHANNEL_DB,ppChannels[i]))) {
+	        pChannelData=StrToChannelData(pChannelSet);
+    	    pMode=ChannelModeToStr(pChannelData->pModes);
 
-        DEBUG("...for channel %s",ppChannels[i]);
-        notice(pNick,ppChannels[i]);
+        	DEBUG("...for channel %s",ppChannels[i]);
+	        notice(pNick,ppChannels[i]);
 
-        pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_MODE)+strlen(pMode)+2)*sizeof(char));
-        sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_MODE,pMode);
-        notice(pNick,pMsgStr);
-        free(pMsgStr);
+    	    pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_MODE)+strlen(pMode)+2)*sizeof(char));
+        	sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_MODE,pMode);
+	        notice(pNick,pMsgStr);
+    	    free(pMsgStr);
 
-        if (pChannelData->pTopic) {
-            pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_TOPIC)+strlen(pChannelData->pTopic)+2)*sizeof(char));
-            sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_TOPIC,pChannelData->pTopic);
-            notice(pNick,pMsgStr);
-            free(pMsgStr);
-        }
+        	if (pChannelData->pTopic) {
+            	pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_TOPIC)+strlen(pChannelData->pTopic)+2)*sizeof(char));
+	            sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_TOPIC,pChannelData->pTopic);
+    	        notice(pNick,pMsgStr);
+        	    free(pMsgStr);
+	        }
 
-        if (pChannelData->pGreeting) {
-            pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_GREAT)+strlen(pChannelData->pGreeting)+2)*sizeof(char));
-            sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_GREAT,pChannelData->pGreeting);
-            notice(pNick,pMsgStr);
-            free(pMsgStr);
-        }
+    	    if (pChannelData->pGreeting) {
+        	    pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_GREAT)+strlen(pChannelData->pGreeting)+2)*sizeof(char));
+            	sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_GREAT,pChannelData->pGreeting);
+	            notice(pNick,pMsgStr);
+    	        free(pMsgStr);
+        	}
 
 
-        free(pMode);
-        free(pChannelData);
-
+	        free(pMode);
+    	    free(pChannelData);
+			free(pChannelSet);
+		}
     }
 
     notice(pNick,MSG_CHANNELLIST_END);
@@ -542,30 +544,30 @@ void setGreeting(char *pLine) {
 
 
     // check of  existenz of the channel
-    pChannelSet=get_db(CHANNEL_DB,pChannel);
+    if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
+	    pChannelData=StrToChannelData(pChannelSet);
+    	free(pChannelSet);
+	    
+		// remive old greeting
+		if (pChannelData->pGreeting) {
+    	    free(pChannelData->pGreeting);
+	    }
+	    pChannelData->pGreeting=getParameters(pLine);
 
-    if (!strlen(pChannelSet)) {
+    
+		pChannelSet=ChannelDataToStr(pChannelData);
+	    replace_db(CHANNEL_DB,pChannel,pChannelSet);
+
+
+    	// message
+	    if (pChannelData->pGreeting[0]=='\0') {
+     	   notice(pNick,MSG_RM_GREATING);
+	    } else {
+    	    notice(pNick,MSG_SET_GREATING);
+	    }
+	} else {
         notice(pNick,MSG_NOT_CHANNEL);
-        return;
-    } else {
-        pChannelData=StrToChannelData(pChannelSet);
-        if (pChannelData->pGreeting) {
-            free(pChannelData->pGreeting);
-        }
-        pChannelData->pGreeting=getParameters(pLine);
-    }
-
-    free(pChannelSet);
-    pChannelSet=ChannelDataToStr(pChannelData);
-    replace_db(CHANNEL_DB,pChannel,pChannelSet);
-
-
-    // message
-    if (pChannelData->pGreeting[0]=='\0') {
-        notice(pNick,MSG_RM_GREATING);
-    } else {
-        notice(pNick,MSG_SET_GREATING);
-    }
+	}
 }
 // #########################################################################
 // Bot comand: !topic <#channel> <topic>
@@ -584,34 +586,32 @@ void setTopic(char *pLine) {
     DEBUG("Topic seting for %s",pChannel);
     
 
-    pChannelSet=get_db(CHANNEL_DB,pChannel);
+    if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
 
-    // check of  existenz of the channel
-    if (!strlen(pChannelSet)) {
-        notice(pNick,MSG_NOT_CHANNEL);
-        return;
-    } else {
-        pChannelData=StrToChannelData(pChannelSet);
+	    pChannelData=StrToChannelData(pChannelSet);
+    	free(pChannelSet);
+
+		// remove old topic
         if (pChannelData->pTopic) {
             free(pChannelData->pTopic);
         }
         pChannelData->pTopic=getParameters(pLine);
-    }
+
+	    pChannelSet=ChannelDataToStr(pChannelData);
+    	replace_db(CHANNEL_DB,pChannel,pChannelSet);
 
 
-    free(pChannelSet);
-    pChannelSet=ChannelDataToStr(pChannelData);
-    replace_db(CHANNEL_DB,pChannel,pChannelSet);
+	    // message
+    	if (pChannelData->pTopic[0]=='\0') {
+	        notice(pNick,MSG_RM_TOPIC);
+    	} else {
+        	notice(pNick,MSG_SET_TOPIC);
+    	}
 
-
-    // message
-    if (pChannelData->pTopic[0]=='\0') {
-        notice(pNick,MSG_RM_TOPIC);
-    } else {
-        notice(pNick,MSG_SET_TOPIC);
-    }
-
-    topic(pChannel,pChannelData->pTopic);
+	    topic(pChannel,pChannelData->pTopic);
+	} else {
+        notice(pNick,MSG_NOT_CHANNEL);
+	}
 }
 // #########################################################################
 // Bot comand: !viewgreet <#channel>
@@ -631,12 +631,11 @@ void greeting(char *pLine) {
 
         DEBUG("Greeting for %s",pChannel);
 
-        pChannelSet=get_db(CHANNEL_DB,pChannel);
-
-        if ((greeting=getGreeting(pChannelSet))) {
-            DEBUG("Greeting line %s",greeting);
-            notice(pNick,greeting);
-        }
+        if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
+    	    if ((greeting=getGreeting(pChannelSet))) {
+            	notice(pNick,greeting);
+        	}
+		}
     }
 }
 // #########################################################################
@@ -734,166 +733,169 @@ void usermode(char *pLine){
     pNick=getNickname(pLine);
     pChannel=getAccessChannel(pLine);
     
-    pthread_mutex_lock(&account_mutex);
-    accesslogin=get_db(NICKTOUSER_DB,getNetmask(pLine));
+    if ((accesslogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
+    	pthread_mutex_lock(&account_mutex);
 
-    // check the channel
-    if (!(exist_db(CHANNEL_DB,pChannel))) {
-        pthread_mutex_unlock(&account_mutex);
-        notice(pNick,MSG_NOT_CHANNEL);
-        return;
-    }
+	    // check the channel
+    	if (!(exist_db(CHANNEL_DB,pChannel))) {
+	        pthread_mutex_unlock(&account_mutex);
+        	notice(pNick,MSG_NOT_CHANNEL);
+    	    return;
+	    }
 
-    // get parameters
-    pParameter=getParameters(pLine);
+    	// get parameters
+	    pParameter=getParameters(pLine);
 
-    // user mod
-    DEBUG("Modify user mod");
+    	// user mod
+	    DEBUG("Modify user mod");
 
-    // look for the space and separat the login for the user which want modify
-    if (!(pPos=strchr(pParameter,' '))) {
-        pthread_mutex_unlock(&account_mutex);
-        notice(pNick,MSG_USERMODE_ERR);
-        return;
-    }
+    	// look for the space and separat the login for the user which want modify
+	    if (!(pPos=strchr(pParameter,' '))) {
+    	    pthread_mutex_unlock(&account_mutex);
+	        notice(pNick,MSG_USERMODE_ERR);
+        	return;
+    	}
 
-    // set the end mark for login string and  place the pointer of the substr
-    *pPos='\0';
-    pPos++;
+	    // set the end mark for login string and  place the pointer of the substr
+    	*pPos='\0';
+	    pPos++;
 
-    // extract the  login
-    pLogin=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
-    strcpy(pLogin,pParameter);
-    StrToLower(pLogin);
+    	// extract the  login
+	    pLogin=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
+    	strcpy(pLogin,pParameter);
+	    StrToLower(pLogin);
 
 
-    // check login in the user db
-    if (!(exist_db(USER_DB,pLogin))) {
-        pthread_mutex_unlock(&account_mutex);
-        notice(pNick,MSG_NOT_ACCOUNT);
-        return;
-    } else if (!strcmp(pLogin,accesslogin)) {
-        pthread_mutex_unlock(&account_mutex);
-        notice(pNick,MSG_NOT_SELF);
-        return;
-    }
+    	// check login in the user db
+	    if (!(exist_db(USER_DB,pLogin))) {
+    	    pthread_mutex_unlock(&account_mutex);
+	        notice(pNick,MSG_NOT_ACCOUNT);
+        	return;
+    	} else if (!strcmp(pLogin,accesslogin)) {
+	        pthread_mutex_unlock(&account_mutex);
+        	notice(pNick,MSG_NOT_SELF);
+    	    return;
+	    }
 
-    // build the key  for access rights  db
-    pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
-    sprintf(pKey,"%s%s",pLogin,pChannel);
+    	// build the key  for access rights  db
+	    pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
+	    sprintf(pKey,"%s%s",pLogin,pChannel);
 
-    oldmod=get_db(ACCESS_DB,pKey);
+    
+	    // get the  old mod for  a  user from the  access db
+    	if (!(oldmod=get_db(ACCESS_DB,pKey))) {
+        	// get the old mod for user as master
+	        if ((oldmod=get_db(ACCESS_DB,pLogin))) {
+		   	    // only a master  can modify  a other master
+    		    if (strchr(oldmod,'m') && !exist_db(ACCESS_DB,accesslogin)) {
+	        	    pthread_mutex_unlock(&account_mutex);
+            		notice(pNick,MSG_NOT_MASTER);
+	        	    return;
+    		    }
+		
+			}
 
-    // get the  old mod for  a  user from the  access db
-    if (!strlen(oldmod)) {
-        // get the old mod for user as master
-        oldmod=get_db(ACCESS_DB,pLogin);
+	    }
 
-        // only a master  can modify  a other master
-        if (strchr(oldmod,'m') && !exist_db(ACCESS_DB,accesslogin)) {
-            pthread_mutex_unlock(&account_mutex);
-            notice(pNick,MSG_NOT_MASTER);
-            return;
-        }
-    }
+    	DEBUG("Modify account %s in channel %s",pLogin,pChannel);
 
-    DEBUG("Modify account %s in channel %s",pLogin,pChannel);
+	    //check for add or remove  mod
+    	if (pPos[0]!='+' && pPos[0]!='-') {
+	        notice(pNick,MSG_USERMODE_ERR);
+        	pthread_mutex_unlock(&account_mutex);
+    	    return;
+	    } else {
+    	    mod[0]=pPos[0];
+	    }
 
-    //check for add or remove  mod
-    if (pPos[0]!='+' && pPos[0]!='-') {
-        notice(pNick,MSG_USERMODE_ERR);
-        pthread_mutex_unlock(&account_mutex);
-        return;
-    } else {
-        mod[0]=pPos[0];
-    }
+    	// checke the mod
+	   	switch (pPos[1]) {
+	    case 'v':
+    	case 'o':
+	        mod[1]=pPos[1];
+        	break;
+    	case 'm':
+	        if (!exist_db(ACCESS_DB,accesslogin)) {
+        	    notice(pNick,MSG_NOT_MASTER);
+    	    } else {
+	            mod[1]=pPos[1];
+        	}
+    	    break;
+	    default:
+        	notice(pNick,MSG_UNKNOWN_MODS);
+    	    return;
+	    }
 
-    // checke the mod
-    switch (pPos[1]) {
-    case 'v':
-    case 'o':
-        mod[1]=pPos[1];
-        break;
-    case 'm':
-        if (!exist_db(ACCESS_DB,accesslogin)) {
-            notice(pNick,MSG_NOT_MASTER);
-        } else {
-            mod[1]=pPos[1];
-        }
-        break;
-    default:
-        notice(pNick,MSG_UNKNOWN_MODS);
-        return;
-    }
+    	// set the end mark
+	    mod[2]='\0';
 
-    // set the end mark
-    mod[2]='\0';
+    	// set end mark for the  mode line
+	    DEBUG("Found mod %s",mod);
 
-    // set end mark for the  mode line
-    DEBUG("Found mod %s",mod);
+    	// check for old or new master
+	    if (strchr(oldmod,'m') || (mod[1]=='m')) {
+    	    DEBUG("Modify a master account");
 
-    // check for old or new master
-    if (strchr(oldmod,'m') || (mod[1]=='m')) {
-        DEBUG("Modify a master account");
+        	// remove old  access rights if make a user to bot master or
+	        // remove  old  master access rights if a master put of a other access level
+    	    if (mod[1]=='m' && !strchr(oldmod,'m')) {
+        	    // remove old access right
+            	rmAccessRights(pLogin);
 
-        // remove old  access rights if make a user to bot master or
-        // remove  old  master access rights if a master put of a other access level
-        if (mod[1]=='m' && !strchr(oldmod,'m')) {
-            // remove old access right
-            rmAccessRights(pLogin);
+	            // replace the  old key by the login as new key
+    	        free(pKey);
+        	    pKey=(char *)malloc((strlen(pLogin)+1)*sizeof(char));
+            	strcpy(pKey,pLogin);
 
-            // replace the  old key by the login as new key
-            free(pKey);
-            pKey=(char *)malloc((strlen(pLogin)+1)*sizeof(char));
-            strcpy(pKey,pLogin);
-
-        } else if (mod[1]!='m' && strchr(oldmod,'m')) {
-            // remove master account
-            del_db(ACCESS_DB,pLogin);
-        }
-    }
-    // add or remove the mod
-    if (mod[0]=='+') {
+	        } else if (mod[1]!='m' && strchr(oldmod,'m')) {
+        	    // remove master account
+    	        del_db(ACCESS_DB,pLogin);
+	        }
+    	}
+	    
+		// add or remove the mod
+   		if (mod[0]=='+') {
         DEBUG("Set new mode");
 
         if (!(add_db(ACCESS_DB,pKey,mod))) {
             replace_db(ACCESS_DB,pKey,mod);
         }
-    } else {
-        DEBUG("Remove new mode");
-        // remove mod
-        del_db(ACCESS_DB,pKey);
+	    } else {
+    	    DEBUG("Remove new mode");
+	        // remove mod
+        	del_db(ACCESS_DB,pKey);
 
-    }
+    	}
 
 
-    // identify the  login and set the rights
-    usernick=getNickname(get_db(USERTONICK_DB,pLogin));
-    if (strlen(usernick) && oldmod[1]!= mod[1]) {
-        DEBUG("Modify the current mode");
-        if (mod[0]=='-') {
-            // remove mods
-            mode(pChannel,mod,usernick);
-        } else {
-            // remove old mods
-            if (strchr(oldmod,'v')) {
-                // remove -o
-                mode(pChannel,"-v",usernick);
-            } else if (strlen(oldmod)) {
-                // remove -v
-                mode(pChannel,"-o",usernick);
-            }
+	    // identify the  login and set the rights
+    	usernick=getNickname(get_db(USERTONICK_DB,pLogin));	
+	    if (strlen(usernick) && oldmod[1]!= mod[1]) {
+    	    DEBUG("Modify the current mode");
+	        if (mod[0]=='-') {
+            	// remove mods
+        	    mode(pChannel,mod,usernick);
+    	    } else {
+	            // remove old mods
+        	    if (strchr(oldmod,'v')) {
+    	            // remove -o
+	                mode(pChannel,"-v",usernick);
+            	} else if (strlen(oldmod)) {
+        	        // remove -v
+    	            mode(pChannel,"-o",usernick);
+	            }
 
-            // set the new mods
-            if (mod[1]=='v') {
-                mode(pChannel,"+v",usernick);
-            } else {
-                mode(pChannel,"+o",usernick);
-            }
-        }
-    }
-    pthread_mutex_unlock(&account_mutex);
-    notice(pNick,MSG_USERMODE_OK);
+            	// set the new mods
+        	    if (mod[1]=='v') {
+    	            mode(pChannel,"+v",usernick);
+	            } else {
+            	    mode(pChannel,"+o",usernick);
+        	    }
+    	    }
+	    }
+		pthread_mutex_unlock(&account_mutex);
+	    notice(pNick,MSG_USERMODE_OK);
+	} 
 }
 // #########################################################################
 // Bot comand: !chanmode [#channel] <mod>
@@ -916,76 +918,75 @@ void chanmode(char *pLine) {
 
 
     // read the old channel parameters
-    pChannelSet=get_db(CHANNEL_DB,pChannel);
-    if (strlen(pChannelSet)) {
+    
+    if (pChannelSet=get_db(CHANNEL_DB,pChannel)) {
         pChannelData=StrToChannelData(pChannelSet);
+
+	    // read the new channel parameters
+	    pNewMode=StrToChannelMode(getParameters(pLine));
+    	DEBUG("Found the new channel modes \"%s\"",ChannelModeToStr(pNewMode));
+
+	    DEBUG("Build the new modes for the channel %s",pChannel);
+    	// build the new channel parameters
+	    for (i=1;i<MAX_MODES;i++) {
+    	    if (pNewMode->pModeStr[MOD_TYPE]=='+') {
+        	    // add  the new mode in the pChannelData
+            	if (pNewMode->pModeStr[i]!=' ') {
+                	// set the new flag
+	                pChannelData->pModes->pModeStr[i]=pNewMode->pModeStr[i];
+	
+    	            // set keyword and limit
+        	        if (pNewMode->pModeStr[i]=='k') {
+            	        free(pChannelData->pModes->pKeyword);
+                	    pChannelData->pModes->pKeyword=(char*)malloc((strlen(pNewMode->pKeyword)+1)*sizeof(char));
+                    	strcpy(pChannelData->pModes->pKeyword,pNewMode->pKeyword);
+	                } else if (pNewMode->pModeStr[i]=='l') {
+    	                free(pChannelData->pModes->pLimit);
+        	            pChannelData->pModes->pLimit=(char*)malloc((strlen(pNewMode->pLimit)+1)*sizeof(char));
+            	        strcpy(pChannelData->pModes->pLimit,pNewMode->pLimit);
+                	}
+	            }
+
+    	    } else if (pNewMode->pModeStr[MOD_TYPE]=='-') {
+        	    // remove  flags from the pChanneldata
+            	if (pNewMode->pModeStr[i]!=' ') {
+
+	                // remove the  mode flag
+    	            pChannelData->pModes->pModeStr[i]=' ';
+
+        	        // remove keyword and limit
+            	    if (pChannelData->pModes->pModeStr[i]=='k') {
+                	    pChannelData->pModes->pKeyword[0]='\0';
+	                } else if (pChannelData->pModes->pModeStr[i]=='l') {
+    	                pChannelData->pModes->pLimit[0]='\0';
+        	        }
+            	}
+
+	        }
+    	}
+
+
+	    // check the exit  of channell modes
+    	// set or remove the leading plus
+	    if (strpbrk(pChannelData->pModes->pModeStr,CHANNEL_MODES)) {
+    	    pChannelData->pModes->pModeStr[0]='+';
+	    } else {
+    	    pChannelData->pModes->pModeStr[0]=' ';
+	    }
+
+    	DEBUG("Write the new modes channel \"%s\"",ChannelModeToStr(pChannelData->pModes))
+	    // set the new mode in database
+    	free(pChannelSet);
+	    pChannelSet=ChannelDataToStr(pChannelData);
+    	replace_db(CHANNEL_DB,pChannel,pChannelSet);
+
+
+	    DEBUG("Set the new channel modes")
+    	// set the mods
+	    mode(pChannel,ChannelModeToStr(pNewMode),NULL);
     } else {
         notice(pNick,MSG_NOT_CHANNEL);
-        return;
     }
-
-    // read the new channel parameters
-    pNewMode=StrToChannelMode(getParameters(pLine));
-    DEBUG("Found the new channel modes \"%s\"",ChannelModeToStr(pNewMode));
-
-    DEBUG("Build the new modes for the channel %s",pChannel);
-    // build the new channel parameters
-    for (i=1;i<MAX_MODES;i++) {
-        if (pNewMode->pModeStr[MOD_TYPE]=='+') {
-            // add  the new mode in the pChannelData
-            if (pNewMode->pModeStr[i]!=' ') {
-                // set the new flag
-                pChannelData->pModes->pModeStr[i]=pNewMode->pModeStr[i];
-
-                // set keyword and limit
-                if (pNewMode->pModeStr[i]=='k') {
-                    free(pChannelData->pModes->pKeyword);
-                    pChannelData->pModes->pKeyword=(char*)malloc((strlen(pNewMode->pKeyword)+1)*sizeof(char));
-                    strcpy(pChannelData->pModes->pKeyword,pNewMode->pKeyword);
-                } else if (pNewMode->pModeStr[i]=='l') {
-                    free(pChannelData->pModes->pLimit);
-                    pChannelData->pModes->pLimit=(char*)malloc((strlen(pNewMode->pLimit)+1)*sizeof(char));
-                    strcpy(pChannelData->pModes->pLimit,pNewMode->pLimit);
-                }
-            }
-
-        } else if (pNewMode->pModeStr[MOD_TYPE]=='-') {
-            // remove  flags from the pChanneldata
-            if (pNewMode->pModeStr[i]!=' ') {
-
-                // remove the  mode flag
-                pChannelData->pModes->pModeStr[i]=' ';
-
-                // remove keyword and limit
-                if (pChannelData->pModes->pModeStr[i]=='k') {
-                    pChannelData->pModes->pKeyword[0]='\0';
-                } else if (pChannelData->pModes->pModeStr[i]=='l') {
-                    pChannelData->pModes->pLimit[0]='\0';
-                }
-            }
-
-        }
-    }
-
-
-    // check the exit  of channell modes
-    // set or remove the leading plus
-    if (strpbrk(pChannelData->pModes->pModeStr,CHANNEL_MODES)) {
-        pChannelData->pModes->pModeStr[0]='+';
-    } else {
-        pChannelData->pModes->pModeStr[0]=' ';
-    }
-
-    DEBUG("Write the new modes channel \"%s\"",ChannelModeToStr(pChannelData->pModes))
-    // set the new mode in database
-    free(pChannelSet);
-    pChannelSet=ChannelDataToStr(pChannelData);
-    replace_db(CHANNEL_DB,pChannel,pChannelSet);
-
-
-    DEBUG("Set the new channel modes")
-    // set the mods
-    mode(pChannel,ChannelModeToStr(pNewMode),NULL);
 }
 // #########################################################################
 // Bot comand: !rmuser <login>
@@ -1002,7 +1003,6 @@ void rmuser(char *pLine) {
     pLogin=getParameters(pLine);
     
     pthread_mutex_lock(&account_mutex);
-    rmnick=getNickname(get_db(USERTONICK_DB,pLogin));
 
 
     DEBUG("Remove %s from the user list",pLogin);
@@ -1015,7 +1015,7 @@ void rmuser(char *pLine) {
     
         // remove the mod  for  this account
         ppChannels=list_db(CHANNEL_DB);
-        if (strlen(rmnick)) {
+        if ((rmnick=getNickname(get_db(USERTONICK_DB,pLogin)))) {
             for (i=0;ppChannels[i]!=NULL;i++) {
                 mode(ppChannels[i],"-o",rmnick);
                 mode(ppChannels[i],"-v",rmnick);

@@ -24,7 +24,7 @@ char *getNickname(char *pLine){
 	
 	pStr=getNetmask(pLine);
 
-	if (strtok(pStr,"!")) {
+	if (strtok(pStr,"!") && pLine!=NULL) {
 		if (NickStringCheck(pStr)) {
 			pNick=(char *)malloc((strlen(pStr)+1)*sizeof(char));
 			strcpy(pNick,pStr);
@@ -42,7 +42,7 @@ char *getNetmask(char *pLine){
 	strcpy(pStr,pLine);
     strtok(&pStr[1]," ");
 
-	if (!strchr(pStr,'!') || !strchr(pStr,'@')) {
+	if (!strchr(pStr,'!') || !strchr(pStr,'@') && pLine==NULL) {
 		return "";
 	} else if (pStr[0]==':'){
 		pNetmask=(char *)malloc(strlen(pStr)*sizeof(char));
@@ -53,7 +53,6 @@ char *getNetmask(char *pLine){
 		strcpy(pNetmask,pStr);
 		return pNetmask;
 	}
-
 
 
 }
@@ -67,30 +66,30 @@ char *getCommand(char *pLine) {
 
 	// find the  secondary double point
 	// and put after this a null byte
-	if (pTmp[0]!=':') {
-		return "";
-	}
-	// find the next colon and replace  him with null byte
-	strtok(&pTmp[1],":");
+	if (pTmp[0]==':' && pLine!=NULL) {
+		// find the next colon and replace  him with null byte
+		strtok(&pTmp[1],":");
 	
-	// cut out  the first part of the server answer 
-	pStr=(char *)malloc((strlen(pTmp)+1)*sizeof(char));
-	strcpy(pStr,pTmp);
+		// cut out  the first part of the server answer 
+		pStr=(char *)malloc((strlen(pTmp)+1)*sizeof(char));
+		strcpy(pStr,pTmp);
 
-	return pStr;
+		return pStr;
+	}
+	return "";
 }
 // ############################################################################# 
 char *getArgument(char *pLine) {
 	char *pStr,*pPos,*pArg;
 	int i,iLineLen;
+
+
+	if (!pLine) return "";
 	
 	// found  the begining  of Parameter 
 	if ((pStr=strstr(pLine," :!"))==NULL) {
 		return "";
 	} else {
-		
-		
-		
 		// set the begin of comand string
 		pStr+=3;
         iLineLen=strlen(pStr);
@@ -119,6 +118,8 @@ char *getChannel(char *pLine){
 	char *pPreamble;
 	char *pPos;
 	char *pChannel;
+	
+	if (!pLine) return "";
 
 	// extract  the substring
 	pPreamble=getCommand(pLine);
@@ -143,6 +144,8 @@ char *getAccessChannel(char *pLine) {
 	char *pParameter;
 	char *pChannel;
 	char *pPos;
+
+	if (!pLine) return "";
 
 	pParameter=getArgument(pLine);
 
@@ -186,6 +189,8 @@ char  *getTopic(char *pChannelSet) {
 	char *pTopic;
 	char *pPos,*pPos2;
 	char *pStr;
+	
+	if (!pChannelSet) return "";
 
 	pStr=(char *)malloc((strlen(pChannelSet)+1)*sizeof(char));
 	strcpy(pStr,pChannelSet);
@@ -216,8 +221,10 @@ char  *getTopic(char *pChannelSet) {
 char  *getGreeting(char *pChannelSet) {
 	char *pGreeting;
 	char *pPos;
-
-    // look for the begin  of greeting
+	
+	if (!pChannelSet) return "";
+    
+	// look for the begin  of greeting
 	if (!(pPos=strrchr(pChannelSet,'\t'))) {
 		return NULL;		  
     }
@@ -240,6 +247,8 @@ char *getChannelMode(char *pChannelSet){
 	char *pStr;
 	char *pPos;
 
+	if (!pChannelSet) return "";
+	
 	pStr=(char *)malloc((strlen(pChannelSet)+1)*sizeof(char));
 	strcpy(pStr,pChannelSet);
 
@@ -258,6 +267,8 @@ char *getParameters(char *pLine){
 	char *pArg;
 	char *pPos; 
 
+	if (!pLine) return "";
+	
 	pArg=getArgument(pLine);
 
 	if (pArg[0]!='#') {
