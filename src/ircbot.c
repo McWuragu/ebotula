@@ -54,6 +54,7 @@ int main(int argc,const char *argv[]) {
 	sSetup.AccountLiveTime=MIN_ALT;
 	sSetup.AutoLoggoff=MIN_ALT;
 	sSetup.sendDelay=-1;
+	sSetup.iTimeout=-1;
 	sSetup.thread_limit=0;
 
 	// container for a message for the queue
@@ -109,6 +110,11 @@ int main(int argc,const char *argv[]) {
 		sSetup.sendDelay=0;
 	}
 
+	if (sSetup.iTimeout<0) {
+		sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
+		DEBUG("DEFAULT TIMEOUT");
+	}
+
 	DEBUG("-----------------------------------------------");
 	DEBUG("Server %s",sSetup.server);
 	DEBUG("Port %s",sSetup.port);
@@ -117,6 +123,7 @@ int main(int argc,const char *argv[]) {
 	DEBUG("Threads %d",sSetup.thread_limit);
 	DEBUG("Config file %s",sSetup.configfile);
 	DEBUG("Database path %s",sSetup.database_path);
+	DEBUG("Ping timeout %ds",sSetup.iTimeout);
 	DEBUG("Sending delay %dms",sSetup.sendDelay);
 	DEBUG("Account live time %dd",sSetup.AccountLiveTime);
 	DEBUG("Autolog of after %dd",sSetup.AutoLoggoff);
@@ -259,8 +266,11 @@ int main(int argc,const char *argv[]) {
 
 	// clear the wait queue
 	msgctl(msgid,IPC_RMID,NULL);
+    
+	// disconnect from server
 	disconnectServer();
-    closeDatabase();
+    
+	closeDatabase();
 	closelog();
 	return(0);
 
