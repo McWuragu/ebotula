@@ -10,6 +10,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define VERSIONSTR 	"%s v%s Build [%s - %s] (C) 2003 Steffen Laube\n",PROGNAME,VERSION,__DATE__,__TIME__
 
 #define PROGNAME				"ebotula"
 #define CONFFILE 				"ebotula.conf"
@@ -18,25 +19,27 @@
 #define DEFAULT_REALNAME		"I'm a stupid bot"
 #define DEFAULT_BOTNAME			"Ebotula"
 
+#define MIN_LOGOFF				1
+#define MIN_ALT					1
 #define MAX_NICKS				3
 #define MAX_THREADS_LIMIT       25
 #define NOT_ALLOW_CHAR 			" :;<>*#/\"\'\\{}[]()=?§$"
 
 
-#define USER_ALLOW_CHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-[]\\`^{}~"
-#define CHANNEL_NOT_ALLOW_CHAR	" \a\r\n,"
-		
-typedef struct ConfStruct{
-	char *botname;
-	char *realname;
-	char *server;
-	char *port;
-	char *configfile;
-	char *database_path;
-	unsigned thread_limit;
-	int newMaster;
-} ConfType;
 
+
+#define	PARAMETER_CHAR	'-'
+#define COMMENT_CHAR	'#'
+
+#define KEY_SERVER			"servername"
+#define KEY_PORT			"port"
+#define KEY_BOTNAME			"botname"
+#define KEY_REALNAME		"realname"
+#define KEY_THREADLIMIT		"threadlimit"
+#define	KEY_DATABASEPATH	"databasepath"
+#define KEY_AUTOLOGOFF		"autologoff"
+#define KEY_SENDDELAY		"senddelay"
+#define KEY_ALT				"accountlivetime"
 
 
 
