@@ -1,14 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <errno.h>
+#include <pthread.h>
+#include <signal.h>
+
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <sys/types.h>
-#include <pthread.h>
-#include <signal.h>
- 
-#include "macro.h"
+#include <sys/time.h>
+
+#include "utilities.h"
 #include "parameter.h"
 #include "messages.h"
 #include "network.h"
@@ -16,37 +19,38 @@
 #include "command.h"
 #include "dbaccess.h"
 #include "config.h"
-#include "ircbot.h"
 
 
 
 CONFIG_TYPE setup;
-int sockid;
 int key;
 int stop;
 
+pthread_mutex_t	send_mutex;
+pthread_mutex_t	dbaccess_mutex;
+
 int main(int argc,const char *argv[]) {
-    int i;
+	int i;
 	int msgid;
 	char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;;
 	pthread_t *thread;
 	struct MSGBUF_DS msg;
-	
+
 	bzero(&msg,sizeof(struct MSGBUF_DS));
 
-
+    
 	setup.createMaster=false;
 
 	// check for parameter
 	if (argc>1) {
 		cmd_line(argc,argv);
 	}
-	
+
 	//  checking  config  file path
 	if (setup.configfile==NULL) {
-		setup.configfile=malloc(sizeof(char)*(strlen(CONFDIR)+strlen(CONFFILE)+1));
+		setup.configfile=(char *)malloc((strlen(CONFDIR)+strlen(CONFFILE)+1)*sizeof(char));
 		sprintf(setup.configfile,"%s%s",CONFDIR,CONFFILE);
-		
+
 	}
 
 	DEBUG("File %s",setup.configfile);
@@ -60,12 +64,12 @@ int main(int argc,const char *argv[]) {
 	}
 
 	if (!setup.botname) {
-		setup.botname=malloc(sizeof(char)*strlen(DEFAULT_BOTNAME)+1);
+		setup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
 		strcpy(setup.botname,DEFAULT_BOTNAME);
 	}
 
 	if (!setup.realname) {
-		setup.realname=malloc(sizeof(char)*strlen(DEFAULT_REALNAME)+1);
+		setup.realname=(char *)malloc((strlen(DEFAULT_REALNAME)+1)*sizeof(char));
 		strcpy(setup.realname,DEFAULT_REALNAME);
 	}
 
@@ -80,20 +84,21 @@ int main(int argc,const char *argv[]) {
 	DEBUG("-----------------------------------------------");
 
 
-	// init Database
+	// init Database and the mutex for  access to the database
 	init_database();
+	pthread_mutex_init(&dbaccess_mutex,NULL);
 
 	// create maste
 	if (setup.createMaster) {
 		DEBUG("Create a master of bot");
 		dialog_master();
 	}
-	
+
 	// create the network connection
-	if ((setup.server!=NULL) && (setup.port!=NULL) ) {
+	if ((setup.server!=NULL) && (setup.port!=NULL)) {
 		printf("Try connect to %s:%s\n",setup.server,setup.port);
 		connectServer();
-		printf("Bot is connect.\n");
+		printf("Bot is connected.\n");
 	} else {
 		closeDatabase();
 		errno=EINVAL;
@@ -101,12 +106,15 @@ int main(int argc,const char *argv[]) {
 		exit(errno);
 	}
 
-	// connect to the server
-	irc_connect();
-	
+	// connect to the server and init the mutex  for sending
+	pthread_mutex_init(&send_mutex,NULL);
+    irc_connect();
+	printf("The irc service is connected.\n");
+	printf("The bot is runing....\n");
+
 	// open msg queue
 	key=getpid();
-    if (!(msgid=msgget(key,0600 | IPC_CREAT ))) {
+	if ((msgid=msgget(key,0600 | IPC_CREAT ))<0) {
 		perror(ERR_MSG);
 		exit(errno);
 	}
@@ -116,30 +124,35 @@ int main(int argc,const char *argv[]) {
 	signal(SIGTERM,stopParser);
 	signal(SIGABRT,stopParser);
 
-	
+	#ifndef _DEBUG
+	// make a daemon 
+	daemon(true,true);
+	#endif
+
 	// create the threads
-	thread=malloc(sizeof(pthread_t)*setup.thread_limit);
-    for(i=0;i<setup.thread_limit;i++) {
+	thread=(pthread_t *)malloc(setup.thread_limit*sizeof(pthread_t));
+	for (i=0;i<setup.thread_limit;i++) {
 		pthread_create(&thread[i],NULL,action_thread,NULL);
 		DEBUG("Thread %d is running",i);
 	}
-    
+
 	// join the channels
 	join_all_channels();
 
 	stop=false;
-	while(!stop){
+	while (!stop) {
 		recv_line(buffer,RECV_BUFFER_SIZE);
 
 		tmp=buffer;
 		while ((pos=strchr(tmp,'\n'))) {
 			*pos='\0';
-			str=malloc(sizeof(char)*(strlen(tmp)+1));
+
+			str=(char *)calloc(strlen(tmp)+1,sizeof(char));
 			strcpy(str,tmp);
-			
-			DEBUG("%s",str);
+
+			DEBUG("Receive: %s",str);
 			msg=preParser(str);
-            
+
 			// put the identifiy line  on the  queue
 			if (msg.identify!=0) {
 				msgsnd(msgid,&msg,sizeof(struct MSGBUF_DS)-sizeof(msg.mtype),0);
@@ -148,10 +161,14 @@ int main(int argc,const char *argv[]) {
 			free(str);
 			tmp=pos+1;
 		}
+
 		
+
 	}
 	DEBUG("Stopped");
 
+	
+	
 	// wait of  terminat all threads
 	for (i=0;i<setup.thread_limit;i++) {
 		DEBUG("Stop thread %d",i);
@@ -159,114 +176,18 @@ int main(int argc,const char *argv[]) {
 		pthread_join(thread[i],NULL);
 	}
 
+
+	// destroy the mutex
+	pthread_mutex_destroy(&send_mutex);
+	pthread_mutex_destroy(&dbaccess_mutex);
+
+	// clear the wait queue
 	msgctl(msgid,IPC_RMID,NULL);
-	shutdown(sockid,0);
-	
-	closeDatabase();
+	disconnectServer();
+    closeDatabase();
 
-	return (0);
+	return(0);
 
 }
 
-void stopParser(int sig) {
-    stop=true;
-	quit();
-	DEBUG("Stop IRCBot");
-}
-
-
-
-void trim(char* line) {
-	int alpha,i,j;
-
-
-	// remove leading space
-	// remove multispace
-	// remove newline
-	// remove carge return
-	alpha=j=0;
-	for (i=0;i<=strlen(line);i++) {
-		if((line[i]==' ') && (alpha==1)) {
-			line[j]=line[i];
-			alpha=0;
-			j++;
-		} else if ((line[i]!='\n') && (line[i]!='\r') && (line[i]!=' ')) {
-			line[j]=line[i];
-			alpha=1;
-			j++;
-		}
-	}
-
-	// remove the folling space
-	if(line[--j]==' '){
-		line[j]='\0';
-	}
-}
-
-
-void clearspace(char *line) {
-	int i,j,noclr;
-
-	j=noclr=0;
-	for (i=0;i<=strlen(line);i++) {
-		if((line[i]!=' ') || (noclr==1)) {
-			if ( (line[i]=='\"') && (noclr==0)) {
-				noclr=1;
-			} else  if (((line[i]=='\"') || (line[i]=='\'')) && (noclr==1)) {
-				noclr=0;
-			} else {
-				line[j]=line[i];
-				j++;
-			}
-		}
-	}
-}
-
-void dialog_master(void){
-	char  name[18],passwd[10],repasswd[10];
-	
-	// insert the login name
-	printf(MSG_MASTER_TITLE);
-	printf(MSG_MASTER_LOGIN);
-	fgets(name,17,stdin);
-	
-	// check loging
-	if(strpbrk(name,NOT_ALLOW_CHAR)) {
-		fprintf(stderr,ERR_NOT_ALLOW_CHAR);
-		exit(1);
-	}
-
-	
-	// insert the password
-	printf(MSG_MASTER_PASS);
-	fgets(passwd,8,stdin);
-	printf(MSG_MASTER_REPASS);
-	fgets(repasswd,8,stdin);
-
-	
-	// check the password
-	if (strcmp(passwd,repasswd)) {
-		fprintf(stderr,MSG_MASTER_PASS_ERR);
-		exit(1);
-	}else if(strpbrk(passwd,NOT_ALLOW_CHAR)) {
-		fprintf(stderr,ERR_NOT_ALLOW_CHAR);
-		exit(1);
-	}
-
-	trim(name);
-	trim(passwd);
-	
-	
-	// create account
-	if (!add_db(USER_DB,name,passwd)){
-		printf(MSG_MASTER_EXISTS);
-		exit(1);
-	}
-	
-	
-	if (!add_db(ACCESS_DB,name,"+ov")) {
-		printf(MSG_MASTER_ERR);
-		exit(1);
-	}
-}
 
