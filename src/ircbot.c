@@ -42,6 +42,8 @@ boolean again;
 pthread_mutex_t account_mutex;      // mutex for synchronize the access of the login db 
 
 
+PQueue pCallbackQueue;
+
 int main(int argc,char * const argv[]) {
     int i;
     int msgid;
@@ -65,7 +67,9 @@ int main(int argc,char * const argv[]) {
     sSetup.newMaster=false;
     sSetup.AccountLiveTime=MIN_ALT;
     sSetup.AutoLoggoff=MIN_LOGOFF;
-    sSetup.sendDelay=0;
+    sSetup.iSendDelay=DEFAULT_SEND_DELAY;
+    sSetup.iSendSafeDelay=DEFAULT_SEND_SAFE_DELAY;
+    sSetup.iSendSafeLine=DEFAULT_SEND_SAFE_LINE;
     sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
     sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
 
@@ -122,6 +126,11 @@ int main(int argc,char * const argv[]) {
         sSetup.AutoLoggoff=sSetup.AccountLiveTime;
     }
 
+    // check the  delay timings
+    if (sSetup.iSendSafeDelay<sSetup.iSendDelay) {
+        sSetup.iSendSafeDelay=sSetup.iSendDelay;
+    }
+
     DEBUG("----------------------------------------------");
     DEBUG("Server %s",sSetup.server);
     DEBUG("Port %s",sSetup.port);
@@ -131,7 +140,9 @@ int main(int argc,char * const argv[]) {
     DEBUG("Config file %s",sSetup.configfile);
     DEBUG("Database path %s",sSetup.pDatabasePath);
     DEBUG("Ping timeout %ds",sSetup.iTimeout);
-    DEBUG("Sending delay %dms",sSetup.sendDelay);
+    DEBUG("Sending delay %dms",sSetup.iSendDelay);
+    DEBUG("Sending safe delay %dms",sSetup.iSendSafeDelay);
+    DEBUG("Sending  line limit %d",sSetup.iSendSafeLine);
     DEBUG("Account live time %dd",sSetup.AccountLiveTime);
     DEBUG("Autolog of after %dd",sSetup.AutoLoggoff);
     DEBUG("-----------------------------------------------");
@@ -189,7 +200,6 @@ int main(int argc,char * const argv[]) {
     signal(SIGPIPE,stopParser);
     signal(SIGILL,stopParser);
     signal(SIGIO,stopParser);
-    signal(SIGHUP,stopParser);
 
     #ifdef NDEBUG
     // make a daemon 
@@ -200,6 +210,9 @@ int main(int argc,char * const argv[]) {
 	 
 	// init the command queue
 	pCommandQueue=initQueue();
+    pCallbackQueue=initQueue();
+
+
 	// create the threads
     pthread_create(&timeThread,NULL,TimingThread,NULL);
     threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
@@ -276,7 +289,8 @@ int main(int argc,char * const argv[]) {
 
     // clear the wait queue
 	deleteQueue(pCommandQueue);   	
- 
+    deleteQueue(pCallbackQueue);
+
     // disconnect from server
     disconnectServer();
     closeDatabase();
