@@ -38,6 +38,7 @@ char *getNickname(char const *pLine){
 char *getNetmask(char const *pLine){ 
 	char *pNetmask,*pStr;
 
+    if (!pLine) {return "";}
 		
 	pStr=(char *)malloc((strlen(pLine)+1)*sizeof(char));
 	strcpy(pStr,pLine);
@@ -295,10 +296,10 @@ char *getParameters(char const *pLine){
 }
 // #############################################################################
 char ** splitString(char const * pString,int nRetArraySize) {
-    char **ppStrings=NULL;
+    char **ppStrings;
     char *pPos,*pSpacePos;
     char *pTmp;
-    unsigned int iCount=0,i;
+    unsigned int iCount=0,i,len;
 
     // check of NULL pointer
     if (pString) {
@@ -310,7 +311,7 @@ char ** splitString(char const * pString,int nRetArraySize) {
         ppStrings=(char**)malloc(nRetArraySize*sizeof(char*));
     
         // fill the array
-        for (i=0;i<nRetArraySize-1;i++) {
+        for (i=0;i<nRetArraySize;i++) {
             pSpacePos=strchr(pPos,' ');
 
             if (pSpacePos) {
@@ -320,25 +321,26 @@ char ** splitString(char const * pString,int nRetArraySize) {
                 }
                 
                 // put the string in the array
-                ppStrings[i]=(char*)malloc((strlen(pPos)+1)*sizeof(char));
-                strcpy(ppStrings[i],pPos);
+                if ((len=strlen(pPos))!=0) {
+                    ppStrings[i]=(char*)malloc((len+1)*sizeof(char));
+                    strcpy(ppStrings[i],pPos);
+                } else {
+                    ppStrings[i]=NULL;
+                }
 
                 pPos=pSpacePos;
-
             } else {
-                break;
+                ppStrings[i]=NULL;
             }
             
         }
-        
+/*        
         // put the rest in the array
-        if (strlen(pPos)) {
-            ppStrings[i]=(char*)malloc((strlen(pPos)+1)*sizeof(char));
+        if ((len=strlen(pPos))) {
+            ppStrings[i]=(char*)malloc((len+1)*sizeof(char));
             strcpy(ppStrings[i],pPos);
-        } else {
-            ppStrings[i]=NULL;
-        }
-
+        } 
+ */
     }
     return ppStrings;
 }
