@@ -10,13 +10,13 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
-void log_on(char *netmask,char *login);
-void log_out(char *login);
+void log_on(char *pNetmask,char *pLogin);
+void log_out(char *pLogin);
 
-void rmAccount(char *login);
-void rmAccessRights(char *login);
+void rmAccount(char *pLogin);
+void rmAccessRights(char *pLogin);
 
-void rmDeadLogins(long checkTime);
-void rmDeadAccounts(long chackTime);
+void rmDeadLogins(long lCheckTime);
+void rmDeadAccounts(long lCheckTime);
 
 #endif

@@ -12,55 +12,55 @@
 #include <string.h>
 #include <pthread.h>
 #include <time.h>
-
+#include <syslog.h>
 					 
 #include "dbaccess.h"
 #include "messages.h"
 #include "utilities.h"
 #include "account.h"
 // ############################################################################# 
-void rmDeadLogins(long checkTime) {
-	char **login;
-	char *time;
+void rmDeadLogins(long lCheckTime) {
+	char **ppLogins;
+	char *pTime;
 	int i;
     
 	// get the  list
-	if ((login=list_db(TIMELOG_DB)))	{
-		for (i=0;login[i]!=NULL;i++) {
+	if ((ppLogins=list_db(TIMELOG_DB)))	{
+		for (i=0;ppLogins[i]!=NULL;i++) {
 			
 			// read time
-			time=get_db(TIMELOG_DB,login[i]);
+			pTime=get_db(TIMELOG_DB,ppLogins[i]);
 			
 			// check the time
-			if (checkTime>atol(time)) {
-				log_out(login[i]);
-                syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,login[i]);
+			if (lCheckTime>atol(pTime)) {
+				log_out(ppLogins[i]);
+                syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,ppLogins[i]);
 			}
-			free(time);
+			free(pTime);
 		}
 	}
 
 }
 // ############################################################################# 
-void log_on(char *netmask,char *login) {
+void log_on(char *pNetmask,char *pLogin) {
 	extern pthread_mutex_t account_mutex;
 	time_t timestamp;
-	char str_timestamp[32];
-	char *oldnetmask;
+	char pTime[32];
+	char *pOldNetmask;
 
-	if (exist_db(USERTONICK_DB,login)) {
-		oldnetmask=get_db(USERTONICK_DB,login);
+	if (exist_db(USERTONICK_DB,pLogin)) {
+		pOldNetmask=get_db(USERTONICK_DB,pLogin);
 
 		pthread_mutex_lock(&account_mutex);
-		del_db(NICKTOUSER_DB,oldnetmask);
-		add_db(NICKTOUSER_DB,netmask,login);
+		del_db(NICKTOUSER_DB,pOldNetmask);
+		add_db(NICKTOUSER_DB,pNetmask,pLogin);
 		
-		replace_db(USERTONICK_DB,login,netmask);
+		replace_db(USERTONICK_DB,pLogin,pNetmask);
 		pthread_mutex_unlock(&account_mutex);
 	} else {
 		pthread_mutex_lock(&account_mutex);
-		add_db(NICKTOUSER_DB,netmask,login);
-		add_db(USERTONICK_DB,login,netmask);
+		add_db(NICKTOUSER_DB,pNetmask,pLogin);
+		add_db(USERTONICK_DB,pLogin,pNetmask);
 		pthread_mutex_unlock(&account_mutex);
 	}
     
@@ -69,88 +69,95 @@ void log_on(char *netmask,char *login) {
 	
 	// build the timestamp
     time(&timestamp);
-	sprintf(str_timestamp,"%ld",timestamp);
+	sprintf(pTime,"%ld",timestamp);
 
 	// set the last login timestamp
-	if (exist_db(TIMELOG_DB,login)) {
-		replace_db(TIMELOG_DB,login,str_timestamp);
-		DEBUG("Update timestamp %s for %s",str_timestamp,login);
+	if (exist_db(TIMELOG_DB,pLogin)) {
+		replace_db(TIMELOG_DB,pLogin,pTime);
+		DEBUG("Update timestamp %s for %s",pTime,pLogin);
 	} else {
-		add_db(TIMELOG_DB,login,str_timestamp);
-		DEBUG("Add timepstamp %s for %s",str_timestamp,login);
+		add_db(TIMELOG_DB,pLogin,pTime);
+		DEBUG("Add timepstamp %s for %s",pTime,pLogin);
 	}
 }
 // ############################################################################# 
-void log_out(char *login) {
+void log_out(char *pLogin) {
 	extern pthread_mutex_t account_mutex;
-	char *netmask;
+	char *pNetmask;
 
-	netmask=get_db(USERTONICK_DB,login);
+	DEBUG("%s logged off",pLogin);
+
+	pNetmask=get_db(USERTONICK_DB,pLogin);
 
 	pthread_mutex_lock(&account_mutex);
-	del_db(NICKTOUSER_DB,netmask);
-	del_db(USERTONICK_DB,login);
+	del_db(NICKTOUSER_DB,pNetmask);
+	del_db(USERTONICK_DB,pLogin);
 	pthread_mutex_unlock(&account_mutex);
 }
 
 // ############################################################################# 
-void rmAccount(char *login) {
+void rmAccount(char *pLogin) {
 
 	// log off the user
-	log_out(login);
+	log_out(pLogin);
 
 	// remove the  rights
-	rmAccessRights(login);
+	rmAccessRights(pLogin);
 	
 	// remove login
-	del_db(USER_DB,login);
+	del_db(USER_DB,pLogin);
+
+	// remove the time log
+	del_db(TIMELOG_DB,pLogin);
 }
 // ############################################################################# 
-void rmAccessRights(char *login){
-	char **channels;
-	char *key;
-	int i,login_len;
+void rmAccessRights(char *pLogin){
+	char **ppChannels;
+	char *pKey;
+	int i,iLoginLen;
+
+	DEBUG("Remove Access Rights for %s",pLogin);
 
 	// remove as master
-	del_db(ACCESS_DB,login);
+	del_db(ACCESS_DB,pLogin);
 	
-	channels=list_db(CHANNEL_DB);
+	ppChannels=list_db(CHANNEL_DB);
 
-	login_len=strlen(login);
+	iLoginLen=strlen(pLogin);
 	// remove access rights from the user
-    if (channels) {
-		for (i=0;channels[i]!=NULL;i++) {
+    if (ppChannels) {
+		for (i=0;ppChannels[i]!=NULL;i++) {
 			
 			// build  the key for access.dbf
-			key=malloc((strlen(channels[i])+login_len+1)*sizeof(char));
-			sprintf(key,"%s%s",login,channels[i]);
+			pKey=malloc((strlen(ppChannels[i])+iLoginLen+1)*sizeof(char));
+			sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
 			
-			del_db(ACCESS_DB,key);
+			del_db(ACCESS_DB,pKey);
 				
-			free(key);
+			free(pKey);
 		}
 
     }
 }
 // ############################################################################# 
-void rmDeadAccounts(long checkTime) {
-	char **login;
-	char *time;
+void rmDeadAccounts(long lCheckTime) {
+	char **ppLogins;
+	char *pTime;
 	int i;
     
 	// get the  list
-	if ((login=list_db(TIMELOG_DB)))	{
-		for (i=0;login[i]!=NULL;i++) {
+	if ((ppLogins=list_db(TIMELOG_DB)))	{
+		for (i=0;ppLogins[i]!=NULL;i++) {
 			
 			// read time
-			time=get_db(TIMELOG_DB,login[i]);
+			pTime=get_db(TIMELOG_DB,ppLogins[i]);
 			
 			// check the time
-			if (checkTime>atol(time)) {
-				rmAccount(login[i]);
-                syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,login[i]);
+			if (lCheckTime>atol(pTime)) {
+				rmAccount(ppLogins[i]);
+                syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,ppLogins[i]);
 			}
-			free(time);
+			free(pTime);
 		}
 	}
 
