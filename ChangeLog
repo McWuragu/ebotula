@@ -1,40 +1,40 @@
 ebotula-0.1.9-dev
 -----------------
-- Bugfix: fixed segmantation fault by ident command
-- Bugfix: fixed the wrong channel joining at the start up
-- Bugfix: fixed segmentation fault by logoff command
-- Bugfix: fixed kicking becaus of excess flooding at the initialization of
-  the channels
+- Bugfix: fixed segmentation fault caused by ident command
+- Bugfix: fixed joining of wrong channels at start up
+- Bugfix: fixed segmentation fault caused by logoff command
+- Bugfix: fixed kicking because of excess flooding at the initialization of
+          the channels
 - added simple ban command
-- added simple deban
+- added simple deban command
 
 ebotula-0.1.8-dev
 -----------------
 - Bugfix:  fixed the high cpu using
 - Bugfix:  fixed the crash after a little execution time
-- modify a little bit the default parameters 
+- a little bit of modification of the default parameters
 
 ebotula-0.1.7-dev
 -----------------
 - Bugfix: fixed the security bug in the user mode protect system
 - Bugfix: fixed the restart problem
-- Bugfix: fixed the stopping  problem
-- Bugfix: maked the protection for kick by excess flooding better
-- modify the output by the commands help, userlist and chanlist
-- added  two new configuration parameter for excess flooding protection
-- maked speed up
-- maked the command kick safly
+- Bugfix: fixed the stopping problem
+- Bugfix: better protection for kick by excess flooding added
+- modified the output of the commands help, userlist and chanlist
+- added two new configuration parameters for excess flooding protection
+- made speed up
+- made the command kick more safely
 
 ebotula-0.1.6-dev
 -----------------
 - Bugfix: fixed wrong parameter handling at !rmuser command
-- Bugfix: fixed the status lost by nick changing
+- Bugfix: fixed the status loss by nick changing
 
 ebotula-0.1.5-dev
 -----------------
 - Bugfix: fixed the blocking after the command !pass
 - Bugfix: fixed the blocking after start the autologoff
-- Bugfix: fixed the SIGSEGV by the calling of the command !rmuser
+- Bugfix: fixed the SIGSEGV caused by the calling of the command !rmuser
 
 ebotula-0.1.4-dev
 -----------------
