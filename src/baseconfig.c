@@ -25,207 +25,89 @@
 #include "ircbot.h"
 #include "type.h"
 #include "baseconfig.h"
-
-static char	* bstr[]={
-    "# Config file for the ebotula", 	
-    "# The name of the bot",		
-    KEY_BOTNAME,"=",
-    "\n# String for the realname",
-    KEY_REALNAME,"=",
-    "\n# execute the bot as this user and this group", 
-    KEY_EXEUSER,"=",
-    KEY_EXEGROUP,"=",
-    "\n# Number of the created threads",
-	KEY_THREADLIMIT,"= ",
-	"\n# The server the bot connects to",
-	KEY_SERVER,"=",
-	"\n# The port the bot connects to",
-	KEY_PORT,"=",
-	"\n# The location of the database for the bot",
-	KEY_DATABASEPATH,"=",
-	"\n# The delay time in millisecond for sending",
-	"# It is used for the prevention of excess flooding",
-	KEY_FASTSENDDELAY,"=",
-	KEY_SLOWSENDDELAY,"=",
-	KEY_FASTSENDLIMIT,"=",
-    "\n# The delay of the start from the startup initialization",
-    KEY_INITDELAY,"=",
-	"\n# The time in days an account exists.",
-	"# Unused accounts will be removed after this time.",
-	KEY_ALT,"=",
-    "\n# The time limit in days for maximum login time",
-	KEY_AUTOLOGOFF,"=",
-	"\n# The time limit in seconds for ping timeout.",
-	KEY_PINGTIMEOUT,"=",
-    "\n# The level of the output (0-7)",
-    KEY_LOGLEVEL,"="
-    };
-
+extern ConfigSetup_t sSetup;
+ValueStruct_t vsConfig[VAL_COUNT]={
+	{ {{"# The name of the bot"},NULL},										KEY_BOTNAME,		PARAM_STRING,	MOD_NONE,	(void *)&(sSetup.pBotname)},
+	{ {{"# String for the realname"},NULL},										KEY_REALNAME,		PARAM_STRING,	MOD_QUOTED,	&sSetup.realname},
+	{ {{"# Execute the bot as this user "},NULL},									KEY_EXEUSER,		PARAM_STRING,	MOD_NONE,	&sSetup.sExeUser},
+	{ {{"# and this group"},NULL},											KEY_EXEGROUP,		PARAM_STRING,	MOD_NONE,	&sSetup.sExeGroup},
+	{ {{"# Number of the created threads"},NULL},									KEY_THREADLIMIT,	PARAM_INT,	MOD_NONE,	&sSetup.thread_limit},
+	{ {{"# The server the bot connects to"},NULL},									KEY_SERVER,		PARAM_STRING,	MOD_NONE,	&sSetup.server},
+	{ {{"# The port the bot connects to"},NULL},									KEY_PORT,		PARAM_STRING,	MOD_NONE,	&sSetup.port},
+	{ {{"# The location of the database for the bot"},NULL},								KEY_DATABASEPATH,	PARAM_STRING,	MOD_NONE,	&sSetup.pDatabasePath},
+	{ {{"# The delay time in millisecond for seding"},{"# It is used for prevention of excess flooding"},NULL},		KEY_FASTSENDDELAY,	PARAM_INT,	MOD_NONE,	&sSetup.iSendDelay},
+	{ {{""},NULL},													KEY_SLOWSENDDELAY,	PARAM_INT,	MOD_NONE,	&(sSetup.nSlowSendDelay)},
+	{ {{""},NULL},													KEY_FASTSENDLIMIT,	PARAM_INT,	MOD_NONE,	&(sSetup.nFastSendingCharLimit)},
+	{ {{"# The delay of the start from the startup initialization"},NULL},						KEY_INITDELAY,		PARAM_INT,	MOD_NONE,	&sSetup.nSettling},
+	{ {{"# The time in days an account exists."},{"# Unused accounts will be removed after this time."},NULL},		KEY_ALT,		PARAM_INT,	MOD_NONE,	&sSetup.AccountLiveTime},
+	{ {{"# The time limit in days for maximum login time"},NULL},							KEY_AUTOLOGOFF,		PARAM_INT,	MOD_NONE,	&sSetup.AutoLoggoff},
+	{ {{"# The time limit in seconds for ping timeout."},NULL},							KEY_PINGTIMEOUT,	PARAM_INT,	MOD_NONE,	&sSetup.iTimeout},
+	{ {{"# The level of the output (0-7)"},NULL},									KEY_LOGLEVEL,		PARAM_INT,	MOD_NONE,	&sSetup.nLogLevel}
+};
 
 void write_baseconfig()
 {
-	/* filediskriptor for output file*/
-	FILE * fd;
-    char tmpstr[128];
-    int i=0;
-	extern  ConfigSetup_t sSetup;
-
-    logger(LOG_INFO,"Creating Configfile: %s",sSetup.configfile);
-
-    /* Create & Openfile*/
-	if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
-	{
-        	perror(getSyslogString(SYSLOG_CONFIG_FILE));
-		logger(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE)); 
-		exit(errno);
-	}
-		/* writingd data to file */
-		/* Version string */
-		sprintf(tmpstr,VERSIONSTR);
-		strcat(tmpstr,"\n");
-		/*    "# Config file for the ebotula", 	*/
-		i=0;
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		fprintf(fd,"# %s\n",tmpstr);
-		/* Botname */
-		/*  "# The name of the bot",*/
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/*    KEY_BOTNAME,"=",*/
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%s\n",bstr[i],sSetup.pBotname);
-		i++;
-		/* realname */
-		/*    "\n# String for the realname",*/
- 		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/*   KEY_REALNAME,"=",*/
- 		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s\"%s\"\n",bstr[i],sSetup.realname);
-		i++;
-		/* user & group */
-	        /* "\n# execute the bot as this user and this group", */
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/* KEY_EXEUSER,"=",*/
-        	fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%s\n",bstr[i],sSetup.sExeUser);
-		i++;
-	        /* KEY_EXEGROUP,"=", */
-        	fprintf(fd,"%s",bstr[i]);
-		i++;
-	        fprintf(fd,"%s%s\n",bstr[i],sSetup.sExeGroup);
-		i++;
-	        /* Thread limit */
-		/*    "\n# Number of the created threads",*/
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/*KEY_THREADLIMIT,"= ",*/
-        	fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%d\n",bstr[i],sSetup.thread_limit);
-		i++;
-		/* Servername */
-		/*"\n# The server the bot connects to",*/
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/* KEY_SERVER,"=", */
-        	fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%s\n",bstr[i],sSetup.server);
-		i++;
-		/* Serverport */
-		/* "\n# The port the bot connects to", */
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/*KEY_PORT,"=",*/
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%s\n",bstr[i],sSetup.port);
-		i++;
-		/* databasepath */
-		/* "\n# The location of the database for the bot", */
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/* KEY_DATABASEPATH,"=", */
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%s\n",bstr[i],sSetup.pDatabasePath);
-		i++;
-		/* delays */
-		/* "\n# The delay time in millisecond for sending",  */
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/* "# It is used for the prevention of excess flooding", */
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/* KEY_FASTSENDDELAY,"=",*/
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%d\n",bstr[i],sSetup.iSendDelay);
-		i++;
-		/* KEY_SLOWSENDDELAY"=", */
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%d\n",bstr[i],sSetup.nSlowSendDelay);
-		i++;
-		/* KEY_FASTSENDLIMIT"=", */
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%d\n",bstr[i],sSetup.nFastSendingCharLimit);
-		i++;
-		i++;
-	        /* KEY_INITDELAY"=", */
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%d\n",bstr[i],sSetup.nSettling);
-		i++;
-		/* Accountlivtime */
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/* "# Unused accounts will be removed after this time.",*/
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/* KEY_ALT,"=",*/
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%d\n",bstr[i],sSetup.AccountLiveTime);
-		i++;
-		/* Autologoff */
-	    	/* "\n# The time limit in days for maximum login time",*/
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
-		/* KEY_AUTOLOGOFF,"=",*/
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%d\n",bstr[i],sSetup.AutoLoggoff);
-		i++;
-		/* Pingtimeout */
-		/* # The time limit in seconds for ping timeout.*/
-		fprintf(fd,"%s\n",bstr[i]);
-		i++;
+	int i,t;
+	char *pC;
+	int *pI;
+	long *pL;
+	float *pF;
+	double *pD;
+	char **pS;
 		
-		/* KEY_PINGTIMEOUT */
-		fprintf(fd,"%s",bstr[i]);
-		i++;
-		fprintf(fd,"%s%d\n",bstr[i],sSetup.iTimeout);
-		i++;
-       
-        /*  The level of the output (0-7) */
-        fprintf(fd,"%s\n",bstr[i]);
-		i++;
+	
+	for(i=0;i<VAL_COUNT;i++)
+	{
+		/* print Description */
+		for(t=0;t<MAX_COMMENT_LINES ;t++)
+		{
+			if (vsConfig[i].sDescription[t])
+			{
+				if (strlen(vsConfig[i].sDescription[t]))
+					fprintf(stderr,"%s\n",vsConfig[i].sDescription[t]);
+			}else
+			{
+				break;
+			}
+		}
+		/* print Name */
+		fprintf(stderr,"%s=",vsConfig[i].sParamName);
+		switch(vsConfig[i].iParamType)
+		{
+			case PARAM_CHAR:
+				pC=(vsConfig[i].pParam);
+				fprintf(stderr,"%c\n",*pC);
+				break;
+			case PARAM_INT:
+				pI=(vsConfig[i].pParam);
+				fprintf(stderr,"%d\n",*pI);
+				break;
+			case PARAM_LONG:
+				pL=(vsConfig[i].pParam);
+				fprintf(stderr,"%ld\n",*pL);
+				break;
+			case PARAM_HEX:
+				pI=(vsConfig[i].pParam);
+				fprintf(stderr,"%x\n",*pI);
+				break;
+			case PARAM_FLOAT:
+				pF=(vsConfig[i].pParam);
+				fprintf(stderr,"%f\n",*pF);
+				break;
+			case PARAM_DOUBLE:
+				pD=(vsConfig[i].pParam);
+				fprintf(stderr,"%G\n",*pD);
+				break;
+			case PARAM_STRING:
+				pS=(vsConfig[i].pParam);
+				if (vsConfig[i].iModefier==MOD_NONE)
+					fprintf(stderr,"%s\n",*pS);
+				else if (vsConfig[i].iModefier==MOD_QUOTED)
+					fprintf(stderr,"\"%s\"\n",*pS);
 
-        /* KEY_LOGLEVEL */
-        fprintf(fd,"%s",bstr[i]);
-        i++;
-        fprintf(fd,"%s%d\n",bstr[i],sSetup.nLogLevel);
-        i++;
-
-		/* closing file */
-		fclose(fd);
+				break;
+			default:
+				break;
+		}
+	}
 }
-
