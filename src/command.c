@@ -139,7 +139,7 @@ void help(char *line) {
 			// next command	
 			i+=HELP_ITEM_SIZE;
 		}
-        notice(nick,MSG_NO_COMMAND);
+        notice(nick,MSG_NOT_COMMAND);
 	}
 }
 // ############################################################################# 
@@ -157,7 +157,7 @@ void hello(char *line) {
 
 	notice(nick,MSG_HELLO);
 	notice(nick,MSG_HELLO2);
-	notice(nick,MSG_IDENT_NO);
+	notice(nick,MSG_NOT_ACCOUNT);
 
 }
 // ############################################################################# 
@@ -177,7 +177,7 @@ void password(char *line) {
 	if ((parameter=getArgument(line))==NULL){
 		passwd=(char *)malloc(sizeof(char));
 		strcpy(passwd,"");
-		notice(nick,MSG_NO_PASS);
+		notice(nick,MSG_NOT_PASS);
 	} else {
 		strtok(line," ");
 		passwd=(char *)malloc((strlen(parameter)+1)*sizeof(char));
@@ -225,7 +225,7 @@ void ident(char *line) {
 	if ((pos=strstr(parameter," "))==NULL) {
 		// no Passwd found 
 		// try empty pass
-		notice(nick,MSG_NO_PASS);
+		notice(nick,MSG_NOT_PASS);
 		passwd=(char *)malloc(sizeof(char));
 		strcpy(passwd,"");
 	} else {
@@ -244,7 +244,7 @@ void ident(char *line) {
 		notice(nick,MSG_IDENT_OK);
 		return;
 	}
-	notice(nick,MSG_IDENT_NO);
+	notice(nick,MSG_NOT_ACCOUNT);
 }
 // ############################################################################# 
 void channel_add(char *line) {
@@ -254,12 +254,8 @@ void channel_add(char *line) {
 	char *channelmod;
 
 
-	// checking of login 
-	CHECK_LOGIN(netmask,nick);
 	login=get_db(LOGIN_DB,netmask);
 
-    // checking of master 
-	CHECK_MASTER(nick,login);
 
 	// read parameters 
 	if (!(parameter=getArgument(line))) {
@@ -295,12 +291,7 @@ void channel_rm(char *line){
 	char *nick=getNickname(line);
 
 
-	// checking of login 
-	CHECK_LOGIN(netmask,nick);
 	login=get_db(LOGIN_DB,netmask);
-	
-    // checking of master 
-	CHECK_MASTER(nick,login);
 	
 	// read parameters 
 	if (!(parameter=getArgument(line))) {
@@ -314,7 +305,7 @@ void channel_rm(char *line){
 
 	// checking of channel exists 
 	if (!exist_db(CHANNEL_DB,parameter)) {
-		notice(nick,MSG_RMCHANNEL_FAIL);
+		notice(nick,MSG_NOT_CHANNEL);
 	} else {
 		del_db(CHANNEL_DB,parameter);
 		notice(nick,MSG_RMCHANNEL_OK);
@@ -333,13 +324,7 @@ void join_channel(char *line) {
 	char *nick=getNickname(line);
 
 
-	// checking of login 
-	CHECK_LOGIN(netmask,nick);
 	login=get_db(LOGIN_DB,netmask);
-	
-    // checking of master 
-	CHECK_MASTER(nick,login);
-
 
 	// read parameters 
 	if (!(parameter=getArgument(line))) {
@@ -362,13 +347,7 @@ void part_channel(char *line) {
 	char *nick=getNickname(line);
 
 
-	// checking of login 
-	CHECK_LOGIN(netmask,nick);
 	login=get_db(LOGIN_DB,netmask);
-
-	
-    // checking of master 
-	CHECK_MASTER(nick,login);
 
 	// read parameters
 	if (!(parameter=getArgument(line))) {
@@ -389,15 +368,8 @@ void part_channel(char *line) {
 void die(char *line) {
 	char *netmask=getNetmask(line);
 	char *login;
-	char *nick=getNickname(line);
-
-
-	// checking of login
-	CHECK_LOGIN(netmask,nick);
+        
 	login=get_db(LOGIN_DB,netmask);
-	
-    // checking of master
-	CHECK_MASTER(nick,login);
 	
 	stopParser(0);
 }
@@ -408,12 +380,8 @@ void change_nick(char *line){
 	char *_nick=getNickname(line);
 
 
-	// checking of login
-	CHECK_LOGIN(netmask,_nick);
 	login=get_db(LOGIN_DB,netmask);
 
-    // checking of master
-	CHECK_MASTER(_nick,login);
 
 	// read parameters
 	if (!(parameter=getArgument(line))) {
@@ -437,12 +405,8 @@ void channel_list(char *line){
 	nick=getNickname(line);
 	netmask=getNetmask(line);
 
-	// checking of login
-	CHECK_LOGIN(netmask,nick);
 	
 	login=get_db(LOGIN_DB,netmask);
-
-	CHECK_MASTER(nick,login);	
 
 	// get  the channel list form the DB
 	channels=list_db(CHANNEL_DB);
@@ -479,4 +443,80 @@ void version(char *line) {
 }
 // ############################################################################# 
 void greating(char *line) {
+	char *parameter;
+	char *channel;
+	char *channelstr;
+	char *_channelstr;
+	char *pos;
+	char *mode;
+	char *topic;
+	char *nick;
+	char *netmask;
+	char *login;
+	char *greatLine;
+	int paramlen;
+
+	nick=getNickname(line);
+	netmask=getNetmask(line);
+	
+	parameter=getArgument(line);
+	paramlen=strlen(parameter);
+
+	login=get_db(LOGIN_DB,netmask);
+
+	
+	if (!(channel=getAccessChannel(line))){
+		notice(nick,MSG_NOT_CHANNELOPT);
+		notice(nick,MSG_GREATING_ERR);
+		return;
+	}
+
+	DEBUG("Greating seting for %s",channel);
+
+	// parse greating string
+	if ((paramlen==0)|| (parameter[0]=='#' && !strchr(parameter,' '))) {				 
+		 
+		greatLine=(char *)malloc(sizeof(char));
+		greatLine[0]='\0';
+		DEBUG("Remove greating line");
+	} else {
+		if (parameter[0]=='#') {
+			pos=strchr(parameter,' ');
+			greatLine=(char*)malloc((strlen(pos))*sizeof(char));
+			pos++;
+			strcpy(greatLine,pos);
+		}else {
+			greatLine=(char*)malloc((strlen(parameter)+1)*sizeof(char));
+			strcpy(greatLine,parameter);
+		}
+		DEBUG("Set new greating line");
+	}
+
+	// check of  existenz of the channel
+	if (!(channelstr=get_db(CHANNEL_DB,channel))) {
+		notice(nick,MSG_NOT_CHANNEL);
+		return;
+	}
+
+	// insert or replace the greating  in the DB
+	if (!(mode=getMode(channelstr))) {
+		mode=(char*)malloc(sizeof(char));
+		mode[0]='\0';
+	}
+	if (!(topic=getTopic(channelstr))) {
+		topic=(char*)malloc(sizeof(char));
+		topic[0]='\0';
+	}
+	
+	_channelstr=(char *)malloc((strlen(mode)+strlen(topic)+strlen(greatLine)+3)*sizeof(char));
+	sprintf(_channelstr,"%s\t%s\t%s",mode,topic,greatLine);
+
+	replace_db(CHANNEL_DB,channel,_channelstr);
+    
+	// message
+	if (greatLine[0]=='\0') {
+		notice(nick,MSG_RM_GREATING);
+	} else {
+		notice(nick,MSG_SET_GREATING);
+	}
 }
