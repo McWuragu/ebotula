@@ -155,8 +155,10 @@ QueueData * popQueue(PQueue pqueueIn)
 	pqueueWork=pqueueIn;
 	
 	pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
-	while(pqueueIn->sentinel->ElementsInQueueForThreads<=0 )
-		pthread_cond_wait(pqueueIn->sentinel->queue_mutex,pqueueIn->sentinel->StopThreadCond);
+	// THIS IS A VERY BAD MISTAKE
+	// Because this is a Deat-End for Threads
+//	while(pqueueIn->sentinel->ElementsInQueueForThreads<=0 )
+//		pthread_cond_wait(pqueueIn->sentinel->queue_mutex,pqueueIn->sentinel->StopThreadCond);
 
 	/** check for valid Queue **/
 	if (pqueueWork)
