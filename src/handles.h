@@ -44,6 +44,7 @@ void hSetModUser(char *pLine);
  */
 void hResetModes(char *pLine);
 
+
 /**
  * This is the handle for rest the topic. he is call by chang the topic
  * by other user as the bot self.
@@ -53,13 +54,19 @@ void hResetModes(char *pLine);
 void hResetTopic(char *pLine);
 
 /**
- * This is the handler for  initialize of a channel after  become
- * operator rights. He reade  the information about the channel out the
+ * This is the handle for  initialize of a channel after get
+ * operator rights. He read the information about this channel out the
  * database and set the  topic and the mode oft the channel.
  *
- * @param pLine a pointer  of the receiving line from the server
+ * @param pLine a pointer  of the receiving line from the smerver
  */
 void hInitAfterOp(char *pLine);
 
+/**
+ * This handle is for the answer  of the  command /who. He look in the
+ * list of  callback function and search the right  item. Then excute the
+ * function form this item.
+ */
+void hCallback(char *pLine);
 
 #endif

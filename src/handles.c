@@ -18,6 +18,7 @@
 
 #include "extract.h"
 #include "callback.h"
+#include "callbacklist.h"
 #include "utilities.h"
 #include "dbaccess.h"
 #include "messages.h"
@@ -148,48 +149,62 @@ void hSetModUser(char *pLine) {
 }
 // #########################################################################
 // Event handler: MODE
-// Action: reset the mod  for the user if this chang not by bot self
+// Action:  added the callback item in the list for the user if this change
+//          not by bot self
 // #########################################################################
 void hResetModes(char *pLine) {
     extern ConfigSetup_t sSetup;
     char *pPos;
     char *pChannel;
-    char *pMod;
+    char *pData;
     char *pNick;
-    extern PQueue pCallbackQueue;
+    char *pMode;
+    char **ppLinePart;
+    extern CallbackDList CallbackList;
     CallbackItem_t Callback;
 
-    pChannel=getAccessChannel(pLine);
+   
 
-    // set pPos of the position of changed mode
-    pPos=strstr(pLine,"MODE");
-    pPos=strchr(pPos,' ');
-    pPos++;
-    pPos=strchr(pPos,' ');
-    pPos++;
+    //splitthe string
+    ppLinePart=splitString(pLine);
+    pChannel=(char*)ppLinePart[2];
+    pMode=(char*)ppLinePart[3];
 
-    if (!strstr(pLine,sSetup.botname)) {
-        if (pPos[1]=='o' || pPos[1]=='v') {
+    if (!strstr(ppLinePart[0],sSetup.botname)) {
+        if (pMode[1]=='o' || pMode[1]=='v') {
             // add callback for reset the modes for a user    
             DEBUG("Added Callback for Mode Reset");
            
-			#warning Mode reset for the user does not work at the Moment. It must fix!!!!  
-            /*
-            Callback.ttl=16;
-            Callback.nichname=pNick;
-            Callback.CallbackFtk=(void*)ModeResetCb;
-            */
+            // extract  the nick
+            pNick=(char*)ppLinePart[4];
+            
+            // built the data for callback
+            pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
+            sprintf(pData,"%s %s",pChannel,pMode);
+            
+            // build  the  element
+            Callback.nickname=pNick;
+            Callback.CallbackFkt=(void*)ModeResetCb;
+            Callback.data=(void*)pData;
+            
+            // put  the  element  in the  callback list  before tail
+            insert_prev_CallbackDList(&CallbackList,&CallbackList.tail,&Callback);
+
+            // send the who
+            whois(pNick);
+
 
         } else {
             // reset channel
+            pPos=strstr(pLine,pMode);
             pPos[0]=(pPos[0]=='-')?'+':'-';
             mode(pChannel,pPos,NULL);
             DEBUG("Reset the modes from the channel %s",pChannel);
         }
-    } else if (strcmp(getNickname(pLine),sSetup.botname)) {
+    } else if (strcmp(getNickname(ppLinePart[0]),sSetup.botname)) {
         // mode set for the bot from other user of operator
         // then initiallize this  channel
-        if (pPos[1]=='+' && pPos[1]=='o') {
+        if (strcmp(pMode,"+o")) {
             privmsg(pChannel,MSG_INIT_CHANNEL);
             channelInit(pChannel);
             DEBUG("Initialize the channel %s", pChannel);
@@ -230,7 +245,7 @@ void hResetTopic(char *pLine){
 }
 // #########################################################################
 // Event handler: MODE
-// Action: initialize the channel after  become operator access
+// Action: initialize the channel after  get operator access
 // #########################################################################
 void hInitAfterOp(char *pLine) {
     char *pChannel;
@@ -267,4 +282,35 @@ static void channelInit(char *pChannel) {
         	}
 		}
     }
+}
+
+// #########################################################################
+// Event handler: 352
+// Action: call the callback function for a nickname
+// #########################################################################
+void hCallback(char *pLine) {
+    extern CallbackDList CallbackList;
+    CallbackItem_t *CB_Data;
+    CallbackDListItem *pCallbackItem;
+    char *pNetmask;
+    char **ppLinePart;
+
+    ppLinePart=splitString(pLine);
+
+    // lock for the Callback item for the nick
+    CB_Data=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
+    
+    if (CB_Data) {
+        // built netmask
+        pNetmask=(char*)malloc((strlen(ppLinePart[3])+strlen(ppLinePart[4])+strlen(ppLinePart[5])+3)*sizeof(char));
+        sprintf(pNetmask,"%s!%s@%s",ppLinePart[3],ppLinePart[4],ppLinePart[5]);
+
+        // execute the callback
+        DEBUG("Callback");
+        CB_Data->CallbackFkt(pNetmask,CB_Data->data);
+
+        // destroy  callback item
+        destroyCallbackItem(CB_Data);
+    }
+  
 }
