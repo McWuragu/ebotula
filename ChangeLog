@@ -4,14 +4,17 @@ ebotula-0.1.13
 - Bugfix: fixed -s  option
 - Bugfix: fixed the command !userlist
 - Bugfix: fixed the command !help
+- Bugfix: fixed the output of the comand !chanlist
 - renamed the version
 - modified the  irc help struction
 - added support for ctcp: ping,version,time
 - modified the sending of a response
 - maked the sending type of a response depending from the request
 - modified the  fast and slow sending  system (excess floodinf protection)
+- changed the default sending delay
 
--ebotula-devel-0.1.12
+
+ebotula-devel-0.1.12
 --------------------
 - Bugfix: fixed the bug by the access level controlling
 - Bugfix: fixed the command !hello
