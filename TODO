@@ -17,3 +17,6 @@ ToDo List
 - join in channel with keyword
 - convert defines to constantes
 - make the answer type (msg/notice) dependent from the type of the request
+- make the excution uid changeable for root per parameter
+- modify the access rights in the rpm 
+- make a automatic creation of the default config file for user
