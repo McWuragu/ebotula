@@ -16,109 +16,13 @@
 
 
 #include "config.h"
+#include "extract.h"
 #include "utilities.h"
 #include "messages.h"
 #include "dbaccess.h"
 #include "irc.h"
 #include "irchelp.h"
 #include "command.h"
-
-// ############################################################################# 
-char *getNickname(char *line){
-	char *nick,*str;
-	
-	str=(char*)malloc((strlen(line)+1)*sizeof(char));
-	strcpy(str,line);
-
-	if (!strtok(str,"!")) {
-		return NULL;
-	}
-
-	nick=(char *)malloc((strlen(str)+1)*sizeof(char));
-	strcpy(nick,&str[1]);
-	return nick;
-}
-// ############################################################################# 
-char *getNetmask(char *line){ 
-	char *netmask,*str, *pos;
-		
-	str=(char *)malloc((strlen(line)+1)*sizeof(char));
-	strcpy(str,line);
-    
-	if (!(pos=strchr(str,'!'))) {
-		return  NULL;
-	}
-	
-	strtok(pos," ");
-
-	netmask=(char *)malloc(strlen(pos)*sizeof(char));
-	strcpy(netmask,&pos[1]);
-
-	return netmask;
-}
-// ############################################################################# 
-char *getCommand(char *line) {
-	char *str,*pos,*tmp;
-
-	// mirror  of the orginal string 
-	tmp=(char *)malloc((strlen(line)+1)*sizeof(char));
-	strcpy(tmp,line);
-
-	// find the  secondary double point
-	// and put after this a null byte
-	if (!(pos=strchr(&tmp[1],':'))) {
-		return NULL;
-	}
-	pos[1]='\0';
-	
-	// cut out  the first part of the server answer 
-	str=(char *)malloc((strlen(tmp)+1)*sizeof(char));
-	strcpy(str,tmp);
-
-	return str;
-}
-// ############################################################################# 
-char *getArgument(char *line) {
-	char *str,*pos;
-	int i,line_len;
-	
-	// found  the begining  of Parameter 
-	if ((str=strstr(line," :!"))==NULL) {
-		return NULL;
-	} else {
-		
-		line_len=strlen(str);
-		
-
-		// check the length of the substring
-		if (line_len<3) {
-			return NULL;
-		}
-
-		// set the begin of comand string
-		str+=3;
-        line_len-=3; 
-
-		// search for the first space or end of string
-		for (i=0;i<=line_len;i++) {
-				
-			if (str[i]==' ') {
-				pos=&str[i];
-				
-				trim(pos);
-
-				// looking  for empty string
-				if (strlen(pos)>0) {
-					str=(char *)malloc((strlen(pos)+1)*sizeof(char));
-					strcpy(str,pos);
-					return str;
-				}
-			}
-		}
-	}
-	
-	return NULL;
-}
 
 
 // ################################ BOT commandos ########################## 
@@ -603,4 +507,64 @@ void channel_list(char *line){
 	}
 	DEBUG("%s",buffer);
 	notice(nick,buffer); 
+}
+// ############################################################################# 
+void bot_op(char *line){
+	extern CONFIG_TYPE setup;
+	char *channel;
+	char *names;
+	char *pos;
+	char *searchstr;
+
+	channel=getChannel(line);
+	
+	// extrakt Namelist
+	pos=strchr(&line[1],':');
+	names=(char*)malloc((strlen(pos)+1)*sizeof(char));
+	strcpy(names,pos);
+
+	searchstr=(char *) malloc((strlen(setup.botname)+2)*sizeof(char));
+	sprintf(searchstr,"@%s",setup.botname);
+
+	DEBUG("Look for OP right for %s",searchstr);
+	if (strstr(names,searchstr)) {
+		return;
+	}
+
+  	privmsg(channel,MSG_NEED_OP);
+}
+// ############################################################################# 
+void print_greating(char *line) {
+	char *channel;
+	char *channelstr;
+	char *greating;
+
+	if (!(channel=strchr(line,'#'))) {
+		return;
+	}
+
+	DEBUG("Greating for %s",channel);
+
+	if (!(channelstr=get_db(CHANNEL_DB,channel))) {
+		return;
+	}
+
+	DEBUG("Channellins %s",channelstr);
+
+	if (!(greating=getGreating(channelstr))) {
+		return;
+	}
+
+	DEBUG("Greating line %s",greating);
+	notice(getNickname(line),greating);
+
+}
+// ############################################################################# 
+void version(char *line) {
+    char *str;
+	str=(char *)calloc(strlen(PROGNAME)+strlen(" Version ")+strlen(VERSION)+3,sizeof(char));
+			
+	// creat Versions String
+	sprintf(str,"%s Version %s\r\n",PROGNAME,VERSION);
+	notice(getNickname(line),str);
 }
