@@ -133,6 +133,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
+                free(sSetup.port);
                 sSetup.port=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
                 strcpy(sSetup.port,argv[i]);
     
@@ -348,6 +349,7 @@ void ConfigFileParser(void) {
                         exit(errno);
                     }
                     // set port
+                    free(sSetup.port);
                     sSetup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.port,value);
                 } else if (!strcmp(key,KEY_BOTNAME)) {
