@@ -1,6 +1,8 @@
 ebotula-devel-0.1.10
 --------------------
 - renamed the version
+- maked better performance by seperate outgoing  thread
+- added the  rejoining after kicking
 
 ebotula-0.1.9-dev
 -----------------
