@@ -340,8 +340,10 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
 			temp=temp->next;
 		}
 	}
-	if (!strcmp(temp->data->nickname,nickname)) {
-//		removeCallbackDList(list,temp,data);
+	
+    
+    if (!strcmp(temp->data->nickname,nickname)) {
+        pthread_mutex_unlock(list->callbacklist_mutex);
         return temp;
     }
 	else

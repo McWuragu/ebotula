@@ -122,10 +122,10 @@ void hSetModUser(char *pLine) {
     pNick=getNickname(pLine);
 
     if (strcmp(pNick,sSetup.botname)) {
-        DEBUG("Set the mod for Account %s with nickname %s",pLogin,pNick);
-            
         if ((pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
-    	    pChannel=getAccessChannel(pLine);
+    	    DEBUG("Set the mod for Account %s with nickname %s",pLogin,pNick);
+
+            pChannel=getAccessChannel(pLine);
 
         	// build key for access.dbf
             pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
@@ -300,12 +300,13 @@ void hCallback(char *pLine) {
     ppLinePart=splitString(pLine);
 
     /** lock for the Callback item for the nick **/
-//    CB_Data=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
+    //    CB_Data=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
 	/** remove was removed from searchNicknameFromCallbackDList 
 	 * Remove all by hand 						**/
-      pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
-	CB_Data=pCallbackItemReturn->data; 
-    if (CB_Data) {
+    pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
+	 
+    // remove  entrie and read the  callback datum
+    if (removeCallbackDList(&CallbackList,pCallbackItemReturn,CB_Data)) {
         // built netmask
         pNetmask=(char*)malloc((strlen(ppLinePart[3])+strlen(ppLinePart[4])+strlen(ppLinePart[5])+3)*sizeof(char));
         sprintf(pNetmask,"%s!%s@%s",ppLinePart[3],ppLinePart[4],ppLinePart[5]);
