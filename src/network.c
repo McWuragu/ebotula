@@ -102,7 +102,6 @@ void  send_line(char *pLine) {
 	msleep(sSetup.sendDelay);
 	
 	if (!send(sockid,pLine,strlen(pLine),0)){
-		perror(SYSLOG_SEND);
 		syslog(LOG_CRIT,SYSLOG_SEND);
 		exit(errno);
 	}
@@ -126,7 +125,6 @@ void  recv_line(char *pLine,unsigned int len) {
 	
 	if (poll(&sPoll,1,sSetup.iTimeout*1000)) {
 		if (!(str_len=recv(sockid,pLine,len,0))){
-			perror(SYSLOG_RECV);
 			syslog(LOG_CRIT,SYSLOG_RECV);
 			exit(errno);
 		}
@@ -141,7 +139,7 @@ void  recv_line(char *pLine,unsigned int len) {
 
 
 // ############################################################################# 
-void irc_connect(void){
+void ConnectToIrc(void){
 	char recv_buffer[RECV_BUFFER_SIZE], *tmp;
 	int i,trying=0;
 	extern ConfType sSetup;
@@ -182,11 +180,11 @@ void irc_connect(void){
 void join_all_channels(void) {
 	char **channelliste;
 	unsigned int i;
-
-	if ((channelliste=list_db(CHANNEL_DB))) {
-		for (i=0;channelliste[i]!=NULL;i++) {
-			join(channelliste[i]);
-		}
+	channelliste=list_db(CHANNEL_DB);
+	
+	// join_Channels
+	for (i=0;channelliste[i]!=NULL;i++) {
+		join(channelliste[i]);
 	}
 	
 }
