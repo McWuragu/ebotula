@@ -10,7 +10,7 @@
 #ifndef IRCBOT_H
 #define IRCBOT_H
 
-#define VERSIONSTR 	"%s v%s Build [%s - %s] (C) 2003 Steffen Laube\n",PACKAGE,VERSION,__DATE__,__TIME__
+#define VERSIONSTR 	"%s v%s Built [%s - %s] (C) 2003 Steffen Laube\n",PACKAGE,VERSION,__DATE__,__TIME__
 
 #define CONFFILE 				"/ebotula/ebotula.conf"
 
