@@ -28,7 +28,9 @@ AM_CONFIG_HEADER(src/config.h)
 
 AC_HEADER_STDC
 AC_HEADER_TIME
-AC_CHECK_HEADERS(syslog.h pthread.h sys/poll.h ctype.h string.h gdbm.h sys/ipc.h sys/socket.h netdb.h netinet/in.h assert.h)
+AC_CHECK_HEADERS(syslog.h pthread.h sys/poll.h ctype.h string.h gdbm.h sys/ipc.h sys/socket.h netdb.h netinet/in.h assert.h,,
+   AC_MSG_ERROR("Header not found...
+Don't found all necessary header files. Please check your install."))
 AC_C_CONST
 
 dnl ===========================
