@@ -1,6 +1,6 @@
 IRC-Bot Spezifikationen
 
-Commandos
+Kommandos
 ---------
 !hello
 	- legt neuen Account an
@@ -9,13 +9,13 @@ Commandos
 	- Automatisch eingeloggt 
 	- leeres Passwort
 
-!ident <login> <pass>
+!ident <login> [pass]
 	- identifizieren gegenüber dem Bot
 
 !logoff
 	- ausloggen beim Bot
 
-!mode [channel] <login> <option>
+!usermode [channel] <login> <option> 
 	- setzt die Modes eines Login für den jeweiligen Channel
 	- darf nur master und owner
 
@@ -24,7 +24,7 @@ Commandos
 		+/-v	Voice
 		+/-m	Master
 
-!mode <channel> <option>
+!channelmode [channel] <option>
 	- setzt die Mode für den IRC-Channel
 	- darf nur master und owner
 	
@@ -36,7 +36,11 @@ Commandos
 	- darf Master und Owner
 	- Owner nur in seinem Channel
 
-!pass	<pass>
+!viewgreat [channnel]
+	- zeigt Begrüssungszeile im aktuellen Channel an
+	- darf jeder User
+
+!pass [pass]
 	- setzt das  password nach dem ident
 
 !userlist [channel]
@@ -79,7 +83,7 @@ Commandos
 	- fügt in in seiner liste ein
 	- darf nur Master
 	
-!rmchannel <channel>
+!rmchannel [channel]
 	- verläst den  aktuellen Channel
 	- entfernt ihn aus der Liste
 	- darf nur der Master
@@ -88,7 +92,7 @@ Commandos
 	- der Bot joint  diesem Channel
 	- darf nur master
 
-!part <channel>
+!part [channel]
 	- verläst den  aktuellen channel
 	- entfernt ihn aus der liste
 	- darf nur der master
@@ -108,10 +112,18 @@ Commandos
 	- listet die channel in den der Bot ist
 	- darf nur Master
 
-!rmuser
+!rmuser <login>
 	- löscht einen Account aus der Datei user.dbf
 	- löscht alle Abhängigkeiten dieses Users
 	- darf nur Master
+
+!say <channel>	
+	- Ausgabe eine privaten Messag im aktuellen oder beliebegen Channel
+	- eingelogte User
+
+!allsay
+	- Ausgabe einer Message in allen Channel des Bots
+	- Darf nur Master
 
 Properties
 ----------
@@ -121,7 +133,7 @@ Properties
 - One-File-DB für User (vielleicht dbm)
 - One-File-DB für Channels (vielleicht dbm)
 - IRC-Bot erzeug eine Leere DB
-- Initialiesierung des ersten Master per Commandline
+- Initialisierung von Master per Commandline
 - wenn User letzten Channel verläst ist automatisches logout
 - nach n Tagen erlischt der Account automatisch
 - n-maliges probieren, wenn  Nickname schon vergeben ist und mit  Unterstrich den Nick erweitern
@@ -134,21 +146,24 @@ Properties
 	- master
 - zur Runtime ein Prozess der Inputstream filtert
 - relevante Einträge in msg-Queue leiten
-- Child-Prozesse lesen  zyklisch die msg-Queue
-- Child-Prozesse arbeiten Einträge up
-- Steuerung des Bots per Konfigurationsdatei
-- Parent-Prozess prüft Füllstand der msg-queue
+- Child-Threas lesen  zyklisch die msg-Queue
+- Child-Thread arbeiten Einträge up
+- Child-Thread für zyklische Aufgabe
+- Steuerung des Bots per Konfigurationsdatei und Kommandozeile
 
 Kommandozeilenoptionen
 ----------------------
 ircbot [Options]
 
         Options:
+	-a days		Set the time in days for the automatic logoff.
         -b name         Set  the name  of the bot.
         -d path         Use this path for the database
         -f file         Use this config file.
         -h              Print this help info.
+	-k days		Set the  account live time in days.
         -m              Create a bot master.
+	-n ms		Set the delay time in millisecond for sending.
         -p port         Set the port of the irc server.
         -r string       Set the output  for a request of the real name.
         -s server       Set the irc server name.
@@ -166,7 +181,9 @@ threadlimit= 6
 servername=irc.fh-lausitz.de
 port = 6667
 databasepath=/var/ircbot
-
+senddelay=750
+autologoff=48
+accountlivetime=90
 
 Aufbau der Datenbank
 --------------------
@@ -181,10 +198,14 @@ Aufbau der Datenbank
 	- Channelname ist Key
 	- Werte durch Newline  getrennt
 
-- login.dbf:
-	- Netmaske und Login
-	- Netmaske ist Key
-	- Netmaske ist user@host.domain ohne den Nickname
+- usertonick.dbf
+	- verknüpft Login mit aktuellen Nickname
+	- Eintrag nur enthalten, wenn User angemeldet ist
+	- wird bei jedem Start neuangelegt
+
+- nicktouser.dbf
+	- verknüpt Nickname mit Login
+	- Eintrag nur enthalten, wenn User angemeldet ist
 	- wird bei jedem Start neuangelegt
 
 - access.dbf:
@@ -198,7 +219,7 @@ Aufbau der Datenbank
 	- Channel gleich * dann Shiltlisteintrag
 
 - timelog.dbf:
-	- liste der letzten !ident-Aufrufe der Logins
+	- Liste der letzten !ident-Aufrufe der Logins
 	- Login und  Unix-Timestamp
 	- dient zum Autologin und  zum Cleanup der Userliste
 
