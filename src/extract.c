@@ -71,7 +71,7 @@ char *getCommand(char *line) {
 }
 // ############################################################################# 
 char *getArgument(char *line) {
-	char *str,*pos;
+	char *str,*pos,*parameter;;
 	int i,line_len;
 	
 	// found  the begining  of Parameter 
@@ -79,31 +79,24 @@ char *getArgument(char *line) {
 		return NULL;
 	} else {
 		
-		line_len=strlen(str);
 		
-
-		// check the length of the substring
-		if (line_len<3) {
-			return NULL;
-		}
-
+		
 		// set the begin of comand string
 		str+=3;
-        line_len-=3; 
+        line_len=strlen(str);
 
 		// search for the first space or end of string
 		for (i=0;i<=line_len;i++) {
 				
 			if (str[i]==' ') {
 				pos=&str[i];
-				
+                pos++;
 				trim(pos);
-
-				// looking  for empty string
+                // looking  for empty string
 				if (strlen(pos)>0) {
-					str=(char *)malloc((strlen(pos)+1)*sizeof(char));
-					strcpy(str,pos);
-					return str;
+					parameter=(char *)malloc((strlen(pos)+1)*sizeof(char));
+                    strcpy(parameter,pos);
+					return parameter;
 				}
 			}
 		}
@@ -138,21 +131,53 @@ char *getChannel(char *line){
 	return channel;
 }
 // ######################################################################### 
+char *getAccessChannel(char *line) {
+	char *parameter;
+	char *channel;
+	char *pos;
+	unsigned int paramsize=0;
+
+	parameter=getArgument(line);
+
+	// look channel name  in preamble
+	if ((parameter == NULL) || (parameter[0]!='#')) {
+	
+		// look for channelname  as parameter
+		if (!(channel=getChannel(line))) {
+            return NULL;
+		}
+	} else {
+		
+		// parse Channel name
+		paramsize=strlen(parameter);
+		pos=strtok(parameter," ");
+		channel=(char *)malloc((strlen(parameter)+1)*sizeof(char));
+		strcpy(channel,parameter);
+    }
+
+	return channel;
+}
+// ######################################################################### 
 char  *getTopic(char *channelstr) {
 	char *topic;
-	char *pos;
+	char *pos,*pos2;
+	char *str;
+
+	str=(char *)malloc((strlen(channelstr)+1)*sizeof(char));
+	strcpy(str,channelstr);
 
 	// look for topic;
-	if (!(pos=strchr(channelstr,'\t'))) {
-		return NULL;
-    }
+	if (!(pos=strchr(str,'\t'))) {
+		return NULL; 
+	}
 		
 	pos++;
 
 	// look for the end  of topic
-	if (!(strtok(pos,"\t"))) {
+	if (!(pos2=strchr(pos,'\t'))) {
 		return NULL;
 	}
+	*pos2='\0';
 
 	// check length
 	if (!strlen(pos)) {
@@ -170,7 +195,7 @@ char  *getGreating(char *channelstr) {
 
     // look for the begin  of greating
 	if (!(pos=strrchr(channelstr,'\t'))) {
-		return NULL;
+		return NULL;		  
     }
 
 	pos++;
@@ -184,4 +209,22 @@ char  *getGreating(char *channelstr) {
 	strcpy(greating,pos);
 
 	return greating;
+}
+// ######################################################################### 
+char *getMode(char *channelstr){
+	char *mode;
+	char *str;
+	char *pos;
+
+	str=(char *)malloc((strlen(channelstr)+1)*sizeof(char));
+	strcpy(str,channelstr);
+
+	if (!(pos=strchr(str,'\t'))) {
+		return NULL;
+	} else {
+		*pos='\0';
+		mode=(char*)malloc((strlen(str)+1)*sizeof(char));
+		strcpy(mode,str);
+	}
+	return mode;
 }
