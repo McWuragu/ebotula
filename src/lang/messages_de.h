@@ -91,7 +91,7 @@
 	#define MSG_NOT_CHANNEL			"Dieser Channel ist nicht auf der Channelliste"
 	#define MSG_NOT_ACCESS			"Zugriff verweigert"
 	#define MSG_NOT_SELF			"Du kannst dich nicht selbst modifizieren"
-    #define MSG_NOT_KICK            "Kann leider diesen User nicht kicken"
+	#define MSG_NOT_KICK            	"Kann leider diesen User nicht kicken"
 	
 	// Errors
 	#define MSG_ADDCHANNEL_ALREADY		"Dieser Channel ist schon auf der Channelliste"
