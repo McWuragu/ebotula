@@ -22,6 +22,7 @@
 #include "messages.h"
 #include "irc.h"
 #include "type.h"
+#include "account.h"
 #include "handles.h"
 
 
@@ -29,31 +30,46 @@
 // Event handler: NICK
 // #########################################################################
 void hNickChange(char *pLine) {
-    extern pthread_mutex_t account_mutex;
     char *pNetmask;
     char *pLogin;
     char *pNewNetmask;
+    char *pNewNick;
+	char *pNetmaskCopy;
+    char *pTmp;
 
     pNetmask=getNetmask(pLine);
-    
-    pNewNetmask=strstr(pLine," :");
-    pNewNetmask+=2;
-        strtok(pNewNetmask,"\r");
 
-    pthread_mutex_lock(&account_mutex);
+	    
     if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
+		// get the new nickname
+		pNewNick=strrchr(pLine,' ');
+		
+		if (strlen(pNewNick)>2) {
+			pNewNick+=2;
 
-	    // replace  the netmask
-    	if (del_db(NICKTOUSER_DB,pNetmask)) {
-        	add_db(NICKTOUSER_DB,pNewNetmask,pLogin);
-	        replace_db(USERTONICK_DB,pLogin,pNewNetmask);
-    	}
+			pNetmaskCopy=(char*)malloc((strlen(pNetmask)+1)*sizeof(char));
+			strcpy(pNetmaskCopy,pNetmask);
+			
+			// cut out the secondary part of the netmask
+			pTmp=strchr(pNetmaskCopy,'!');
+			strtok(pTmp," ");
 
-    	free(pNetmask);
+			// build new netmask	
+			pNewNetmask=(char*)malloc((strlen(pNewNick)+strlen(pTmp)+1)*sizeof(char));
+			sprintf(pNewNetmask,"%s%s",pNewNick,pTmp);
 
-    	DEBUG("Changethe netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
+			// reset Login Status
+			log_out(pLogin);
+			log_on(pNewNetmask,pLogin);
+
+    		DEBUG("Changethe netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
+	    	
+			free(pNetmaskCopy);
+	    	free(pNewNetmask);
+			free(pLogin);
+		}
+
 	}
-    pthread_mutex_unlock(&account_mutex);
 
 }
 // #########################################################################
@@ -95,7 +111,6 @@ void hBotNeedOp(char *pLine){
 // #########################################################################
 void hSetModUser(char *pLine) {
     extern ConfigSetup_t sSetup;
-    extern pthread_mutex_t account_mutex;
     char *pLogin;
     char *pNick;
     char *pKey;
@@ -108,7 +123,6 @@ void hSetModUser(char *pLine) {
     if (strcmp(pNick,sSetup.botname)) {
         DEBUG("Set the mod for Account %s with nickname %s",pLogin,pNick);
             
-        pthread_mutex_lock(&account_mutex);
         if ((pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
     	    pChannel=getAccessChannel(pLine);
 
@@ -129,7 +143,6 @@ void hSetModUser(char *pLine) {
             free(pKey);
 
         }
-        pthread_mutex_unlock(&account_mutex);
     }
     free(pNick);
 }
