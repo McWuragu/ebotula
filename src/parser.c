@@ -20,6 +20,7 @@
 #include "irc.h"
 #include "dbaccess.h"
 #include "command.h"
+#include "handles.h"
 #include "utilities.h"
 #include "messages.h"
 #include "parser.h"
@@ -48,10 +49,10 @@ MsgBufType preParser(char *line) {
 		msg.identify=CMD_LOGOFF;
 	} else if (strstr(pos,"JOIN")) {
 		msg.mtype=2;
-		msg.identify=CMD_GREATING;
+		msg.identify=CMD_ONJOIN;
 	} else if (strstr(pos,"NICK")) {
 		msg.mtype=2;
-		msg.identify= CMD_NICKCHG;
+		msg.identify= CMD_ONNICKCHG;
 	} else if (strstr(pos,"353")) {
 		msg.mtype=2;
 		msg.identify=CMD_NAMES;
@@ -104,7 +105,7 @@ MsgBufType preParser(char *line) {
 				msg.identify=CMD_SET_GREATING;
 			} else if (!strncmp(str,"viewgreat",strlen("viewgreat"))) {
 				msg.mtype=1;
-				msg.identify=CMD_GREATING;
+				msg.identify=CMD_ONJOIN;
 			} else if (!strncmp(str,"topic",strlen("topic"))) {
 				msg.mtype=1;
 				msg.identify=CMD_SET_TOPIC;
@@ -117,6 +118,9 @@ MsgBufType preParser(char *line) {
 			} else if (!strncmp(str,"usermode",strlen("usermode"))) {
 				msg.mtype=1;
 				msg.identify=CMD_USERMODE;
+			} else if (!strncmp(str,"rmuser",strlen("rmuser"))) {
+				msg.mtype=1;
+				msg.identify=CMD_RMUSER;
 			}
 		}
 	}
@@ -187,10 +191,11 @@ void *action_thread(void *argv) {
 				channel_list(msg.msg_line);
 				break;
 			case CMD_NAMES:
-				bot_op(msg.msg_line);
+				hBotNeedOp(msg.msg_line);
 				break;
-			case CMD_GREATING:
+			case CMD_ONJOIN:
 				greating(msg.msg_line);
+                hSetMods(msg.msg_line);
 				break;
 			case CMD_SET_GREATING:
 				setGreating(msg.msg_line);
@@ -207,8 +212,11 @@ void *action_thread(void *argv) {
 			case CMD_USERMODE:
 				usermode(msg.msg_line);
 				break;
-			case CMD_NICKCHG:
-				nickchg(msg.msg_line);
+			case CMD_ONNICKCHG:
+				hNickChange(msg.msg_line);
+				break;
+			case CMD_RMUSER:
+				rmuser(msg.msg_line);
 				break;
 			default:
 				syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,msg.identify);
@@ -239,7 +247,7 @@ int AccessRight(char *line,CmdType cmd_id) {
 	// handlers
 	case CMD_PING:
 	case CMD_NAMES:
-	case CMD_GREATING:
+	case CMD_ONJOIN:
 	case CMD_TOPIC:
 	// any users
 	case CMD_HELP:
@@ -248,7 +256,7 @@ int AccessRight(char *line,CmdType cmd_id) {
 	case CMD_IDENT:
 		return true;
 	// logged in user
-	case CMD_NICKCHG:
+	case CMD_ONNICKCHG:
 	case CMD_LOGOFF:
 	case CMD_PASS:
 		if (!exist_db(NICKTOUSER_DB,netmask)) {
@@ -292,6 +300,7 @@ int AccessRight(char *line,CmdType cmd_id) {
 	case CMD_PART:
 	case CMD_RMCHANNEL:
 	case CMD_ADDCHANNEL:
+	case CMD_RMUSER:
 		channel=getAccessChannel(line);
 
 		if (!strlen(channel)) {
