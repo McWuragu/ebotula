@@ -1,0 +1,20 @@
+# Oriya translations for ebotula package.
+# Copyright (C) 2004 THE ebotula'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the ebotula package.
+# Steffen Laube <Laube.Steffen@gmx.de>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ebotula 0.1.17\n"
+"Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
+"POT-Creation-Date: 2004-07-14 21:02+0200\n"
+"PO-Revision-Date: 2004-07-14 11:29+0200\n"
+"Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
+"Language-Team: Oriya\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/ircbot.c:168
+msgid "Found debug level option"
+msgstr "Debug-Level-Option gefunden"

@@ -21,6 +21,9 @@ AM_INIT_AUTOMAKE(ebotula,0.1.17)
 
 AM_SANITY_CHECK
 
+
+AM_GNU_GETTEXT
+
 AC_PROG_CC
 #CFLAGS=`echo $CFLAGS | sed 's/-O2//'`
 CFLAGS=`echo $CFLAGS | sed 's/-g//'`
@@ -133,7 +136,11 @@ dnl end
 dnl ===========================
 AC_CONFIG_FILES([Makefile
                  ebotula.spec
+		 doc/ebotula.1
+		 doc/ebotula.conf.5
                  doc/Makefile
+		 po/Makefile.in
+		 intl/Makefile
                  etc/Makefile
                  src/Makefile
                  src/lang/Makefile])
