@@ -286,7 +286,7 @@ char * get_db(int db,char *_key){
     extern pthread_mutex_t dbaccess_mutex;
 
 
-    if (exist_db(db,_key) && (dbf=get_dbf(db)) && _key!=NULL) {
+    if ((dbf=get_dbf(db)) && _key!=NULL) {
     
 	    key.dptr=_key;
 	    key.dsize=strlen(key.dptr)+1;
@@ -344,6 +344,7 @@ char ** list_db(int db){
     ppList=(char **)malloc((count+1)*sizeof(char *));
     ppList[count]=NULL;
 
+    firstkey=gdbm_firstkey(dbf);
     key=firstkey;
 
     for (i=0;i<count;i++) {

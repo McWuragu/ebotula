@@ -25,8 +25,8 @@
 // #############################################################################
 void rmDeadLogins(long lCheckTime) {
     extern pthread_mutex_t account_mutex;
-    char **ppLogins;
-    char *pTime;
+    char **ppLogins=NULL;
+    char *pTime=NULL;
     int i;
 
     pthread_mutex_lock(&account_mutex);
