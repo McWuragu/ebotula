@@ -18,7 +18,7 @@
 
 #ifdef LANG_DE
 
-	#include "lang/messages_ger.h"
+	#include "lang/messages_de.h"
 
 #else
 	#include "lang/messages_eng.h"
