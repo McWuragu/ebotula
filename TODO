@@ -1,21 +1,21 @@
 ToDo Liste
 ----------
-- Fehlende Botkommandos
+- missing commands
 	- !chanmode
 	- !ban
 	- !timeban
-	- !userlist
 	- !banlist
 	- !allban
 	- !restart
 	- !allsay
-- Reset Mods, wenn nicht  über Bot verändert wurden
 - Set topic and mode from channel if the bot join, become op or other user have changed
-- execute the banlist 
+- implement the banlist (set and execute)
 - complete the  help system
 - Code cleanup
 - Debuggen
-- Anforderung der Rechte als ACTION
-- Hervorhebung von Messages per bold
+- emphasize per bold the messages
 - insert allow and  disallow filter for charaters in all  strings
 - set the bot channel op by the  server self 
+- make multilingual messages.h and irchelp.h
+- to complete the  documentation
+- to translate the documents
