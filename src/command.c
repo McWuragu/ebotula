@@ -1389,13 +1389,13 @@ void accountlist(MsgItem_t *pMsg){
 			/* build the key  for  access.dbf */
 			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
 			sprintf(pKey,"%s%s",(char*)pLoginItem->data,pMsg->pAccessChannel);
-
+			iLoginTab=(iLoginLen<ACCOUNT_LIST_TAB)?ACCOUNT_LIST_TAB:iLoginLen;
             /* "Status:" + ACCOUNT_LIST_TAB + "Owner "+ "   Status: "+"ON " */
-            pMsgStr=(char*)malloc((ACCOUNT_LIST_TAB+30)*sizeof(char));
+            pMsgStr=(char*)malloc((iLoginTab+30)*sizeof(char));
             strcpy(pMsgStr,(char*)pLoginItem->data);
 
             /* fill */
-            for (j=0;j<(ACCOUNT_LIST_TAB-iLoginLen);j++) {
+            for (j=0;j<(iLoginTab-iLoginLen);j++) {
                 strcat(pMsgStr," ");
             }
 
