@@ -169,7 +169,7 @@ int main(int argc,char * const argv[]) {
                 logger(LOG_INFO,gettext("Found debug level option."));
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(gettext("Missing value"));
+                    printf(gettext("%s need a parameter value"),argv[i-1]);
                     exit(errno);
                 }
 
@@ -177,7 +177,7 @@ int main(int argc,char * const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<0  || tmp > MAX_LOGLEVEL) {
                     errno=EDOM;
-                    perror(gettext("The log level is invalid."));
+                    printf(gettext("The log level %i is invalid."),tmp);
                     exit(errno);
                 }
                 sSetup.nLogLevel=tmp;
@@ -194,7 +194,7 @@ int main(int argc,char * const argv[]) {
         		else
         		{	
         			errno=EINVAL;
-                    perror(gettext("Missing value"));
+                    printf(gettext("%s need a parameter value"),argv[i-1]);
         			exit(errno);
         		}
                 break;
@@ -240,7 +240,7 @@ int main(int argc,char * const argv[]) {
             if ((Group=getgrnam(sSetup.sExeGroup)))
                setegid(Group->gr_gid);
             else {
-                logger(LOG_ERR,getSyslogString(SYSLOG_GROUP_NOT_FOUND));
+                logger(LOG_ERR,gettext("The group %s couldn't found"),sSetup.sExeGroup);
             }
         }
 
@@ -249,7 +249,7 @@ int main(int argc,char * const argv[]) {
             if ((User=getpwnam(sSetup.sExeUser)))
                seteuid(User->pw_uid);
             else {
-                logger(LOG_ERR,gettext("User %s not found"),sSetup.sExeUser);
+                logger(LOG_ERR,gettext("Th user %s couldn't found"),sSetup.sExeUser);
             }
         }
     }
@@ -274,7 +274,7 @@ int main(int argc,char * const argv[]) {
     logger(LOG_INFO,"Log level: %i",sSetup.nLogLevel);
     logger(LOG_INFO,"-------------------------------------------------");
 
-    logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));
+    logger(LOG_NOTICE,gettext("Start..."));
 
 
     // init Database and the mutex for  access to the database
@@ -293,24 +293,27 @@ int main(int argc,char * const argv[]) {
     // create the network connection
     if ((sSetup.server!=NULL) && (sSetup.port!=NULL)) {
         #ifdef NDEBUG
-        printf("%s\n",getSyslogString(SYSLOG_TRY_CONNECT));
+        printf(gettext("Try to connect to %s"),sSetup.server);
+        printf("\n");
         #endif
-        logger(LOG_INFO,getSyslogString(SYSLOG_TRY_CONNECT));
+        logger(LOG_INFO,gettext("Try to connect to %s"),sSetup.server);
         
         connectServer();
         
         #ifdef NDEBUG
-        printf("%s\n",getSyslogString(SYSLOG_IS_CONNECT));
+        printf(gettext("The bot is connect to %s"),sSetup.server);
+        printf("\n");
         #endif
         
-        logger(LOG_INFO,getSyslogString(SYSLOG_IS_CONNECT));
+        logger(LOG_INFO,gettext("The bot is connect to %s"),sSetup.server);
     } else {
         closeDatabase();
         errno=EINVAL;
         #ifdef NDEBUG
-        perror(getSyslogString(SYSLOG_FAILED_NETPARA));
+        printf(gettext("The servername or portnumber isn't set."));
+        printf("\n");
         #endif
-        logger(LOG_ERR,getSyslogString(SYSLOG_FAILED_NETPARA));
+        logger(LOG_ERR,gettext("The servername or portnumber isn't set."));
         exit(errno);
     }
 
@@ -319,9 +322,9 @@ int main(int argc,char * const argv[]) {
     // connect to the server
     ConnectToIrc();
     #ifdef NDEBUG
-    printf("%s\n",getSyslogString(SYSLOG_BOT_RUN));
+    printf("%s\n",gettext("Running..."));
     #endif
-    logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_RUN));
+    logger(LOG_NOTICE,gettext("Running..."));
 
     // redefine the signal handler for to stop the bot
     signal(SIGINT,stopParser);
@@ -424,7 +427,7 @@ int main(int argc,char * const argv[]) {
 
     flushQueue(pCommandQueue);
 
-    logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));
+    logger(LOG_NOTICE,gettext("The bot is stopping."));
     pthread_join(timeThread,NULL);
     
 
@@ -449,7 +452,7 @@ int main(int argc,char * const argv[]) {
     
     //  check for restart option
     if (again) {
-        logger(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));
+        logger(LOG_NOTICE,gettext("Restart..."));
         
         #ifdef HAVE_SYSLOG_H
         closelog();
@@ -457,20 +460,20 @@ int main(int argc,char * const argv[]) {
         
         execvp(argv[0],argv);
         #ifdef NDEBUG
-        perror(getMsgString(ERR_RESTART));
+        perror(gettext("Restart failed"));
         #endif
         
         #ifdef HAVE_SYSLOG_H
         openlog(PACKAGE,0,LOG_DAEMON);
         #endif
         
-        logger(LOG_ERR,getSyslogString(SYSLOG_RESTART));
+        logger(LOG_ERR,gettext("Restart failed"));
         
         #ifdef HAVE_SYSLOG_H
         closelog();
         #endif
     } else {
-        logger(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));
+        logger(LOG_NOTICE,gettext("Stopped..."));
         closelog();
     }
 
