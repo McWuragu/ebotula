@@ -1,0 +1,6 @@
+ebotula v.0.1.2-dev
+-------------------
+- added the  support  for !chanmode
+- renamed the command !channels to !chanlist
+- modify the output form !chanlist
+- added  the locking  of topic
