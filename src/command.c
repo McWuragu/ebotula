@@ -5,7 +5,7 @@
  * See the file COPYING for details.
  *
  * (c)2003 Steffen Laube <realebula@gmx.de>
- * ############################################################# 
+ * #############################################################
  */
 
 #include <stdio.h>
@@ -33,7 +33,7 @@
 #include "command.h"
 
 
-/* ######################################################################### 
+/* #########################################################################
    Bot comand: !help <command>
    ######################################################################### */
 void help(MsgItem_t *pMsg) {
@@ -42,7 +42,7 @@ void help(MsgItem_t *pMsg) {
     char *pMsgStr;
     char *pMsgPart;
     unsigned int i,j,iLength;
-   
+
 
     pParameter=getParameters(pMsg->pRawLine);
 
@@ -1381,9 +1381,9 @@ void ctcpping(MsgItem_t *pMsg) {
    if ((pPing=strstr(pMsg->pRawLine," :\001"))==NULL) {
  	/* ignoring errors */
         return;
-    }    
+    }
    pPing+=2;
-   sprintf(pPong,"%s\r\n",pPing);
+   sprintf(pPong,"%s",pPing);
    notice(pMsg->pCallingNick,pPong);
 }
 /* #########################################################################
@@ -1393,7 +1393,6 @@ void ctcpversion(MsgItem_t *pMsg) {
     char pMsgStr[256];
     /* creat Versions String */
     sprintf(pMsgStr,VERSIONSTR);
-    strcat(pMsgStr,"\r\n");
     notice(pMsg->pCallingNick,pMsgStr);
     return;
 }
@@ -1409,7 +1408,7 @@ void ctcptime(MsgItem_t *pMsg) {
 	/* pTm=gmtime(&t);*/
 	/* localtime */
 	pTm=localtime(&t);
-	strftime(pMsgStr,63,"\001TIME %a %b %d %H:%M:%S\001\r\n",pTm);
+	strftime(pMsgStr,63,"\001TIME %a %b %d %H:%M:%S\001",pTm);
 	notice(pMsg->pCallingNick,pMsgStr);
 	return;
 }
