@@ -14,6 +14,8 @@ ebotula-0.1.17
 - modified the global sending mutex to a static mutex
 - adjusted the command line help
 - modified the configuration file generator
+- modified the SendMsg()
+- added the  suport of  variable parameter list to the SendMsg()
 
 
 ebotula-0.1.16
