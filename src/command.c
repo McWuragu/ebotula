@@ -1312,7 +1312,7 @@ void accountlist(MsgItem_t *pMsg){
         			sprintf(pKey,"%s%s",(char*)pLoginItem->data,(char*)pChannel->data);
         
                     /* "Status:" + ACCOUNT_LIST_TAB + "Friend from " + strlen(pChannel->data) + "   Status: "+ "OFF" */
-                    pMsgStr=(char*)malloc((ACCOUNT_LIST_TAB+iChanLen+40)*sizeof(char));
+                    pMsgStr=(char*)malloc((ACCOUNT_LIST_TAB+iChanLen+50)*sizeof(char));
                     strcpy(pMsgStr,(char*)pLoginItem->data);
         
                     /* fill */
