@@ -151,7 +151,7 @@ int main(int argc,char * const argv[]) {
     // init Database and the mutex for  access to the database
     initDatabases();
 
-
+    // create master dialog
     if (sSetup.newMaster) {
         if (!dialogMaster()){
             closeDatabase();
