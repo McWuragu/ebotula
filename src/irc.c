@@ -1,4 +1,11 @@
-#include "macro.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <errno.h>
+#include <pwd.h>
+
+#include "utilities.h"
 #include "messages.h"
 #include "config.h"
 #include "network.h"
@@ -9,7 +16,7 @@
 
 
 
-
+// ############################################################################# 
 void irc_connect(void){
 	char recv_buffer[RECV_BUFFER_SIZE], *tmp;
 	int i,trying=0;
@@ -32,7 +39,7 @@ void irc_connect(void){
 		// check fpr  nickname alread in use
 		// if he in use then put a leading underline on the front of the name 
 		if (strstr(recv_buffer,"Nickname is already in use.")) {
-			tmp=malloc(sizeof(char)*(strlen(setup.botname)+2));
+			tmp=(char *)calloc(strlen(setup.botname)+2,sizeof(char));
 			sprintf(tmp,"_%s",setup.botname);
 			free(setup.botname);
 			setup.botname=tmp;
@@ -48,7 +55,7 @@ void irc_connect(void){
 	} while (i==1);
 }
 
-
+// ############################################################################# 
 void user(void) {
 	extern CONFIG_TYPE setup;
 	struct passwd *pw;
@@ -61,59 +68,59 @@ void user(void) {
 	gethostname(hostname,HOSTNAME_BUFFER_SIZE);
 
 	// calculat the command size
-	buffer_size=strlen("USER")+strlen(pw->pw_name)+strlen(hostname)+strlen(setup.server)+strlen(setup.realname)+7;
-    buffer=malloc(sizeof(char)*buffer_size);
+	buffer_size=strlen("USER")+strlen(pw->pw_name)+strlen(hostname)+strlen(setup.server)+strlen(setup.realname)+8;
+    buffer=(char *)calloc(sizeof(char),buffer_size);
 	
 	// create the  commando string
-	sprintf(buffer,"USER %s %s %s :%s\n",pw->pw_name,hostname,setup.server,setup.realname);
+	sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,setup.server,setup.realname);
 
 	// send commando
 	send_line(buffer);
-	free(buffer);
 }
-
+// ############################################################################# 
 void notice(char *nick,char *text) {
-	char *buffer=malloc(sizeof(char)*(strlen("NOTICE ")+strlen(nick)+strlen(text)+2));
+	char *buffer;
+	buffer=(char *)calloc(strlen("NOTICE ")+strlen(nick)+strlen(text)+3,sizeof(char));
 	
-	sprintf(buffer,"NOTICE %s :%s\n",nick,text);
+	sprintf(buffer,"NOTICE %s :%s\r\n",nick,text);
 
 	// send commando
 	send_line(buffer);
-	free(buffer);
 }
-
+// ############################################################################# 
 void version(char *line) {
-    char *str=malloc(sizeof(char)*(strlen(PROGNAME)+strlen("Version ")+strlen(VERSION)+3));
+    char *str;
+	str=(char *)calloc(strlen(PROGNAME)+strlen("Version ")+strlen(VERSION)+4,sizeof(char));
 			
 	// creat Versions String
-	sprintf(str,"%s Version %s\n",PROGNAME,VERSION);
+	sprintf(str,"%s Version %s\r\n",PROGNAME,VERSION);
 	notice(getNickname(line),str);
 }
-
+// ############################################################################# 
 void quit(void) {
-	send_line("QUIT\n");
+	send_line("QUIT\r\n");
 }
-
+// ############################################################################# 
 void join(char *channel) {
-	char *buffer=malloc(sizeof(char)*(strlen("JOIN ")+strlen(channel)+2));
+	char *buffer;
+	buffer=(char *)calloc(strlen("JOIN ")+strlen(channel)+3,sizeof(char));
 	
-	sprintf(buffer,"JOIN %s \n",channel);
+	sprintf(buffer,"JOIN %s\r\n",channel);
 	
 	// send commando
 	send_line(buffer);
-    free(buffer);
 }
-
+// ############################################################################# 
 void part(char *channel) {
-	char *buffer=malloc(sizeof(char)*(strlen("PART ")+strlen(channel)+2));
+	char *buffer;
+	buffer=(char *)calloc(strlen("PART ")+strlen(channel)+3,sizeof(char));
 
-	sprintf(buffer,"PART %s \n",channel);
+	sprintf(buffer,"PART %s\r\n",channel);
 
 	// send commando
 	send_line(buffer);
-	free(buffer);
 }
-
+// ############################################################################# 
 void pong(void) {
 	char *buffer,hostname[HOSTNAME_BUFFER_SIZE];
     
@@ -122,25 +129,22 @@ void pong(void) {
 
 
 	// create commando string
-	buffer=malloc(sizeof(char)*(strlen("PONG ")+strlen(hostname)+2));
+	buffer=(char *)calloc(strlen("PONG ")+strlen(hostname)+3,sizeof(char));
 	
-	sprintf(buffer,"PONG %s\n",hostname);
+	sprintf(buffer,"PONG %s\r\n",hostname);
 
 
 	// send commando
 	send_line(buffer);
-	free(buffer);
 }
-
-
+// ############################################################################# 
 void nick(char *nick) {
 	char *buffer;
-	buffer=malloc(sizeof(char)*(strlen("NICK ")+strlen(nick)+2));
+	buffer=(char *)calloc(strlen("NICK ")+strlen(nick)+3,sizeof(char));
 
-	sprintf(buffer,"NICK %s\n",nick);
+	sprintf(buffer,"NICK %s\r\n",nick);
 
 	send_line(buffer);
-	free(buffer);
 }
 
 
