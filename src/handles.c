@@ -182,7 +182,7 @@ void hResetModes(char *pLine) {
             // check of bot new mods or  other user
             if (!strcmp(pNick,sSetup.botname)) {
                 DEBUG("Bot get new mods\n");
-                // mode set for the bot from other user of operator
+            // mode set for the bot from other user of operator
                 // then initiallize this  channel
                 if (strcmp(pMode,"+o")==0) {
                 channelInit(pChannel);
@@ -210,7 +210,7 @@ void hResetModes(char *pLine) {
                 // send the who
                 whois(pNick);
             }
-        } else if (pMode[1]='b') {
+        } else if (pMode[1]=='b') {
             DEBUG("Ban reset not implemented jet\n");
         } else {
             // reset other mods
