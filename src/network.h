@@ -12,25 +12,28 @@
 
 
 
-#define RECV_BUFFER_SIZE		4096
-#define HOSTNAME_BUFFER_SIZE	256
+#define RECV_BUFFER_SIZE		0x1000
+#define HOSTNAME_BUFFER_SIZE	0xFF
 
 
 
-#define CMD_PING				1
-#define CMD_HELP				2
-#define CMD_VERSION				3
-#define CMD_HELLO				4
-#define CMD_PASS				5
-#define CMD_IDENT				6
-#define CMD_ADDCHANNEL			7
-#define CMD_JOIN				8
-#define CMD_PART				9
-#define CMD_RMCHANNEL			10
-#define CMD_LOGOFF				11
-#define CMD_DIE					12
-#define CMD_NICK				13
-#define CMD_CHANNELS			14
+#define CMD_PING				0x01
+#define CMD_HELP				0x02
+#define CMD_VERSION				0x03
+#define CMD_HELLO				0x04
+#define CMD_PASS				0x05
+#define CMD_IDENT				0x06
+#define CMD_ADDCHANNEL			0x07
+#define CMD_JOIN				0x08
+#define CMD_PART				0x09
+#define CMD_RMCHANNEL			0x0A
+#define CMD_LOGOFF				0x0B
+#define CMD_DIE					0x0C
+#define CMD_NICK				0x0D
+#define CMD_CHANNELS			0x0E
+#define CMD_NAMES				0x0F
+#define CMD_JOIN_GREATING		0x10
+#define CMD_GREATING			0x11
 
 /// connect to the server
 void connectServer(void);

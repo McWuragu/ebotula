@@ -22,6 +22,7 @@
 #include <pthread.h>
 
 #include "config.h"
+#include "extract.h"
 #include "utilities.h"
 #include "messages.h"
 #include "irc.h"
@@ -85,18 +86,19 @@ void disconnectServer(void){
 void  send_line(char *line) {
 	extern int sockid;
 	extern pthread_mutex_t send_mutex;
-	
+
+
 	pthread_mutex_lock(&send_mutex);
 
+	// protect excess flood
+	millisleep(1500);
+	
 	if (!send(sockid,line,strlen(line),0)){
 		perror(ERR_SEND);
 		exit(errno);
 	}
 
 	DEBUG("Send(%d): %s",getpid(),line);
-
-	// protect excess flood
-	millisleep(1500);
 
 	pthread_mutex_unlock(&send_mutex);
 
@@ -129,9 +131,9 @@ struct MSGBUF_DS preParser(char *line) {
 	}
 
 	if (!(pos=strchr(first_part,' '))){
-		pos=NULL;
+		return msg;
 	}
-	
+								 
 	// preparse the line
 	if (!strncmp(first_part,"PING",strlen("PING"))) {
 		msg.mtype=2;
@@ -139,52 +141,60 @@ struct MSGBUF_DS preParser(char *line) {
 	} else if (strstr(pos,"QUIT")) {
 		msg.mtype=2;
 		msg.identify=CMD_LOGOFF;
+	} else if (strstr(pos,"JOIN")) {
+		msg.mtype=2;
+		msg.identify=CMD_JOIN_GREATING;
+	} else if (strstr(pos,"353")) {
+		msg.mtype=2;
+		msg.identify=CMD_NAMES;
 	} else if ((str=strstr(line," :!"))!=NULL) {
 
-		str+=3;
-
-		if (!strncmp(str,"help",strlen("help"))){
-			msg.mtype=1;
-			msg.identify=CMD_HELP;
-		} else if (!strncmp(str,"version",strlen("version"))){
-			msg.mtype=1;
-			msg.identify=CMD_VERSION;
-		} else if (!strncmp(str,"help",strlen("help"))){
-			msg.mtype=1;
-			msg.identify=CMD_HELP;
-		} else if (!strncmp(str,"hello",strlen("hello"))){
-			msg.mtype=1;
-			msg.identify=CMD_HELLO;
-		} else if (!strncmp(str,"pass",strlen("pass"))){
-			msg.mtype=1;
-			msg.identify=CMD_PASS;
-		} else if (!strncmp(str,"ident",strlen("ident"))){
-			msg.mtype=1;
-			msg.identify=CMD_IDENT;
-		} else if (!strncmp(str,"addchannel",strlen("addchannel"))) {
-			msg.mtype=1;
-			msg.identify=CMD_ADDCHANNEL;
-		} else if (!strncmp(str,"rmchannel",strlen("rmchannel"))) {
-			msg.mtype=1;
-			msg.identify=CMD_RMCHANNEL;
-		} else if (!strncmp(str,"join",strlen("join"))) {
-			msg.mtype=1;
-			msg.identify=CMD_JOIN;
-		} else if (!strncmp(str,"part",strlen("part"))) {
-			msg.mtype=1;
-			msg.identify=CMD_PART;
-		} else if (!strncmp(str,"logoff",strlen("logoff"))) {
-			msg.mtype=1;
-			msg.identify=CMD_LOGOFF;
-		} else if (!strncmp(str,"die",strlen("die"))) {
-			msg.mtype=1;
-			msg.identify=CMD_DIE;
-		} else if (!strncmp(str,"nick",strlen("nick"))) {
-			msg.mtype=1;
-			msg.identify=CMD_NICK;
-		} else if (!strncmp(str,"channels",strlen("channels"))) {
-			msg.mtype=1;
-			msg.identify=CMD_CHANNELS;
+		if (strlen(str)>=3) {
+			str+=3;
+	
+			if (!strncmp(str,"help",strlen("help"))){
+				msg.mtype=1;
+				msg.identify=CMD_HELP;
+			} else if (!strncmp(str,"version",strlen("version"))){
+				msg.mtype=1;
+				msg.identify=CMD_VERSION;
+			} else if (!strncmp(str,"help",strlen("help"))){
+				msg.mtype=1;
+				msg.identify=CMD_HELP;
+			} else if (!strncmp(str,"hello",strlen("hello"))){
+				msg.mtype=1;
+				msg.identify=CMD_HELLO;
+			} else if (!strncmp(str,"pass",strlen("pass"))){
+				msg.mtype=1;
+				msg.identify=CMD_PASS;
+			} else if (!strncmp(str,"ident",strlen("ident"))){
+				msg.mtype=1;
+				msg.identify=CMD_IDENT;
+			} else if (!strncmp(str,"addchannel",strlen("addchannel"))) {
+				msg.mtype=1;
+				msg.identify=CMD_ADDCHANNEL;
+			} else if (!strncmp(str,"rmchannel",strlen("rmchannel"))) {
+				msg.mtype=1;
+				msg.identify=CMD_RMCHANNEL;
+			} else if (!strncmp(str,"join",strlen("join"))) {
+				msg.mtype=1;
+				msg.identify=CMD_JOIN;
+			} else if (!strncmp(str,"part",strlen("part"))) {
+				msg.mtype=1;
+				msg.identify=CMD_PART;
+			} else if (!strncmp(str,"logoff",strlen("logoff"))) {
+				msg.mtype=1;
+				msg.identify=CMD_LOGOFF;
+			} else if (!strncmp(str,"die",strlen("die"))) {
+				msg.mtype=1;
+				msg.identify=CMD_DIE;
+			} else if (!strncmp(str,"nick",strlen("nick"))) {
+				msg.mtype=1;
+				msg.identify=CMD_NICK;
+			} else if (!strncmp(str,"channels",strlen("channels"))) {
+				msg.mtype=1;
+				msg.identify=CMD_CHANNELS;
+			}
 		}
 	}
 
@@ -250,6 +260,12 @@ void *action_thread(void *argv) {
 			break;
 		case CMD_CHANNELS:
 			channel_list(msg.msg_line);
+			break;
+		case CMD_NAMES:
+			bot_op(msg.msg_line);
+			break;
+		case CMD_JOIN_GREATING:
+			print_greating(msg.msg_line);
 			break;
 		default:
             break;
