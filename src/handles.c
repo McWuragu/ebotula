@@ -65,7 +65,7 @@ void hNickChange(char *pLine) {
     			log_out(pLogin);
     			log_on(pNewNetmask,pLogin);
     
-        		logger(LOG_DEBUG,gettext("Change the netmask \"%s\" to \"%s\""),pNetmask,pNewNetmask);
+        		logger(LOG_DEBUG,_("Change the netmask \"%s\" to \"%s\""),pNetmask,pNewNetmask);
     	    	
     			free(pNetmaskCopy);
     	    	free(pNewNetmask);
@@ -102,7 +102,7 @@ void hBotNeedOp(char *pLine){
     sprintf(pSearchStr,"@%s",sSetup.pBotname);
 
     if (!strstr(pNickList,pSearchStr)) {
-        action(pChannel,gettext("needs operator access rights."));
+        action(pChannel,_("needs operator access rights."));
     } else {
         channelInit(pChannel);
     }
@@ -139,7 +139,7 @@ void hSetModUser(char *pLine) {
             if (pNetmask) {
                 
                 if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-            	    logger(LOG_DEBUG,gettext("Set the account modes for the account %s with nickname %s"),pLogin,pNick);
+            	    logger(LOG_DEBUG,_("Set the account modes for the account %s with nickname %s"),pLogin,pNick);
         
                     if ((pChannel=getAccessChannel(pLine))) {
                     	// build key for access.dbf
@@ -212,17 +212,17 @@ void hResetModes(char *pLine) {
               
                 // check of bot new mods or  other user
                 if (strcmp(pNick,pTmpBotName)==0) {
-                    logger(LOG_DEBUG,gettext("Bot get a new account mode"));
+                    logger(LOG_DEBUG,_("Bot get a new account mode"));
                     // mode set for the bot from other user of operator
                     // then initiallize this  channel
                     if (strcmp(pMode,"+o")==0) {
                         channelInit(pChannel);
                     } else {
-                        action(pChannel,gettext("needs operator access rights."));
+                        action(pChannel,_("needs operator access rights."));
                     }
                 } else {
                     // add callback for reset the modes for a user    
-                    logger(LOG_DEBUG,gettext("Added callback routine for the reset of the account modes"));
+                    logger(LOG_DEBUG,_("Added callback routine for the reset of the account modes"));
                     
                     // built the data for callback
                     pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
@@ -243,13 +243,13 @@ void hResetModes(char *pLine) {
                     whois(pNick);
                 }
             } else if (pMode[1]=='b') {
-                logger(LOG_INFO,gettext("Ban reset not implemented jet"));
+                logger(LOG_INFO,_("Ban reset not implemented jet"));
             } else {
                 // reset other mods
                 pPos=strstr(pLine,pMode);
                 pPos[0]=(pPos[0]=='-')?'+':'-';
                 mode(pChannel,pPos,NULL);
-                logger(LOG_DEBUG,gettext("Reset the channelmodes of the channel %s"),pChannel);
+                logger(LOG_DEBUG,_("Reset the channelmodes of the channel %s"),pChannel);
             }
         } 
         free(pTmpBotName);
@@ -296,7 +296,7 @@ void hResetTopic(char *pLine){
     	            topic(pChannel,"");
         	    }
     
-                logger(LOG_DEBUG,gettext("Reset the topic in the channel %s"),pChannel);
+                logger(LOG_DEBUG,_("Reset the topic in the channel %s"),pChannel);
             	free(pChannelSet);
     		}	
             free(pChannel);
@@ -333,7 +333,7 @@ void hRejoinAfterKick(char *pLine){
     if (!strcmp(pTmpBotName,pNick)) {
         join(pChannel);
 
-        logger(LOG_DEBUG,gettext("Rejoin the channel %s"),pChannel);
+        logger(LOG_DEBUG,_("Rejoin the channel %s"),pChannel);
     }
     free(pTmpBotName);
     free(pChannel);
@@ -384,8 +384,8 @@ static void channelInit(char *pChannel) {
         free (sChannelData.sModes.pKeyword);
         free (sChannelData.sModes.pLimit);
 	
-        action(pChannel,gettext("has initialized this channnel."));
-        logger(LOG_INFO,gettext("Initialize the channel %s"), pChannel);
+        action(pChannel,_("has initialized this channnel."));
+        logger(LOG_INFO,_("Initialize the channel %s"), pChannel);
     }
 }
 
@@ -458,7 +458,7 @@ void hWhoisFailed(char *pLine) {
     free(pRest);
     StrToLower(pNick);
 
-    logger(LOG_DEBUG,gettext("Look for a callback zombie routine of the user %s"),pNick);
+    logger(LOG_DEBUG,_("Look for a callback zombie routine of the user %s"),pNick);
 
    /** lock for the Callback item for the nick **/
     if ((pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,pNick))) {
@@ -469,7 +469,7 @@ void hWhoisFailed(char *pLine) {
         if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
             /* destroy  callback item */
             destroyCallbackItem(CB_Data);
-            logger(LOG_DEBUG,gettext("The callback zombie routine of the user %s is removed"),pNick);
+            logger(LOG_DEBUG,_("The callback zombie routine of the user %s is removed"),pNick);
         }
     }
     free(pNick);

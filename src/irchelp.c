@@ -2,7 +2,7 @@
 #include <assert.h>
 #include "irchelp.h"
 
-static IrcHelp_t   sIrcHelp[CMDCOUNT]={
+static IrcHelp_t   sIrcHelp[CMD_COUNT]={
     {
         CMD_NONE,
         {

@@ -54,7 +54,7 @@ boolean initDatabases(void) {
 	int i;
     char *pDBPath;
 
-    logger(LOG_NOTICE,gettext("Initialization of the database" ));
+    logger(LOG_NOTICE,_("Initialization of the database" ));
     
     // check directory
     // if  this not existe then try to create
@@ -62,14 +62,14 @@ boolean initDatabases(void) {
     if (!(pDir=opendir(sSetup.pDatabasePath))) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
-            logger(LOG_ERR,gettext("Couldn't create the directory %s for the database.",sSetup.pDatabasePath ));
+            logger(LOG_ERR,_("Couldn't create the directory %s for the database.",sSetup.pDatabasePath ));
             #ifdef NDEBUG
-            fprintf(stderr,gettext("Couldn't create the directory %s for the database.",sSetup.pDatabasePath ));
+            fprintf(stderr,_("Couldn't create the directory %s for the database.",sSetup.pDatabasePath ));
             fprintf(stderr,"\n");
             #endif
             return false;
         } else {
-            logger(LOG_INFO,gettext("Create the directory %s for the database."),sSetup.pDatabasePath);
+            logger(LOG_INFO,_("Create the directory %s for the database."),sSetup.pDatabasePath);
         }
     }
     closedir(pDir);
@@ -84,9 +84,9 @@ boolean initDatabases(void) {
         
         if (!dbf[i]) {
             //errno=EBUSY;
-            logger(LOG_ERR,gettext("Couldn't open the databases %s.",pDBPath));
+            logger(LOG_ERR,_("Couldn't open the databases %s.",pDBPath));
             #ifdef NDEBUG
-            fprintf(stderr,gettext("Couldn't open the databases %s.",pDBPath));
+            fprintf(stderr,_("Couldn't open the databases %s.",pDBPath));
             fprintf(stderr,"\n");
             #endif
             return false;
@@ -110,14 +110,14 @@ void closeDatabase(void) {
         // close the databases
         gdbm_close(dbf[i]);
 	}
-    logger(LOG_INFO,gettext("Database is closed"));
+    logger(LOG_INFO,_("Database is closed"));
 }
 
 //######################### database access ##############################
 static GDBM_FILE get_dbf(int db) {
     
     if (db>=MAX_DB || db <0) {
-        logger(LOG_DEBUG,gettext("Unkown database id %d"),db);
+        logger(LOG_DEBUG,_("Unkown database id %d"),db);
         return 0;
     } else {
         return dbf[db];

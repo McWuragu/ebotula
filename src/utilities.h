@@ -39,7 +39,15 @@
 
 #define CommonStringCheck(m) ((strpbrk((m),COMMON_NOT_ALLOW_CHAR))?false:true)
 
+#ifdef HAVE_GETTEXT
+    #include<libintl.h>
+#endif
 
+#ifdef HAVE_GETTEXT
+    #define _(STRING,...)    gettext(STRING)
+#else
+    #define _(STRING,...)   (STRING)
+#endif
 /**
 * This function trim a string. It remove leading, folling and
 * multi spaces and  CR LF at the end.

@@ -44,7 +44,7 @@ void user(void) {
 
 	if ((buffer=(char *)malloc(sizeof(char)*buffer_size))==NULL)
    	{
-	   logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
    	}	   
     // create the  commando string
@@ -63,7 +63,7 @@ void action(char *pTarget, char *pMsgStr){
 
     if ((buffer=(char *)malloc(nStrSize*sizeof(char)))==NULL)
 	{
-	   logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
@@ -80,7 +80,7 @@ void privmsg(char *pTarget, char *pMsgStr){
     char *buffer;
     if ((buffer=(char *)malloc((strlen("PRIVMSG ")+strlen(pTarget)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
 	{
-	   logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
@@ -93,7 +93,7 @@ void notice(char * pNick,char *pMsgStr) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
 	{
-	   logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
@@ -118,7 +118,7 @@ void join(char *pChannel) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("JOIN ")+strlen(pChannel)+3)*sizeof(char)))==NULL)
 	{
-	   logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
@@ -131,7 +131,7 @@ void part(char *pChannel) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("PART ")+strlen(pChannel)+3)*sizeof(char)))==NULL)
 	{
-	   logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
@@ -150,7 +150,7 @@ void pong(char *pPong) {
 	    gethostname(hostname,HOSTNAME_BUFFER_SIZE);
 		if ((buffer=(char *)malloc((strlen("PONG ")+strlen(hostname)+3)*sizeof(char)))==NULL)
 		{
-		   	logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		   	logger(LOG_ERR,_("Couldn't allocate memory!"));
 		 	return;
     	}	   
 
@@ -159,7 +159,7 @@ void pong(char *pPong) {
 	{
 		if ((buffer=(char *)malloc((strlen("PONG ")+strlen(pPong)+3)*sizeof(char)))==NULL)
 		{
-	   		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+	   		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   		return;
     	}	   
 
@@ -173,7 +173,7 @@ void ping(char *pTarget) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("PING ")+strlen(pTarget)+3)*sizeof(char)))==NULL)
 	{
-		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
@@ -186,7 +186,7 @@ void invite(char *pChannel,char *pNick) {
     char *buffer;
     if ((buffer=(char*)malloc((strlen("INVITE")+strlen(pNick)+strlen(pChannel)+4)*sizeof(char)))==NULL)
 	{
-		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
@@ -199,7 +199,7 @@ void nick(char *pNick) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("NICK ")+strlen(pNick)+3)*sizeof(char)))==NULL)
 	{
-		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
@@ -212,7 +212,7 @@ void topic(char *pChannel, char* pMsgStr) {
     char *buffer;
     if ((buffer=(char*)malloc((strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
 	{
-		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
@@ -226,7 +226,7 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
 
     if ((buffer=(char*)malloc((strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6)*sizeof(char)))==NULL)
 	{
-		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
@@ -239,7 +239,7 @@ void ban(char *pChannel,char *pMask){
     char *buffer;
     if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
 	{
-		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
@@ -252,7 +252,7 @@ void deban(char *pChannel,char *pMask){
     char *buffer;
     if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
 	{
-		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
@@ -270,7 +270,7 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
     }
     if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMod)+strlen(pModParameter)+5)*sizeof(char)))==NULL)
 	{
-		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
@@ -283,7 +283,7 @@ void whois(char *pNickname) {
     char *buffer;
     if ((buffer=(char*)malloc((strlen("WHOIS ")+strlen(pNickname)+3)*sizeof(char)))==NULL)
 	{
-		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 

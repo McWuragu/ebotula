@@ -36,7 +36,7 @@ void ModeResetCb(char *pNetmask,void* data){
     char *pMod;
     char *pTmpBotName;
 
-	logger(LOG_DEBUG,gettext("Callback routine for the reset of the modes"));
+	logger(LOG_DEBUG,_("Callback routine for the reset of the modes"));
 
     // split the  input datums
     pChannel=getFirstPart((char*)data,&pOldMode);
@@ -51,7 +51,7 @@ void ModeResetCb(char *pNetmask,void* data){
         StrToLower(pTmpBotName);
 
         if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-            logger(LOG_DEBUG,gettext("Reset the account modes for the identified account %s"),pLogin);
+            logger(LOG_DEBUG,_("Reset the account modes for the identified account %s"),pLogin);
     
             // built the  key for the access_db
             pAccessKey=(char*)malloc((strlen(pChannel)+strlen(pLogin)+1)*sizeof(char));
@@ -74,7 +74,7 @@ void ModeResetCb(char *pNetmask,void* data){
                 }
                 free(pMod);
             }  else if ((pMod=get_db(ACCESS_DB,pLogin))) {
-                logger(LOG_DEBUG,gettext("Reset the account modes of the master %s"),pLogin);
+                logger(LOG_DEBUG,_("Reset the account modes of the master %s"),pLogin);
                 // master mod reset
                 if (strcmp(pOldMode,"+o")!=0){
                     // reset all mod other mod until op
@@ -86,7 +86,7 @@ void ModeResetCb(char *pNetmask,void* data){
             free(pAccessKey);
             free(pLogin);
         } else if (pOldMode[0]=='+' && strcmp(pNick,pTmpBotName)) {
-            logger(LOG_DEBUG,gettext("Reset the account mode for user %s"),pNick);
+            logger(LOG_DEBUG,_("Reset the account mode for user %s"),pNick);
             // reset the mode for not identify user
             pOldMode[0]='-';
             mode(pChannel,pOldMode,pNick);
@@ -113,7 +113,7 @@ void SetBanCb(char *pNetmask,void * data){
     char *pCmdNick;
     
 
-    logger(LOG_DEBUG,gettext("Callback routine for user banning"));
+    logger(LOG_DEBUG,_("Callback routine for user banning"));
 
     /* get user information */
     pLogin=getFirstPart((char*)data,&pRest);
@@ -132,9 +132,9 @@ void SetBanCb(char *pNetmask,void * data){
         /* try to ban */
         if (doBan) {
             ban(pChannel,pBanmask);
-            notice(pCmdNick,gettext("The user is banned by the bot."));
+            notice(pCmdNick,_("The user is banned by the bot."));
         } else {
-            notice(pCmdNick,gettext("Couldn't ban this user"));
+            notice(pCmdNick,_("Couldn't ban this user"));
         }
         free(pCmdNick);
     }
@@ -158,7 +158,7 @@ void KickCb(char *pNetmask, void *data) {
     char *pCmdNick;
     char *pCmdNetmask;
     
-    logger(LOG_DEBUG,gettext("Callback routine for user kicking"));
+    logger(LOG_DEBUG,_("Callback routine for user kicking"));
 
 
     /* split Datums */
@@ -179,11 +179,11 @@ void KickCb(char *pNetmask, void *data) {
             pNick=getNickname(pNetmask);
             if (pNick) {
                 kick(pChannel,pNick,pReason);
-                notice(pCmdNick,gettext("The user is kicked by the bot"));
+                notice(pCmdNick,_("The user is kicked by the bot"));
                 free(pNick);
             }
         } else {
-            notice(pCmdNick,gettext("Couldn't kick this user"));
+            notice(pCmdNick,_("Couldn't kick this user"));
         }
 
         free(pCmdNick);

@@ -89,7 +89,7 @@ void rmDeadLogins(long lCheckTime) {
                 /* check the time */
         	    if (lCheckTime>atol(pTime)) {
     	            log_out((char*)pLogin->data);
-                	logger(LOG_DEBUG,gettext("The account %s was automatically logged off"),(char*)pLogin->data);
+                	logger(LOG_DEBUG,_("The account %s was automatically logged off"),(char*)pLogin->data);
             	}
             }
     	    free(pTime);
@@ -126,7 +126,7 @@ void log_on(char *pNetmask,char *pLogin) {
     }
     pthread_mutex_unlock(&mutexAccount);
 
-    logger(LOG_INFO,gettext("Account %s logged in"),pLogin);
+    logger(LOG_INFO,_("Account %s logged in"),pLogin);
 
     /* build the timestamp */
     time(&timestamp);
@@ -135,10 +135,10 @@ void log_on(char *pNetmask,char *pLogin) {
     /* set the last login timestamp */
     if (exist_db(TIMELOG_DB,pLogin)) {
         replace_db(TIMELOG_DB,pLogin,pTime);
-        logger(LOG_DEBUG,gettext("Update the timestamp %s for the account %s"),pTime,pLogin);
+        logger(LOG_DEBUG,_("Update the timestamp %s for the account %s"),pTime,pLogin);
     } else {
         add_db(TIMELOG_DB,pLogin,pTime);
-        logger(LOG_DEBUG,gettext("Add the timepstamp %s for the account %s"),pTime,pLogin);
+        logger(LOG_DEBUG,_("Add the timepstamp %s for the account %s"),pTime,pLogin);
     }
 }
 /* ############################################################################# */
@@ -160,7 +160,7 @@ void __log_out(char *pLogin) {
         /* Log off */
 	    del_db(NICKTOUSER_DB,pNetmask);
     	del_db(USERTONICK_DB,pLogin);
-    	logger(LOG_INFO,gettext("Account %s logged off"),pLogin);
+    	logger(LOG_INFO,_("Account %s logged off"),pLogin);
         free(pNetmask);
 	}
 }
@@ -168,7 +168,7 @@ void __log_out(char *pLogin) {
 void rmAccount(char *pLogin) {
     extern pthread_mutex_t mutexAccount;
     
-	logger(LOG_INFO,gettext("Remove the account %s"),pLogin);
+	logger(LOG_INFO,_("Remove the account %s"),pLogin);
 
     pthread_mutex_lock(&mutexAccount);
 	/* logoff the user */
@@ -191,7 +191,7 @@ void rmAccessRights(char *pLogin){
     char *pKey;
     int iLoginLen;
 
-    logger(LOG_DEBUG,gettext("Remove the access rights for the account %s"),pLogin);
+    logger(LOG_DEBUG,_("Remove the access rights for the account %s"),pLogin);
 
     /* remove as master */
     del_db(ACCESS_DB,pLogin);
@@ -233,7 +233,7 @@ void rmDeadAccounts(long lCheckTime) {
         	/* check the time */
     	    if (lCheckTime>atol(pTime)) {
 	            rmAccount((char*)pLogin->data);
-                logger(LOG_INFO,gettext("The account %s is removed"),(char*)pLogin->data);
+                logger(LOG_INFO,_("The account %s is removed"),(char*)pLogin->data);
         	}
         	free(pTime);
 		}

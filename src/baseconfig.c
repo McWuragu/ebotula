@@ -111,17 +111,17 @@ void write_baseconfig()
 		
         FILE * fd;
 
-       logger(LOG_NOTICE,gettext("Creating Configfile %s"),sSetup.configfile);
+       logger(LOG_NOTICE,_("Creating Configfile %s"),sSetup.configfile);
 
       /* Create & Openfile*/
       if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
       {
           #ifdef NDEBUG
-          fprintf(stderr,gettext("Couldn't open the configuration file %s."),sSetup.configfile);
+          fprintf(stderr,_("Couldn't open the configuration file %s."),sSetup.configfile);
           fprintf(stderr,"\n");
           #endif
               
-          logger(LOG_ERR,gettext("Couldn't open the configuration file %s."),sSetup.configfile);
+          logger(LOG_ERR,_("Couldn't open the configuration file %s."),sSetup.configfile);
               
           exit(errno);
       }

@@ -85,11 +85,12 @@ typedef enum {
     CMD_RMCHANNEL,
     CMD_ADDCHANNEL,
     CMD_JOIN,
-    CMD_PART
+    CMD_PART,
+    CMD_COUNT
 
 }Cmd_t;
 
-#define CMDCOUNT    (CMD_PART-CMD_NONE+1)
+//#define CMD_COUNT    (CMD_PART-CMD_NONE+1)
 
 #define CMD_MASTER  CMD_RESTART
 #define CMD_OWNER   CMD_CHANMODE
@@ -97,9 +98,7 @@ typedef enum {
 #define CMD_LOGGED  CMD_LOGOFF
 #define CMD_EVENT   CMD_ONPING
 #define CMD_OTHERS  CMD_VIEWGREAT
-
-#define CmdIdToHelpId(m)        ((m)-CMD_OTHERS+1)
-#define HelpIdToCmdId(m)        ((m)+CMD_OTHERS-1)
+#define CMD_FIRST   CMD_OTHERS
 
 /**
  * Here define the commando strings. It must synchronously

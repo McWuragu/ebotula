@@ -64,17 +64,17 @@ boolean connectServer(void) {
     if ((sSetup.sHostname==NULL) && (sSetup.sPort==NULL)) {
         errno=EINVAL;
         #ifdef NDEBUG
-        fprintf(stderr,"%s\n",gettext("The hostname or portnumber isn't set."));
+        fprintf(stderr,"%s\n",_("The hostname or portnumber isn't set."));
         #endif
-        logger(LOG_ERR,gettext("The hostname or portnumber isn't set."));
+        logger(LOG_ERR,_("The hostname or portnumber isn't set."));
         return false;
     }
 
     #ifdef NDEBUG
-    printf(gettext("Try to connect to %s"),sSetup.sHostname);
+    printf(_("Try to connect to %s"),sSetup.sHostname);
     printf("\n");
     #endif 
-    logger(LOG_INFO,gettext("Try to connect to %s"),sSetup.sHostname);
+    logger(LOG_INFO,_("Try to connect to %s"),sSetup.sHostname);
 
 
     pthread_mutex_init(&mutexSend,NULL);
@@ -88,10 +88,10 @@ boolean connectServer(void) {
     hostaddr=gethostbyname(sSetup.sHostname);
     if (!hostaddr) {
         #ifdef NDEBUG
-        fprintf(stderr,gettext("Couldn't resolve the hostname %s."),sSetup.sHostname);
+        fprintf(stderr,_("Couldn't resolve the hostname %s."),sSetup.sHostname);
         fprintf(stderr,"\n");
         #endif
-        logger(LOG_ERR,gettext("Couldn't resolve the hostname %s."),sSetup.sHostname);
+        logger(LOG_ERR,_("Couldn't resolve the hostname %s."),sSetup.sHostname);
         return false;
     }
     
@@ -101,9 +101,9 @@ boolean connectServer(void) {
     protocol = getprotobyname("tcp");
     if (!protocol) {
         #ifdef NDEBUG
-        fprintf(stderr,"%s\n",gettext("Couldn't found the tcp protocol."));
+        fprintf(stderr,"%s\n",_("Couldn't found the tcp protocol."));
         #endif
-        logger(LOG_CRIT,gettext("Couldn't found the tcp protocol."));
+        logger(LOG_CRIT,_("Couldn't found the tcp protocol."));
         return false;
     }
 
@@ -111,9 +111,9 @@ boolean connectServer(void) {
     sockid=socket(PF_INET,SOCK_STREAM,protocol->p_proto);
     if (sockid <= 0) {
         #ifdef NDEBUG
-        fprintf(stderr,"%s\n",gettext("Couldn't create a tcp socket."));
+        fprintf(stderr,"%s\n",_("Couldn't create a tcp socket."));
         #endif
-        logger(LOG_CRIT,gettext("Couldn't create a tcp socket."));
+        logger(LOG_CRIT,_("Couldn't create a tcp socket."));
         return false;
     }
 
@@ -121,19 +121,19 @@ boolean connectServer(void) {
     /* connect to server */
     if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
         #ifdef NDEBUG
-        fprintf(stderr,gettext("Couldn't connect to %s:%s"),sSetup.sHostname,sSetup.sPort);
+        fprintf(stderr,_("Couldn't connect to %s:%s"),sSetup.sHostname,sSetup.sPort);
         fprintf(stderr,"\n");
         #endif
-        logger(LOG_ERR,gettext("Couldn't connect to %s:%s"),sSetup.sHostname,sSetup.sPort);
+        logger(LOG_ERR,_("Couldn't connect to %s:%s"),sSetup.sHostname,sSetup.sPort);
         return false;
     }
 
     #ifdef NDEBUG
-    printf(gettext("The bot is connect to %s"),sSetup.sHostname);
+    printf(_("The bot is connect to %s"),sSetup.sHostname);
     printf("\n");
     #endif
     
-    logger(LOG_NOTICE,gettext("The bot is connect to %s"),sSetup.sHostname);
+    logger(LOG_NOTICE,_("The bot is connect to %s"),sSetup.sHostname);
 
     return true;
 }
@@ -161,10 +161,10 @@ void SendLine(char* pMsg){
 
         /* send the line */
         if (!send(sockid,pMsg,nSendLength,0)){
-            logger(LOG_CRIT,gettext("Couldn't send a command."));
+            logger(LOG_CRIT,_("Couldn't send a command."));
 	     stop=true;
         }
-        logger(LOG_DEBUG,gettext("Send(%d/%d): \"%s\""),nCharPerMinute,sSetup.nFastSendingCharLimit,pMsg);
+        logger(LOG_DEBUG,_("Send(%d/%d): \"%s\""),nCharPerMinute,sSetup.nFastSendingCharLimit,pMsg);
     
         
         nCharPerMinute=GetCharPerMin(nSendLength);
@@ -184,12 +184,12 @@ void  RecvLine(char *pLine,unsigned int len) {
     
     if (poll(&sPoll,1,sSetup.iTimeout*1000)) {
         if (!(str_len=recv(sockid,pLine,len,0))){
-            logger(LOG_CRIT,gettext("Can't receive a line."));
+            logger(LOG_CRIT,_("Can't receive a line."));
 	    stop=true;
         }
     } else {
         stop=true;
-        logger(LOG_ERR,gettext("Receiving timeout"));
+        logger(LOG_ERR,_("Receiving timeout"));
     }
 
     pLine[str_len]='\0';
@@ -291,10 +291,10 @@ boolean ConnectToIrc(void){
         if ( trying>MAX_NICKS) {
             errno=EAGAIN;
             #ifndef NDEBUG
-            fprintf(stderr,gettext("Couldn't set the nickname %s."),sSetup.pBotname);
+            fprintf(stderr,_("Couldn't set the nickname %s."),sSetup.pBotname);
             fprintf(stderr,"\n");
             #endif
-            logger(LOG_ERR,gettext("Couldn't set the nickname %s."),sSetup.pBotname);
+            logger(LOG_ERR,_("Couldn't set the nickname %s."),sSetup.pBotname);
             return false;
         }
     } while (i==1);

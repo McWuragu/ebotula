@@ -15,7 +15,6 @@
 #include <errno.h>
 #include <pthread.h>
 #include <signal.h>
-#include <libintl.h>
 #include <locale.h>
 
 #include <pwd.h>
@@ -167,10 +166,10 @@ int main(int argc,char * const argv[]) {
             case 'D':
             {
                 int tmp;
-                logger(LOG_INFO,gettext("Found debug level option."));
+                logger(LOG_INFO,_("Found debug level option."));
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
+                    fprintf(stderr,_("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
 
@@ -178,7 +177,7 @@ int main(int argc,char * const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<0  || tmp > MAX_LOGLEVEL) {
                     errno=EDOM;
-                    fprintf(stderr,gettext("The log level %i is invalid.\n"),tmp);
+                    fprintf(stderr,_("The log level %i is invalid.\n"),tmp);
                     exit(errno);
                 }
                 sSetup.nLogLevel=tmp;
@@ -195,7 +194,7 @@ int main(int argc,char * const argv[]) {
         		else
         		{	
         			errno=EINVAL;
-                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
+                    fprintf(stderr,_("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
         		}
                 break;
@@ -242,7 +241,7 @@ int main(int argc,char * const argv[]) {
             if ((Group=getgrnam(sSetup.sExeGroup)))
                setegid(Group->gr_gid);
             else {
-                logger(LOG_ERR,gettext("The group %s couldn't found"),sSetup.sExeGroup);
+                logger(LOG_ERR,_("The group %s couldn't found"),sSetup.sExeGroup);
             }
         }
 
@@ -251,32 +250,32 @@ int main(int argc,char * const argv[]) {
             if ((User=getpwnam(sSetup.sExeUser)))
                seteuid(User->pw_uid);
             else {
-                logger(LOG_ERR,gettext("The user %s couldn't found"),sSetup.sExeUser);
+                logger(LOG_ERR,_("The user %s couldn't found"),sSetup.sExeUser);
             }
         }
     }
    
 
-    logger(LOG_INFO,gettext("--------------- current setup -------------------"));
-    logger(LOG_INFO,gettext("Hostname %s"),sSetup.sHostname);
-    logger(LOG_INFO,gettext("Portnumber %s"),sSetup.sPort);
-    logger(LOG_INFO,gettext("Nickname %s"), sSetup.pBotname);
-    logger(LOG_INFO,gettext("Realname %s"), sSetup.realname);
-    logger(LOG_INFO,gettext("Execute as %s.%s"),sSetup.sExeUser,sSetup.sExeGroup);
-    logger(LOG_INFO,gettext("Threads %d"),sSetup.thread_limit);
-    logger(LOG_INFO,gettext("Configuration file %s"),sSetup.configfile);
-    logger(LOG_INFO,gettext("Database path %s"),sSetup.pDatabasePath);
-    logger(LOG_INFO,gettext("Ping timeout %ds"),sSetup.iTimeout);
-    logger(LOG_INFO,gettext("Fast sending delay %dms"),sSetup.iSendDelay);
-    logger(LOG_INFO,gettext("Slow sending delay %dms"),sSetup.nSlowSendDelay);
-    logger(LOG_INFO,gettext("Fast sending limit %d"),sSetup.nFastSendingCharLimit);
-    logger(LOG_INFO,gettext("Startup initialization delay %ds"),sSetup.nSettling);
-    logger(LOG_INFO,gettext("Account live time %dd"),sSetup.AccountLiveTime);
-    logger(LOG_INFO,gettext("Autolog of after %dd"),sSetup.AutoLoggoff);
-    logger(LOG_INFO,gettext("Log level: %i"),sSetup.nLogLevel);
-    logger(LOG_INFO,gettext("----------------- setup end ---------------------"));
+    logger(LOG_INFO,_("--------------- current setup -------------------"));
+    logger(LOG_INFO,_("Hostname %s"),sSetup.sHostname);
+    logger(LOG_INFO,_("Portnumber %s"),sSetup.sPort);
+    logger(LOG_INFO,_("Nickname %s"), sSetup.pBotname);
+    logger(LOG_INFO,_("Realname %s"), sSetup.realname);
+    logger(LOG_INFO,_("Execute as %s.%s"),sSetup.sExeUser,sSetup.sExeGroup);
+    logger(LOG_INFO,_("Threads %d"),sSetup.thread_limit);
+    logger(LOG_INFO,_("Configuration file %s"),sSetup.configfile);
+    logger(LOG_INFO,_("Database path %s"),sSetup.pDatabasePath);
+    logger(LOG_INFO,_("Ping timeout %ds"),sSetup.iTimeout);
+    logger(LOG_INFO,_("Fast sending delay %dms"),sSetup.iSendDelay);
+    logger(LOG_INFO,_("Slow sending delay %dms"),sSetup.nSlowSendDelay);
+    logger(LOG_INFO,_("Fast sending limit %d"),sSetup.nFastSendingCharLimit);
+    logger(LOG_INFO,_("Startup initialization delay %ds"),sSetup.nSettling);
+    logger(LOG_INFO,_("Account live time %dd"),sSetup.AccountLiveTime);
+    logger(LOG_INFO,_("Autolog of after %dd"),sSetup.AutoLoggoff);
+    logger(LOG_INFO,_("Log level: %i"),sSetup.nLogLevel);
+    logger(LOG_INFO,_("----------------- setup end ---------------------"));
 
-    logger(LOG_NOTICE,gettext("Start..."));
+    logger(LOG_NOTICE,_("Start..."));
 
 
     // init Database and the mutex for  access to the database
@@ -309,9 +308,9 @@ int main(int argc,char * const argv[]) {
     }
 
     #ifdef NDEBUG
-    printf("%s\n",gettext("Running..."));
+    printf("%s\n",_("Running..."));
     #endif
-    logger(LOG_NOTICE,gettext("Running..."));
+    logger(LOG_NOTICE,_("Running..."));
 
     // redefine the signal handler for to stop the bot
     signal(SIGINT,stopParser);
@@ -373,7 +372,7 @@ int main(int argc,char * const argv[]) {
             strcpy(pCurrLine,pCurrStringPos);
 
             /* parse the part line */
-            logger(LOG_DEBUG,gettext("Receive: \"%s\""),pCurrLine);
+            logger(LOG_DEBUG,_("Receive: \"%s\""),pCurrLine);
             preParser(pCurrLine,&sMsg);
 
             /* put the identified line  on the  queue */
@@ -414,7 +413,7 @@ int main(int argc,char * const argv[]) {
 
     flushQueue(pCommandQueue);
 
-    logger(LOG_NOTICE,gettext("The bot is stopping."));
+    logger(LOG_NOTICE,_("The bot is stopping."));
     pthread_join(timeThread,NULL);
     
 
@@ -439,7 +438,7 @@ int main(int argc,char * const argv[]) {
     
     //  check for restart option
     if (again) {
-        logger(LOG_NOTICE,gettext("Restart..."));
+        logger(LOG_NOTICE,_("Restart..."));
         
         #ifdef HAVE_SYSLOG_H
         closelog();
@@ -447,20 +446,20 @@ int main(int argc,char * const argv[]) {
         
         execvp(argv[0],argv);
         #ifdef NDEBUG
-        fprintf(stderr,"%s\n",gettext("Restart failed"));
+        fprintf(stderr,"%s\n",_("Restart failed"));
         #endif
         
         #ifdef HAVE_SYSLOG_H
         openlog(PACKAGE,0,LOG_DAEMON);
         #endif
         
-        logger(LOG_ERR,gettext("Restart failed"));
+        logger(LOG_ERR,_("Restart failed"));
         
         #ifdef HAVE_SYSLOG_H
         closelog();
         #endif
     } else {
-        logger(LOG_NOTICE,gettext("Stopped..."));
+        logger(LOG_NOTICE,_("Stopped..."));
         closelog();
     }
 
