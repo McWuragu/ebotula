@@ -103,7 +103,7 @@ typedef struct MsgBufStruct {
 void help(char *pLine);
 void password(char *pLine);
 void ident(char *pLine);
-void logoff(char *pLine);
+void logoff(char *pLine,int iRemoveMode);
 void version(char *pLine);
 void hello(char *pLine);
 void addChannel(char *pLine);

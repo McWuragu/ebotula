@@ -200,29 +200,50 @@ void password(char *pLine) {
 // #########################################################################
 // Bot comand: !logoff
 // #########################################################################
-void logoff(char *pLine) {
+void logoff(char *pLine,int iRemoveMode) {
     char *pLogin;
     char *pNick;
     char *pNetmask;
-    char **ppChannels;
+	char *pKey;
+	char *pMode;
 
-    int i;
+	QueueData *pChannel;
+    PQueue pChannelQueue;
+
+    int i, iLength;
 
     pNetmask=getNetmask(pLine);
     pNick=getNickname(pLine);
-
+	
+	// check login status
    	if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 	    log_out(pLogin);
-/*
-    	// remove the mod  for  this account
-	    ppChannels=list_db(CHANNEL_DB);
-    	for (i=0;ppChannels[i]!=NULL;i++) {
-        	mode(ppChannels[i],"-o",pNick);
-	        mode(ppChannels[i],"-v",pNick);
-    	}
-*/
+   
+		// only by manuel logof tmeove  the modes 
+		if (iRemoveMode) {	
+			// get channel list
+			pChannelQueue=list_db(CHANNEL_DB);
+			iLength=strlen(pLogin);
+			// remove the mod  for  this account
+			while ((pChannel=popQueue(pChannelQueue))){
+				pKey=(char *)malloc((pChannel->t_size+iLength)*sizeof(char));
+				sprintf(pKey,"%s%s",pLogin,(char *)pChannel->data);
+				
+				// look for the  access rights and  remove this
+				if ((pMode=get_db(ACCESS_DB,pKey))){
+					pMode[0]='-';
+					mode(pChannel->data,pMode,pLogin);	
+					free(pMode);
+				}
+				free(pKey);
+				free(pChannel);	
+			}
+
+			// delete the queue
+			delete(pChannelQueue);
+			notice(pNick,MSG_LOGOFF);
+		}
 	}
-    notice(pNick,MSG_LOGOFF);
 }
 // #########################################################################
 // Bot comand: !ident login <password>

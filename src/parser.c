@@ -117,8 +117,9 @@ void *ComandExecutionThread(void *argv) {
 						pong();
 						break;
 					case CMD_ONQUIT:
+						logoff(pMsg->pMsgLine,false);
 					case CMD_LOGOFF:
-						logoff(pMsg->pMsgLine);
+						logoff(pMsg->pMsgLine,true);
 						break;
 					case CMD_HELP:
 						help(pMsg->pMsgLine);
