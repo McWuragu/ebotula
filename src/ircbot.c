@@ -60,14 +60,14 @@ int main(int argc,char * const argv[]) {
     MsgBuf_t sMsg;
     QueueData Command;	
     PQueue pCommandQueue;
-    uid_t uid;
+    int uid;
     struct passwd *User;
     struct group *Group;
 	char *sDirDummy;
     DIR *pDir;
     int iTemp;
-    uid=geteuid();
     int nSettling;
+    uid=geteuid();
     
     // init config
     if (uid==0) {
