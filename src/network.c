@@ -161,7 +161,8 @@ void  send_line(char *pLine) {
     Data->data=pLine;
 
     pushQueue(pSendingQueue,*Data);
-    
+    free(Data);
+
     DEBUG("presend: %s",pLine);
 }
 /* ############################################################################# */
