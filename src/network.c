@@ -71,7 +71,7 @@ boolean connectServer(void) {
     }
 
     #ifdef NDEBUG
-    printf("%s\n"gettext("Try to connect to %s"),sSetup.server);
+    printf("%s\n",gettext("Try to connect to %s"),sSetup.server);
     #endif
     logger(LOG_INFO,gettext("Try to connect to %s"),sSetup.server);
 
