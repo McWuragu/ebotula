@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cat $1 $2 >> tmp
+mv -f tmp $2
+rm -f tmp
+
+
