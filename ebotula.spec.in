@@ -1,15 +1,15 @@
-Name:    ebotula
+Name:    @PACKAGE@ 
 Summary: ebotula - IRC bot
 Version: @VERSION@
 Release: 1
-Copyright: GPL
+License: GPL
 Source: http://lux.fh-lausitz.de/~slaube/develop/%{name}-%{PACKAGE_VERSION}.tar.gz
 Source0: %{name}-%{PACKAGE_VERSION}.tar.gz
 Packager: Steffen Laube <Laube.Steffen@gmx.de>
 Group: Applications/Communication
 Requires: gdbm => 1.8.0
 BuildRoot: /tmp/%{name}-root
-URL: http://www.lugse.de
+URL: http://freshmeat.net/projects/ebotula/
 Prefix: /usr/local
 Docdir: %{prefix}/doc
 
