@@ -6,8 +6,6 @@ ToDo List
 	- !banlist
 	- !allban
 - Implement the banlist (set and execute)
-- Set topic for the channel if the bot become op
-- Set mode for the channel if the bot become op
 - Complete the  help system
 - Code cleanup
 - Debuggen
