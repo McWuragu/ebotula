@@ -16,6 +16,10 @@
 #include <pthread.h>
 #include <syslog.h>
 
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
+
 #include "ircbot.h"
 #include "extract.h"
 #include "irc.h"
@@ -135,6 +139,9 @@ MsgBufType preParser(char *pLine) {
 			} else if (!strncmp(pStr,"allsay",strlen("allsay"))) {
 				sMsg.mtype=1;
 				sMsg.identify=CMD_ALLSAY;
+			} else if (!strncmp(pStr,"chanmode",strlen("chanmode"))) {
+				sMsg.mtype=1;
+				sMsg.identify=CMD_CHANMODE;
 			}
 		}
 	}
@@ -246,6 +253,9 @@ void *ComandExecutionThread(void *argv) {
 			case CMD_ONTOPIC:
 				hResetTopic(sMsg.pMsgLine);
 				break;
+			case CMD_CHANMODE:
+				chanmode(sMsg.pMsgLine);
+				break;
 			default:
 				syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,sMsg.identify);
 				break;
@@ -303,6 +313,7 @@ int AccessRight(char *pLine,CmdType cmd_id) {
 	case CMD_SAY:
 	case CMD_KICK:
 	case CMD_USERMODE:
+	case CMD_CHANMODE:
 		if (!exist_db(NICKTOUSER_DB,pNetmask)) {
 			notice(pNick,MSG_NOT_LOGON);	
 			return false;

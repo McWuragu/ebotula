@@ -15,7 +15,11 @@
 #include <string.h>
 #include <errno.h>
 #include <pthread.h>
-
+ 
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
+ 
 #include "utilities.h"
 #include "irc.h"
 #include "type.h"

@@ -11,6 +11,10 @@
 #include <string.h>
 #include <unistd.h>
 
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
+
 #include "irc.h"
 #include "utilities.h"
 #include "extract.h"

@@ -14,6 +14,10 @@
 #include <errno.h>
 #include <ctype.h>
 
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif 
+ 
 #include "type.h"
 #include "messages.h"
 #include "extract.h"

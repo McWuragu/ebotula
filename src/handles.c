@@ -11,6 +11,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
+
 #include "extract.h"
 #include "utilities.h"
 #include "dbaccess.h"
@@ -32,7 +36,7 @@ void hNickChange(char *pLine) {
 
 	pNewNetmask=strstr(pLine," :");
 	pNewNetmask+=2;
-    strtok(pNewNetmask,"\r");
+    	strtok(pNewNetmask,"\r");
 
 	// replace  the netmask
 	if (del_db(NICKTOUSER_DB,pNetmask)) {
@@ -41,7 +45,6 @@ void hNickChange(char *pLine) {
 	}
 
 	free(pNetmask);
-	free(pLogin);
 
 
 	DEBUG("Changethe netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
@@ -114,7 +117,6 @@ void hSetModUser(char *pLine) {
 		free(pMod);
 	}
 
-	free(pLogin);
 	free(pNick);
 }
 // ######################################################################### 

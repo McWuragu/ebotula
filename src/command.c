@@ -884,13 +884,13 @@ void chanmode(char *pLine) {
 		notice(pNick,MSG_NOT_CHANNEL);
 		return;
 	}
-
+	
 	// read the new channel parameters
 	pNewMode=StrToChannelMode(getParameters(pLine));
     
-	
+	DEBUG("Build the new modes for the channel %s",pChannel);
 	// build the new channel parameters
-	for (i=1;i<12;i++) {
+	for (i=1;i<MAX_MODES;i++) {
 		if (pNewMode->pModeStr[MOD_TYPE]=='+') {
 			// add  the new mode in the pChannelData
 			if (pNewMode->pModeStr[i]!=' ') {
@@ -924,13 +924,15 @@ void chanmode(char *pLine) {
 			}
 		}
 	}
-
+	
+	DEBUG("Write the new channel setting")
 	// set the new mode in database
 	free(pChannelSet);
+	pChannelData->pModes->pModeStr[0]='+';
 	pChannelSet=ChannelDataToStr(pChannelData);
 	replace_db(CHANNEL_DB,pChannel,pChannelSet);
 	
-
+	DEBUG("Set the new channel modes")
 	// set the mods
 	mode(pChannel,ChannelModeToStr(pNewMode),NULL);
 }
@@ -990,10 +992,10 @@ void userlist(char *pLine){
 
 	pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine));
 	pNick=getNickname(pLine);
-    pAccessChannel=getAccessChannel(pLine);
+	pAccessChannel=getAccessChannel(pLine);
 	pArgv=getArgument(pLine);
 
-	// read the lsit of Logins
+	// read the list of Logins
 	ppLogins=list_db(USER_DB);
 
 	notice(pNick,MSG_USERLIST_BEGIN);

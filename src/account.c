@@ -13,6 +13,10 @@
 #include <pthread.h>
 #include <time.h>
 #include <syslog.h>
+
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
 					 
 #include "dbaccess.h"
 #include "messages.h"

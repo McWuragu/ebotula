@@ -15,6 +15,10 @@
 #include <pthread.h>
 #include <syslog.h>
 
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
+
 #include "utilities.h"
 #include "messages.h"
 #include "dbaccess.h"
