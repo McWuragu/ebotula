@@ -15,95 +15,95 @@
 #include "utilities.h"
 #include "extract.h"
 // ############################################################################# 
-char *getNickname(char *line){
-	char *nick,*str;
+char *getNickname(char *pLine){
+	char *pNick,*pStr;
 	
-	str=getNetmask(line);
+	pStr=getNetmask(pLine);
 
 
-	if (!strtok(str,"!")) {
+	if (!strtok(pStr,"!")) {
 		return "";
 	} else {
-		nick=(char *)malloc((strlen(str)+1)*sizeof(char));
-		strcpy(nick,str);
-		return nick;
+		pNick=(char *)malloc((strlen(pStr)+1)*sizeof(char));
+		strcpy(pNick,pStr);
+		return pNick;
 	}
 
 
 }
 // ############################################################################# 
-char *getNetmask(char *line){ 
-	char *netmask,*str;
+char *getNetmask(char *pLine){ 
+	char *pNetmask,*pStr;
 
 		
-	str=(char *)malloc((strlen(line)+1)*sizeof(char));
-	strcpy(str,line);
-    strtok(&str[1]," ");
+	pStr=(char *)malloc((strlen(pLine)+1)*sizeof(char));
+	strcpy(pStr,pLine);
+    strtok(&pStr[1]," ");
 
-	if (!strchr(str,'!') || !strchr(str,'@')) {
+	if (!strchr(pStr,'!') || !strchr(pStr,'@')) {
 		return "";
-	} else if (str[0]==':'){
-		netmask=(char *)malloc(strlen(str)*sizeof(char));
-		strcpy(netmask,&str[1]);
-		return netmask;
+	} else if (pStr[0]==':'){
+		pNetmask=(char *)malloc(strlen(pStr)*sizeof(char));
+		strcpy(pNetmask,&pStr[1]);
+		return pNetmask;
 	} else {
-		netmask=(char *)malloc((strlen(str)+1)*sizeof(char));
-		strcpy(netmask,str);
-		return netmask;
+		pNetmask=(char *)malloc((strlen(pStr)+1)*sizeof(char));
+		strcpy(pNetmask,pStr);
+		return pNetmask;
 	}
 
 
 
 }
 // ############################################################################# 
-char *getCommand(char *line) {
-	char *str,*pos,*tmp;
+char *getCommand(char *pLine) {
+	char *pStr,*pPos,*pTmp;
 
 	// mirror  of the orginal string 
-	tmp=(char *)malloc((strlen(line)+1)*sizeof(char));
-	strcpy(tmp,line);
+	pTmp=(char *)malloc((strlen(pLine)+1)*sizeof(char));
+	strcpy(pTmp,pLine);
 
 	// find the  secondary double point
 	// and put after this a null byte
-	if (tmp[0]!=':' || !(pos=strchr(&tmp[1],':'))) {
+	if (pTmp[0]!=':' || !(pPos=strchr(&pTmp[1],':'))) {
 		return "";
 	}
-	pos[1]='\0';
+	pPos[1]='\0';
 	
 	// cut out  the first part of the server answer 
-	str=(char *)malloc((strlen(tmp)+1)*sizeof(char));
-	strcpy(str,tmp);
+	pStr=(char *)malloc((strlen(pTmp)+1)*sizeof(char));
+	strcpy(pStr,pTmp);
 
-	return str;
+	return pStr;
 }
 // ############################################################################# 
-char *getArgument(char *line) {
-	char *str,*pos,*parameter;;
-	int i,line_len;
+char *getArgument(char *pLine) {
+	char *pStr,*pPos,*pArg;;
+	int i,iLineLen;
 	
 	// found  the begining  of Parameter 
-	if ((str=strstr(line," :!"))==NULL) {
+	if ((pStr=strstr(pLine," :!"))==NULL) {
 		return "";
 	} else {
 		
 		
 		
 		// set the begin of comand string
-		str+=3;
-        line_len=strlen(str);
+		pStr+=3;
+        iLineLen=strlen(pStr);
 
 		// search for the first space or end of string
-		for (i=0;i<=line_len;i++) {
+		for (i=0;i<=iLineLen;i++) {
 				
-			if (str[i]==' ') {
-				pos=&str[i];
-                pos++;
-				trim(pos);
+			if (pStr[i]==' ') {
+				pPos=&pStr[i];
+                pPos++;
+				trim(pPos);
                 // looking  for empty string
-				if (strlen(pos)>0) {
-					parameter=(char *)malloc((strlen(pos)+1)*sizeof(char));
-                    strcpy(parameter,pos);
-					return parameter;
+				if (strlen(pPos)>0) {
+					pArg=(char *)malloc((strlen(pPos)+1)*sizeof(char));
+                    strcpy(pArg,pPos);
+					return pArg;
 				}
 			}
 		}
@@ -112,156 +112,156 @@ char *getArgument(char *line) {
 	return "";
 }
 // ######################################################################### 
-char *getChannel(char *line){
-	char *pramble;
-	char *pos;
-	char *channel;
+char *getChannel(char *pLine){
+	char *pPreamble;
+	char *pPos;
+	char *pChannel;
 
 	// extract  the substring
-	pramble=getCommand(line);
+	pPreamble=getCommand(pLine);
 
 	// look for the channelname
-	if (!(pos=strchr(pramble,'#'))) {
+	if (!(pPos=strchr(pPreamble,'#'))) {
 		return "";
 	}
 
 	// market the end  of channelname
-	strtok(pos," ");
+	strtok(pPos," ");
     
 	// extract the channelname
-	channel=(char *)malloc((strlen(pos)+1)*sizeof(char));
-	strcpy(channel,pos);
+	pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
+	strcpy(pChannel,pPos);
 
-	StrToLower(channel);
-	return channel;
+	StrToLower(pChannel);
+	return pChannel;
 }
 // ######################################################################### 
-char *getAccessChannel(char *line) {
-	char *parameter;
-	char *channel;
-	char *pos;
+char *getAccessChannel(char *pLine) {
+	char *pParameter;
+	char *pChannel;
+	char *pPos;
 
-	parameter=getArgument(line);
+	pParameter=getArgument(pLine);
 
 	// look channel name  in preamble
-	if (parameter[0]!='#') {
+	if (pParameter[0]!='#') {
 	
 		// look for channelname  as preamble
-		channel=getChannel(line);
-		if (!strlen(channel)) {
-			if (!(pos=strstr(line," :#"))) {
+		pChannel=getChannel(pLine);
+		if (!strlen(pChannel)) {
+			if (!(pPos=strstr(pLine," :#"))) {
 			return "";
 			}
 			// move to '#'
-			pos+=2;
+			pPos+=2;
 			// marked the end of str and  copy out
-			strtok(pos," ");
-			channel=(char *)malloc((strlen(pos)+1)*sizeof(char));
-		    strcpy(channel,pos);
+			strtok(pPos," ");
+			pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
+		    strcpy(pChannel,pPos);
 		}
 	} else {
 		
 		// parse Channel name
-		strtok(parameter," ");
+		strtok(pParameter," ");
 		// check the  chrakter in the  channel name
-		if (strpbrk(parameter,CHANNEL_NOT_ALLOW_CHAR)) {
+		if (strpbrk(pParameter,CHANNEL_NOT_ALLOW_CHAR)) {
 			return "";
 		}
-		channel=(char *)malloc((strlen(parameter)+1)*sizeof(char));
-		strcpy(channel,parameter);
+		pChannel=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
+		strcpy(pChannel,pParameter);
     }
 
-	StrToLower(channel);
-	return channel;
+	StrToLower(pChannel);
+	return pChannel;
 }
 // ######################################################################### 
-char  *getTopic(char *channelstr) {
-	char *topic;
-	char *pos,*pos2;
-	char *str;
+char  *getTopic(char *pChannelData) {
+	char *pTopic;
+	char *pPos,*pPos2;
+	char *pStr;
 
-	str=(char *)malloc((strlen(channelstr)+1)*sizeof(char));
-	strcpy(str,channelstr);
+	pStr=(char *)malloc((strlen(pChannelData)+1)*sizeof(char));
+	strcpy(pStr,pChannelData);
 
 	// look for topic;
-	if (!(pos=strchr(str,'\t'))) {
+	if (!(pPos=strchr(pStr,'\t'))) {
 		return ""; 
 	}
 		
-	pos++;
+	pPos++;
 
 	// look for the end  of topic
-	if (!(pos2=strchr(pos,'\t'))) {
+	if (!(pPos2=strchr(pPos,'\t'))) {
 		return "";
 	}
-	*pos2='\0';
+	*pPos2='\0';
 
 	// check length
-	if (!strlen(pos)) {
+	if (!strlen(pPos)) {
 		return "";
 	}
-	topic=(char *)malloc((strlen(pos)+1)*sizeof(char));
-	strcpy(topic,pos);
+	pTopic=(char *)malloc((strlen(pPos)+1)*sizeof(char));
+	strcpy(pTopic,pPos);
 
-	return topic;
+	return pTopic;
 }
 // ######################################################################### 
-char  *getGreating(char *channelstr) {
-	char *greating;
-	char *pos;
+char  *getGreating(char *pChannelData) {
+	char *pGreating;
+	char *pPos;
 
     // look for the begin  of greating
-	if (!(pos=strrchr(channelstr,'\t'))) {
+	if (!(pPos=strrchr(pChannelData,'\t'))) {
 		return "";		  
     }
 
-	pos++;
+	pPos++;
 
 	// check length
-	if (!strlen(pos)) {
+	if (!strlen(pPos)) {
 		return "";
 	}
 
-	greating=(char *)malloc((strlen(pos)+1)*sizeof(char));
-	strcpy(greating,pos);
+	pGreating=(char *)malloc((strlen(pPos)+1)*sizeof(char));
+	strcpy(pGreating,pPos);
 
-	return greating;
+	return pGreating;
 }
 // ######################################################################### 
-char *getMode(char *channelstr){
-	char *mode;
-	char *str;
-	char *pos;
+char *getMode(char *pChannelData){
+	char *pMod;
+	char *pStr;
+	char *pPos;
 
-	str=(char *)malloc((strlen(channelstr)+1)*sizeof(char));
-	strcpy(str,channelstr);
+	pStr=(char *)malloc((strlen(pChannelData)+1)*sizeof(char));
+	strcpy(pStr,pChannelData);
 
-	if (!(pos=strchr(str,'\t'))) {
+	if (!(pPos=strchr(pStr,'\t'))) {
 		return "";
 	} else {
-		*pos='\0';
-		mode=(char*)malloc((strlen(str)+1)*sizeof(char));
-		strcpy(mode,str);
+		*pPos='\0';
+		pMod=(char*)malloc((strlen(pStr)+1)*sizeof(char));
+		strcpy(pMod,pStr);
 	}
-	return mode;
+	return pMod;
 }
 // ############################################################################# 
-char *getParameters(char *line){
-	char *parameters;
-	char *arg;
-	char *pos; 
+char *getParameters(char *pLine){
+	char *pParameter;
+	char *pArg;
+	char *pPos; 
 
-	arg=getArgument(line);
+	pArg=getArgument(pLine);
 
-	if (arg[0]!='#') {
-		return arg;
-	} else if(!(pos=strchr(arg,' '))) {
+	if (pArg[0]!='#') {
+		return pArg;
+	} else if(!(pPos=strchr(pArg,' '))) {
 		return "";
 	} else {
 		// jump over the space
-		pos++;
-		parameters=(char*)malloc((strlen(pos)+1)*sizeof(char));
-		strcpy(parameters,pos);
-		return parameters;
+		pPos++;
+		pParameter=(char*)malloc((strlen(pPos)+1)*sizeof(char));
+		strcpy(pParameter,pPos);
+		return pParameter;
 	}
 }

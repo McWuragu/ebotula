@@ -20,16 +20,16 @@ void connectServer(void);
 void disconnectServer(void);
 /**
 * send a command string to the server
-* @param line the  commando string whiche  want  to send
+* @param pLine the  commando string whiche  want  to send
 */
-void send_line(char *line);
+void send_line(char *pLine);
 
 /**
 * reveive  oneline from the server
-* @param line a pointer of a buffer for the  receiving string
+* @param pLine a pointer of a buffer for the  receiving string
 * @param len the  size of the buffer
 */
-void recv_line(char *line,unsigned int len);
+void recv_line(char *pLine,unsigned int len);
 
 
 

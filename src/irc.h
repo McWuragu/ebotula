@@ -16,18 +16,18 @@
 
 void user(void);
 void pong(void);
-void ping(char *target);
-void topic(char *channel,char *text);
+void ping(char *pTarget);
+void topic(char *pChannel,char *pMsgStr);
 void quit(void);
-void nick(char *nick);
-void part(char *channel);
-void join(char *channel);
-void notice(char *nick,char *text);
-void privmsg(char *target, char *text);
-void action(char *target, char *text);
-void kick(char *channel, char *nick, char *reason);
-void ban(char *channel, char *mask);
-void deban(char *channel,char *mask);
-void mode(char *channel, char *mods, char *modsparam);
+void nick(char *pNick);
+void part(char *pChannel);
+void join(char *pChannel);
+void notice(char *pNick,char *pMsgStr);
+void privmsg(char *pTarget, char *pMsgStr);
+void action(char *pTarget, char *pMsgStr);
+void kick(char *pChannel, char *pNick, char *pMsgStr);
+void ban(char *pChannel, char *pMask);
+void deban(char *pChannel,char *pMask);
+void mode(char *pChannel, char *pMod, char *pModParameter);
 
 #endif

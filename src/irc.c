@@ -27,7 +27,7 @@
 
 // ############################################################################# 
 void user(void) {
-	extern ConfType setup;
+	extern ConfType sSetup;
 	struct passwd *pw;
 	char hostname[HOSTNAME_BUFFER_SIZE];
 	char *buffer;
@@ -38,34 +38,34 @@ void user(void) {
 	gethostname(hostname,HOSTNAME_BUFFER_SIZE);
 
 	// calculat the command size
-	buffer_size=strlen("USER")+strlen(pw->pw_name)+strlen(hostname)+strlen(setup.server)+strlen(setup.realname)+8;
+	buffer_size=strlen("USER")+strlen(pw->pw_name)+strlen(hostname)+strlen(sSetup.server)+strlen(sSetup.realname)+8;
     buffer=(char *)calloc(sizeof(char),buffer_size);
 	
 	// create the  commando string
-	sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,setup.server,setup.realname);
+	sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.server,sSetup.realname);
 
 	// send commando
 	send_line(buffer);
 }
 // ############################################################################# 
-void action(char *target, char *text){
+void action(char *pTarget, char *pMsgStr){
 	char *buffer;
-	buffer=(char *)malloc((strlen("ACTION ")+strlen(text)+1)*sizeof(char));
-	sprintf(buffer,"ACTION %s",text);
-	privmsg(target,buffer);
+	buffer=(char *)malloc((strlen("ACTION ")+strlen(pMsgStr)+1)*sizeof(char));
+	sprintf(buffer,"ACTION %s",pMsgStr);
+	privmsg(pTarget,buffer);
 }
 // ############################################################################# 
-void privmsg(char *target, char *text){
+void privmsg(char *pTarget, char *pMsgStr){
 	char *buffer;
-	buffer=(char *)calloc(strlen("PRIVMSG ")+strlen(target)+strlen(text)+5,sizeof(char));
-	sprintf(buffer,"PRIVMSG %s :%s\r\n",target,text);
+	buffer=(char *)calloc(strlen("PRIVMSG ")+strlen(pTarget)+strlen(pMsgStr)+5,sizeof(char));
+	sprintf(buffer,"PRIVMSG %s :%s\r\n",pTarget,pMsgStr);
 	send_line(buffer);
 }
 // ############################################################################# 
-void notice(char *nick,char *text) {
+void notice(char *pNick,char *pMsgStr) {
 	char *buffer;
-	buffer=(char *)calloc(strlen("NOTICE ")+strlen(nick)+strlen(text)+5,sizeof(char));
-	sprintf(buffer,"NOTICE %s :%s\r\n",nick,text);
+	buffer=(char *)calloc(strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5,sizeof(char));
+	sprintf(buffer,"NOTICE %s :%s\r\n",pNick,pMsgStr);
 	send_line(buffer);
 }
 
@@ -74,17 +74,17 @@ void quit(void) {
 	send_line("QUIT\r\n");
 }
 // ############################################################################# 
-void join(char *channel) {
+void join(char *pChannel) {
 	char *buffer;
-	buffer=(char *)calloc(strlen("JOIN ")+strlen(channel)+3,sizeof(char));
-	sprintf(buffer,"JOIN %s\r\n",channel);
+	buffer=(char *)calloc(strlen("JOIN ")+strlen(pChannel)+3,sizeof(char));
+	sprintf(buffer,"JOIN %s\r\n",pChannel);
 	send_line(buffer);
 }
 // ############################################################################# 
-void part(char *channel) {
+void part(char *pChannel) {
 	char *buffer;
-	buffer=(char *)calloc(strlen("PART ")+strlen(channel)+3,sizeof(char));
-	sprintf(buffer,"PART %s\r\n",channel);
+	buffer=(char *)calloc(strlen("PART ")+strlen(pChannel)+3,sizeof(char));
+	sprintf(buffer,"PART %s\r\n",pChannel);
 	send_line(buffer);
 }
 // ############################################################################# 
@@ -99,66 +99,66 @@ void pong(void) {
 	send_line(buffer);
 }
 // ############################################################################# 
-void ping(char *target) {
+void ping(char *pTarget) {
 	char *buffer;
-	buffer=(char *)calloc(strlen("PING ")+strlen(target)+3,sizeof(char));
-	sprintf(buffer,"PING %s\r\n",target);
+	buffer=(char *)calloc(strlen("PING ")+strlen(pTarget)+3,sizeof(char));
+	sprintf(buffer,"PING %s\r\n",pTarget);
 	send_line(buffer);
 }
 // ############################################################################# 
-void nick(char *nick) {
+void nick(char *pNick) {
 	char *buffer;
-	buffer=(char *)calloc(strlen("NICK ")+strlen(nick)+3,sizeof(char));
-	sprintf(buffer,"NICK %s\r\n",nick);
+	buffer=(char *)calloc(strlen("NICK ")+strlen(pNick)+3,sizeof(char));
+	sprintf(buffer,"NICK %s\r\n",pNick);
 	send_line(buffer);
 }
 // ############################################################################# 
-void topic(char *channel, char* text) {
+void topic(char *pChannel, char* pMsgStr) {
 	char *buffer;
-	buffer=(char*)calloc(strlen("TOPIC ")+strlen(channel)+strlen(text)+5,sizeof(char));
-	sprintf(buffer,"TOPIC %s :%s\r\n",channel,text);
+	buffer=(char*)calloc(strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5,sizeof(char));
+	sprintf(buffer,"TOPIC %s :%s\r\n",pChannel,pMsgStr);
 	send_line(buffer);
 }
 // ############################################################################# 
-void kick(char *channel, char *nick, char *reason) {
+void kick(char *pChannel, char *pNick, char *pMsgStr) {
 	char *buffer;
 
 	// check  optional parameters and  set  it of default values
-	if (reason==NULL) {
-		reason=(char*)malloc((strlen(MSG_DEFAULT_REASON)+1)*sizeof(char));
-		strcpy(reason,MSG_DEFAULT_REASON);
+	if (pMsgStr==NULL) {
+		pMsgStr=(char*)malloc((strlen(MSG_DEFAULT_REASON)+1)*sizeof(char));
+		strcpy(pMsgStr,MSG_DEFAULT_REASON);
 	}
-	buffer=(char*)calloc(strlen("KICK ")+strlen(channel)+strlen(nick)+strlen(reason)+6,sizeof(char));
-	sprintf(buffer,"KICK %s %s :%s\r\n",channel,nick,reason);
+	buffer=(char*)calloc(strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6,sizeof(char));
+	sprintf(buffer,"KICK %s %s :%s\r\n",pChannel,pNick,pMsgStr);
 	send_line(buffer);
 }
 // ############################################################################# 
-void ban(char *channel,char *mask){
+void ban(char *pChannel,char *pMask){
 	char *buffer;
-	buffer=(char*)calloc(strlen("MODE ")+strlen(channel)+strlen(mask)+6,sizeof(char));
-	sprintf(buffer,"MODE %s +b %s\r\n",channel,mask);
+	buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6,sizeof(char));
+	sprintf(buffer,"MODE %s +b %s\r\n",pChannel,pMask);
 	send_line(buffer);
 
 }
 // ############################################################################# 
-void deban(char *channel,char *mask){
+void deban(char *pChannel,char *pMask){
 	char *buffer;
-	buffer=(char*)calloc(strlen("MODE ")+strlen(channel)+strlen(mask)+6,sizeof(char));
-	sprintf(buffer,"MODE %s -b %s\r\n",channel,mask);
+	buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6,sizeof(char));
+	sprintf(buffer,"MODE %s -b %s\r\n",pChannel,pMask);
 	send_line(buffer);
 
 }
 // ############################################################################# 
-void mode(char *channel, char *mods, char *modsparam) {
+void mode(char *pChannel, char *pMod, char *pModParameter) {
 	char *buffer;
 
 	// check  optional parameters and  set  it of default values
-	if (modsparam==NULL) {
-		modsparam=(char*)malloc(sizeof(char));
-		*modsparam='\0';
+	if (pModParameter==NULL) {
+		pModParameter=(char*)malloc(sizeof(char));
+		*pModParameter='\0';
 	}
-	buffer=(char*)calloc(strlen("MODE ")+strlen(channel)+strlen(mods)+strlen(modsparam)+5,sizeof(char));
-	sprintf(buffer,"MODE %s %s %s\r\n",channel,mods,modsparam);
+	buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMod)+strlen(pModParameter)+5,sizeof(char));
+	sprintf(buffer,"MODE %s %s %s\r\n",pChannel,pMod,pModParameter);
 	send_line(buffer);
 }
 

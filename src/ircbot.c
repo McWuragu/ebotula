@@ -14,6 +14,8 @@
 #include <errno.h>
 #include <pthread.h>
 #include <signal.h>
+#include <syslog.h>
+
 
 #include <sys/ipc.h>
 #include <sys/msg.h>
@@ -30,7 +32,7 @@
   
 	 
 
-ConfType setup;	// global config structur
+ConfType sSetup;	// global config structur
 int key;			// key of the message  queue
 int stop;			// singal for stop the endless loop
 
@@ -48,15 +50,15 @@ int main(int argc,const char *argv[]) {
 	pthread_t timeThread;
 	
 	// init config
-	setup.newMaster=false;
-	setup.AccountLiveTime=MIN_ALT;
-	setup.AutoLoggoff=MIN_ALT;
-	setup.sendDelay=-1;
-	setup.thread_limit=0;
+	sSetup.newMaster=false;
+	sSetup.AccountLiveTime=MIN_ALT;
+	sSetup.AutoLoggoff=MIN_ALT;
+	sSetup.sendDelay=-1;
+	sSetup.thread_limit=0;
 
 	// container for a message for the queue
-	MsgBufType msg;
-	bzero(&msg,sizeof(MsgBufType));
+	MsgBufType sMsg;
+	bzero(&sMsg,sizeof(MsgBufType));
     
 	// versions ausgabe
 	printf(VERSIONSTR);
@@ -66,7 +68,7 @@ int main(int argc,const char *argv[]) {
 	#else
 	openlog(PROGNAME,LOG_PERROR,LOG_DAEMON);
 	#endif
-	syslog(LOG_NOTICE,SYSLOG_BOT_START);
+	
 
 	// check for parameter
 	if (argc>1) {
@@ -75,13 +77,13 @@ int main(int argc,const char *argv[]) {
 	}
 
 	//  checking  config  file path
-	if (setup.configfile==NULL) {
-		setup.configfile=(char *)malloc((strlen(CONFDIR)+strlen(CONFFILE)+1)*sizeof(char));
-		sprintf(setup.configfile,"%s%s",CONFDIR,CONFFILE);
+	if (sSetup.configfile==NULL) {
+		sSetup.configfile=(char *)malloc((strlen(CONFDIR)+strlen(CONFFILE)+1)*sizeof(char));
+		sprintf(sSetup.configfile,"%s%s",CONFDIR,CONFFILE);
 
 	}
 
-	DEBUG("File %s",setup.configfile);
+	DEBUG("File %s",sSetup.configfile);
 
 	// read config file
 	read_config_file();
@@ -89,43 +91,44 @@ int main(int argc,const char *argv[]) {
 	
 
 	// check config datums
-	if (!setup.thread_limit) {
-		setup.thread_limit=DEFAULT_THREAD_LIMIT;
+	if (!sSetup.thread_limit) {
+		sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
 	}
 
-	if (!setup.botname) {
-		setup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
-		strcpy(setup.botname,DEFAULT_BOTNAME);
+	if (!sSetup.botname) {
+		sSetup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
+		strcpy(sSetup.botname,DEFAULT_BOTNAME);
 	}
 
-	if (!setup.realname) {
-		setup.realname=(char *)malloc((strlen(DEFAULT_REALNAME)+1)*sizeof(char));
-		strcpy(setup.realname,DEFAULT_REALNAME);
+	if (!sSetup.realname) {
+		sSetup.realname=(char *)malloc((strlen(DEFAULT_REALNAME)+1)*sizeof(char));
+		strcpy(sSetup.realname,DEFAULT_REALNAME);
 	}
 
-	if (setup.sendDelay<0) {
-		setup.sendDelay=0;
+	if (sSetup.sendDelay<0) {
+		sSetup.sendDelay=0;
 	}
 
 	DEBUG("-----------------------------------------------");
-	DEBUG("Server %s",setup.server);
-	DEBUG("Port %s",setup.port);
-	DEBUG("Nickname %s", setup.botname);
-	DEBUG("Realname %s", setup.realname);
-	DEBUG("Threads %d",setup.thread_limit);
-	DEBUG("Config file %s",setup.configfile);
-	DEBUG("Database path %s",setup.database_path);
-	DEBUG("Sending delay %dms",setup.sendDelay);
-	DEBUG("Account live time %dd",setup.AccountLiveTime);
-	DEBUG("Autolog of after %dd",setup.AutoLoggoff);
+	DEBUG("Server %s",sSetup.server);
+	DEBUG("Port %s",sSetup.port);
+	DEBUG("Nickname %s", sSetup.botname);
+	DEBUG("Realname %s", sSetup.realname);
+	DEBUG("Threads %d",sSetup.thread_limit);
+	DEBUG("Config file %s",sSetup.configfile);
+	DEBUG("Database path %s",sSetup.database_path);
+	DEBUG("Sending delay %dms",sSetup.sendDelay);
+	DEBUG("Account live time %dd",sSetup.AccountLiveTime);
+	DEBUG("Autolog of after %dd",sSetup.AutoLoggoff);
 	DEBUG("-----------------------------------------------");
 
+	syslog(LOG_NOTICE,SYSLOG_BOT_START);
 
 	// init Database and the mutex for  access to the database
 	init_database();
 
 
-	if (setup.newMaster) {
+	if (sSetup.newMaster) {
 		if (!dialogMaster()){
 			closeDatabase();
 			exit(-1);
@@ -133,11 +136,11 @@ int main(int argc,const char *argv[]) {
 	}
 	
 	// create the network connection
-	if ((setup.server!=NULL) && (setup.port!=NULL)) {
-		printf(SYSLOG_TRY_CONNECT,setup.server,setup.port);
+	if ((sSetup.server!=NULL) && (sSetup.port!=NULL)) {
+		printf(SYSLOG_TRY_CONNECT,sSetup.server,sSetup.port);
 		printf("\n");
 		
-		syslog(LOG_INFO,SYSLOG_TRY_CONNECT,setup.server,setup.port);
+		syslog(LOG_INFO,SYSLOG_TRY_CONNECT,sSetup.server,sSetup.port);
 		
 		connectServer();
 		
@@ -184,8 +187,8 @@ int main(int argc,const char *argv[]) {
 	
 	// create the threads
 	pthread_create(&timeThread,NULL,synchron,NULL);
-	threads=(pthread_t *)malloc(setup.thread_limit*sizeof(pthread_t));
-	for (i=0;i<setup.thread_limit;i++) {
+	threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
+	for (i=0;i<sSetup.thread_limit;i++) {
 		pthread_create(&threads[i],NULL,action_thread,NULL);
 		syslog(LOG_NOTICE,SYSLOG_THREAD_RUN,i);
 	}
@@ -213,11 +216,11 @@ int main(int argc,const char *argv[]) {
 
 			// parse the part line
 			DEBUG("Parse \"%s\"",str);
-            msg=preParser(str);
+            sMsg=preParser(str);
 
 			// put the identified line  on the  queue
-			if (msg.identify!=CMD_NONE) {
-				msgsnd(msgid,&msg,sizeof(MsgBufType)-sizeof(msg.mtype),0);
+			if (sMsg.identify!=CMD_NONE) {
+				msgsnd(msgid,&sMsg,sizeof(MsgBufType)-sizeof(sMsg.mtype),0);
 			}
 
 			free(str);
@@ -243,7 +246,7 @@ int main(int argc,const char *argv[]) {
 	pthread_join(timeThread,NULL);
 
 	// wait of  terminat all threads
-	for (i=0;i<setup.thread_limit;i++) {
+	for (i=0;i<sSetup.thread_limit;i++) {
 		DEBUG("Stop thread %d",i);
 		pthread_cancel(threads[i]);
 		pthread_join(threads[i],NULL);

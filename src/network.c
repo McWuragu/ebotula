@@ -20,6 +20,7 @@
 #include <string.h>
 #include <errno.h>
 #include <pthread.h>
+#include <syslog.h>
 
 #include "config.h"
 #include "dbaccess.h"
@@ -34,7 +35,7 @@ int sockid;
 
 void connectServer(void) {
 	extern int sockid;
-	extern ConfType setup;
+	extern ConfType sSetup;
 
 	
 	struct sockaddr_in socketaddr;
@@ -46,10 +47,10 @@ void connectServer(void) {
 	// init the  socketaddr
 	bzero((char*) &socketaddr,sizeof(socketaddr));
 	socketaddr.sin_family=AF_INET;
-    socketaddr.sin_port=htons(atoi(setup.port));
+    socketaddr.sin_port=htons(atoi(sSetup.port));
 
 	// resolve hostname
-	hostaddr=gethostbyname(setup.server);
+	hostaddr=gethostbyname(sSetup.server);
 	if (!hostaddr) {
 		perror(SYSLOG_RESOLVE_HOSTNAME);
 		syslog(LOG_ERR,SYSLOG_RESOLVE_HOSTNAME);
@@ -88,8 +89,8 @@ void disconnectServer(void){
 	shutdown(sockid,0);
 }
 
-void  send_line(char *line) {
-	extern ConfType setup;
+void  send_line(char *pLine) {
+	extern ConfType sSetup;
 	extern int sockid;
 	extern pthread_mutex_t send_mutex;
 
@@ -97,31 +98,31 @@ void  send_line(char *line) {
 	pthread_mutex_lock(&send_mutex);
 
 	// protect excess flood
-	msleep(setup.sendDelay);
+	msleep(sSetup.sendDelay);
 	
-	if (!send(sockid,line,strlen(line),0)){
+	if (!send(sockid,pLine,strlen(pLine),0)){
 		perror(SYSLOG_SEND);
 		syslog(LOG_CRIT,SYSLOG_SEND);
 		exit(errno);
 	}
 
-	DEBUG("Send(%d): %s",getpid(),line);
+	DEBUG("Send(%d): %s",getpid(),pLine);
 
 	pthread_mutex_unlock(&send_mutex);
 
 	
 }
 
-void  recv_line(char *line,unsigned int len) {
+void  recv_line(char *pLine,unsigned int len) {
 	extern int sockid;
 	int str_len;
 	
-	if (!(str_len=recv(sockid,line,len,0))){
+	if (!(str_len=recv(sockid,pLine,len,0))){
 		perror(SYSLOG_RECV);
 		syslog(LOG_CRIT,SYSLOG_RECV);
 		exit(errno);
 	}
-	line[str_len]='\0';
+	pLine[str_len]='\0';
 	
 }
 
@@ -130,7 +131,7 @@ void  recv_line(char *line,unsigned int len) {
 void irc_connect(void){
 	char recv_buffer[RECV_BUFFER_SIZE], *tmp;
 	int i,trying=0;
-	extern ConfType setup;
+	extern ConfType sSetup;
 	
 
 	// send the  USER commado
@@ -143,16 +144,16 @@ void irc_connect(void){
 		trying++;
 		
 		
-		nick(setup.botname);
+		nick(sSetup.botname);
         recv_line(recv_buffer,RECV_BUFFER_SIZE);
 
 		// check fpr  nickname alread in use
 		// if he in use then put a leading underline on the front of the name 
 		if (strstr(recv_buffer,"Nickname is already in use.")) {
-			tmp=(char *)calloc(strlen(setup.botname)+2,sizeof(char));
-			sprintf(tmp,"_%s",setup.botname);
-			free(setup.botname);
-			setup.botname=tmp;
+			tmp=(char *)calloc(strlen(sSetup.botname)+2,sizeof(char));
+			sprintf(tmp,"_%s",sSetup.botname);
+			free(sSetup.botname);
+			sSetup.botname=tmp;
 			i=1;
 		}
 		

@@ -10,15 +10,15 @@
 #ifndef EXTRACT_H
 #define EXTRACT_H
 
-char *getNickname(char *line);
-char *getNetmask(char *line);
-char *getArgument(char *line);
-char *getParameters(char *line);
-char *getCommand(char *line);
-char *getChannel(char *line);
-char *getAccessChannel(char *line);
-char *getTopic(char *channelstr);
-char *getGreating(char *channelstr);
-char *getMode(char *channelstr);
+char *getNickname(char *pLine);
+char *getNetmask(char *pLine);
+char *getArgument(char *pLine);
+char *getParameters(char *pLine);
+char *getCommand(char *pLine);
+char *getChannel(char *pLine);
+char *getAccessChannel(char *pLine);
+char *getTopic(char *pChannelData);
+char *getGreating(char *pChannelData);
+char *getMode(char *pChannelData);
 
 #endif
