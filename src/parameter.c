@@ -14,6 +14,7 @@
 #include <errno.h>
 #include <ctype.h>
 #include <syslog.h>
+#include <termios.h>
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -441,11 +442,11 @@ void ConfigFileParser(void) {
     }
 }
 
-// ############################################################################# 
+/* ############################################################################# */
 boolean dialogMaster(void){
     char  name[LOGIN_LENGTH+1],passwd[PASSWD_LENGTH+1],repasswd[PASSWD_LENGTH+1];
-
-    // insert the login name
+     struct termios stBuf, stBufsave;
+    /* insert the login name */
     printf("%s\n\n",getMsgString(INFO_MASTER_TITLE));
     printf("%s",getMsgString(INFO_MASTER_LOGIN));
     fgets(name,LOGIN_LENGTH,stdin);
@@ -453,20 +454,36 @@ boolean dialogMaster(void){
     trim(name);
     StrToLower(name);
 
-    // check loging
+    /* check loging */
     if (!NickStringCheck(name) || !strlen(name)) {
         fprintf(stderr,"%s\n",getMsgString(ERR_NOT_ALLOW_CHAR));
         return false;
     }
-
-
-    // insert the password
+    /**************************************/
+    /* getting the password		  */
+    /* get term-attribut */
+    if (tcgetattr(0, &stBuf) == -1)
+	perror("tcgetattr");
+    /* save option */
+    stBufsave=stBuf;
+    /* disable echo */
+    stBuf.c_lflag &= ~(ECHO);
+    /* set attributs */
+    if (tcsetattr(0, TCSADRAIN, &stBuf) == -1)
+        perror("tcsetattr");
+    /* insert the password */
     printf("%s",getMsgString(INFO_MASTER_PASS));
     fgets(passwd,PASSWD_LENGTH+1,stdin);
     printf("\n%s",getMsgString(INFO_MASTER_REPASS));
     fgets(repasswd,PASSWD_LENGTH+1,stdin);
-
-    // check the password
+    /* set save attributs to terminal */
+    if (tcsetattr(0, TCSADRAIN, &stBufsave) == -1)
+        perror("tcsetattr");
+    /* empty lines to screen */
+    printf("\n\n");
+		      
+    
+    /* check the password */
     if (strcmp(passwd,repasswd)) {
         fprintf(stderr,"%s\n",getMsgString(ERR_MASTER_PASS));
         return false;
