@@ -108,6 +108,7 @@ void  send_line(char *pLine) {
 		syslog(LOG_CRIT,SYSLOG_SEND);
 		stop=true;
 	}
+	DEBUG("send: %s",pLine);
 	pthread_mutex_unlock(&send_mutex);
 
 	
