@@ -224,13 +224,15 @@ void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
 void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData) {
     char *pMode;
 
-    pChannelData->pGreeting=getGreeting(pChannelSet);
-    pChannelData->pTopic=getTopic(pChannelSet);
-    
-    pMode=getChannelMode(pChannelSet);
-    StrToChannelMode(pMode,&(pChannelData->sModes));
-    
-    free(pMode);
+    if (pChannelData) {
+        pChannelData->pGreeting=getGreeting(pChannelSet);
+        pChannelData->pTopic=getTopic(pChannelSet);
+        
+        pMode=getChannelMode(pChannelSet);
+        StrToChannelMode(pMode,&(pChannelData->sModes));
+        
+        free(pMode);
+    }
 
     return;
 }
