@@ -95,6 +95,8 @@ int pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	/** assembling Queue **/
 	pqueueNew->sentinel=pqueueIn->sentinel;
 	pqueueNew->next=pqueueIn->sentinel->next;
+	pqueueNew->queue_mutex=NULL;
+
 	if (pqueueIn->sentinel->longCount==0)
 	{
 		pqueueIn->sentinel->prev=(PQueue)pqueueNew;
