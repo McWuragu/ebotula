@@ -28,9 +28,65 @@ typedef struct CallbackStruct {
  */
 void destroyCallbackItem(CallbackItem_t *data);
 
+/* ModerResetCb
+ * 
+ * Description: Callback routine for the  reset of user
+ *              access rigths. It is a part of  mode 
+ *              protection  featuer
+ *
+ * Parameter:   
+ *      pNetmask
+ *      - Pointer to a string of netmask
+ *      data
+ *      - a pointer to a container of data
+ * Return: void
+ *
+ */
 void ModeResetCb(char *pNetmask,void *data);
+
+/* SetBanCb
+ * 
+ * Description: Callback routine for the activation
+ *              of a ban. 
+ *
+ * Parameter:   
+ *      pNetmask
+ *      - Pointer to a string of netmask
+ *      data
+ *      - a pointer to a container of data
+ * Return: void
+ *
+ */
 void SetBanCb(char *pNetmask,void *data);
-void GetBanCb(char *pNetmask,void *data);
+
+/* RemoveBanCb
+ * 
+ * Description: Callback routine for the removing
+ *              of a ban.
+ *
+ * Parameter:   
+ *      pNetmask
+ *      - Pointer to a string of netmask
+ *      data
+ *      - a pointer to a container of data
+ * Return: void
+ *
+ */
+void RemoveBanCb(char *pNetmask,void *data);
+
+/* KickCb
+ * 
+ * Description: Callback routine for the kicking of
+ *              a user.
+ *
+ * Parameter:   
+ *      pNetmask
+ *      - Pointer to a string of netmask
+ *      data
+ *      - a pointer to a container of data
+ * Return: void
+ *
+ */
 void KickCb(char *pNetmask, void *data);
 
 #endif
