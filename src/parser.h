@@ -25,7 +25,7 @@ MsgBufType preParser(char *pLine);
 * @param argv a pointer  of arguements for  the
 * starting of  this thread
 */
-void *action_thread(void *argv);
+void *ComandExecutionThread(void *argv);
 
 int AccessRight(char *pLine,CmdType cmd_id);
 void stopParser(int sig);
