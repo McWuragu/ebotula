@@ -1390,9 +1390,11 @@ void ctcpping(MsgItem_t *pMsg) {
    Bot comand: \001VERSION\001
    ######################################################################### */
 void ctcpversion(MsgItem_t *pMsg) {
-    char pMsgStr[256];
+    char pMsgStr[300];
+    char pTemp[256];
     /* creat Versions String */
-    sprintf(pMsgStr,VERSIONSTR);
+    sprintf(pTemp,VERSIONSTR);
+    sprintf(pMsgStr,"\001VERSION %s\001",pTemp);
     notice(pMsg->pCallingNick,pMsgStr);
     return;
 }
