@@ -49,7 +49,6 @@ pthread_mutex_t mutexSend;
 
 
 CallbackDList CallbackList;
-PQueue pSendingQueue;
 
 int main(int argc,char * const argv[]) {
     int i;
@@ -290,7 +289,6 @@ int main(int argc,char * const argv[]) {
 	 
 	// init the command queue
 	pCommandQueue=initQueue();
-    pSendingQueue=initQueue();
     init_extended_CallbackDList(&CallbackList, destroyCallbackItem);
 
     // Main execution loop
@@ -369,7 +367,6 @@ int main(int argc,char * const argv[]) {
     free(pUnparsed);
 
     flushQueue(pCommandQueue);
-    flushQueue(pSendingQueue);
 
     syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));
     pthread_join(timeThread,NULL);
@@ -387,7 +384,6 @@ int main(int argc,char * const argv[]) {
 
     // clear the wait queue and  callback list
 	deleteQueue(pCommandQueue);
-    deleteQueue(pSendingQueue);
     destroyCallbackDList(&CallbackList);
 
     // disconnect from server
