@@ -165,7 +165,7 @@ static MsgStruct_t Msg[] ={
 		"\t-g group\tSetzt die Group unter der gestartet werden soll (nur root).\n",
         "\t-h\t\tGibt diese Hilfe aus.\n",
 		"\t-k Tage\t\tSetzt die maximal Lebenszeit eines Account.\n",
-		"\t-l Zeichen\tLimit für das schnelle Senden.\n"
+		"\t-l Zeichen/min\tLimit für das schnelle Senden.\n"
 		"\t-m\t\tLegt neuen Master an.\n",
 		"\t-n ms\t\tSetzt die Verzögerung für das schnelle Senden.\n",
 		"\t-p Port\t\tSetzt den Prot des IRC-Servers.\n"
