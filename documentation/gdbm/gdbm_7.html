@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.51
+     from gdbm.texinfo on 7 January 1998 -->
+
+<TITLE>gdbm - Fetch</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="gdbm_1.html">first</A>, <A HREF="gdbm_6.html">previous</A>, <A HREF="gdbm_8.html">next</A>, <A HREF="gdbm_17.html">last</A> section, <A HREF="gdbm_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC7" HREF="gdbm_toc.html#TOC7">Searching for records in the database.</A></H1>
+
+<P>
+Looks up a given <CODE>key</CODE> and returns the information associated with that
+key. The pointer in the structure that is  returned is a pointer to dynamically
+allocated memory block. To search for some data:
+
+</P>
+
+<PRE>
+content = gdbm_fetch(dbf, key);
+</PRE>
+
+<P>
+The parameters are:
+
+</P>
+<DL COMPACT>
+
+<DT>GDBM_FILE dbf
+<DD>
+The pointer returned by <CODE>gdbm_open</CODE>.
+<DT>datum key
+<DD>
+The <CODE>key</CODE> data.
+</DL>
+
+<P>
+The datum returned in <CODE>content</CODE> is a pointer to the data found. If the
+dptr is NULL, no data was found. If dptr is not NULL, then it points
+to data allocated by malloc. <CODE>gdbm</CODE> does not automatically free this data.
+The user must free this storage when done using it. This eliminates the
+need to copy the result to save it for later use (you just save the pointer).
+
+</P>
+<P>
+You may also search for a particular key without retrieving it, using:
+
+</P>
+
+<PRE>
+ret = gdbm_exists(dbf, key);
+</PRE>
+
+<P>
+The parameters are:
+
+</P>
+<DL COMPACT>
+
+<DT>GDBM_FILE dbf
+<DD>
+The pointer returned by <CODE>gdbm_open</CODE>.
+<DT>datum key
+<DD>
+The <CODE>key</CODE> data.
+</DL>
+
+<P>
+Unlike <CODE>gdbm_fetch</CODE>, this routine does not allocate any memory, and
+simply returns true or false, depending on whether the <CODE>key</CODE> exists,
+or not.
+
+</P>
+<P><HR><P>
+Go to the <A HREF="gdbm_1.html">first</A>, <A HREF="gdbm_6.html">previous</A>, <A HREF="gdbm_8.html">next</A>, <A HREF="gdbm_17.html">last</A> section, <A HREF="gdbm_toc.html">table of contents</A>.
+</BODY>
+</HTML>

@@ -1,0 +1,86 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.51
+     from gdbm.texinfo on 7 January 1998 -->
+
+<TITLE>gdbm - Store</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="gdbm_1.html">first</A>, <A HREF="gdbm_5.html">previous</A>, <A HREF="gdbm_7.html">next</A>, <A HREF="gdbm_17.html">last</A> section, <A HREF="gdbm_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC6" HREF="gdbm_toc.html#TOC6">Inserting and replacing records in the database.</A></H1>
+
+<P>
+The function <CODE>gdbm_store</CODE> inserts or replaces records in the database.
+
+</P>
+
+<PRE>
+ret = gdbm_store(dbf, key, content, flag);
+</PRE>
+
+<P>
+The parameters are:
+
+</P>
+<DL COMPACT>
+
+<DT>GDBM_FILE dbf
+<DD>
+The pointer returned by <CODE>gdbm_open</CODE>.
+<DT>datum key
+<DD>
+The <CODE>key</CODE> data.
+<DT>datum content
+<DD>
+The data to be associated with the key.
+<DT>int flag
+<DD>
+Defines the action to take when the key is already in the database. The value
+GDBM_REPLACE (defined in <CODE>gdbm.h</CODE>) asks that the old data be replaced by
+the new <CODE>content</CODE>. The value GDBM_INSERT asks that an error be returned
+and no action taken if the <CODE>key</CODE> already exists.
+</DL>
+
+<P>
+The values returned in <CODE>ret</CODE> are:
+
+</P>
+<DL COMPACT>
+
+<DT>-1
+<DD>
+The item was not stored in the database because the caller was not an
+official writer or either <CODE>key</CODE> or <CODE>content</CODE> have a NULL dptr field.
+Both <CODE>key</CODE> and <CODE>content</CODE> must have the dptr field be a non-NULL value.
+Since a NULL dptr field is used by other functions to indicate an error, a NULL
+field cannot be valid data.
+<DT>+1
+<DD>
+The item was not stored because the argument <CODE>flag</CODE> was GDBM_INSERT and
+the <CODE>key</CODE> was already in the database.
+<DT>0
+<DD>
+No error. <CODE>content</CODE> is keyed by <CODE>key</CODE>. The file on disk is updated
+to reflect the structure of the new database before returning from this
+function.
+</DL>
+
+<P>
+If you store data for a <CODE>key</CODE> that is already in the data base,
+<CODE>gdbm</CODE> replaces the old data with the new data if called with
+GDBM_REPLACE. You do not get two data items for the same <CODE>key</CODE> and you do
+not get an error from <CODE>gdbm_store</CODE>.
+
+</P>
+<P>
+The size in <CODE>gdbm</CODE> is not restricted like <CODE>dbm</CODE> or <CODE>ndbm</CODE>. Your
+data can be as large as you want.
+
+</P>
+<P><HR><P>
+Go to the <A HREF="gdbm_1.html">first</A>, <A HREF="gdbm_5.html">previous</A>, <A HREF="gdbm_7.html">next</A>, <A HREF="gdbm_17.html">last</A> section, <A HREF="gdbm_toc.html">table of contents</A>.
+</BODY>
+</HTML>

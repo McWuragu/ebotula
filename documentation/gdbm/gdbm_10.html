@@ -1,0 +1,54 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.51
+     from gdbm.texinfo on 7 January 1998 -->
+
+<TITLE>gdbm - Reorganization</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="gdbm_1.html">first</A>, <A HREF="gdbm_9.html">previous</A>, <A HREF="gdbm_11.html">next</A>, <A HREF="gdbm_17.html">last</A> section, <A HREF="gdbm_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC10" HREF="gdbm_toc.html#TOC10">Database reorganization.</A></H1>
+
+<P>
+The following function should be used very seldom.
+
+</P>
+
+<PRE>
+ret = gdbm_reorganize(dbf);
+</PRE>
+
+<P>
+The parameter is:
+
+</P>
+<DL COMPACT>
+
+<DT>GDBM_FILE dbf
+<DD>
+The pointer returned by <CODE>gdbm_open</CODE>.
+</DL>
+
+<P>
+If you have had a lot of deletions and would like to shrink the space
+used by the <CODE>gdbm</CODE> file, this function will reorganize the database.
+<CODE>gdbm</CODE> will not shorten the length of a <CODE>gdbm</CODE> file (deleted file space will be
+reused) except by using this reorganization.
+
+</P>
+<P>
+This reorganization requires creating a new file and inserting all the elements
+in the old file <CODE>dbf</CODE> into the new file. The new file is then renamed to
+the same name as the old file and <CODE>dbf</CODE> is updated to contain all the
+correct information about the new file. If an error is detected, the return
+value is negative. The value zero is returned after a successful
+reorganization.
+
+</P>
+<P><HR><P>
+Go to the <A HREF="gdbm_1.html">first</A>, <A HREF="gdbm_9.html">previous</A>, <A HREF="gdbm_11.html">next</A>, <A HREF="gdbm_17.html">last</A> section, <A HREF="gdbm_toc.html">table of contents</A>.
+</BODY>
+</HTML>

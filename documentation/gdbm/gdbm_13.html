@@ -1,0 +1,81 @@
+<HTML>
+<HEAD>
+<!-- This HTML file has been created by texi2html 1.51
+     from gdbm.texinfo on 7 January 1998 -->
+
+<TITLE>gdbm - Options</TITLE>
+</HEAD>
+<BODY>
+Go to the <A HREF="gdbm_1.html">first</A>, <A HREF="gdbm_12.html">previous</A>, <A HREF="gdbm_14.html">next</A>, <A HREF="gdbm_17.html">last</A> section, <A HREF="gdbm_toc.html">table of contents</A>.
+<P><HR><P>
+
+
+<H1><A NAME="SEC13" HREF="gdbm_toc.html#TOC13">Seting options.</A></H1>
+
+<P>
+<CODE>Gdbm</CODE> now supports the ability to set certain options on an already
+open database.
+
+</P>
+
+<PRE>
+ret = gdbm_setopt(dbf, option, value, size)
+</PRE>
+
+<P>
+The parameters are:
+
+</P>
+<DL COMPACT>
+
+<DT>GDBM_FILE dbf
+<DD>
+The pointer returned by <CODE>gdbm_open</CODE>.
+<DT>int option
+<DD>
+The option to be set.
+<DT>int *value
+<DD>
+A pointer to the value to which <CODE>option</CODE> will be set.
+<DT>int size
+<DD>
+The length of the data pointed to by <CODE>value</CODE>.
+</DL>
+
+<P>
+The valid options are currently:
+
+</P>
+<P>
+  GDBM_CACHESIZE - Set the size of the internal bucket cache.  This
+  option may only be set once on each GDBM_FILE descriptor, and
+  is set automatically to 100 upon the first access to the database.
+
+</P>
+<P>
+  GDBM_FASTMODE - Set fast mode to either on or off.  This allows
+  fast mode to be toggled on an already open and active database.
+  value (see below) should be set to either TRUE or FALSE.
+
+</P>
+<P>
+The return value will be -1 upon failure, or 0 upon success.  The global
+variable <CODE>gdbm_errno</CODE> will be set upon failure.
+
+</P>
+<P>
+For instance, to set a database to use a cache of 10, after opening it
+with <CODE>gdbm_open</CODE>, but prior to accessing it in any way, the following
+code could be used:
+
+</P>
+
+<PRE>
+int value = 10;
+ret = gdbm_setopt(dbf, GDBM_CACHESIZE, &#38;value, sizeof(int));
+</PRE>
+
+<P><HR><P>
+Go to the <A HREF="gdbm_1.html">first</A>, <A HREF="gdbm_12.html">previous</A>, <A HREF="gdbm_14.html">next</A>, <A HREF="gdbm_17.html">last</A> section, <A HREF="gdbm_toc.html">table of contents</A>.
+</BODY>
+</HTML>

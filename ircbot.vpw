@@ -1,0 +1,183 @@
+[CurrentProject]
+curproj=ircbot.vpj
+[ProjectDates]
+ircbot.vpj=20030128200239000
+[ProjectFiles]
+ircbot.vpj
+[TreeExpansion]
+ircbot.vpj 1 1 1 0 0 1
+[State]
+SCREEN: 1024 768 0 0 1022 736 0 0 N 0 0 0 0 763 407
+CWD: /home/slaube/src/ircbot/src
+BUFFER: BN="/usr/include/jmorecfg.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=1 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.4799 CL=1 LE=0 CX=1 CY=17 WI=5 BI=21 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/usr/src/linux-2.4.20/include/linux/wavefront.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=1 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.1999 CL=1 LE=0 CX=1 CY=17 WI=5 BI=23 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/usr/X11R6/include/X11/Xmd.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=1 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.4669 CL=1 LE=0 CX=1 CY=17 WI=5 BI=24 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/irc.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.315 CL=1 LE=0 CX=1 CY=14 WI=5 BI=52 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/irc.c"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.2042 CL=1 LE=0 CX=1 CY=14 WI=5 BI=25 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/Makefile"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.284 CL=20 LE=0 CX=20 CY=15 WI=5 BI=26 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/ircbot.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.138 CL=29 LE=0 CX=29 CY=7 WI=5 BI=27 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/network.c"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.170 CL=32 LE=0 CX=32 CY=10 WI=5 BI=29 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/documentation/RFC/rfc1459"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.20814 CL=25 LE=0 CX=25 CY=1 WI=5 BI=30 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/documentation/RFC/rfc2810"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.2396 CL=2 LE=0 CX=2 CY=1 WI=5 BI=31 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/documentation/RFC/rfc2811"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.29186 CL=2 LE=0 CX=2 CY=1 WI=5 BI=32 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/network.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.405 CL=1 LE=0 CX=1 CY=14 WI=5 BI=33 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/documentation/spezifikation"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.57 CL=13 LE=0 CX=13 CY=5 WI=5 BI=36 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/documentation/RFC/CTCP.paper"
+BI: MA=1 74 1  TABS=1 9  WWS=1 IWT=1 ST=0 IN=1 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=Fundamental	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.8938 CL=1 LE=0 CX=1 CY=17 WI=5 BI=37 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/usr/include/mikmod.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=1 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.18916 CL=19 LE=0 CX=19 CY=17 WI=5 BI=38 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/macro.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.33 CL=1 LE=0 CX=1 CY=4 WI=5 BI=39 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/parameter.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.410 CL=1 LE=0 CX=1 CY=15 WI=5 BI=40 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/parameter.c"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.3594 CL=9 LE=0 CX=9 CY=18 WI=5 BI=41 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/messages.c"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.43 CL=1 LE=0 CX=1 CY=5 WI=5 BI=42 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/usr/include/bfd.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=1 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.4124 CL=27 LE=0 CX=27 CY=17 WI=5 BI=43 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/usr/include/stdio.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=1 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.1091 CL=1 LE=0 CX=1 CY=19 WI=5 BI=44 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/config.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.497 CL=2 LE=0 CX=2 CY=19 WI=5 BI=45 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/messages.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.1851 CL=52 LE=0 CX=52 CY=19 WI=5 BI=46 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/ircbot.c"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.331 CL=1 LE=0 CX=1 CY=16 WI=5 BI=47 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/dbaccess.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.395 CL=11 LE=0 CX=11 CY=14 WI=5 BI=48 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/dbaccess.c"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.3913 CL=10 LE=0 CX=10 CY=14 WI=5 BI=49 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/command.h"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=8 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.260 CL=1 LE=0 CX=1 CY=13 WI=5 BI=50 HT=0 HN=0 HF=0 HC=4
+BUFFER: BN="/home/slaube/src/ircbot/src/command.c"
+BI: MA=1 74 1  TABS=1 5  WWS=1 IWT=1 ST=0 IN=2 BW=0 US=32000 RO=0 SE=1 SN=0 BIN=0 MN=C	HM=0 MF=616 TL=0 MLL=0 ASE=0 LNL=6 LCF=0 CAPS=0
+VIEW: LN=.1817 CL=13 LE=0 CX=13 CY=12 WI=5 BI=51 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 515 318 0 0 N  WF=0 WT=12 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/irc.h"
+VIEW: LN=.315 CL=1 LE=0 CX=1 CY=14 WI=122 BI=52 HT=0 HN=0 HF=0 HC=4
+WINDOW: 25 25 515 318 0 0 N  WF=0 WT=15 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/irc.c"
+VIEW: LN=.2042 CL=1 LE=0 CX=1 CY=14 WI=123 BI=25 HT=0 HN=0 HF=0 HC=4
+WINDOW: 75 75 515 318 0 0 N  WF=0 WT=18 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/Makefile"
+VIEW: LN=.284 CL=20 LE=0 CX=20 CY=15 WI=124 BI=26 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 515 284 0 0 N  WF=0 WT=25 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/ircbot.h"
+VIEW: LN=.138 CL=29 LE=0 CX=29 CY=7 WI=125 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 100 100 515 318 0 0 N  WF=0 WT=19 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/ircbot.h"
+VIEW: LN=.138 CL=29 LE=0 CX=29 CY=7 WI=126 BI=27 HT=0 HN=0 HF=0 HC=4
+WINDOW: 25 25 515 318 0 0 N  WF=0 WT=9 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/network.c"
+VIEW: LN=.170 CL=32 LE=0 CX=32 CY=10 WI=127 BI=29 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 515 284 0 0 N  WF=0 WT=17 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/documentation/RFC/rfc1459"
+VIEW: LN=.20814 CL=25 LE=0 CX=25 CY=1 WI=128 BI=30 HT=0 HN=0 HF=0 HC=4
+WINDOW: 25 25 515 284 0 0 N  WF=0 WT=26 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/documentation/RFC/rfc2810"
+VIEW: LN=.2396 CL=2 LE=0 CX=2 CY=1 WI=129 BI=31 HT=0 HN=0 HF=0 HC=4
+WINDOW: 50 50 515 284 0 0 N  WF=0 WT=27 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/documentation/RFC/rfc2811"
+VIEW: LN=.29186 CL=2 LE=0 CX=2 CY=1 WI=130 BI=32 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 515 318 0 0 N  WF=0 WT=4 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/network.h"
+VIEW: LN=.405 CL=1 LE=0 CX=1 CY=14 WI=131 BI=33 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 515 284 0 0 N  WF=0 WT=20 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/documentation/spezifikation"
+VIEW: LN=.57 CL=13 LE=0 CX=13 CY=5 WI=134 BI=36 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 515 284 0 0 N  WF=0 WT=28 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/documentation/RFC/CTCP.paper"
+VIEW: LN=.8938 CL=1 LE=0 CX=1 CY=17 WI=135 BI=37 HT=0 HN=0 HF=0 HC=4
+WINDOW: 75 75 515 318 0 0 N  WF=0 WT=16 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/usr/include/mikmod.h"
+VIEW: LN=.18916 CL=19 LE=0 CX=19 CY=17 WI=136 BI=38 HT=0 HN=0 HF=0 HC=4
+WINDOW: 75 75 515 318 0 0 N  WF=0 WT=6 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/macro.h"
+VIEW: LN=.33 CL=1 LE=0 CX=1 CY=4 WI=137 BI=39 HT=0 HN=0 HF=0 HC=4
+WINDOW: 124 5 515 318 0 0 N  WF=0 WT=8 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/parameter.h"
+VIEW: LN=.410 CL=1 LE=0 CX=1 CY=15 WI=138 BI=40 HT=0 HN=0 HF=0 HC=4
+WINDOW: 25 25 515 318 0 0 N  WF=0 WT=7 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/parameter.c"
+VIEW: LN=.3594 CL=9 LE=0 CX=9 CY=18 WI=139 BI=41 HT=0 HN=0 HF=0 HC=4
+WINDOW: 25 25 515 318 0 0 N  WF=0 WT=11 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/messages.c"
+VIEW: LN=.43 CL=1 LE=0 CX=1 CY=5 WI=140 BI=42 HT=0 HN=0 HF=0 HC=4
+WINDOW: 125 125 515 318 0 0 N  WF=0 WT=10 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/usr/include/bfd.h"
+VIEW: LN=.4124 CL=27 LE=0 CX=27 CY=17 WI=141 BI=43 HT=0 HN=0 HF=0 HC=4
+WINDOW: 100 100 515 318 0 0 N  WF=0 WT=5 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/usr/include/stdio.h"
+VIEW: LN=.1091 CL=1 LE=0 CX=1 CY=19 WI=142 BI=44 HT=0 HN=0 HF=0 HC=4
+WINDOW: 75 75 515 318 0 0 N  WF=0 WT=1 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/config.h"
+VIEW: LN=.497 CL=2 LE=0 CX=2 CY=19 WI=143 BI=45 HT=0 HN=0 HF=0 HC=4
+WINDOW: 25 25 515 319 0 0 N  WF=0 WT=3 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/messages.h"
+VIEW: LN=.1851 CL=52 LE=0 CX=52 CY=19 WI=144 BI=46 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 515 319 0 0 N  WF=0 WT=2 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/ircbot.c"
+VIEW: LN=.331 CL=1 LE=0 CX=1 CY=16 WI=145 BI=47 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 515 284 0 0 N  WF=0 WT=21 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/dbaccess.h"
+VIEW: LN=.395 CL=11 LE=0 CX=11 CY=14 WI=146 BI=48 HT=0 HN=0 HF=0 HC=4
+WINDOW: 25 25 515 284 0 0 N  WF=0 WT=22 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/dbaccess.c"
+VIEW: LN=.3913 CL=10 LE=0 CX=10 CY=14 WI=147 BI=49 HT=0 HN=0 HF=0 HC=4
+WINDOW: 0 0 515 284 0 0 N  WF=0 WT=23 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/command.h"
+VIEW: LN=.260 CL=1 LE=0 CX=1 CY=13 WI=148 BI=50 HT=0 HN=0 HF=0 HC=4
+WINDOW: 25 25 515 284 0 0 M  WF=0 WT=24 "OEM Fixed Font,10,0,1"
+BUFFER: BN="/home/slaube/src/ircbot/src/command.c"
+VIEW: LN=.1639 CL=13 LE=0 CX=13 CY=5 WI=149 BI=51 HT=0 HN=0 HF=0 HC=4
+FILEHIST: 9
+/home/slaube/src/ircbot/src/dbaccess.c
+/home/slaube/src/ircbot/documentation/RFC/rfc1459
+/home/slaube/src/ircbot/src/irc.c
+/home/slaube/src/ircbot/src/ircbot.c
+/home/slaube/src/ircbot/documentation/spezifikation
+/home/slaube/src/ircbot/src/command.h
+/home/slaube/src/ircbot/src/network.h
+/home/slaube/src/ircbot/src/network.c
+/home/slaube/src/ircbot/src/command.c
