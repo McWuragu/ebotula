@@ -104,6 +104,7 @@ void * SendingThread(void *argv){
     extern int stop;
     QueueData *Data;
     extern PQueue  pSendingQueue;
+    int nSendLength;
 
     DEBUG("Sending thread is running (%d)\n",getpid());
 
@@ -125,7 +126,7 @@ void * SendingThread(void *argv){
             }
             DEBUG("send(%d/%d): %s",nCharSendingCounter,sSetup.nFastSendingCharLimit,(char*)Data->data);
         
-            int nSendLength=strlen((char*)Data->data);
+            nSendLength=strlen((char*)Data->data);
             nCharSendingCounter+=nSendLength;                           
             nCharSendingIncrement=(nCharSendingIncrement+nSendLength)/2;
 
