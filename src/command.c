@@ -43,7 +43,7 @@ void help(MsgItem_t *pMsg) {
     char *pMsgStr;
     char *pMsgPart;
     unsigned int i,j,iLength;
-
+	int nCmdHelpID;
 
     pParameter=getParameters(pMsg->pRawLine);
 
@@ -101,7 +101,6 @@ void help(MsgItem_t *pMsg) {
         /* Help for a command */
         for (i=CMD_OTHERS+1;i<CMDCOUNT;i++) {
             if (!strcmp((char*)CmdList[i],&pParameter[1])) {
-                int nCmdHelpID;
                 DEBUG("Command found %d\n",i);
                 nCmdHelpID=CmdIdToHelpId(i);
 
