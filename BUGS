@@ -1,4 +1,5 @@
 - The bot isn't complete protect for exess flooding
 - The bot can't join a keyword  protected channel
 - The bot don't join a channel after the  inviting from a other user
-
+- Bot allows after !hello the new user the !part command. (May be the user wasn't created in db)
+- !userlist command doesn't work corectly all user of the channel (without master(s)) should be shown.
