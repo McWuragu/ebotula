@@ -35,6 +35,11 @@
 #define DEFAULT_USER            "nobody"
 #define DEFAULT_GROUP           "nobody"
 
+#define DEFAULT_LOGLEVEL        5
+#define DEFAULT_DEBUG_LOGLEVEL  7
+
+#define MAX_LOGLEVEL            7
+
 #define MIN_LOGOFF				1
 #define MIN_ALT					1
 #define MIN_PINGTIME			60
@@ -60,4 +65,5 @@
 #define KEY_INITDELAY       "initdelay"
 #define KEY_EXEUSER         "user"
 #define KEY_EXEGROUP        "group"
+#define KEY_LOGLEVEL        "loglevel"
 #endif												

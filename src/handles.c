@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <pthread.h>
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -65,7 +65,7 @@ void hNickChange(char *pLine) {
     			log_out(pLogin);
     			log_on(pNewNetmask,pLogin);
     
-        		DEBUG("Change the netmask \"%s\" to \"%s\"\n",pNetmask,pNewNetmask);
+        		logger(LOG_DEBUG,"Change the netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
     	    	
     			free(pNetmaskCopy);
     	    	free(pNewNetmask);
@@ -139,7 +139,7 @@ void hSetModUser(char *pLine) {
             if (pNetmask) {
                 
                 if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-            	    DEBUG("Set the mod for Account %s with nickname %s\n",pLogin,pNick);
+            	    logger(LOG_DEBUG,"Set the mod for Account %s with nickname %s",pLogin,pNick);
         
                     if ((pChannel=getAccessChannel(pLine))) {
                     	// build key for access.dbf
@@ -212,7 +212,7 @@ void hResetModes(char *pLine) {
               
                 // check of bot new mods or  other user
                 if (strcmp(pNick,pTmpBotName)==0) {
-                    DEBUG("Bot get new mods\n");
+                    logger(LOG_DEBUG,"Bot get a new mods");
                     // mode set for the bot from other user of operator
                     // then initiallize this  channel
                     if (strcmp(pMode,"+o")==0) {
@@ -222,7 +222,7 @@ void hResetModes(char *pLine) {
                     }
                 } else {
                     // add callback for reset the modes for a user    
-                    DEBUG("Added Callback for Mode Reset\n");
+                    logger(LOG_DEBUG,"Added Callback for a Mode Reset");
                     
                     // built the data for callback
                     pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
@@ -243,13 +243,13 @@ void hResetModes(char *pLine) {
                     whois(pNick);
                 }
             } else if (pMode[1]=='b') {
-                DEBUG("Ban reset not implemented jet\n");
+                logger(LOG_DEBUG,"Ban reset not implemented jet");
             } else {
                 // reset other mods
                 pPos=strstr(pLine,pMode);
                 pPos[0]=(pPos[0]=='-')?'+':'-';
                 mode(pChannel,pPos,NULL);
-                DEBUG("Reset the modes from the channel %s",pChannel);
+                logger(LOG_DEBUG,"Reset the modes from the channel %s",pChannel);
             }
         } 
         free(pTmpBotName);
@@ -296,7 +296,7 @@ void hResetTopic(char *pLine){
     	            topic(pChannel,"");
         	    }
     
-                DEBUG("Reset the topic in the channel %s\n",pChannel);
+                logger(LOG_DEBUG,"Reset the topic in the channel %s",pChannel);
             	free(pChannelSet);
     		}	
             free(pChannel);
@@ -333,7 +333,7 @@ void hRejoinAfterKick(char *pLine){
     if (!strcmp(pTmpBotName,pNick)) {
         join(pChannel);
 
-        DEBUG("Rejoin the  channel %s\n",pChannel);
+        logger(LOG_DEBUG,"Rejoin the  channel %s",pChannel);
     }
     free(pTmpBotName);
     free(pChannel);
@@ -385,7 +385,7 @@ static void channelInit(char *pChannel) {
         free (sChannelData.sModes.pLimit);
 	
         action(pChannel,getMsgString(INFO_INIT_CHANNEL));
-        DEBUG("Initialize the channel %s\n", pChannel);
+        logger(LOG_INFO,"Initialize the channel %s", pChannel);
     }
 }
 
@@ -426,7 +426,7 @@ void hCallback(char *pLine) {
             sprintf(pNetmask,"%s!%s@%s",pNick,pLogin,pDomain);
     
             // execute the callback
-            DEBUG("Callback\n");
+            logger(LOG_DEBUG,"Callback");
             CB_Data->CallbackFkt(pNetmask,CB_Data->data);
     
             /* destroy  callback item */
@@ -459,7 +459,7 @@ void hWhoisFailed(char *pLine) {
     free(pRest);
     StrToLower(pNick);
 
-    DEBUG("Callback Zombie %s\n",pNick);
+    logger(LOG_DEBUG,"Callback Zombie %s",pNick);
 
    /** lock for the Callback item for the nick **/
     if ((pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,pNick))) {
@@ -470,7 +470,7 @@ void hWhoisFailed(char *pLine) {
         if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
             /* destroy  callback item */
             destroyCallbackItem(CB_Data);
-            DEBUG("Callback Zombie removed\n");
+            logger(LOG_DEBUG,"Callback Zombie removed");
         }
     }
     free(pNick);

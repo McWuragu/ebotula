@@ -16,7 +16,7 @@
 #include <syslog.h>
 #include <termios.h>
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -37,12 +37,13 @@ void CommandLineParser(int argc,char *const argv[]) {
     int i;
     int tmp;
 
+    logger(LOG_NOTICE,getSyslogString(SYSLOG_READ_CMD));
     
     for (i=1;i<argc;i++) {
         if (argv[i][0]==PARAMETER_CHAR) {
             switch  (argv[i][1]) {
             case 's':
-                DEBUG("Found server option\n");
+                logger(LOG_INFO,"Found server option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -61,7 +62,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'b':
-                DEBUG("Found botname option\n");
+                logger(LOG_INFO,"Found botname option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -80,7 +81,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'u':
-                DEBUG("Found execution user option\n");
+                logger(LOG_INFO,"Found execution user option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -93,7 +94,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'g':
-                DEBUG("Found execution group option\n");
+                logger(LOG_INFO,"Found execution group option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -106,7 +107,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'r':
-                DEBUG("Found realname option\n");
+                logger(LOG_INFO,"Found realname option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -119,7 +120,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'p':
-                DEBUG("Found port option\n");
+                logger(LOG_INFO,"Found port option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -139,7 +140,7 @@ void CommandLineParser(int argc,char *const argv[]) {
     
                 break;
             case 't':
-                DEBUG("Found thread limit option\n");
+                logger(LOG_INFO,"Found thread limit option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -157,7 +158,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.thread_limit=tmp;
                 break;
             case 'a':
-                DEBUG("Found auto logoff time option\n");
+                logger(LOG_INFO,"Found auto logoff time option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -175,7 +176,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.AutoLoggoff=tmp;
                 break;
             case 'n':
-                DEBUG("Found first sending delay option\n");
+                logger(LOG_INFO,"Found first sending delay option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -193,7 +194,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.iSendDelay=tmp;
                 break;
             case 'e':
-                DEBUG("Found secondary sending delay option\n");
+                logger(LOG_INFO,"Found secondary sending delay option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -211,7 +212,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.nSlowSendDelay=tmp;
                 break;
             case 'l':
-                DEBUG("Found send line limit option\n");
+                logger(LOG_INFO,"Found send line limit option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -228,7 +229,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.nFastSendingCharLimit=tmp;
                 break;
             case 'i':
-                DEBUG("Found startup delay option\n");
+                logger(LOG_INFO,"Found startup delay option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -245,7 +246,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.nSettling=tmp;
                 break;
             case 'k':
-                DEBUG("Found account live time option\n");
+                logger(LOG_INFO,"Found account live time option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -263,11 +264,11 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.AccountLiveTime=tmp;
                 break;
             case 'm':
-                DEBUG("Found bot master option\n");
+                logger(LOG_INFO,"Found bot master option");
                 sSetup.newMaster=true;
                 break;
             case 'd':
-                DEBUG("Found database path option\n");
+                logger(LOG_INFO,"Found database path option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -278,7 +279,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 strcpy(sSetup.pDatabasePath,argv[i]);
                 break;
             case 'c':
-                DEBUG("Found ping timeout option\n");
+                logger(LOG_INFO,"Found ping timeout option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -294,11 +295,12 @@ void CommandLineParser(int argc,char *const argv[]) {
                 }
                 sSetup.iTimeout=tmp;
                 break;
-	    case 'f':
-            /* Dummy, Configfile allready parsed */
-            i++;
-            break;
-        default:
+            case 'D':
+            case 'f':
+                /* Dummy, Configfile allready parsed */
+                i++;
+                break;
+            default:
                 printf("%s ",argv[i]);
                 printMsg(getCmdLineError());
                 exit(-1);
@@ -319,13 +321,14 @@ void ConfigFileParser(void) {
     char buffer[MAX_READ_BUFFER_SIZE], *c,*value,*key;
     //errno=0;
 
+    logger(LOG_NOTICE,getSyslogString(SYSLOG_READ_CONFFILE));
+    logger(LOG_INFO,"File %s",sSetup.configfile);
+
     if (!(fd=fopen(sSetup.configfile,"r"))) {
 	    // generating basicconfig for ebotula
-	    DEBUG("Creating Configfile: %s\n",sSetup.configfile);
-		write_baseconfig(sSetup.configfile);
+        write_baseconfig(sSetup.configfile);
     }else {
-    
-        DEBUG("Config file is open\n");
+        logger(LOG_DEBUG,"Config file is open");
     
         while((fgets(buffer,MAX_READ_BUFFER_SIZE,fd)!=NULL) && (errno==0)){
             // remove newline and leading spaces
@@ -334,7 +337,7 @@ void ConfigFileParser(void) {
             
             // ignore space lines and comments
             if ((buffer[0]!=COMMENT_CHAR) && (buffer[0]!='\0')) {
-                DEBUG("Found config line %s\n",buffer);
+                logger(LOG_INFO,"Found config line %s",buffer);
                 
     
                 c=strchr(buffer,'=');
@@ -461,6 +464,16 @@ void ConfigFileParser(void) {
                     }   
                     // set account live time
                     sSetup.iTimeout=tmp;
+                } else if (!strcmp(key,KEY_LOGLEVEL)) {
+                    // cmd line has change  the log level
+                    if (sSetup.bLogLevelWasSet) {continue;}
+                    tmp=atoi(value);
+                    if (tmp<=0 || tmp > MAX_LOGLEVEL) {
+                        errno=EDOM;
+                        perror(getMsgString(ERR_LOGLEVEL_RANGE));
+                        exit(errno);
+                    }
+                    sSetup.nLogLevel=tmp;
                 }else if (!strcmp(key,KEY_EXEUSER)) {
                     // set execution rights
                     if (sSetup.sExeUser)free(sSetup.sExeUser);

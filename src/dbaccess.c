@@ -19,7 +19,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -63,13 +63,13 @@ void initDatabases(void) {
     if (!(pDir=opendir(sSetup.pDatabasePath))) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
-            /* syslog(LOG_ERR,getSyslogString(SYSLOG_CREATE_DIR_ERR));*/
             logger(LOG_ERR,getSyslogString(SYSLOG_CREATE_DIR_ERR));
+            #ifdef NDEBUG
             perror(getSyslogString(SYSLOG_CREATE_DIR_ERR));
+            #endif
             exit(errno);
         } else {
-            /*syslog(LOG_INFO,getSyslogString(SYSLOG_CREATE_DIR));*/
-	    logger(LOG_INFO,getSyslogString(SYSLOG_CREATE_DIR));
+            logger(LOG_INFO,getSyslogString(SYSLOG_CREATE_DIR));
         }
     }
     closedir(pDir);
@@ -84,9 +84,10 @@ void initDatabases(void) {
         
         if (!dbf[i]) {
             //errno=EBUSY;
-            /*syslog(LOG_ERR,getSyslogString(SYSLOG_DATABASE_ERR));*/
             logger(LOG_ERR,getSyslogString(SYSLOG_DATABASE_ERR));
-	    perror(getSyslogString(SYSLOG_DATABASE_ERR));
+            #ifdef NDEBUG
+            perror(getSyslogString(SYSLOG_DATABASE_ERR));
+            #endif
             exit(errno);
         }
 
@@ -95,8 +96,7 @@ void initDatabases(void) {
 
         free(pDBPath);
     }
-    /*syslog(LOG_INFO,getSyslogString(SYSLOG_INIT_DB));*/
-    logger(LOG_INFO,getSyslogString(SYSLOG_INIT_DB));
+    logger(LOG_NOTICE,getSyslogString(SYSLOG_INIT_DB));
 }
 // ############################################################################# 
 void closeDatabase(void) {
@@ -108,14 +108,14 @@ void closeDatabase(void) {
         // close the databases
         gdbm_close(dbf[i]);
 	}
-    DEBUG("Close databases\n");
+    logger(LOG_INFO,"Close databases");
 }
 
 //######################### database access ##############################
 static GDBM_FILE get_dbf(int db) {
     
     if (db>=MAX_DB || db <0) {
-        DEBUG("Unkown database %d\n",db);
+        logger(LOG_ERR,"Unkown database %d",db);
         return 0;
     } else {
         return dbf[db];

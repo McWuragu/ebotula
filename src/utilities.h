@@ -11,8 +11,15 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
-#include "type.h"
+#if HAVE_CONFIG_H
+    #include "config.h"
+#endif
 
+#if HAVE_SYSLOG_H
+    #include <syslog.h>
+#endif
+
+#include "type.h"
 
 
 #define msleep(m)   usleep((m)*1000)
@@ -21,29 +28,6 @@
 #define USER_ALLOW_CHAR             "-[]\\^{}|_`"
 
 #define CommonStringCheck(m) ((strpbrk((m),COMMON_NOT_ALLOW_CHAR))?false:true)
-
-
-#ifdef HAVE_CONFIG_H
-    #include "config.h"
-#endif
-
-#ifndef NDEBUG
-    #include <time.h>
-    #include <stdio.h>
-    
-    /** Macro for debugging messages */
-    #define DEBUG(str...){ \
-         struct timespec stamp; \
-         struct tm *td; \
-         clock_gettime(CLOCK_REALTIME,&stamp); \
-         td=localtime(&stamp.tv_sec);\
-         fprintf(stderr,"%02d:%02d:%02d.%03d ",td->tm_hour,td->tm_min,td->tm_sec,(stamp.tv_nsec/1000000)); \
-         fprintf(stderr,str); \
-         }
-#else
-    /** Macro for debugging messages */
-    #define DEBUG(str...)
-#endif
 
 
 /**

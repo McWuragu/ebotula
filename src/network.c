@@ -25,7 +25,7 @@
 #include <pthread.h>
 #include <syslog.h>
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -77,7 +77,7 @@ void connectServer(void) {
         logger(LOG_ERR,getSyslogString(SYSLOG_RESOLVE_HOSTNAME));
 	exit(errno);
     }
-    DEBUG("Connecting to %s\n",hostaddr->h_name);
+    logger(LOG_NOTICE,"Connecting to %s",hostaddr->h_name);
     
     memcpy(&socketaddr.sin_addr,hostaddr->h_addr,hostaddr->h_length);
 
@@ -137,7 +137,7 @@ void SendLine(char* pMsg){
             logger(LOG_CRIT,getSyslogString(SYSLOG_SEND));
 	     stop=true;
         }
-        DEBUG("send(%d/%d): %s",nCharPerMinute,sSetup.nFastSendingCharLimit,pMsg);
+        logger(LOG_DEBUG,"send(%d/%d): %s",nCharPerMinute,sSetup.nFastSendingCharLimit,pMsg);
     
         
         nCharPerMinute=GetCharPerMin(nSendLength);
@@ -157,14 +157,12 @@ void  RecvLine(char *pLine,unsigned int len) {
     
     if (poll(&sPoll,1,sSetup.iTimeout*1000)) {
         if (!(str_len=recv(sockid,pLine,len,0))){
-           /* syslog(LOG_CRIT,getSyslogString(SYSLOG_RECV));*/
             logger(LOG_CRIT,getSyslogString(SYSLOG_RECV));
 	    stop=true;
         }
     } else {
         stop=true;
-       /* syslog(LOG_NOTICE,getSyslogString(SYSLOG_TIMEOUT));*/
-        logger(LOG_NOTICE,getSyslogString(SYSLOG_TIMEOUT));
+        logger(LOG_ERR,getSyslogString(SYSLOG_TIMEOUT));
     }
 
     pLine[str_len]='\0';

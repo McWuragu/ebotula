@@ -24,7 +24,7 @@
 #include <time.h>
 #include <syslog.h>
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -90,7 +90,7 @@ void rmDeadLogins(long lCheckTime) {
                 /* check the time */
         	    if (lCheckTime>atol(pTime)) {
     	            log_out((char*)pLogin->data);
-                	DEBUG("The account %s was automatically logged off\n",(char*)pLogin->data);
+                	logger(LOG_DEBUG,"The account %s was automatically logged off",(char*)pLogin->data);
             	}
             }
     	    free(pTime);
@@ -127,7 +127,7 @@ void log_on(char *pNetmask,char *pLogin) {
     }
     pthread_mutex_unlock(&mutexAccount);
 
-    DEBUG("User log in\n");
+    logger(LOG_INFO,"User log in %s",pLogin);
 
     /* build the timestamp */
     time(&timestamp);
@@ -136,10 +136,10 @@ void log_on(char *pNetmask,char *pLogin) {
     /* set the last login timestamp */
     if (exist_db(TIMELOG_DB,pLogin)) {
         replace_db(TIMELOG_DB,pLogin,pTime);
-        DEBUG("Update timestamp %s for %s\n",pTime,pLogin);
+        logger(LOG_DEBUG,"Update timestamp %s for %s",pTime,pLogin);
     } else {
         add_db(TIMELOG_DB,pLogin,pTime);
-        DEBUG("Add timepstamp %s for %s\n",pTime,pLogin);
+        logger(LOG_DEBUG,"Add timepstamp %s for %s",pTime,pLogin);
     }
 }
 /* ############################################################################# */
@@ -161,7 +161,7 @@ void __log_out(char *pLogin) {
         /* Log off */
 	    del_db(NICKTOUSER_DB,pNetmask);
     	del_db(USERTONICK_DB,pLogin);
-    	DEBUG("%s logged off\n",pLogin);
+    	logger(LOG_INFO,"%s logged off",pLogin);
         free(pNetmask);
 	}
 }
@@ -169,7 +169,7 @@ void __log_out(char *pLogin) {
 void rmAccount(char *pLogin) {
     extern pthread_mutex_t mutexAccount;
     
-	DEBUG("Remove the account %s\n",pLogin);
+	logger(LOG_INFO,"Remove the account %s",pLogin);
 
     pthread_mutex_lock(&mutexAccount);
 	/* logoff the user */
@@ -192,7 +192,7 @@ void rmAccessRights(char *pLogin){
     char *pKey;
     int iLoginLen;
 
-    DEBUG("Remove access rights from %s\n",pLogin);
+    logger(LOG_DEBUG,"Remove access rights from %s",pLogin);
 
     /* remove as master */
     del_db(ACCESS_DB,pLogin);
@@ -235,7 +235,7 @@ void rmDeadAccounts(long lCheckTime) {
     	    if (lCheckTime>atol(pTime)) {
 	            rmAccount((char*)pLogin->data);
             	/* syslog(LOG_NOTICE,getSyslogString(SYSLOG_ACCOUNT_RM));*/
-		logger(LOG_NOTICE,getSyslogString(SYSLOG_ACCOUNT_RM));
+                logger(LOG_INFO,getSyslogString(SYSLOG_ACCOUNT_RM));
         	}
         	free(pTime);
 		}

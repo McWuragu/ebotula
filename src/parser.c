@@ -16,7 +16,7 @@
 #include <pthread.h>
 #include <syslog.h>
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -99,7 +99,7 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
                 for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
                     if (!strncmp(pStr,CmdList[i],strlen(CmdList[i]))){
                         pMsg->identify=i;
-                        DEBUG("Found Command %s\n",CmdList[i]);
+                        logger(LOG_DEBUG,"Found Command %s",CmdList[i]);
                         i=CMDCOUNT;
                     }
                 }
@@ -111,13 +111,13 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
                 // command parser
                if (!strncmp(pStr,CmdList[CMD_CTCPPING],strlen(CmdList[CMD_CTCPPING]))){
                          pMsg->identify=CMD_CTCPPING;
-                     DEBUG("Found Command %s\n",CmdList[CMD_CTCPPING]);
+                     logger(LOG_DEBUG,"Found Command %s",CmdList[CMD_CTCPPING]);
                 } else if (!strncmp(pStr,CmdList[CMD_CTCPVERSION],strlen(CmdList[CMD_CTCPVERSION]))){
                          pMsg->identify=CMD_CTCPVERSION;
-                     DEBUG("Found Command %s\n",CmdList[CMD_CTCPVERSION]);
+                     logger(LOG_DEBUG,"Found Command %s",CmdList[CMD_CTCPVERSION]);
                 } else if (!strncmp(pStr,CmdList[CMD_CTCPTIME],strlen(CmdList[CMD_CTCPTIME]))){
                             pMsg->identify=CMD_CTCPTIME;
-                    DEBUG("Found Command %s\n",CmdList[CMD_CTCPTIME]);
+                    logger(LOG_DEBUG,"Found Command %s",CmdList[CMD_CTCPTIME]);
                 }
             }
         }
@@ -145,7 +145,7 @@ void *CommandExecutionThread(void *argv) {
     // set the thread cancelable
     pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
 
-    DEBUG("Execution thread is running (%d)\n",getpid());
+    logger(LOG_DEBUG,"Execution thread is running (pid%d)",getpid());
 
     // execute loop
     while(!stop) {
@@ -312,7 +312,7 @@ void *CommandExecutionThread(void *argv) {
             free (pCommand);
         }
     }
-    DEBUG("Execution thread is stopped\n");
+    logger(LOG_DEBUG,"Execution thread is stopped");
     return NULL;
 }
 
@@ -351,7 +351,7 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
             }
         } 
     }
-   DEBUG("Userlevel %i AccessStatus %i of the command id %i\n",Level,ret,cmd_id);
+   logger(LOG_DEBUG,"Userlevel %i AccessStatus %i of the command id %i",Level,ret,cmd_id);
     return ret;
 }
 // #############################################################################
@@ -362,5 +362,5 @@ RETSIGTYPE stopParser(int sig) {
     }
 
     stop=true;
-    DEBUG("Stop IRCBot\n");
+    logger(LOG_NOTICE,"Stop IRCBot");
 }

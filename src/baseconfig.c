@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
          
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -56,7 +56,9 @@ char	* bstr[]={
     "\n# The time limit in days for maximum login time",
 	KEY_AUTOLOGOFF,"=",
 	"\n# The time limit in seconds for ping timeout.",
-	KEY_PINGTIMEOUT,"="
+	KEY_PINGTIMEOUT,"=",
+    "\n# The level of the output (0-7)",
+    KEY_LOGLEVEL,"="
     };
 
 /**
@@ -74,6 +76,8 @@ void write_baseconfig()
     char tmpstr[128];
     int i=0;
 	extern  ConfigSetup_t sSetup;
+
+    logger(LOG_INFO,"Creating Configfile: %s",sSetup.configfile);
 
     /* Create & Openfile*/
 	if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
@@ -208,15 +212,25 @@ void write_baseconfig()
 		fprintf(fd,"%s%d\n",bstr[i],sSetup.AutoLoggoff);
 		i++;
 		/* Pingtimeout */
-		/*"\n# The time limit in seconds for ping timeout.",*/
+		/* # The time limit in seconds for ping timeout.*/
 		fprintf(fd,"%s\n",bstr[i]);
 		i++;
-		fflush(fd);
-		/* KEY_PINGTIMEOUT,"="*/
+		
+		/* KEY_PINGTIMEOUT */
 		fprintf(fd,"%s",bstr[i]);
 		i++;
 		fprintf(fd,"%s%d\n",bstr[i],sSetup.iTimeout);
 		i++;
+       
+        /*  The level of the output (0-7) */
+        fprintf(fd,"%s\n",bstr[i]);
+		i++;
+
+        /* KEY_LOGLEVEL */
+        fprintf(fd,"%s",bstr[i]);
+        i++;
+        fprintf(fd,"%s%d\n",bstr[i],sSetup.nLogLevel);
+        i++;
 
 		/* closing file */
 		fclose(fd);

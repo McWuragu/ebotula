@@ -51,6 +51,9 @@ typedef struct ConfStruct{
     char *sExeGroup;
     /** a delay of initialization of the channels */
     unsigned int nSettling;
+    /** log level is define as syslog level */
+    unsigned int nLogLevel;
+    int bLogLevelWasSet;
 } ConfigSetup_t;
 
 

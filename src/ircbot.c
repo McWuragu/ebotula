@@ -25,7 +25,7 @@
 
 #include <sys/types.h>
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -133,6 +133,13 @@ int main(int argc,char * const argv[]) {
     
     sSetup.nSettling=DEFAULT_INIT_DELAY;
 
+    #ifdef NDEBUG
+        sSetup.nLogLevel=DEFAULT_LOGLEVEL;
+    #else
+        sSetup.nLogLevel=DEFAULT_DEBUG_LOGLEVEL;
+    #endif
+    sSetup.bLogLevelWasSet=0;
+
     // versions ausgabe
     printf(VERSIONSTR);
     printf("\n");
@@ -142,6 +149,27 @@ int main(int argc,char * const argv[]) {
     for (i=1;i<argc;i++) {
         if (argv[i][0]==PARAMETER_CHAR) {
             switch (argv[i][1]) {
+            case 'D':
+            {
+                int tmp;
+                logger(LOG_INFO,"Found debug level option");
+                if (++i>=argc) {
+                    errno=EINVAL;
+                    perror(getMsgString(ERR_MISSING_PARAM));
+                    exit(errno);
+                }
+
+                // linie limit  for the first send delay
+                tmp=atoi(argv[i]);
+                if (tmp<0  || tmp > MAX_LOGLEVEL) {
+                    errno=EDOM;
+                    perror(getMsgString(ERR_LOGLEVEL_RANGE));
+                    exit(errno);
+                }
+                sSetup.nLogLevel=tmp;
+                sSetup.bLogLevelWasSet=1;
+                break;
+            }
             case 'f':
                 if (argv[++i]!=NULL)
         		{
@@ -151,8 +179,9 @@ int main(int argc,char * const argv[]) {
         		}
         		else
         		{	
-        			fprintf(stderr,"  No Configfile was given!\n");
-        			exit(1);
+        			errno=EINVAL;
+                    perror(getMsgString(ERR_MISSING_PARAM));
+        			exit(errno);
         		}
                 break;
             case 'v':
@@ -169,18 +198,13 @@ int main(int argc,char * const argv[]) {
         }
 
     }
-    DEBUG("File %s\n",sSetup.configfile);
 
     // read config file
     ConfigFileParser();
-    logger(LOG_NOTICE,getSyslogString(SYSLOG_READ_CONFFILE));
-    /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_READ_CONFFILE));*/
     
     // check for parameter
     if (argc>1) {
         CommandLineParser(argc,argv);
-        /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_READ_CMD));*/
-	logger(LOG_NOTICE,getSyslogString(SYSLOG_READ_CMD));
     }
 
     // check the automatic times
@@ -202,9 +226,8 @@ int main(int argc,char * const argv[]) {
             if ((Group=getgrnam(sSetup.sExeGroup)))
                setegid(Group->gr_gid);
             else {
-                /*syslog(LOG_ERR,getSyslogString(SYSLOG_GROUP_NOT_FOUND));*/
-	        logger(LOG_ERR,getSyslogString(SYSLOG_GROUP_NOT_FOUND));
-	    }
+                logger(LOG_ERR,getSyslogString(SYSLOG_GROUP_NOT_FOUND));
+            }
         }
 
         // user
@@ -212,30 +235,30 @@ int main(int argc,char * const argv[]) {
             if ((User=getpwnam(sSetup.sExeUser)))
                seteuid(User->pw_uid);
             else {
-                /*syslog(LOG_ERR,getSyslogString(SYSLOG_USER_NOT_FOUND));*/
-		logger(LOG_ERR,getSyslogString(SYSLOG_USER_NOT_FOUND));
-	    }
+                logger(LOG_ERR,getSyslogString(SYSLOG_USER_NOT_FOUND));
+            }
         }
     }
    
 
-    DEBUG("----------------------------------------------\n");
-    DEBUG("Server %s\n",sSetup.server);
-    DEBUG("Port %s\n",sSetup.port);
-    DEBUG("Nickname %s\n", sSetup.pBotname);
-    DEBUG("Realname %s\n", sSetup.realname);
-    DEBUG("Execute as %s.%s\n",sSetup.sExeUser,sSetup.sExeGroup);
-    DEBUG("Threads %d\n",sSetup.thread_limit);
-    DEBUG("Config file %s\n",sSetup.configfile);
-    DEBUG("Database path %s\n",sSetup.pDatabasePath);
-    DEBUG("Ping timeout %ds\n",sSetup.iTimeout);
-    DEBUG("Fast sending delay %dms\n",sSetup.iSendDelay);
-    DEBUG("Slow sending delay %dms\n",sSetup.nSlowSendDelay);
-    DEBUG("Fast sending limit %d\n",sSetup.nFastSendingCharLimit);
-    DEBUG("Startup initialization delay %ds\n",sSetup.nSettling);
-    DEBUG("Account live time %dd\n",sSetup.AccountLiveTime);
-    DEBUG("Autolog of after %dd\n",sSetup.AutoLoggoff);
-    DEBUG("-----------------------------------------------\n");
+    logger(LOG_INFO,"--------------- current setup -------------------");
+    logger(LOG_INFO,"Server %s",sSetup.server);
+    logger(LOG_INFO,"Port %s",sSetup.port);
+    logger(LOG_INFO,"Nickname %s", sSetup.pBotname);
+    logger(LOG_INFO,"Realname %s", sSetup.realname);
+    logger(LOG_INFO,"Execute as %s.%s",sSetup.sExeUser,sSetup.sExeGroup);
+    logger(LOG_INFO,"Threads %d",sSetup.thread_limit);
+    logger(LOG_INFO,"Config file %s",sSetup.configfile);
+    logger(LOG_INFO,"Database path %s",sSetup.pDatabasePath);
+    logger(LOG_INFO,"Ping timeout %ds",sSetup.iTimeout);
+    logger(LOG_INFO,"Fast sending delay %dms",sSetup.iSendDelay);
+    logger(LOG_INFO,"Slow sending delay %dms",sSetup.nSlowSendDelay);
+    logger(LOG_INFO,"Fast sending limit %d",sSetup.nFastSendingCharLimit);
+    logger(LOG_INFO,"Startup initialization delay %ds",sSetup.nSettling);
+    logger(LOG_INFO,"Account live time %dd",sSetup.AccountLiveTime);
+    logger(LOG_INFO,"Autolog of after %dd",sSetup.AutoLoggoff);
+    logger(LOG_INFO,"Log level: %i",sSetup.nLogLevel);
+    logger(LOG_INFO,"-------------------------------------------------");
 
    /* syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));*/
     logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));
@@ -256,35 +279,36 @@ int main(int argc,char * const argv[]) {
 
     // create the network connection
     if ((sSetup.server!=NULL) && (sSetup.port!=NULL)) {
+        #ifdef NDEBUG
         printf("%s\n",getSyslogString(SYSLOG_TRY_CONNECT));
-        
-        /* syslog(LOG_INFO,getSyslogString(SYSLOG_TRY_CONNECT));*/
-	logger(LOG_INFO,getSyslogString(SYSLOG_TRY_CONNECT));
+        #endif
+        logger(LOG_INFO,getSyslogString(SYSLOG_TRY_CONNECT));
         
         connectServer();
         
-       /* syslog(LOG_INFO,getSyslogString(SYSLOG_IS_CONNECT));*/
-	
-        logger(LOG_INFO,getSyslogString(SYSLOG_IS_CONNECT));
- 
+        #ifdef NDEBUG
         printf("%s\n",getSyslogString(SYSLOG_IS_CONNECT));
+        #endif
+        
+        logger(LOG_INFO,getSyslogString(SYSLOG_IS_CONNECT));
     } else {
         closeDatabase();
         errno=EINVAL;
+        #ifdef NDEBUG
         perror(getSyslogString(SYSLOG_FAILED_NETPARA));
-        /*syslog(LOG_ERR,getSyslogString(SYSLOG_FAILED_NETPARA));*/
-         logger(LOG_ERR,getSyslogString(SYSLOG_FAILED_NETPARA));
-	exit(errno);
+        #endif
+        logger(LOG_ERR,getSyslogString(SYSLOG_FAILED_NETPARA));
+        exit(errno);
     }
 
     
 
     // connect to the server
     ConnectToIrc();
+    #ifdef NDEBUG
     printf("%s\n",getSyslogString(SYSLOG_BOT_RUN));
-    /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_RUN));*/
+    #endif
     logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_RUN));
-
 
     // redefine the signal handler for to stop the bot
     signal(SIGINT,stopParser);
@@ -299,8 +323,8 @@ int main(int argc,char * const argv[]) {
     // make a daemon 
     daemon(true,true);
     #endif
-   
-	pthread_mutex_init(&mutexAccount,NULL);
+	
+    pthread_mutex_init(&mutexAccount,NULL);
     
 	 
 	// init the command queue
@@ -321,8 +345,7 @@ int main(int argc,char * const argv[]) {
     
 	// join the channels
     pthread_create(&joinThread,NULL,JoinAllChannelsThread,&sSetup.nSettling);
-    
-        pthread_detach(joinThread);
+    pthread_detach(joinThread);
 
     // init the  buffer  for unparsed string
     pUnparsed=(char*)malloc(sizeof(char));
@@ -347,7 +370,7 @@ int main(int argc,char * const argv[]) {
             strcpy(pCurrLine,pCurrStringPos);
 
             /* parse the part line */
-            DEBUG("Parse: \"%s\"\n",pCurrLine);
+            logger(LOG_DEBUG,"Parse: \"%s\"",pCurrLine);
             preParser(pCurrLine,&sMsg);
 
             /* put the identified line  on the  queue */
@@ -415,13 +438,17 @@ int main(int argc,char * const argv[]) {
     //  check for restart option
     if (again) {
         /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));*/
-	logger(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));
+        logger(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));
         closelog();
         execvp(argv[0],argv);
+        #ifdef NDEBUG
         perror(getMsgString(ERR_RESTART));
+        #endif
+        openlog(PACKAGE,0,LOG_DAEMON);
+        logger(LOG_ERR,getSyslogString(SYSLOG_RESTART));
+        closelog();
     } else {
-        /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));*/
-	logger(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));
+        logger(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));
         closelog();
     }
 

@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <pthread.h>
  
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif
  
@@ -43,7 +43,7 @@ void *TimingThread(void *argv){
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
     */
 
-    DEBUG("Synchronize thread is running (%d)\n",getpid());
+    logger(LOG_DEBUG,"Synchronize thread is running (pid%d)",getpid());
 
     while (!stop) {
         time(&newTime);
@@ -57,21 +57,21 @@ void *TimingThread(void *argv){
 
         /* remove dead logins  */
         if ((newTime-lastRemoveDeadLogins)>=3600) {
-            DEBUG("Remove dead logins\n");
+            logger(LOG_INFO,"Remove dead logins");
             rmDeadLogins(newTime-sSetup.AutoLoggoff*86400);
             lastRemoveDeadLogins=newTime;
         }
 
         /* remove dead accounts  */
         if ((newTime-lastRemoveDeadAccounts)>=3600) {
-            DEBUG("Remove dead accounts\n");
+            logger(LOG_INFO,"Remove dead accounts");
             rmDeadAccounts(newTime-sSetup.AccountLiveTime*86400);
             lastRemoveDeadAccounts=newTime;
         }
         
         msleep(100);
     }
-    DEBUG("The timing thread stopped\n");
+    logger(LOG_DEBUG,"The timing thread stopped");
 }
 
 //#######################################################################

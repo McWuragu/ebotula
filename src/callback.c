@@ -36,7 +36,7 @@ void ModeResetCb(char *pNetmask,void* data){
     char *pMod;
     char *pTmpBotName;
 
-	DEBUG("Callback for ResetMode\n");
+	logger(LOG_DEBUG,"Callback for ResetMode");
 
     // split the  input datums
     pChannel=getFirstPart((char*)data,&pOldMode);
@@ -51,7 +51,7 @@ void ModeResetCb(char *pNetmask,void* data){
         StrToLower(pTmpBotName);
 
         if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-            DEBUG("Reset the mode for the identified User %s\n",pLogin);
+            logger(LOG_DEBUG,"Reset the mode for the identified User %s",pLogin);
     
             // built the  key for the access_db
             pAccessKey=(char*)malloc((strlen(pChannel)+strlen(pLogin)+1)*sizeof(char));
@@ -74,7 +74,7 @@ void ModeResetCb(char *pNetmask,void* data){
                 }
                 free(pMod);
             }  else if ((pMod=get_db(ACCESS_DB,pLogin))) {
-                DEBUG("Reset the master\n");
+                logger(LOG_DEBUG,"Reset the master");
                 // master mod reset
                 if (strcmp(pOldMode,"+o")!=0){
                     // reset all mod other mod until op
@@ -86,7 +86,7 @@ void ModeResetCb(char *pNetmask,void* data){
             free(pAccessKey);
             free(pLogin);
         } else if (pOldMode[0]=='+' && strcmp(pNick,pTmpBotName)) {
-            DEBUG("Reset the mode for %s\n",pNick);
+            logger(LOG_DEBUG,"Reset the mode for %s",pNick);
             // reset the mode for not identify user
             pOldMode[0]='-';
             mode(pChannel,pOldMode,pNick);
@@ -113,7 +113,7 @@ void SetBanCb(char *pNetmask,void * data){
     char *pCmdNick;
     
 
-    DEBUG("Callback for user banning\n");
+    logger(LOG_DEBUG,"Callback for user banning");
 
     /* get user information */
     pLogin=getFirstPart((char*)data,&pRest);
@@ -158,7 +158,7 @@ void KickCb(char *pNetmask, void *data) {
     char *pCmdNick;
     char *pCmdNetmask;
     
-    DEBUG("Callback for user kicking\n");
+    logger(LOG_DEBUG,"Callback for user kicking");
 
 
     /* split Datums */

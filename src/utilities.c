@@ -8,6 +8,7 @@
  * ############################################################# 
  */
 
+#include <time.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -16,7 +17,7 @@
 #include <errno.h>
 #include <ctype.h>
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
     #include "config.h"
 #endif 
  
@@ -297,17 +298,26 @@ boolean NickStringCheck(char *const pStr) {
 // ############################################################################# 
 int logger(int priority, char *format, ...)
 {
+    extern ConfigSetup_t sSetup;
 	char buf[1<<12];
-	va_list az;
+	struct timespec stamp; 
+    struct tm *td; 
+    va_list az;
 	
+    if (priority>sSetup.nLogLevel) { return 0;}
+
 	/**/
 	va_start(az,format);
 	/* put message in to data*/
 	vsprintf(buf,format,az);
 #ifdef NDEBUG
+    #if HAVE_SYSLOG_H
 	syslog(priority,&buf);
+    #endif
 #else
-	DEBUG(buf);
+    clock_gettime(CLOCK_REALTIME,&stamp);
+    td=localtime(&stamp.tv_sec);
+    fprintf(stderr,"%02d:%02d:%02d.%03d %s\n",td->tm_hour,td->tm_min,td->tm_sec,(stamp.tv_nsec/1000000),buf); 
 #endif
 	/**/
 	va_end(az);
