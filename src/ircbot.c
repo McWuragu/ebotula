@@ -271,15 +271,13 @@ int main(int argc,char * const argv[]) {
     }
 
     syslog(LOG_NOTICE,SYSLOG_BOT_STOP);
-    DEBUG("Stop the timing thread");
-    pthread_cancel(timeThread);
     pthread_join(timeThread,NULL);
+    DEBUG("The timing thread stopped");
 
     // wait of  terminat all threads
-    for (i=0;i<sSetup.thread_limit;i++) {
-        DEBUG("Stop thread %d",i);
-        pthread_cancel(threads[i]);
+    for (i=0;i<sSetup.thread_limit;i++) { 
         pthread_join(threads[i],NULL);
+        DEBUG("Thread %d stopped",i);
     }
 
 
