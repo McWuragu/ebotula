@@ -38,7 +38,7 @@ void help(char *pLine) {
 	char *pParameter;
 	char *pTmp;
 	char *pMsgStr;
-	unsigned int i,j;
+	unsigned int i,j,iLength;
 	boolean bIsLogin=false,bIsMaster=false;
 	
 	pNetmask=getNetmask(pLine);
@@ -46,20 +46,17 @@ void help(char *pLine) {
 
 	pParameter=getParameters(pLine);
 
-	
 
 	// check for parameters
 	if (!strlen(pParameter)) {
 		DEBUG("Default information");
 		
 		// Header of help message 
-		for (i=0;i<HELP_ITEM_SIZE;i++) {
+
+		for (i=0;irchelp_msg[0][i]!=NULL;i++) {
 			// look for the end  of msg 
-			if ((irchelp_msg[i][0]=='\0') || (i==HELP_ITEM_SIZE)) {
-				break;
-			}
-			notice(pNick,(char *)irchelp_msg[i]);
-		}
+			notice(pNick,irchelp_msg[0][i]);
+		}	 
 	
 		// checking  login and  master status 
         if ((bIsLogin=exist_db(NICKTOUSER_DB,pNetmask))) {
@@ -67,51 +64,28 @@ void help(char *pLine) {
 		}
 		
     
-		i=HELP_ITEM_SIZE;
-		while (irchelp_msg[i][0]!='.') {
+		for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
 			// checking  for allow commands
-			// first check for  unkwon user
-			// secondary check for not master 
-			if (!bIsLogin
-				&& strcmp(irchelp_msg[i],"!help")
-				&& strcmp(irchelp_msg[i],"!version")
-				&& strcmp(irchelp_msg[i],"!hello")
-				&& strcmp(irchelp_msg[i],"!ident")) {
-				// next command 
-				i+=HELP_ITEM_SIZE;
+			if (!bIsLogin && i>=CMD_LOGGED) {
 				continue;
-			} else if (!bIsMaster
-					   && !(strcmp(irchelp_msg[i],"!die")
-					   && strcmp(irchelp_msg[i],"!join")
-					   && strcmp(irchelp_msg[i],"!part")
-					   && strcmp(irchelp_msg[i],"!addchannel")
-					   && strcmp(irchelp_msg[i],"!rmchannel")
-					   && strcmp(irchelp_msg[i],"!chanlist")
-					   && strcmp(irchelp_msg[i],"!rmuser")
-					   && strcmp(irchelp_msg[i],"!allsay")
-					   && strcmp(irchelp_msg[i],"!nick"))) {
-				// next command 
-				i+=HELP_ITEM_SIZE;
+			} else if (!bIsMaster && i >= CMD_MASTER) {
 				continue;
 			}
 
 			// calculat the length of buffer 
-			pMsgStr=(char *)calloc(HELP_TAB+1+strlen(irchelp_msg[i+1]),sizeof(char));
+			pMsgStr=(char *)calloc(HELP_TAB+1+strlen((char*)irchelp_msg[CmdIdToHelpId(i)][0]),sizeof(char));
 						
 			// build string 
-			strcpy(pMsgStr,irchelp_msg[i]);
-			
+			strcpy(pMsgStr,CmdList[i]);
+			iLength=HELP_TAB-strlen(CmdList[i]);
 			// fill
-			for (j=0;j<(HELP_TAB-strlen(irchelp_msg[i]));j++) {
+			for (j=0;j<iLength;j++) {
 				strcat(pMsgStr," ");
 			}
-			strcat(pMsgStr,irchelp_msg[i+1]);
+			strcat(pMsgStr,(char*)irchelp_msg[CmdIdToHelpId(i)][0]);
 			
 			// send notice 
 			notice(pNick,pMsgStr);
-
-			// next command 
-			i+=HELP_ITEM_SIZE;
 		}
 		// the tail
 		notice(pNick,MSG_HELP_END);
@@ -129,35 +103,24 @@ void help(char *pLine) {
 			pParameter=pTmp;
 		}
 
-		DEBUG("Looking for information about \"%s\"",pParameter);
+        DEBUG("Looking for information about \"%s\"",pParameter);
 
 		// Help for a command 
-		i=HELP_ITEM_SIZE;
-		while (irchelp_msg[i][0]!='.') {
-			
-			// look for  the command 
-			if (!strcmp((char*)irchelp_msg[i],pParameter)) {
-				DEBUG("Command found");
-				
+		for (i=CMD_OTHERS+1;i<CMDCOUNT;i++) {
+			if (!strcmp((char*)CmdList[i],&pParameter[1])) {
+				DEBUG("Command found %d",i);
+
 				// the head	for help
-				pTmp=(char*)malloc((strlen(MSG_HELP_FOR)+strlen((char *)irchelp_msg[i])+3)*sizeof(char));
-				sprintf(pTmp,"%s %s:",MSG_HELP_FOR,irchelp_msg[i]);
+				pTmp=(char*)malloc((strlen(MSG_HELP_FOR)+strlen((char *)CmdList[i])+3)*sizeof(char));
+				sprintf(pTmp,"%s %s:",MSG_HELP_FOR,pParameter);
 				notice(pNick,pTmp);
 
-				// help message	of the  command 
-				for (j=1;j<HELP_ITEM_SIZE;j++) {
-					// look for  the end of the  msg 
-					if ((irchelp_msg[j+i][0]=='\0') || (j==HELP_ITEM_SIZE)) {
-						// tail
-						notice(pNick,MSG_HELP_END);
-						return;
-					}
-					notice(pNick,(char *)irchelp_msg[j+i]);
+				for (j=0;irchelp_msg[CmdIdToHelpId(i)][j]!=NULL;j++) {
+					notice(pNick,(char*)irchelp_msg[CmdIdToHelpId(i)][j]);
 				}
+				notice(pNick,MSG_HELP_END);
+				return;
 			}
-			
-			// next command	
-			i+=HELP_ITEM_SIZE;
 		}
         notice(pNick,MSG_NOT_COMMAND);
 	}

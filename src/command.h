@@ -13,7 +13,88 @@
 #define USERLIST_TAB	20
 #define HELP_TAB		12
 
-#define CHANNEL_MODES	"kltnmsprqi"	
+#define CHANNEL_MODES	"kltnmsprqi"
+
+
+/**
+* This enum define all comand ids for the events and commands. This is used by the
+* parser and the threads for execution the  commands or handle the events. The ids identify
+* the comands or events in the message queue. 
+*/	  
+typedef enum CmdEnum {
+	CMD_NONE,
+	
+	// Event handler ids
+	CMD_ONPING, 
+	CMD_ONQUIT,
+	CMD_ONNICKCHG,
+	CMD_ONMODE,
+	CMD_ONJOIN,
+	CMD_ONNAMES,
+	CMD_ONTOPIC,
+
+
+	// others
+	CMD_VIEWGREAT,
+	CMD_HELP,
+    CMD_VERSION,
+    CMD_HELLO,
+    CMD_IDENT,
+	
+
+	// Logged user
+	CMD_LOGOFF,
+	CMD_PASS,
+	
+	// owner commands
+	CMD_CHANMODE,
+	CMD_USERLIST,
+	CMD_USERMODE,
+	CMD_SAY,
+	CMD_KICK,
+	CMD_SET_TOPIC,
+    CMD_SET_GREATING,
+	CMD_CHANNELS,
+	
+	// Master commands
+	CMD_RESTART,
+	CMD_ALLSAY,
+	CMD_RMUSER,
+	CMD_NICK,
+    CMD_DIE,
+	CMD_RMCHANNEL,
+	CMD_ADDCHANNEL,
+	CMD_JOIN,
+	CMD_PART
+}CmdType;
+	
+#define CMDCOUNT	(CMD_PART-CMD_NONE+1)
+
+#define CMD_MASTER	CMD_RESTART
+#define CMD_OWNER	CMD_CHANMODE
+#define CMD_LOGGED	CMD_LOGOFF
+#define CMD_EVENT	CMD_ONPING
+#define CMD_OTHERS	CMD_VIEWGREAT
+
+#define CmdIdToHelpId(m)		((m)-CMD_OTHERS+1)
+#define HelpIdToCmdId(m)		((m)+CMD_OTHERS-1)
+
+static char * const CmdList[]= {
+	"none",
+	"PING","QUIT","NICK","MODE","JOIN","353","TOPIC",
+	"viewgreet","help","version","hello","ident",
+	"logoff","pass",
+	"chanmode","userlist","usermode","say","kick","topic","greeting","chanlist",
+	"restart","allsay","rmuser","nick","die","rmchannel","addchannel","join","part"
+};
+
+/// This is the structure for the entries in the message queue
+typedef struct MsgBufStruct {
+	long	mtype;
+	CmdType	identify;
+	/** the complete string which receive from the irc server */
+	char	pMsgLine[RECV_BUFFER_SIZE];
+} MsgBufType;
 				  
 // ######################### Bot commands ################################
 

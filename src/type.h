@@ -53,45 +53,6 @@ typedef struct ConfStruct{
 	boolean newMaster;
 } ConfType;
 	  
-/**
-* This enum define all comand ids for the events and commands. This is used by the
-* parser and the threads for execution the  commands or handle the events. The ids identify
-* the comands or events in the message queue. 
-*/	  
-typedef enum CmdEnum {
-	CMD_NONE,
-	CMD_ONPING, 
-	CMD_ONQUIT,
-	CMD_ONNICKCHG,
-	CMD_ONMODE,
-	CMD_ONJOIN,
-	CMD_ONNAMES,
-	CMD_ONTOPIC,
-	CMD_HELP,
-    CMD_VERSION,
-    CMD_HELLO,
-	CMD_PASS,
-    CMD_IDENT,
-	CMD_ADDCHANNEL,
-	CMD_JOIN,
-	CMD_PART,
-	CMD_RMCHANNEL,
-	CMD_LOGOFF,
-    CMD_DIE,
-	CMD_NICK,
-	CMD_CHANNELS,
-    CMD_SET_GREATING,
-	CMD_SET_TOPIC,
-	CMD_SAY,
-	CMD_KICK,
-	CMD_USERMODE,
-	CMD_RMUSER,
-	CMD_VIEWGREAT,
-	CMD_USERLIST,
-	CMD_ALLSAY,
-	CMD_CHANMODE,
-	CMD_RESTART
-}CmdType;
 
 /// This  enum is  used as index for value pModeStr from the struct ChannelModeStruct
 enum ChanModeEnum {
@@ -109,13 +70,7 @@ enum ChanModeEnum {
 	MOD_INVITE
 };
 
-/// This is the structure for the entries in the message queue
-typedef struct MsgBufStruct {
-	long	mtype;
-	CmdType	identify;
-	/** the complete string which receive from the irc server */
-	char	pMsgLine[RECV_BUFFER_SIZE];
-} MsgBufType;
+
 
 
 
