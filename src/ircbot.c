@@ -34,7 +34,7 @@
 	 
 	 
 
-CONFIG_TYPE setup;	// global config structur
+ConfType setup;	// global config structur
 int key;			// key of the message  queue
 int stop;			// singal for stop the endless loop
 
@@ -53,8 +53,8 @@ int main(int argc,const char *argv[]) {
 	setup.newMaster=false;
 
 	// container for a message for the queue
-	struct MSGBUF_DS msg;
-	bzero(&msg,sizeof(struct MSGBUF_DS));
+	MsgBufType msg;
+	bzero(&msg,sizeof(MsgBufType));
     
 	// check for parameter
 	if (argc>1) {
@@ -108,6 +108,7 @@ int main(int argc,const char *argv[]) {
 	if (setup.newMaster) {
 		dialogMaster();
 	}
+	
 	// create the network connection
 	if ((setup.server!=NULL) && (setup.port!=NULL)) {
 		printf("Try connect to %s:%s\n",setup.server,setup.port);
@@ -176,8 +177,8 @@ int main(int argc,const char *argv[]) {
             msg=preParser(str);
 
 			// put the identified line  on the  queue
-			if (msg.identify!=0) {
-				msgsnd(msgid,&msg,sizeof(struct MSGBUF_DS)-sizeof(msg.mtype),0);
+			if (msg.identify!=CMD_NONE) {
+				msgsnd(msgid,&msg,sizeof(MsgBufType)-sizeof(msg.mtype),0);
 			}
 
 			free(str);
