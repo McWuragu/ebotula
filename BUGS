@@ -1,2 +1,4 @@
 - little bit unstabile
-- charakter sensitive channel names
+- charakter sensitive channel names (fixed)
+- !usermode SIGSEGV
+- !kick nur ein wort von reason
