@@ -1,5 +1,5 @@
 #########################################################################
-VERSION=0.06-alpha
+VERSION=0.07-alpha
 DATABASEPATH=./
 CONFDIR=./
 
@@ -28,6 +28,7 @@ OBJS=   parameter.o \
 	parser.o \
 	timing.o \
 	account.o \
+	handles.o \
 	ircbot.o 
 
 DEPS= $(patsubst %.o,%.d,$(OBJS))
