@@ -24,47 +24,47 @@ static char *pIrcHelp[][15] = {
     // VIEWGREAT
     {
         "gibt die Begrüssung eines Channels aus",
-        "Mit diesem Kommando kann man nachträglich sich Begrüssung",
+        "Mit diesem Kommando kann man sich nachträglich die Begrüssung",
         "des aktuellen oder angegeben Channels ausgeben lassen.",
     },
     // HELP
     {
         "ruft die Onlinehilfe des Bots auf",
-        "Das Kommando gibt generale Informationen zum Bot und Hinweis",
-        "zur Benutzung  einzelner Kommandos",
+        "Das Kommando gibt generelle Informationen zum Bot und Hinweis",
+        "zur Benutzung einzelner Kommandos",
     },
     // VERSION
     {
         "gibt die Version aus",
-        "Damit kann man sich die  Version und Kompilierdatum des Bots",
+        "Damit kann man sich die Version und das Kompilierdatum des Bots",
         "anezeigen lassen",
     },
     // HELLO
     {     
         "legt neuen Account an",
-        "Damit wir ein neuer Account beim Bot mit dem aktuellen",
-        "Nicknamen als  Login. Dieses ist für das Einloggen von",
-        "Bedeutung. Auch solle man gleich dach nach mit !pass sein",
+        "Damit wird ein neuer Account beim Bot mit dem aktuellen",
+        "Nicknamen als  Login erzeugt. Dieses ist für das Einloggen von",
+        "Bedeutung. Auch sollte man gleich danach mit !pass sein",
         "Passwort ändern.",
     },
     // IDENT
     {
-        "indifiziert den User gegenüber dem Bot",
-        "Durch aufrufen dieses Kommando logt man sich beim Bot ein",
-        "und kann dann weitere Funktionen nutzen. Des Weiteren werden",
+        "identifiziert den User gegenüber dem Bot",
+        "Durch aufrufen dieses Kommandos loggt man sich beim Bot ein",
+        "und kann dann weitere Funktionen nutzen. Desweiteren werden",
         "die Rechte des Account in allen Channel vom bot gesetzt",
     },
 
     // Logged user
     // LOGOFF
     {
-        "auloggen beim Bot",
-        "Hier mit kann man sich manuell beim Bot ausloggen",
+        "ausloggen beim Bot",
+        "Hiermit kann man sich manuell beim Bot ausloggen",
     },
     // PASS
     {
         "ändert das Passwort des aktuellen Accounts",
-        "duDas Kommando ermöglichdas setzen unde änder des Passwortes",
+        "Das Kommando ermöglicht das setzen und ändern des Passwortes",
         "des aktuell identifizieren Accounts.",
     },
     
@@ -72,7 +72,7 @@ static char *pIrcHelp[][15] = {
     // CHANMODE
     {
         "setzt oder entfernt Modes vom Channel",
-        "Hier mit ist es möglich Rechte und Modien des aktuellen",
+        "Hiermit ist es möglich Rechte und Modi des aktuellen",
         "oder einem angebenen Channnel zu setzen oder zu löschen",
     },
     // USERLIST
@@ -86,18 +86,18 @@ static char *pIrcHelp[][15] = {
     {
         "setzt und entfernt die Rechte eines Accounts",
         "Hiermit ist es möglich die Rechte eines Account in einem Channel",
-        "zusetzen und zulöschen",
+        "zu setzen und zu löschen",
     },
     // SAY
     {
         "gibt eine Nachricht in einem Channel aus",
-        "Damit is es möglich dem Bot anzuweisen einen  Nachricht in den",
-        "Channel zuposten",
+        "Damit is es möglich, den Bot anzuweisen eine Nachricht in den",
+        "Channel zu posten",
     },
     // KICK
     {
         "wirft einen User aus einen Channel hinaus",
-        "Das Kommando ermöglicht es einen  User aus einem Channel zuwerfen",
+        "Das Kommando ermöglicht es, einen  User aus einem Channel zu werfen",
     },
     // SET_TOPIC
     {
@@ -115,7 +115,7 @@ static char *pIrcHelp[][15] = {
     {
         "gibt eine Liste von Channels",
         "Damit kann man sich einer Liste der Channels mit den gesetzten",
-        "Rechten, Topics und Begrüssung augaben lassen",
+        "Rechten, Topics und Begrüssungen ausgeben lassen",
     },
     
     // Master commands
@@ -123,26 +123,26 @@ static char *pIrcHelp[][15] = {
     {
         "startet den Bot neu",
         "Durch aufrufen diese Kommandos startet der Bot neu und",
-        "liest  die Konfigurationsdaten neu ein",
-        "WARRNING: Das funktioniert nicht  zuverlässig",
+        "liest die Konfigurationsdaten neu ein",
+        "WARRNUNG: Das funktioniert nicht zuverlässig",
     },
     // ALLSAY
     {
         "sendet eine Nachricht in alle Channel des Bots",
         "Dieses Kommando ermöglicht einen Broadcast in alle Channels",
-        "in in der Liste des Bots enthalten sind.",
+        "die in der Liste des Bots enthalten sind.",
     },
     // RMUSER
     {
         "löscht accounts",
-        "Hier drüber kann man manuell Accounts und ihre Rechte löschen.",
+        "Hierrüber kann man manuell Accounts und ihre Rechte löschen.",
     },
     // NICK
     {
         "ändert den Nickname des Bots",
         "Dieses Kommando ändert den Nickname des Bots. Dieser ist aber nur",
         "für die Laufzeit gültig. Bei einem Neustart wird wieder der",
-        "vorher Konfigurierte gesetzt",
+        "vorher konfigurierte gesetzt",
         
     },
     // DIE
@@ -165,14 +165,14 @@ static char *pIrcHelp[][15] = {
     // JOIN
     {
         "joint einem Channel",
-        "Damit kann man den Bot einem Channel join ohne das er ihne in die",
-        "Liste mit einfügt."
+        "Damit kann man den Bot einen Channel joinen lassen, ohne das er ihn in die",
+        "Liste einfügt."
     },
     // PART
     {
         "verläst einen Channel",
-        "Hier mit kann man einen Channel verlassen ohne ihn aus der Liste",
-        "zulöschen.",
+        "Hiermit kann man einen Channel verlassen ohne ihn aus der Liste",
+        "zu löschen.",
     }
 };
 #endif
