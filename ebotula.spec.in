@@ -1,5 +1,5 @@
 Name:    ebotula-devel
-Summary: ebotula - irc bot 
+Summary: ebotula - IRC bot 
 Version: @VERSION@ 
 Release: 1
 Copyright: GPL
@@ -14,7 +14,7 @@ Prefix: /usr/local
 Docdir: %{prefix}/doc
 
 %description
-Ebotula is a irc bot for general tasks in one or more channels. These
+Ebotula is an IRC bot for general tasks in one or more channels. These
 tasks are the user and channel administration. He (the bot) can save the channel
 topic and modes. Also the modes of the user are set and saved by the bot.
 
