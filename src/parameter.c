@@ -14,6 +14,7 @@
 #include <ctype.h>
 
 #include "config.h"
+#include "irc.h"
 #include "utilities.h"
 #include "dbaccess.h"
 
@@ -26,15 +27,15 @@
 void cmd_line(int argc,const char *argv[]) {
 	extern ConfType setup;
 	int i;
-	int thread_limit;
+	int tmp;
 
     
 	for (i=1;i<argc;i++) {
 	   	if (argv[i][0]==PARAMETER_CHAR) {
 			switch	(argv[i][1]) {
 			case 'v':
-				print_msg(version_msg);
-				break;
+				exit(0);
+                break;
 			case 'h':
 			case '?':
 				print_msg(help_msg);
@@ -67,7 +68,7 @@ void cmd_line(int argc,const char *argv[]) {
 				}
 				
 				// set the botname
-				if ((!strpbrk(argv[i],USER_ALLOW_CHAR)) && isalpha(argv[i][0])) {
+				if ((strpbrk(argv[i],USER_NOT_ALLOW_CHAR)) && isalpha(argv[i][0])) {
 					errno=EINVAL;
 					perror(ERR_WRONG_BOTNAME);
 					exit(errno);
@@ -100,7 +101,7 @@ void cmd_line(int argc,const char *argv[]) {
 				
 				// set port
 				if ((atoi(argv[i])<1) || (atoi(argv[i])>65535)) {
-					errno=ERANGE;
+					errno=EDOM;
 					perror(ERR_PORT_PARAMETER);
 					exit(errno);
 				}
@@ -119,13 +120,67 @@ void cmd_line(int argc,const char *argv[]) {
 				}
 				
 				// set threadlimit
-				thread_limit=atoi(argv[i]);
-				if ((thread_limit<1) || (thread_limit>MAX_THREADS_LIMIT)) {
-					errno=ERANGE;
+				tmp=atoi(argv[i]);
+				if ((tmp<1) || (tmp>MAX_THREADS_LIMIT)) {
+					errno=EDOM;
 					perror(ERR_THREAD_RANGE);
 					exit(errno);
 				}
-				setup.thread_limit=thread_limit;
+				setup.thread_limit=tmp;
+				break;
+			case 'a':
+				DEBUG("Found auto log off time option");
+											
+				if (++i>=argc) {
+					errno=EINVAL;
+					perror(ERR_MSSING_PARA);
+					exit(errno);
+				}
+				
+				// set auto log off time
+				tmp=atoi(argv[i]);
+				if (tmp<MIN_LOGOFF) {
+					errno=EDOM;
+					perror(ERR_LOGOFF_RANGE);
+					exit(errno);
+				}
+				setup.AutoLoggoff=tmp;
+				break;
+			case 'n':
+				DEBUG("Found sending delay option");
+											
+				if (++i>=argc) {
+					errno=EINVAL;
+					perror(ERR_MSSING_PARA);
+					exit(errno);
+				}
+				
+				// set sending delay 
+				tmp=atoi(argv[i]);
+				if (tmp<0) {
+					errno=EDOM;
+					perror(ERR_SENDDELAY_RANGE);
+					exit(errno);
+				}
+				setup.sendDelay=tmp;
+				break;
+			case 'k':
+				DEBUG("Found account live time option");
+											
+				if (++i>=argc) {
+					errno=EINVAL;
+					perror(ERR_MSSING_PARA);
+					exit(errno);
+				}
+				
+				// set account live time
+				tmp=atoi(argv[i]);
+				if (tmp<MIN_ALT) {
+					errno=EDOM;
+					perror(ERR_ALT_RANGE);
+					exit(errno);
+				}
+				setup.AccountLiveTime=tmp;
 				break;
 			case 'f':
 				DEBUG("Found config file option");
@@ -166,6 +221,7 @@ void cmd_line(int argc,const char *argv[]) {
 void read_config_file(void) {
 	FILE *fd;
 	extern ConfType setup;
+	int tmp;
 	char buffer[MAX_READ_BUFFER_SIZE], *c,*value,*key;
 	errno=0;
 
@@ -217,7 +273,7 @@ void read_config_file(void) {
 				setup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(setup.port,value);
 			} else if ((!strcmp(key,KEY_BOTNAME)) && (setup.botname==NULL )) {
-				if (!strpbrk(value,USER_ALLOW_CHAR)) {
+				if (strpbrk(value,USER_NOT_ALLOW_CHAR)) {
 					errno=EINVAL;
 					perror(ERR_WRONG_BOTNAME);
 					exit(errno);
@@ -230,19 +286,46 @@ void read_config_file(void) {
 				setup.realname=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(setup.realname,value);
 			} else if ((!strcmp(key,KEY_THREADLIMIT))&& (setup.thread_limit<=0)) {
-				int thread_limit=atoi(value);
-				if ((thread_limit<=0) || (thread_limit>MAX_THREADS_LIMIT)) {
-					errno=ERANGE;
+				tmp=atoi(value);
+				if ((tmp<=0) || (tmp>MAX_THREADS_LIMIT)) {
+					errno=EDOM;
 					perror(ERR_THREAD_RANGE);
 					exit(errno);
 				}	
 				// set thread limit
-				setup.thread_limit=thread_limit;
+				setup.thread_limit=tmp;
 			} else  if ((!strcmp(key,KEY_DATABASEPATH))&& (setup.database_path==NULL)) {
 				// set database path
 				setup.database_path=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(setup.database_path,value);
-            }
+            } else if ((!strcmp(key,KEY_AUTOLOGOFF))&& (setup.AutoLoggoff==MIN_LOGOFF)) {
+				tmp=atoi(value);
+				if (tmp<MIN_LOGOFF) {
+					errno=EDOM;
+					perror(ERR_LOGOFF_RANGE);
+					exit(errno);
+				}	
+				// set auto log off time
+				setup.AutoLoggoff=tmp;
+			} else if ((!strcmp(key,KEY_SENDDELAY))&& (setup.sendDelay<0)) {
+				tmp=atoi(value);
+				if (tmp<0) {
+					errno=EDOM;
+					perror(ERR_SENDDELAY_RANGE);
+					exit(errno);
+				}	
+				// set auto log off time
+				setup.sendDelay=tmp;
+			} else if ((!strcmp(key,KEY_ALT))&& (setup.AccountLiveTime==MIN_ALT)) {
+				tmp=atoi(value);
+				if (tmp<0) {
+					errno=EDOM;
+					perror(ERR_ALT_RANGE);
+					exit(errno);
+				}	
+				// set account live time
+				setup.AccountLiveTime=tmp;
+			}
 			free(value);
 			free(key);
 		}
