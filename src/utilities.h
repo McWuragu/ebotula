@@ -21,7 +21,7 @@
 
 
 
-#ifdef _DEBUG
+#ifndef NDEBUG
     #include <syslog.h>
     /** Macro for debugging messages */
     #define DEBUG(str...) syslog(LOG_DEBUG,str);

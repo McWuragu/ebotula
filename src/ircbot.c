@@ -76,7 +76,7 @@ int main(int argc,char * const argv[]) {
     // versions ausgabe
     printf(VERSIONSTR);
 
-    #ifndef _DEBUG
+    #ifdef NDEBUG
     openlog(PACKAGE,0,LOG_DAEMON);
     #else
     openlog(PACKAGE,LOG_PERROR,LOG_DAEMON);
@@ -199,7 +199,7 @@ int main(int argc,char * const argv[]) {
     signal(SIGIO,stopParser);
     signal(SIGHUP,stopParser);
 
-    #ifndef _DEBUG
+    #ifdef NDEBUG
     // make a daemon 
     daemon(true,true);
     #endif
