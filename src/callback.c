@@ -92,11 +92,67 @@ void ModeResetCb(char *pNetmask,void* data){
 }
 
 void SetBanCb(char *pNetmask,void * data){
-	DEBUG("SetBan");
+    boolean doBan;
+	char **pDataVec;
+    char *pBanmask;
+    char *pAccessKey;
+    char *pMod=NULL;
+    char *pNick;
+    char *pLogin;
+    char *pCmdNick;
+    
+
+    DEBUG("Callback for user banning");
+
+    /* get user information */
+    pDataVec=splitString((char*)data,3);
+    pBanmask=getBanmask(pNetmask);
+    pNick=getNickname(pNetmask);
+    pLogin=get_db(NICKTOUSER_DB,pNetmask);
+    pCmdNick=getNickname(get_db(USERTONICK_DB,pDataVec[0]));
+
+    /* read mods */
+    if (pLogin){
+        /* built db access key */
+        pAccessKey=(char*)malloc((strlen(pLogin)+strlen(pDataVec[1])+1)*sizeof(char));
+        sprintf(pAccessKey,"%s%s",pLogin,pDataVec[1]);
+    
+        /* read the access level of  the  user wiche want baning user */
+        if ((pMod=get_db(ACCESS_DB,pAccessKey))) {}
+        else if ((pMod=get_db(ACCESS_DB,pLogin))) {
+                
+        }
+        else pMod=NULL;
+    }
+
+    /* look for ban */
+    if (pMod==NULL) {
+        doBan=true;
+    } else if (pMod[1]=='m') {
+        doBan=false;
+    } else if (exist_db(ACCESS_DB,pDataVec[0])) {
+        /* kick by master */
+        doBan=true;
+    } else if (pMod[1]!='o'){
+        /* ban by owner */
+        doBan=true;
+    } else {
+        doBan=false;
+    }
+
+    /* try to ban */
+    if (doBan) {
+        ban(pDataVec[1],pBanmask);
+        notice(pCmdNick,MSG_BAN_OK);
+    } else {
+        notice(pCmdNick,MSG_NOT_BAN);
+    }
+
 }
 
+
 void RemoveBanCb(char *pNetmask,void * data){
-	DEBUG("GetBan");
+	DEBUG("RemoveBan");
 
 }
 
@@ -108,7 +164,7 @@ void KickCb(char *pNetmask, void *data) {
     char *pNick;
     char *pMod=NULL;
     char *pLogin;
-    char *pPos;
+    //char *pPos;
     char *pCmdNick;
     
     DEBUG("Callback for user kicking");
@@ -127,7 +183,7 @@ void KickCb(char *pNetmask, void *data) {
         pReason=(char*)ppDataPart[2];
     } else {
         pReason=(char*)malloc(strlen(MSG_DEFAULT_REASON)*sizeof(char));
-        sprintf(pReason,MSG_DEFAULT_REASON);
+        strcpy(pReason,MSG_DEFAULT_REASON);
     }
     
 
