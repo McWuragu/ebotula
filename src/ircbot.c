@@ -16,6 +16,8 @@
 #include <pthread.h>
 #include <signal.h>
 #include <syslog.h>
+#include <pwd.h>
+#include <dirent.h>
 
 
 #include <sys/types.h>
@@ -56,16 +58,54 @@ int main(int argc,char * const argv[]) {
     MsgBuf_t *pMsg;
     QueueData Command;	
     PQueue pCommandQueue;
-	
+    uid_t uid;
+    struct passwd *User;
+	char *sDirDummy;
+    DIR *pDir;
+
+    uid=geteuid();
+    User=getpwuid(uid);
+
     // init config
+    if (uid==0) {
+        // database path
+        sSetup.pDatabasePath=(char *)malloc((strlen(DATABASEDIR)+1)*sizeof(char));
+        strcpy(sSetup.pDatabasePath,DATABASEDIR);
+        
+        // config file path
+        sSetup.configfile=(char *)malloc((strlen(CONFDIR)+strlen(CONFFILE)+1)*sizeof(char));
+        sprintf(sSetup.configfile,"%s%s",CONFDIR,CONFFILE);
+    
+        // change the user
+        User=getpwnam(sSetup.sExeUser);
+        setreuid(User->pw_uid,User->pw_uid);
+        uid=User->pw_uid;
+
+    } else {
+        // built the path for the  user dir
+        sDirDummy=(char*)malloc((strlen(User->pw_dir)+strlen(DEFAULT_USER_CONFDIR)+1)*sizeof(char));
+        sprintf(sDirDummy,"%s%s",User->pw_dir,DEFAULT_USER_CONFDIR);
+
+        // create the user config dir
+        if (!(pDir=opendir(sDirDummy))) {
+            mkdir(sDirDummy,0700);
+        }
+        closedir(pDir); 
+
+        // database path
+        sSetup.pDatabasePath=(char *)malloc((strlen(sDirDummy)+strlen(DEFAULT_USER_DATABASEDIR)+1)*sizeof(char));
+        sprintf(sSetup.pDatabasePath,"%s%s",sDirDummy,DEFAULT_USER_DATABASEDIR);
+
+        // config file path
+        sSetup.configfile=(char *)malloc((strlen(sDirDummy)+strlen(CONFFILE)+1)*sizeof(char));
+        sprintf(sSetup.configfile,"%s%s",sDirDummy,CONFFILE);
+    }
+    
+    // set the other default values
     sSetup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
     strcpy(sSetup.botname,DEFAULT_BOTNAME);
-    sSetup.pDatabasePath=(char *)malloc((strlen(DATABASEDIR)+1)*sizeof(char));
-    strcpy(sSetup.pDatabasePath,DATABASEDIR);
     sSetup.realname=(char *)malloc((strlen(DEFAULT_REALNAME)+1)*sizeof(char));
     strcpy(sSetup.realname,DEFAULT_REALNAME);
-    sSetup.configfile=(char *)malloc((strlen(CONFDIR)+strlen(CONFFILE)+1)*sizeof(char));
-    sprintf(sSetup.configfile,"%s%s",CONFDIR,CONFFILE);
     sSetup.newMaster=false;
     sSetup.AccountLiveTime=MIN_ALT;
     sSetup.AutoLoggoff=MIN_LOGOFF;
@@ -74,6 +114,7 @@ int main(int argc,char * const argv[]) {
     sSetup.iSendSafeLine=DEFAULT_SEND_SAFE_LINE;
     sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
     sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
+    sSetup.sExeUser=DEFAULT_USER;
 
     
 
@@ -127,6 +168,13 @@ int main(int argc,char * const argv[]) {
         sSetup.iSendSafeDelay=sSetup.iSendDelay;
     }
 
+    
+    
+    // change the uid for root
+    if (uid==0) {
+    
+    }
+   
     DEBUG("----------------------------------------------\n");
     DEBUG("Server %s\n",sSetup.server);
     DEBUG("Port %s\n",sSetup.port);

@@ -13,11 +13,14 @@
 
 #define VERSIONSTR 	"%s v%s Built [%s - %s] (C) 2003 Steffen Laube\n",PACKAGE,VERSION,__DATE__,__TIME__
 
-#define CONFFILE 				"/ebotula/ebotula.conf"
+#define DEFAULT_USER_DATABASEDIR        "/db"
+#define DEFAULT_USER_CONFDIR            "/.ebotula"
+#define CONFFILE 				        "/ebotula.conf"
 
 #define DEFAULT_THREAD_LIMIT	3
 #define DEFAULT_REALNAME		"I'm a stupid bot"
 #define DEFAULT_BOTNAME			"Ebotula"
+#define DEFAULT_USER            "nobody"
 #define DEFAULT_PING_TIMEOUT	90
 
 #define DEFAULT_SEND_SAFE_DELAY 1750
