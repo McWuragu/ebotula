@@ -168,7 +168,7 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
     }
     buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMod)+strlen(pModParameter)+5,sizeof(char));
     sprintf(buffer,"MODE %s %s %s\r\n",pChannel,pMod,pModParameter);
-    send_direct(buffer);
+    send_line(buffer);
     free (buffer);
 }
 // #############################################################################
