@@ -178,9 +178,11 @@ void password(MsgItem_t *pMsg) {
 	        }
 
         	/* set password */
-	        replace_db(USER_DB,pLogin,pPasswd);
-        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_PASSWD));        
-	    }
+	        replace_db(USER_DB,pLogin,((pPasswd)?pPasswd:""));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_PASSWD)); 
+            if (pPasswd) free(pPasswd);
+        }
+        free(pLogin);
     }
 }
 /* #########################################################################
@@ -220,13 +222,15 @@ void logoff(MsgItem_t *pMsg,int nRemoveMode) {
                     mode(pChannel->data,"-o",pLogin);
                 }
 				free(pKey);
-				free(pChannel);	
+				free(pChannel->data);
+                free(pChannel);	
 			}
 
 			/* delete the queue */
             deleteQueue(pChannelQueue);
 			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_LOGOFF));
 		}
+        free(pLogin);
 	}
 }
 /* #########################################################################
@@ -259,7 +263,7 @@ void ident(MsgItem_t *pMsg) {
                 /* no Passwd found */
                 /* try empty pass */
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_NOT_PASS));
-                pPasswd="";
+                pPasswd=NULL;
             } else {
                 pPasswd=(char *)malloc(strlen(pPos)*sizeof(char));
                 strcpy(pPasswd,&pPos[1]);
@@ -275,7 +279,7 @@ void ident(MsgItem_t *pMsg) {
             DEBUG("Look for the account %s\n",pLogin);
         
             /* check the account */
-            if (check_db(USER_DB,pLogin,pPasswd)) {
+            if (check_db(USER_DB,pLogin,(pPasswd)?pPasswd:"")) {
                 DEBUG("User %s found\n",pLogin);
                 log_on(pMsg->pNetmask,pLogin);
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_IDENT));
@@ -290,6 +294,7 @@ void ident(MsgItem_t *pMsg) {
                 while (isfullQueue(pChannelQueue)) {
                     pChannel=popQueue(pChannelQueue);
 
+                    /* lock for the access rights */
                     if (isMaster) {
                         mode((char*)pChannel->data,"+o",pMsg->pCallingNick);
                     } else {
@@ -301,12 +306,16 @@ void ident(MsgItem_t *pMsg) {
           	            }
                        	free(pKey);
                     }
+                    free(pChannel->data);
 					free(pChannel);
                 }
 				deleteQueue(pChannelQueue);
             } else {
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
-            }    
+            }
+            free(pLogin);
+            free(pParameter);
+            if (pPasswd) free(pPasswd);
         } else {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         }
@@ -331,27 +340,26 @@ void addChannel(MsgItem_t *pMsg) {
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
          if (!strcmp(pMsg->pAccessChannel,pCmdChannel)) {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
-            return;
+        } else {
+            DEBUG("Join and  try to add the channnel %s\n",pMsg->pAccessChannel);
+
+            /* checking of channel exist */
+            if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
+            } else {
+                /* add channel */
+                channelmod=(char *)malloc(3*sizeof(char));
+                strcpy(channelmod,"\t\t");
+                add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
+            }
+        
+            /* join the channel */
+            join(pMsg->pAccessChannel);
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
         }
+        free(pCmdChannel);
     }
-
-    DEBUG("Join and  try to add the channnel %s\n",pMsg->pAccessChannel);
-
-    /* checking of channel exist */
-    if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
-    } else {
-        /* add channel */
-        channelmod=(char *)malloc(3*sizeof(char));
-        strcpy(channelmod,"\t\t");
-        add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
-    }
-
-    /* join the channel */
-    join(pMsg->pAccessChannel);
-    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
-
 }
 /* #########################################################################
    Bot comand: !rmchannel <#channel>
@@ -386,9 +394,7 @@ void rmChannel(MsgItem_t *pMsg){
    ######################################################################### */
 void joinChannel(MsgItem_t *pMsg) {
     char *pCmdChannel;
-
     
-
     if (!pMsg->pAccessChannel){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
@@ -398,15 +404,14 @@ void joinChannel(MsgItem_t *pMsg) {
         /* compare the current channel and  the channel for joining */
         if (!(strcmp(pMsg->pAccessChannel,pCmdChannel))) {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
-            return;
+        } else {
+            DEBUG("Join the channel %s\n",pMsg->pAccessChannel);
+            /* join the channel */
+            join(pMsg->pAccessChannel);
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
         }
+        free(pCmdChannel);
     }
-
-    DEBUG("Join the channel %s\n",pMsg->pAccessChannel);
-    /* join the channel */
-    join(pMsg->pAccessChannel);
-    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
-
 }
 /* #########################################################################
    Bot comand: !part <#channel>
@@ -450,13 +455,15 @@ void setNick(MsgItem_t *pMsg){
     /* read parameters */
     if (!pParameter) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
-    } else if (!NickStringCheck(pParameter)) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NICK_INVALID));
     } else {
-        nick(pParameter);
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_NICK_SET));
+        if (!NickStringCheck(pParameter)) {
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NICK_INVALID));
+        } else {
+            nick(pParameter);
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_NICK_SET));
+        }
+        free(pParameter);
     }
-
 }
 /* #########################################################################
    Bot comand: !chanlist
@@ -563,16 +570,24 @@ void setGreeting(MsgItem_t *pMsg) {
 	    pChannelData->pGreeting=getParameters(pMsg->pRawLine);
 
     
+        /* set the new greeting in the database */
 		pChannelSet=ChannelDataToStr(pChannelData);
 	    replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
-
+        free(pChannelSet);
 
     	/* message */
 	    if (!pChannelData->pGreeting) {
      	   sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RM_GREETING));
 	    } else {
-    	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_GREETING));
+    	   sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_GREETING));
 	    }
+        if (pChannelData->pModes->pKeyword) {free(pChannelData->pModes->pKeyword);}
+        if (pChannelData->pModes->pLimit) {free(pChannelData->pModes->pLimit);}
+        if (pChannelData->pGreeting) {free(pChannelData->pGreeting);}
+        if (pChannelData->pTopic) {free(pChannelData->pTopic);}
+        
+        free(pChannelData->pModes); 
+        free(pChannelData);
 	} else {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
 	}
