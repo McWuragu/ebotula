@@ -25,19 +25,18 @@ void rmDeadLogins(long lCheckTime) {
 	int i;
     
 	// get the  list
-	if ((ppLogins=list_db(TIMELOG_DB)))	{
-		for (i=0;ppLogins[i]!=NULL;i++) {
-			
-			// read time
-			pTime=get_db(TIMELOG_DB,ppLogins[i]);
-			
-			// check the time
-			if (lCheckTime>atol(pTime)) {
-				log_out(ppLogins[i]);
-                syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,ppLogins[i]);
-			}
-			free(pTime);
+	ppLogins=list_db(TIMELOG_DB);
+	for (i=0;ppLogins[i]!=NULL;i++) {
+		
+		// read time
+		pTime=get_db(TIMELOG_DB,ppLogins[i]);
+		
+		// check the time
+		if (lCheckTime>atol(pTime)) {
+			log_out(ppLogins[i]);
+			syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,ppLogins[i]);
 		}
+		free(pTime);
 	}
 
 }
@@ -98,7 +97,7 @@ void log_out(char *pLogin) {
 // ############################################################################# 
 void rmAccount(char *pLogin) {
 
-	// log off the user
+	// logoff the user
 	log_out(pLogin);
 
 	// remove the  rights
@@ -125,19 +124,16 @@ void rmAccessRights(char *pLogin){
 
 	iLoginLen=strlen(pLogin);
 	// remove access rights from the user
-    if (ppChannels) {
-		for (i=0;ppChannels[i]!=NULL;i++) {
+	for (i=0;ppChannels[i]!=NULL;i++) {
+		
+		// build  the key for access.dbf
+		pKey=malloc((strlen(ppChannels[i])+iLoginLen+1)*sizeof(char));
+		sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
+		
+		del_db(ACCESS_DB,pKey);
 			
-			// build  the key for access.dbf
-			pKey=malloc((strlen(ppChannels[i])+iLoginLen+1)*sizeof(char));
-			sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
-			
-			del_db(ACCESS_DB,pKey);
-				
-			free(pKey);
-		}
-
-    }
+		free(pKey);
+	}
 }
 // ############################################################################# 
 void rmDeadAccounts(long lCheckTime) {
@@ -145,20 +141,19 @@ void rmDeadAccounts(long lCheckTime) {
 	char *pTime;
 	int i;
     
-	// get the  list
-	if ((ppLogins=list_db(TIMELOG_DB)))	{
-		for (i=0;ppLogins[i]!=NULL;i++) {
-			
-			// read time
-			pTime=get_db(TIMELOG_DB,ppLogins[i]);
-			
-			// check the time
-			if (lCheckTime>atol(pTime)) {
-				rmAccount(ppLogins[i]);
-                syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,ppLogins[i]);
-			}
-			free(pTime);
-		}
-	}
+	ppLogins=list_db(TIMELOG_DB);
 
+	// get the  list
+	for (i=0;ppLogins[i]!=NULL;i++) {
+		
+		// read time
+		pTime=get_db(TIMELOG_DB,ppLogins[i]);
+		
+		// check the time
+		if (lCheckTime>atol(pTime)) {
+			rmAccount(ppLogins[i]);
+			syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,ppLogins[i]);
+		}
+		free(pTime);
+	}
 }
