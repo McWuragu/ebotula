@@ -14,10 +14,10 @@ dnl to build the configure script
 dnl *************************************************************
 
 AC_PREREQ(2.57)
-AC_INIT(ebotula,0.1.17,Laube.Steffe@gmx.de)
+AC_INIT(ebotula,0.1.18,Laube.Steffe@gmx.de)
 AC_CONFIG_SRCDIR([src/ircbot.c])
 AC_CONFIG_HEADER([src/config.h])
-AM_INIT_AUTOMAKE(ebotula,0.1.17)
+AM_INIT_AUTOMAKE(ebotula,0.1.18)
 
 AM_SANITY_CHECK
 
