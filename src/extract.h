@@ -10,6 +10,8 @@
 #ifndef EXTRACT_H
 #define EXTRACT_H
 
+#include "type.h"
+			 
 char *getNickname(char *pLine);
 char *getNetmask(char *pLine);
 char *getArgument(char *pLine);
@@ -17,8 +19,10 @@ char *getParameters(char *pLine);
 char *getCommand(char *pLine);
 char *getChannel(char *pLine);
 char *getAccessChannel(char *pLine);
-char *getTopic(char *pChannelData);
-char *getGreating(char *pChannelData);
-char *getMode(char *pChannelData);
+
+
+char *getTopic(char *pChannelSet);
+char *getGreating(char *pChannelSet);
+char *getChannelMode(char *pChannelSet);
 
 #endif
