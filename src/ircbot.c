@@ -41,7 +41,8 @@
 
 ConfType sSetup;	// global config structure
 int key;			// key of the message  queue
-int stop;			// singal for stop the endless loop
+boolean stop;		// singal for stop the endless loop
+boolean again;
 
 
 
@@ -49,7 +50,7 @@ pthread_mutex_t	send_mutex;			// mutex for synchronize of send command
 pthread_mutex_t	dbaccess_mutex;		// mutex for synchronize of database access
 pthread_mutex_t account_mutex;		// mutex for synchronize of accessing to the login db 
 
-int main(int argc,const char *argv[]) {
+int main(int argc,char * const argv[]) {
 	int i;
 	int msgid;
 	char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;
@@ -203,6 +204,10 @@ int main(int argc,const char *argv[]) {
 	signal(SIGTERM,stopParser);
 	signal(SIGABRT,stopParser);
 	signal(SIGQUIT,stopParser);
+	signal(SIGPIPE,stopParser);
+    signal(SIGILL,stopParser);
+	signal(SIGIO,stopParser);
+	signal(SIGHUP,stopParser);
 
 	#ifndef _DEBUG
 	// make a daemon 
@@ -223,6 +228,7 @@ int main(int argc,const char *argv[]) {
 
 	// Main execution loop
 	stop=false;
+	again=false;
 	while (!stop) {
 
 		// read line from tcp stack
@@ -286,9 +292,18 @@ int main(int argc,const char *argv[]) {
     
 	// disconnect from server
 	disconnectServer();
+    closeDatabase();
+	
     
-	closeDatabase();
-	closelog();
+	//	check for restart option
+	if (again) {
+		syslog(LOG_NOTICE,SYSLOG_RESTART);
+		closelog();
+		execv(argv[0],argv);
+	} else {
+		syslog(LOG_NOTICE,SYSLOG_STOPPED);
+		closelog();
+	}
 	return(0);
 
 }
