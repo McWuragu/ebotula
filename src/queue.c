@@ -18,7 +18,7 @@
 #include "type.h"
 #include "queue.h"
 
-// #############################################################################
+/* ############################################################################# */
 PQueue initQueue()
 {
 	PQueue pqueueInit;
@@ -34,7 +34,8 @@ PQueue initQueue()
 	/** creating Sentinel pointer **/
 	pqueueInit->sentinel=pqueueInit;
 	pqueueInit->queuetypeT=(QueueType)QUEUESENTINEL;
-	
+	/* iterator not set because Queue is empty */
+	pqueueInit->iterator=pqueueInit;	
 	/** creating rest of pointer **/
 	pqueueInit->next=pqueueInit;
 	pqueueInit->prev=pqueueInit;
@@ -52,7 +53,7 @@ PQueue initQueue()
 	return	pqueueInit;
 }
 
-// #############################################################################
+/* ############################################################################# */
 QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 {
 	/** lokal auto vars **/
@@ -125,7 +126,7 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
     pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return QUEUE_SUCCESS;
 }
-// #############################################################################
+/* ############################################################################# */
 QueueData * popQueue(PQueue pqueueIn)
 {
 	PQueue pqueueWork;
@@ -167,7 +168,7 @@ QueueData * popQueue(PQueue pqueueIn)
 	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return (QueueData *)NULL;
 }
-// #############################################################################
+/* ############################################################################# */
 int isemptyQueue(PQueue pqueueIn)
 {
     boolean ret=true;
@@ -179,12 +180,12 @@ int isemptyQueue(PQueue pqueueIn)
     pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return ret;
 }
-// #############################################################################
+/* ############################################################################# */
 int isfullQueue(PQueue pqueueIn)
 {
 	return !isemptyQueue(pqueueIn);
 }
-// #############################################################################
+/* ############################################################################# */
 QueueExeStatus deleteQueue(PQueue pqueueIn)
 {
     QueueExeStatus err;
@@ -204,7 +205,7 @@ QueueExeStatus deleteQueue(PQueue pqueueIn)
 	free(pqueueIn);
 	return QUEUE_SUCCESS;
 }
-// #############################################################################
+/* ############################################################################# */
 QueueExeStatus flushQueue(PQueue pqueueIn) {
 	QueueData *pTmp;
     QueueExeStatus err;
@@ -229,4 +230,44 @@ QueueExeStatus flushQueue(PQueue pqueueIn) {
     }
 
     return err;
+}
+/* ############################################################################# */
+QueueData * getnextitrQueue(PQueue pqueueIn)
+{
+	PQueue pqueueWork;
+	PQueue pqueueOld;
+	QueueData *queuedataElement;
+	pqueueWork=pqueueIn;
+	
+    
+    /* protect the queue access */
+	pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
+	
+    /* condition handling */
+    if (pqueueIn->sentinel->longCount<=0) {
+        pthread_cond_wait(pqueueIn->sentinel->StopThreadCond,pqueueIn->sentinel->queue_mutex);
+    }
+
+    /* check for valid Queue */
+	if (pqueueWork)
+	{
+		pqueueWork=(PQueue )pqueueWork->sentinel;
+		pqueueOld=(PQueue)pqueueWork->iterator;
+		if (pqueueWork->sentinel!=(PQueue)pqueueOld->next)
+		{
+			/** poping **/
+			pqueueOld=(PQueue)pqueueOld->next;
+			queuedataElement=(QueueData *)pqueueOld->queuedataData;
+			pqueueWork->iterator=(PQueue)pqueueOld;
+
+			
+            pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
+			return (QueueData *)queuedataElement;
+		}	
+	} else {
+		DEBUG("ERROR: popQueue() - empty Queue!\n");
+	}
+
+	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
+	return (QueueData *)NULL;
 }

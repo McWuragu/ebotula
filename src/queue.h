@@ -49,6 +49,10 @@ typedef struct tag_Queue
 	struct tag_Queue *next,*prev;
     /** pointer to the sentinel; To jump from every elment to the sentinel */
 	struct tag_Queue *sentinel; 
+    /** pointer to the iterator element; You can only jump from the sentinal 
+     * to this element 
+     * default iterator points at sentinel */
+	struct tag_Queue *iterator;
 	/** Type of Queue */
     QueueType queuetypeT;
     /** Data Elements */
@@ -85,7 +89,7 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement);
  * popping one element from Queue until Queue is empty
  *							
  * @param pqueueIn pointer to queue	
- * @Return pointer of the datum	 		
+ * @return pointer of the datum	 		
  */
 QueueData * popQueue(PQueue pqueueIn);
 
@@ -120,4 +124,11 @@ QueueExeStatus deleteQueue(PQueue pqueueIn);
  * @return 0 if Success		
  */
 QueueExeStatus flushQueue(PQueue pqueueIn);
+/**
+ * getting next parameter until sentinel
+ *
+ * @param pqueueIn pointer to queue
+ * @return pointer of the datum	 		
+ */
+ QueueData * getnextitrQueue(PQueue pqueueIn);
 #endif
