@@ -20,3 +20,5 @@ ToDo List
 - checking of all commands
 - ask for inviting in a invitei mode channel
 - remove memory leaks
+- NLS-Support
+- Plugin System
