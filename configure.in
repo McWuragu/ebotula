@@ -14,7 +14,7 @@ dnl to build the configure script
 dnl *************************************************************
 
 AC_INIT(src/ircbot.c)
-AM_INIT_AUTOMAKE(ebotula,0.1.6-dev)
+AM_INIT_AUTOMAKE(ebotula,0.1.7-dev)
 
 AM_SANITY_CHECK
 
@@ -25,7 +25,7 @@ AM_CONFIG_HEADER(src/config.h)
 
 AC_HEADER_STDC
 AC_HEADER_TIME
-AC_CHECK_HEADERS(syslog.h pthread.h sys/poll.h ctype.h string.h gdbm.h sys/ipc.h sys/msg.h sys/socket.h netdb.h netinet/in.h)
+AC_CHECK_HEADERS(syslog.h pthread.h sys/poll.h ctype.h string.h gdbm.h sys/ipc.h sys/socket.h netdb.h netinet/in.h)
 AC_C_CONST
 
 dnl ===========================
