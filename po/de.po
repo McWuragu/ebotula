@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-25 13:44+0200\n"
-"PO-Revision-Date: 2004-07-24 21:50+0200\n"
+"POT-Creation-Date: 2004-08-06 19:41+0200\n"
+"PO-Revision-Date: 2004-08-06 19:42+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -112,11 +112,12 @@ msgstr "Der Benutzer wurd vom Bot hinausgeworfen.."
 msgid "Couldn't kick this user"
 msgstr "Konnte diesen Benutzer nicht herauswerfen."
 
-#: src/callbacklist.c:82 src/callbacklist.c:135 src/irc.c:47 src/irc.c:66
-#: src/irc.c:83 src/irc.c:96 src/irc.c:121 src/irc.c:134 src/irc.c:153
-#: src/irc.c:162 src/irc.c:176 src/irc.c:189 src/irc.c:202 src/irc.c:215
-#: src/irc.c:229 src/irc.c:242 src/irc.c:255 src/irc.c:273 src/irc.c:286
-#: src/queue.c:30 src/queue.c:82 src/queue.c:111
+#: src/callbacklist.c:82 src/callbacklist.c:135 src/command.c:1484
+#: src/command.c:1493 src/irc.c:47 src/irc.c:66 src/irc.c:83 src/irc.c:96
+#: src/irc.c:121 src/irc.c:134 src/irc.c:153 src/irc.c:162 src/irc.c:176
+#: src/irc.c:189 src/irc.c:202 src/irc.c:215 src/irc.c:229 src/irc.c:242
+#: src/irc.c:255 src/irc.c:273 src/irc.c:286 src/queue.c:30 src/queue.c:82
+#: src/queue.c:111
 msgid "Couldn't allocate memory!"
 msgstr "Konnte keinen Speicher anfordern."
 
@@ -231,7 +232,7 @@ msgstr "Ungültiges Passwort"
 #: src/command.c:327 src/command.c:470 src/command.c:715 src/command.c:731
 #: src/command.c:770 src/command.c:777 src/command.c:827 src/command.c:862
 #: src/command.c:940 src/command.c:949 src/command.c:1115 src/command.c:1223
-#: src/command.c:1469
+#: src/command.c:1470
 msgid "Couldn't found regulare parameters."
 msgstr "Konnte keine gültigen Parameter finden."
 
@@ -460,6 +461,14 @@ msgstr "Ende der Kontoliste."
 #: src/command.c:1387
 msgid "Create the accountlist for a owner"
 msgstr "Erzeuge eine Kontoliste für einen Owner"
+
+#: src/command.c:1505
+msgid "Can't invite myself."
+msgstr "Kann mich nicht selbst einladen."
+
+#: src/command.c:1509
+msgid "The bot has invite the user to the channel."
+msgstr "Der Bot hat den Benutzer in den Channel eingeladen."
 
 #: src/dbaccess.c:57
 msgid "Initialization of the database"
@@ -940,7 +949,7 @@ msgstr "Datei ist offen."
 msgid "Found config line %s"
 msgstr "Konfigurationszeile %s gefunden"
 
-#: src/parameter.c:487
+#: src/parameter.c:488
 msgid ""
 "Create a new master account\n"
 "\n"
@@ -948,19 +957,19 @@ msgstr ""
 "Anlegen eines neuen Master-Kontos \n"
 "\n"
 
-#: src/parameter.c:488
+#: src/parameter.c:489
 msgid "Type the login: "
 msgstr "Eingabe des Logins: "
 
-#: src/parameter.c:496 src/parameter.c:531
+#: src/parameter.c:497 src/parameter.c:532
 msgid "Forbidden characters used.\n"
 msgstr "Untersage Zeichen benutzt.\n"
 
-#: src/parameter.c:514
+#: src/parameter.c:515
 msgid "Enter the password: "
 msgstr "Eingabe des Passworts: "
 
-#: src/parameter.c:516
+#: src/parameter.c:517
 msgid ""
 "\n"
 "Reenter the password: "
@@ -968,16 +977,16 @@ msgstr ""
 "\n"
 "Wiederholung des Passworts: "
 
-#: src/parameter.c:528
+#: src/parameter.c:529
 msgid "Typing error... passwords not equal\n"
 msgstr "Schreibfehler...Passwörter ist nicht identisch.\n"
 
-#: src/parameter.c:539
+#: src/parameter.c:540
 #, c-format
 msgid "A account %s already exists."
 msgstr "Ein Konto %s existiert schon."
 
-#: src/parameter.c:547
+#: src/parameter.c:548
 msgid "Couldn't set this account to master."
 msgstr "Konnte das Konto nicht auf Master setzen."
 
