@@ -1,5 +1,2 @@
-- The bot isn't complete protect for the kicking becaus of exess flooding
-- The bot can't join a keyword  protected channel
-- The bot don't join a channel after the  inviting from a other user
-- restart at  root not  realy work
-- memory leaks
+For bugs see the bug tracker on:
+http://lux.fh-lausitz.de/~slaube/buglist/
