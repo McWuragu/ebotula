@@ -24,7 +24,7 @@
 #define CHECK_EXIST(_db,__key)			if (exist_db(_db,__key)){return false;}
 #define CHECK_NO_EXIST(_db,__key)		if (!exist_db(_db,__key)){return false;}
 
-void init_database(void);
+void initDatabases(void);
 void closeDatabase(void);
 
 

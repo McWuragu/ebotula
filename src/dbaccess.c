@@ -28,7 +28,7 @@ GDBM_FILE dbf_banlist;
 GDBM_FILE dbf_timelog;
 
 // ############################################################################# 
-void init_database(void) {
+void initDatabases(void) {
 	extern ConfType	sSetup;
 
 	char *user,*channel,*access,*nicktouser,*usertonick,*banlist,*timelog;
@@ -61,7 +61,7 @@ void init_database(void) {
 	dbf_timelog=gdbm_open(timelog,512,GDBM_WRCREAT,0600,NULL);
 	
 	if (!dbf_user || !dbf_channel || !dbf_usertonick || !dbf_nicktouser || !dbf_access || !dbf_banlist || !dbf_timelog) {
-		errno=EBUSY;
+		//errno=EBUSY;
 		perror(SYSLOG_DATABASE_ERR);
 		exit(errno);
 		syslog(LOG_ERR,SYSLOG_DATABASE_ERR);
@@ -289,7 +289,7 @@ char * get_db(int db,char *_key){
 }
 // ############################################################################# 
 char ** list_db(int db){
-	char ** channellist;
+	char **ppList;
 	GDBM_FILE dbf;
 	datum key,nextkey;
 	unsigned int count=0,i;
@@ -297,7 +297,9 @@ char ** list_db(int db){
 
 	// get the database handle
 	if (!(dbf=get_dbf(db))) {
-		return NULL;
+		ppList=malloc(sizeof(char *));
+		ppList[0]=NULL;
+		return ppList;
 	}
 	
 	pthread_mutex_lock(&dbaccess_mutex);
@@ -322,16 +324,16 @@ char ** list_db(int db){
 
 
 	// allocat the memory and set  end mark
-	channellist=(char **)malloc((count+1)*sizeof(char *));
-	channellist[count]=NULL;
+	ppList=(char **)malloc((count+1)*sizeof(char *));
+	ppList[count]=NULL;
 
 	pthread_mutex_lock(&dbaccess_mutex);
 	key=gdbm_firstkey(dbf);
 	pthread_mutex_unlock(&dbaccess_mutex);
 
 	for (i=0;i<count;i++) {
-		channellist[i]=(char *)malloc(key.dsize*sizeof(char));
-		strcpy(channellist[i],key.dptr);
+		ppList[i]=(char *)malloc(key.dsize*sizeof(char));
+		strcpy(ppList[i],key.dptr);
 		
 		pthread_mutex_lock(&dbaccess_mutex);
 		nextkey=gdbm_nextkey(dbf,key);
@@ -341,6 +343,6 @@ char ** list_db(int db){
 		key=nextkey;
 
 	}
-	return channellist;
+	return ppList;
 }
 
