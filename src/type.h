@@ -89,7 +89,8 @@ typedef enum CmdEnum {
 	CMD_VIEWGREAT,
 	CMD_USERLIST,
 	CMD_ALLSAY,
-	CMD_CHANMODE
+	CMD_CHANMODE,
+	CMD_RESTART
 }CmdType;
 
 /// This  enum is  used as index for value pModeStr from the struct ChannelModeStruct
