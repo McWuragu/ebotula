@@ -77,6 +77,19 @@ void ComandLineParser(int argc,char *const argv[]) {
                 strcpy(sSetup.botname,argv[i]);
                 
                 break;
+            case 'u':
+                DEBUG("Found execution user option\n");
+                if (++i>=argc) {
+                    errno=EINVAL;
+                    perror(getMsgString(ERR_MISSING_PARAM));
+                    exit(errno);
+                }
+                
+                // set the user
+                sSetup.sExeUser=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+                strcpy(sSetup.sExeUser,argv[i]);
+                
+                break;
             case 'r':
                 DEBUG("Found realname option\n");
                 if (++i>=argc) {
