@@ -211,7 +211,7 @@ int main(int argc,const char *argv[]) {
 	#endif
 	
 	// create the threads
-	pthread_create(&timeThread,NULL,synchron,NULL);
+	pthread_create(&timeThread,NULL,TimingThread,NULL);
 	threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
 	for (i=0;i<sSetup.thread_limit;i++) {
 		pthread_create(&threads[i],NULL,ComandExecutionThread,NULL);
