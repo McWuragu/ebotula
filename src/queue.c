@@ -111,22 +111,21 @@ int pushQueue(PQueue *pqueueIn, QueueData queuedataElement)
  ** Function: 		popQueue			**
  ** Parameters: 	PQueue *pqueueIn  	   	**
  **				Pointer to Queue	**
- **			QueueData *queuedataElement	** 		
- ** Return:		int STATUS			**
+ ** Return:		QueueData *queuedataElement	** 		
  **				0 if Success		**
  ** Description:	poping 1 element from Queue 	**
  **			until Queue is empty		**
  **							**/
-int popQueue(PQueue *pqueueIn, QueueData *queuedataElement)
+QueueData * popQueue(PQueue *pqueueIn)
 {
 	PQueue pqueueWork,pqueueOld;
-	
+	QueueData *queuedataElement;
 	pqueueWork=(PQueue)*pqueueIn;
 	/** check for valid Queue **/
 	if (pqueueWork==NULL)
 	{
 		DEBUG(" ERROR: popQueue() - empty Queue!\n");
-		return QUEUE_NULL_POINTER_AS_IN_PARAMETER;
+		return NULL;
 	}
 	pqueueWork=(PQueue )pqueueWork->sentinel;
 	if (pqueueWork->sentinel->prev!=(PQueue)pqueueWork->sentinel)
@@ -137,14 +136,15 @@ int popQueue(PQueue *pqueueIn, QueueData *queuedataElement)
 		pqueueWork->prev=(PQueue )pqueueOld->prev;
 		pqueueWork->prev->next=(PQueue )pqueueWork->sentinel;
 		pqueueWork->sentinel->longCount--;
-		free(pqueueOld);		
+		free(pqueueOld);
+		return (QueueData *)queuedataElement;
 	} 
 	else
 	{
 		/** nothing to pop empty Queue **/
-		queuedataElement=NULL;
+		return (QueueData *)NULL;
 	}
-	return QUEUE_SUCCESS;
+	return (QueueData *)NULL;
 }
 /**							**
  ** Function:		isemptyQueue			**
@@ -191,14 +191,14 @@ int isfullQueue(PQueue *pqueueIn)
 int deleteQueue(PQueue *pqueueIn)
 {
 	PQueue pqueueWork;
-	QueueData data;	
+	
 	pqueueWork=(PQueue)*pqueueIn;
 	/** do it while something is in the queue **/
 	if (pqueueWork!=NULL)
 	{
 		while(isfullQueue(&pqueueWork))
 		{
-			if (popQueue(&pqueueWork,&data))
+			if (popQueue(&pqueueWork)!=NULL)
 			{
 				return QUEUE_NULL_POINTER_AS_IN_PARAMETER;
 

@@ -55,15 +55,13 @@ int pushQueue(PQueue *pqueueIn, QueueData queuedataElement);
 
 /**							**
 ** Function: 		popQueue			**
-** Parameters: 	PQueue *pqueueIn  	   	**
+** Parameters: 	PQueue *pqueueIn  	   		**
 **				Pointer to Queue	**
-**			QueueData *queuedataElement	** 		
-** Return:		int STATUS			**
-**				0 if Success		**
-** Description:	poping 1 element from Queue 	**
+** Return:		QueueData *queuedataElement	** 		
+** Description:	poping 1 element from Queue 		**
 **			until Queue is empty		**
 **							**/
-int popQueue(PQueue *pqueueIn, QueueData *queuedataElement);
+QueueData * popQueue(PQueue *pqueueIn);
 /**							**
 ** Function: 		isemptyQueue			**
 ** Parameters: 	PQueue *pqueueIn	  	   	**
