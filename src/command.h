@@ -26,7 +26,7 @@ void channel_rm(char *line);
 void join_channel(char *line);
 void part_channel(char *line);
 void die(char *line);
-void change_nick(char *line);
+void set_nick(char *line);
 void channel_list(char *line);
 void setGreating(char *line);
 void setTopic(char *line);
@@ -36,6 +36,7 @@ void say(char *line);
 void kickuser(char *line);
 void usermode(char *line);
 void chanmode(char *line);
+void nickchg(char *line);
 
 boolean log_on(char *nick,char *login);
 #endif

@@ -402,7 +402,7 @@ void die(char *line) {
 // ######################################################################### 
 // Bot comand: !nick nickname
 // ######################################################################### 
-void change_nick(char *line){
+void set_nick(char *line){
 	char *parameter;
 	char *_nick;
 
@@ -456,7 +456,7 @@ void channel_list(char *line){
 // Bot comand: !version
 // ######################################################################### 
 void version(char *line) {
-    char str[64];
+    char str[256];
 	// creat Versions String
     sprintf(str,VERSIONSTR);
 	strcat(str,"\r\n");
@@ -826,7 +826,10 @@ void usermode(char *line){
 	sprintf(key,"%s%s",login,channel);
 
 	// get the  old mods from the  access db
-	oldmods=get_db(ACCESS_DB,key);
+	if (!(oldmods=get_db(ACCESS_DB,key))) {
+		oldmods=(char *)malloc(sizeof(char));
+		*oldmods='\0';
+	}
 
 	// add or remove the mods
 	len=strlen(mods);
@@ -867,7 +870,28 @@ void usermode(char *line){
 // ######################################################################### 
 void chanmode(char *line) {
 }
+// ######################################################################### 
+// Event handler: NICK
+// ######################################################################### 
+void nickchg(char *line) {
+	char *nick;
+	char *login;
+	char *newnick;
 
+	nick=getNickname(line);
+	login=get_db(NICKTOUSER_DB,nick);
+
+	newnick=strstr(line," :");
+	newnick+=2;
+    strtok(newnick,"\r");
+
+	del_db(NICKTOUSER_DB,nick);
+	add_db(NICKTOUSER_DB,newnick,login);
+	replace_db(USERTONICK_DB,login,newnick);
+
+	DEBUG("Changethe nick \"%s\" to \"%s\"",nick,newnick);
+
+}
 // ############################################################################# 
 boolean log_on(char *nick,char *login) {
 	extern pthread_mutex_t account_mutex;
@@ -899,3 +923,4 @@ boolean log_on(char *nick,char *login) {
 	}
 	return true;
 }
+
