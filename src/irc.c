@@ -147,7 +147,7 @@ void ban(char *pChannel,char *pMask){
     char *buffer;
     buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6,sizeof(char));
     sprintf(buffer,"MODE %s +b %s\r\n",pChannel,pMask);
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -155,7 +155,7 @@ void deban(char *pChannel,char *pMask){
     char *buffer;
     buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6,sizeof(char));
     sprintf(buffer,"MODE %s -b %s\r\n",pChannel,pMask);
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -168,7 +168,7 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
     }
     buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMod)+strlen(pModParameter)+5,sizeof(char));
     sprintf(buffer,"MODE %s %s %s\r\n",pChannel,pMod,pModParameter);
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
