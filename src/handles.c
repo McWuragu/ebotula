@@ -137,28 +137,28 @@ void hSetModUser(char *pLine) {
         if (strcmp(pNick,pTmpBotName)) {
             pNetmask=getNetmask(pLine);
             if (pNetmask) {
+                
                 if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
             	    DEBUG("Set the mod for Account %s with nickname %s\n",pLogin,pNick);
         
-                    if (!(pChannel=getAccessChannel(pLine)))
-                        return;
-        
-                	// build key for access.dbf
-                    pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
-        	        sprintf(pKey,"%s%s",pLogin,pChannel);
-           	        
-        			// read  the  mod
-               	    if ((pMod=get_db(ACCESS_DB,pKey))) {
-                	    // set the mod  for this nick
-               	       	mode(pChannel,pMod,pNick);
-                        free(pMod);
-        	        } else if (exist_db(ACCESS_DB,pLogin)) {
-           		        mode(pChannel,"+o",pNick);
-               		}
-        
-                   	free(pChannel);
-                    free(pKey);
-        
+                    if ((pChannel=getAccessChannel(pLine))) {
+                    	// build key for access.dbf
+                        pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
+            	        sprintf(pKey,"%s%s",pLogin,pChannel);
+               	        
+            			// read  the  mod
+                   	    if ((pMod=get_db(ACCESS_DB,pKey))) {
+                    	    // set the mod  for this nick
+                   	       	mode(pChannel,pMod,pNick);
+                            free(pMod);
+            	        } else if (exist_db(ACCESS_DB,pLogin)) {
+               		        mode(pChannel,"+o",pNick);
+                   		}
+            
+                       	free(pChannel);
+                        free(pKey);
+                    }
+                    free (pLogin);
                 }
                 free(pNetmask);
             }
@@ -193,7 +193,8 @@ void hResetModes(char *pLine) {
     
     pChannel=getFirstPart(pRest,&pRest);
     pMode=getFirstPart(pRest,&pRest);
-    pNick=getFirstPart(pRest,&pRest);;
+    pNick=getFirstPart(pRest,&pRest);
+    StrToLower(pNick);
     free(pRest);
     
     // extract  the nick
@@ -210,9 +211,9 @@ void hResetModes(char *pLine) {
             if (pMode[1]=='o' || pMode[1]=='v') {
               
                 // check of bot new mods or  other user
-                if (!strcmp(pNick,pTmpBotName)) {
+                if (strcmp(pNick,pTmpBotName)==0) {
                     DEBUG("Bot get new mods\n");
-                // mode set for the bot from other user of operator
+                    // mode set for the bot from other user of operator
                     // then initiallize this  channel
                     if (strcmp(pMode,"+o")==0) {
                         channelInit(pChannel);
@@ -250,16 +251,7 @@ void hResetModes(char *pLine) {
                 mode(pChannel,pPos,NULL);
                 DEBUG("Reset the modes from the channel %s",pChannel);
             }
-        } else if (strcmp(pAccessNick,pTmpBotName)!=0) {
-            DEBUG("Bot get new mods\n");
-            // mode set for the bot from other user of operator
-            // then initiallize this  channel
-            if (strcmp(pMode,"+o")==0) {
-                channelInit(pChannel);
-            } else {
-                privmsg(pChannel,getMsgString(INFO_NEED_OP));
-            }
-        }
+        } 
         free(pTmpBotName);
         free(pAccessNick);
     }

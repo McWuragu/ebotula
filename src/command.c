@@ -469,10 +469,11 @@ void setNick(MsgItem_t *pMsg){
         if (!NickStringCheck(pParameter)) {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NICK_INVALID));
         } else {
+            /* set the nickname for the bot on the irc */
             nick(pParameter);
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_NICK_SET));
 
-            /* set  the new  nick name as default */
+            /* set  the new  nickname in the configuration struct*/
             free(sSetup.pBotname);
             sSetup.pBotname=(char*)malloc((strlen(pParameter)+1)*sizeof(char));
             strcpy(sSetup.pBotname,pParameter);
@@ -572,43 +573,41 @@ void setGreeting(MsgItem_t *pMsg) {
 
     if (!pMsg->pAccessChannel){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
-        return;
-    }
-
-    DEBUG("Greeting seting for %s\n",pMsg->pAccessChannel);
-
-
-    /* check of  existenz of the channel */
-    if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
-	    StrToChannelData(pChannelSet,&sChannelData);
-    	free(pChannelSet);
-	    
-		/* remove old greeting */
-		if (sChannelData.pGreeting) {
-    	    free(sChannelData.pGreeting);
-	    }
-	    sChannelData.pGreeting=getParameters(pMsg->pRawLine);
-
-    
-        /* set the new greeting in the database */
-		pChannelSet=ChannelDataToStr(&sChannelData);
-	    replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
-        free(pChannelSet);
-
-    	/* message */
-	    if (!sChannelData.pGreeting) {
-     	   sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RM_GREETING));
-	    } else {
-    	   sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_GREETING));
-	    }
+    } else {
+        DEBUG("Greeting seting for %s\n",pMsg->pAccessChannel);
         
-        free(sChannelData.sModes.pKeyword);
-        free(sChannelData.sModes.pLimit);
-        free(sChannelData.pGreeting);
-        free(sChannelData.pTopic);
-	} else {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
-	}
+        /* check of  existenz of the channel */
+        if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
+            StrToChannelData(pChannelSet,&sChannelData);
+            free(pChannelSet);
+            
+            /* remove old greeting */
+            if (sChannelData.pGreeting) {
+                free(sChannelData.pGreeting);
+            }
+            sChannelData.pGreeting=getParameters(pMsg->pRawLine);
+        
+        
+            /* set the new greeting in the database */
+            pChannelSet=ChannelDataToStr(&sChannelData);
+            replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
+            free(pChannelSet);
+        
+            /* message */
+            if (!sChannelData.pGreeting) {
+               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RM_GREETING));
+            } else {
+               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_GREETING));
+            }
+            
+            free(sChannelData.sModes.pKeyword);
+            free(sChannelData.sModes.pLimit);
+            free(sChannelData.pGreeting);
+            free(sChannelData.pTopic);
+        } else {
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        }
+    }
 }
 /* #########################################################################
    Bot comand: !topic <#channel> <topic>
@@ -622,16 +621,10 @@ void setTopic(MsgItem_t *pMsg) {
     
     if (!pMsg->pAccessChannel) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
-        return;
-    }
-
-    DEBUG("Topic seting for %s\n",pMsg->pAccessChannel);
-    
-
-    if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
-
-	    StrToChannelData(pChannelSet,&sChannelData);
-    	free(pChannelSet);
+    } else if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
+        DEBUG("Topic seting for %s\n",pMsg->pAccessChannel);
+	    
+        StrToChannelData(pChannelSet,&sChannelData);
 
 		/* remove old topic */
         if (sChannelData.pTopic) {
@@ -639,9 +632,13 @@ void setTopic(MsgItem_t *pMsg) {
         }
         sChannelData.pTopic=getParameters(pMsg->pRawLine);
 
+        /* replace the topic in the  database */
+        free(pChannelSet);
 	    pChannelSet=ChannelDataToStr(&sChannelData);
     	replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
 
+
+	    topic(pMsg->pAccessChannel,sChannelData.pTopic);
 
 	    /* message */
     	if (!sChannelData.pTopic) {
@@ -650,7 +647,12 @@ void setTopic(MsgItem_t *pMsg) {
         	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_TOPIC));
     	}
 
-	    topic(pMsg->pAccessChannel,sChannelData.pTopic);
+        free(pChannelSet);
+        free(sChannelData.sModes.pKeyword);
+        free(sChannelData.sModes.pLimit);
+        free(sChannelData.pGreeting);
+        free(sChannelData.pTopic);
+
 	} else {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
 	}
@@ -672,20 +674,17 @@ void greeting(MsgItem_t *pMsg) {
 
         /* only greeting  send  to other user */
         if (strcmp(pMsg->pCallingNick,pTmpBotName)) {
-            
-            if (!pMsg->pAccessChannel){
-                return;
+            if (pMsg->pAccessChannel){
+                DEBUG("Greeting for %s\n",pMsg->pAccessChannel);
+        
+                if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
+                    if ((greeting=getGreeting(pChannelSet))) {
+                        sendMsg(NoticeMode,pMsg->pCallingNick,greeting);
+                        free(greeting);
+                    }
+                    free(pChannelSet);
+                }
             }
-    
-            DEBUG("Greeting for %s\n",pMsg->pAccessChannel);
-    
-            if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
-        	    if ((greeting=getGreeting(pChannelSet))) {
-                	sendMsg(NoticeMode,pMsg->pCallingNick,greeting);
-                    free(greeting);
-            	}
-                free(pChannelSet);
-    		}
         }
         free (pTmpBotName);
     }
@@ -1093,6 +1092,7 @@ void usermode(MsgItem_t *pMsg){
 void chanmode(MsgItem_t *pMsg) {
     char *pChannelSet;
     char *pParameters;
+    char *pNewModeStr;
 
     int i;
 
@@ -1102,84 +1102,103 @@ void chanmode(MsgItem_t *pMsg) {
 
     if (!pMsg->pAccessChannel) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
-        return;
-    }
-    
-    if(!(pParameters=getParameters(pMsg->pRawLine))) {
+    } else if(!(pParameters=getParameters(pMsg->pRawLine))) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
-        return;
-    }
-
-
-    /* read the old channel parameters */
-    
-    if (pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-        StrToChannelData(pChannelSet,&sChannelData);
-
-	    /* read the new channel parameters */
-	    StrToChannelMode(pParameters,&sNewMode);
-    	DEBUG("Found the new channel modes \"%s\"\n",ChannelModeToStr(&sNewMode));
-
-	    DEBUG("Build the new modes for the channel %s\n",pMsg->pAccessChannel);
-    	/* build the new channel parameters */
-	    for (i=1;i<MAX_MODES;i++) {
-    	    if (sNewMode.pModeStr[MOD_TYPE]=='+') {
-        	    /* add  the new mode in the sChannelData */
-            	if (sNewMode.pModeStr[i]!=' ') {
-                	/* set the new flag */
-	                sChannelData.sModes.pModeStr[i]=sNewMode.pModeStr[i];
-	
-    	            /* set keyword and limit */
-        	        if (sNewMode.pModeStr[i]=='k') {
-            	        free(sChannelData.sModes.pKeyword);
-                	    sChannelData.sModes.pKeyword=(char*)malloc((strlen(sNewMode.pKeyword)+1)*sizeof(char));
-                    	strcpy(sChannelData.sModes.pKeyword,sNewMode.pKeyword);
-	                } else if (sNewMode.pModeStr[i]=='l') {
-    	                free(sChannelData.sModes.pLimit);
-        	            sChannelData.sModes.pLimit=(char*)malloc((strlen(sNewMode.pLimit)+1)*sizeof(char));
-            	        strcpy(sChannelData.sModes.pLimit,sNewMode.pLimit);
-                	}
-	            }
-
-    	    } else if (sNewMode.pModeStr[MOD_TYPE]=='-') {
-        	    /* remove  flags from the pChanneldata */
-            	if (sNewMode.pModeStr[i]!=' ') {
-
-	                /* remove the  mode flag */
-    	            sChannelData.sModes.pModeStr[i]=' ';
-
-        	        /* remove keyword and limit */
-            	    if (sChannelData.sModes.pModeStr[i]=='k') {
-                	    sChannelData.sModes.pKeyword[0]='\0';
-	                } else if (sChannelData.sModes.pModeStr[i]=='l') {
-    	                sChannelData.sModes.pLimit[0]='\0';
-        	        }
-            	}
-
-	        }
-    	}
-
-
-	    /* check the exit  of channell modes */
-    	/* set or remove the leading plus */
-	    if (strpbrk(sChannelData.sModes.pModeStr,CHANNEL_MODES)) {
-    	    sChannelData.sModes.pModeStr[0]='+';
-	    } else {
-    	    sChannelData.sModes.pModeStr[0]=' ';
-	    }
-
-    	DEBUG("Write the new modes channel \"%s\"\n",ChannelModeToStr(&(sChannelData.sModes)))
-	    /* set the new mode in database */
-    	free(pChannelSet);
-	    pChannelSet=ChannelDataToStr(&sChannelData);
-    	replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
-
-
-	    DEBUG("Set the new channel modes\n")
-    	/* set the mods */
-	    mode(pMsg->pAccessChannel,ChannelModeToStr(&sNewMode),NULL);
     } else {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        /* read the old channel parameters */
+        
+        if (pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel)) {
+            StrToChannelData(pChannelSet,&sChannelData);
+    
+    	    /* read the new channel parameters */
+    	    StrToChannelMode(pParameters,&sNewMode);
+        	DEBUG("Found the new channel modes \"%s\"\n",ChannelModeToStr(&sNewMode));
+    
+    	    DEBUG("Build the new modes for the channel %s\n",pMsg->pAccessChannel);
+        	/* build the new channel parameters */
+    	    for (i=1;i<MAX_MODES;i++) {
+        	    if (sNewMode.pModeStr[MOD_TYPE]=='+') {
+            	    /* add  the new mode in the sChannelData */
+                	if (sNewMode.pModeStr[i]!=' ') {
+                    	/* set the new flag */
+    	                sChannelData.sModes.pModeStr[i]=sNewMode.pModeStr[i];
+    	
+        	            /* set keyword and limit */
+            	        if (sNewMode.pModeStr[i]=='k' && sNewMode.pKeyword) {
+                	        if (sChannelData.sModes.pKeyword){
+                                free(sChannelData.sModes.pKeyword);
+                            }
+    
+                    	    sChannelData.sModes.pKeyword=(char*)malloc((strlen(sNewMode.pKeyword)+1)*sizeof(char));
+                        	strcpy(sChannelData.sModes.pKeyword,sNewMode.pKeyword);
+    	                } else if (sNewMode.pModeStr[i]=='l' && sNewMode.pLimit) {
+        	                if (sChannelData.sModes.pLimit) {
+                                free(sChannelData.sModes.pLimit);
+                            }
+    
+            	            sChannelData.sModes.pLimit=(char*)malloc((strlen(sNewMode.pLimit)+1)*sizeof(char));
+                	        strcpy(sChannelData.sModes.pLimit,sNewMode.pLimit);
+                    	}
+    	            }
+    
+        	    } else if (sNewMode.pModeStr[MOD_TYPE]=='-') {
+            	    /* remove  flags from the pChanneldata */
+                	if (sNewMode.pModeStr[i]!=' ') {
+    
+    	                /* remove the  mode flag */
+        	            sChannelData.sModes.pModeStr[i]=' ';
+    
+            	        /* remove keyword and limit */
+                	    if (sChannelData.sModes.pModeStr[i]=='k') {
+                    	    if (sChannelData.sModes.pKeyword){
+                                free(sChannelData.sModes.pKeyword);
+                            }
+    
+                            sChannelData.sModes.pKeyword=NULL;
+    	                } else if (sChannelData.sModes.pModeStr[i]=='l') {
+        	                if (sChannelData.sModes.pLimit) {
+                                free(sChannelData.sModes.pLimit);
+                            }
+                            
+                            sChannelData.sModes.pLimit=NULL;
+            	        }
+                	}
+    
+    	        }
+    
+        	}
+    
+    
+    	    /* check the exit  of channell modes */
+        	/* set or remove the leading plus */
+    	    if (strpbrk(sChannelData.sModes.pModeStr,CHANNEL_MODES)) {
+        	    sChannelData.sModes.pModeStr[0]='+';
+    	    } else {
+        	    sChannelData.sModes.pModeStr[0]=' ';
+    	    }
+    
+        	DEBUG("Write the new modes channel \"%s\"\n",ChannelModeToStr(&(sChannelData.sModes)))
+    	    /* set the new mode in database */
+        	free(pChannelSet);
+    	    pChannelSet=ChannelDataToStr(&sChannelData);
+        	replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
+  
+
+    
+        	/* set the mods */
+    	    DEBUG("Set the new channel modes\n")
+            pNewModeStr=ChannelModeToStr(&sNewMode);
+    	    mode(pMsg->pAccessChannel,pNewModeStr,NULL);
+            free(pNewModeStr);
+
+            free(sChannelData.pTopic);
+            free(sChannelData.pGreeting);
+            free(sChannelData.sModes.pKeyword);
+            free(sChannelData.sModes.pLimit);
+        } else {
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        }
+        free(pParameters);
     }
 }
 /* #########################################################################

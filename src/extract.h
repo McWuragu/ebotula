@@ -33,9 +33,9 @@ char *getChannel(char const *pLine);
 char *getAccessChannel(char const *pLine);
 AnswerMode_t getAnswerMode(char const *pLine);
 
-char *getTopic(char const *pLine);
-char *getGreeting(char const *pLine);
-char *getChannelMode(char const *pLine);
+char *getTopic(char const *pChannelSet);
+char *getGreeting(char const *pChannelSet);
+char *getChannelMode(char const *pChannelSet);
 /**
  * This functions gets the Banmask from a Netmask
  *

@@ -103,20 +103,25 @@ void StrToLower(char *pStr) {
 // ############################################################################# 
 char *ChannelModeToStr(ChannelMode_t *pMode){
     char *pModeStr;
+    int nStrSize;
 
-    pModeStr=malloc((MAX_MODES+strlen(pMode->pKeyword)+strlen(pMode->pLimit)+4)*sizeof(char));
+    /* calcuate the maximal length of the string of the channel modes line */
+    nStrSize=MAX_MODES+4;
+    if (pMode->pKeyword) {nStrSize+=strlen(pMode->pKeyword);}
+    if (pMode->pLimit) {nStrSize+=strlen(pMode->pLimit);}
+
+    pModeStr=malloc(nStrSize*sizeof(char));
     strcpy(pModeStr,pMode->pModeStr);
     clearspace(pModeStr);
 
-
     // add the parameter for +k and/or +l 
     // the order is: keyword is first then come limit
-    if (strchr(pModeStr,'k')) {
+    if (strchr(pModeStr,'k') && pMode->pKeyword) {
         strcat(pModeStr," ");
         strcat(pModeStr,pMode->pKeyword);
     }
 
-    if (strchr(pModeStr,'l')) {
+    if (strchr(pModeStr,'l') && pMode->pLimit) {
         strcat(pModeStr," ");
         strcat(pModeStr,pMode->pLimit);
     }
@@ -134,12 +139,10 @@ void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
     if (!pMode) {return;}
 
     // init  the struct
-    pMode->pKeyword=(char*)malloc(sizeof(char));
-    pMode->pLimit=(char*)malloc(sizeof(char));
+    pMode->pKeyword=NULL;
+    pMode->pLimit=NULL;
 
     strcpy(pMode->pModeStr,"            ");
-    strcpy(pMode->pKeyword,"");
-    strcpy(pMode->pLimit,"");
 
     // split the mode line in three parts
     pPos=pModeStr;
@@ -173,14 +176,12 @@ void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
                 break;
             case 'k':
                 pMode->pModeStr[MOD_KEYWORD]='k';
-                free(pMode->pKeyword);
                 pMode->pKeyword=(char*)malloc((strlen(ppArgv[j])+1)*sizeof(char));
                 strcpy(pMode->pKeyword,ppArgv[j]);
                 j++;
                 break;
             case 'l':
                 pMode->pModeStr[MOD_LIMIT]='l';
-                free(pMode->pLimit);
 
                 pMode->pLimit=(char*)malloc((strlen(ppArgv[j])+1)*sizeof(char));
                 strcpy(pMode->pLimit,ppArgv[j]);
