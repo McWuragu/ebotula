@@ -1,3 +1,12 @@
+/*************************************************************
+*
+* This is a part of ebotula.
+* It is distributed under the GNU General Public License
+* See the file COPYING for details.
+*
+* (c)2003 Steffen Laube <realebula@gmx.de>
+*************************************************************/
+
 
 #include"dbaccess.h"
 #include"irc.h"
@@ -20,20 +29,25 @@ void destroyCallbackItem(CallbackItem_t *data)
 {
       /** destroy all sub-element of CallbackIten_t **/
         free(data->nickname);
+        free(data->data);
         free(data);
         return;
 }
 
 
-void ModeResetCb(char *pLine){
+void ModeResetCb(char *pNetmask,void* data){
 	DEBUG("ResetMode");
 }
 
-void SetBanCb(char *pLine){
+void SetBanCb(char *pNetmask,void * data){
 	DEBUG("SetBan");
 }
 
-void GetBanCb(char *pLine){
+void GetBanCb(char *pNetmask,void * data){
 	DEBUG("GetBan");
+}
+
+void KickCb(char *pNetmask, void *data) {
+    DEBUG("Kick user")
 }
 
