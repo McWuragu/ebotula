@@ -161,9 +161,9 @@ void hResetModes(char *pLine) {
     char *pMode;
     char **ppLinePart;
     extern CallbackDList CallbackList;
-    CallbackItem_t Callback;
-
-   
+    CallbackItem_t *Callback;
+    
+    
 
     //splitthe string
     ppLinePart=splitString(pLine);
@@ -183,13 +183,14 @@ void hResetModes(char *pLine) {
             sprintf(pData,"%s %s",pChannel,pMode);
             
             // build  the  element
-            Callback.nickname=pNick;
-            Callback.CallbackFkt=(void*)ModeResetCb;
-            Callback.data=(void*)pData;
+            Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
+            Callback->nickname=pNick;
+            Callback->CallbackFkt=ModeResetCb;
+            Callback->data=pData;
             
             // put  the  element  in the  callback list  before tail
             //insert_prev_CallbackDList(&CallbackList,&CallbackList.tail,&Callback);
-	insert_prev_CallbackDList(&CallbackList,CallbackList.tail,&Callback);
+	insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
 
             // send the who
             whois(pNick);
