@@ -66,6 +66,8 @@ UserLevel_t getUserLevel(char *const pChannel, char *const pNetmask) {
                 UserLevel=MasterLevel;
                 free(pLevel);
         }
+
+        free(pLogin);
     }
     return UserLevel;
 }

@@ -89,6 +89,8 @@ void printMsg( char *const pMsg[]) {
 void StrToLower(char *pStr) {
      unsigned int str_length,i;
 
+     if (!pStr) {return;}
+
      str_length=strlen(pStr);
 
      for (i=0;i<str_length;i++) {
@@ -228,6 +230,7 @@ void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData) {
     
     pMode=getChannelMode(pChannelSet);
     StrToChannelMode(pMode,&(pChannelData->sModes));
+    
     free(pMode);
 
     return;

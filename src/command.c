@@ -128,6 +128,7 @@ void help(MsgItem_t *pMsg) {
                 return;
             }
         }
+        free (pParameter);
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_COMMAND));
     }
 }
@@ -531,6 +532,10 @@ void chanlist(MsgItem_t *pMsg){
 
 	        free(pMode);
 			free(pChannelSet);
+            free(sChannelData.sModes.pLimit);
+            free(sChannelData.sModes.pKeyword);
+            free(sChannelData.pTopic);
+            free(sChannelData.pGreeting);
 		}
 		free(pChannel);
     }
@@ -662,7 +667,9 @@ void greeting(MsgItem_t *pMsg) {
             if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
         	    if ((greeting=getGreeting(pChannelSet))) {
                 	sendMsg(NoticeMode,pMsg->pCallingNick,greeting);
+                    free(greeting);
             	}
+                free(pChannelSet);
     		}
         }
     }
@@ -1051,6 +1058,8 @@ void usermode(MsgItem_t *pMsg){
                 }
     	    }
 		}
+
+        free(pLogin);
 	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_USERMODE));
 	} 
 }

@@ -186,11 +186,9 @@ char *getAccessChannel(char const *pLine) {
 				pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
 				strcpy(pChannel,pPos);
 			} else {
-                free(pChannel);
-				return NULL;
+                pChannel=NULL;
 			}
 		}
-
 	} else {
 		// parse Channel name
 		strtok(pParameter," ");
@@ -199,18 +197,18 @@ char *getAccessChannel(char const *pLine) {
 		if (ChannelStringCheck(pParameter)) {
 			pChannel=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
 			strcpy(pChannel,pParameter);
-            free(pParameter);
         } else {
-			return NULL;
+			pChannel=NULL;
 		}
     }
+    free(pParameter);
 
 	StrToLower(pChannel);
 	return pChannel;
 }
 // #########################################################################
 char  *getTopic(char const *pChannelSet) {
-	char *pTopic;
+	char *pTopic=NULL;
 	char *pPos,*pPos2;
 	char *pStr;
 	
@@ -220,24 +218,19 @@ char  *getTopic(char const *pChannelSet) {
 	strcpy(pStr,pChannelSet);
 
 	// look for topic;
-	if (!(pPos=strchr(pStr,'\t'))) {
-		return NULL; 
-	}
-		
-	pPos++;
-
-	// look for the end  of topic
-	if (!(pPos2=strchr(pPos,'\t'))) {
-		return NULL;
-	}
-	*pPos2='\0';
-
-	// check length
-	if (!strlen(pPos)) {
-		return NULL;
-	}
-	pTopic=(char *)malloc((strlen(pPos)+1)*sizeof(char));
-	strcpy(pTopic,pPos);
+	if ((pPos=strchr(pStr,'\t'))) {
+        pPos++;
+        // look for the end  of topic
+    	if ((pPos2=strchr(pPos,'\t'))) {
+            *pPos2='\0';
+        
+            // check length
+            if (strlen(pPos)) {
+                pTopic=(char *)malloc((strlen(pPos)+1)*sizeof(char));
+                strcpy(pTopic,pPos);
+            }
+        }
+    }
 
     free(pStr);
 	return pTopic;
@@ -290,25 +283,26 @@ char *getChannelMode(char const * pChannelSet){
 }
 // ############################################################################# 
 char *getParameters(char const *pLine){
-	char *pParameter;
+	char *pParameter=NULL;
 	char *pArg;
 	char *pPos; 
 
 	if (!pLine) return NULL;
 	
-	if (!(pArg=getArgument(pLine))) return NULL;
-
-	if (pArg[0]!='#') {
-		return pArg;
-	} else if(!(pPos=strchr(pArg,' '))) {
-		return NULL;
-	} else {
-		// jump over the space
-		pPos++;
-		pParameter=(char*)malloc((strlen(pPos)+1)*sizeof(char));
-		strcpy(pParameter,pPos);
-		return pParameter;
-	}
+	if ((pArg=getArgument(pLine))) {
+        if (pArg[0]!='#') {
+    		pParameter=pArg;
+    	} else if((pPos=strchr(pArg,' '))) {
+    		// jump over the space
+    		pPos++;
+    		pParameter=(char*)malloc((strlen(pPos)+1)*sizeof(char));
+    		strcpy(pParameter,pPos);
+            free(pArg);
+    	} else {
+            free(pArg);
+        }
+    }
+    return pParameter;
 }
 // #############################################################################
 char ** splitString(char const * pString,int nRetArraySize) {

@@ -217,6 +217,7 @@ boolean check_db(int db,char *_key,char* _value){
     datum value;
     char *__value;
     GDBM_FILE dbf;
+    boolean bRet=false;
 
     key.dptr=_key;
     key.dsize=strlen(_key)+1;
@@ -237,10 +238,12 @@ boolean check_db(int db,char *_key,char* _value){
     
         // checke  the values
         if (!strcmp(value.dptr,__value)) {
-            return true;
+            bRet=true;
         }
+
+        free(value.dptr);
     }
-    return false;
+    return bRet;
 }
 // ############################################################################# 
 boolean exist_db(int db,char *_key){
