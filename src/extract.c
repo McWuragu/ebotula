@@ -299,7 +299,7 @@ char ** splitString(char const * pString,int nRetArraySize) {
     char **ppStrings;
     char *pPos,*pSpacePos;
     char *pTmp;
-    unsigned int iCount=0,i,len;
+    unsigned int iCount=0,i,j,len;
 
     // check of NULL pointer
     if (pString) {
@@ -311,36 +311,34 @@ char ** splitString(char const * pString,int nRetArraySize) {
         ppStrings=(char**)malloc(nRetArraySize*sizeof(char*));
     
         // fill the array
-        for (i=0;i<nRetArraySize;i++) {
-            pSpacePos=strchr(pPos,' ');
-
-            if (pSpacePos) {
-                if  (pSpacePos[0]!='\0') {
-                    pSpacePos[0]='\0';
-                    pSpacePos++;
+        for (i=0;i<nRetArraySize-1;i++) {
+            len=strlen(pPos);
+            for (j=0;j<len;j++) {
+                // look for the separator
+                if (pPos[j]==' ') {
+                    pPos[j]='\0';
+                    break;
                 }
-                
+            }
+            len=strlen(pPos);
+            if (len!=0) {
                 // put the string in the array
-                if ((len=strlen(pPos))!=0) {
-                    ppStrings[i]=(char*)malloc((len+1)*sizeof(char));
-                    strcpy(ppStrings[i],pPos);
-                } else {
-                    ppStrings[i]=NULL;
-                }
-
-                pPos=pSpacePos;
+                ppStrings[i]=(char*)malloc((len+1)*sizeof(char));
+                strcpy(ppStrings[i],pPos);
             } else {
                 ppStrings[i]=NULL;
             }
-            
+
+            // set the new start
+            pPos=pPos+j;
+            pPos++;
+                
         }
-/*        
         // put the rest in the array
         if ((len=strlen(pPos))) {
             ppStrings[i]=(char*)malloc((len+1)*sizeof(char));
             strcpy(ppStrings[i],pPos);
         } 
- */
     }
     return ppStrings;
 }
