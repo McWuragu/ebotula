@@ -133,6 +133,7 @@ int main(int argc,char * const argv[]) {
     
     // versions ausgabe
     printf(VERSIONSTR);
+    printf("\n");
     openlog(PACKAGE,0,LOG_DAEMON);
     
     // Look for simple parameter and  custom config file

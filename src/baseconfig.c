@@ -83,6 +83,7 @@ void write_baseconfig()
 		/* writingd data to file */
 		/* Version string */
 		sprintf(tmpstr,VERSIONSTR);
+		strcat(tmpstr,"\n");
 		fprintf(fd,"%s\n",bstr[i++]);
 		fprintf(fd,"# %s\n",tmpstr);
 		/* borname */
