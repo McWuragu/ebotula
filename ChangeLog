@@ -4,6 +4,7 @@ ebotula-devel-0.1.11
 - Bugfix: fixed mode event handle
 - Bugfix: fixed online help message
 - Bugfix: fixed the crash after mode change from other user as the bot
+- Bugfix: fixed the command online help for !ban
 - added the parameter user and group
 - added the option -u and -g
 - added the creating of the  direction ~/.ebotula for the user mode
