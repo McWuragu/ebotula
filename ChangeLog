@@ -1,7 +1,7 @@
 ebotula-devel-0.1.11
 --------------------
 - Bugfix: fixed SIGSEGV from the commands !addchannel and !join
-- Bugfix: fixed chanmode command
+- Bugfix: fixed mode event handle 
 - Bugfix: fixed online help message
 
 ebotula-devel-0.1.10
