@@ -87,13 +87,13 @@ void log_out(char *pLogin) {
     extern pthread_mutex_t account_mutex;
     char *pNetmask;
 
-    DEBUG("%s logged off",pLogin);
 
     
     pthread_mutex_lock(&account_mutex);
     if ((pNetmask=get_db(USERTONICK_DB,pLogin))){
 	    del_db(NICKTOUSER_DB,pNetmask);
     	del_db(USERTONICK_DB,pLogin);
+    	DEBUG("%s logged off",pLogin);
 	}
     pthread_mutex_unlock(&account_mutex);
 }
@@ -101,7 +101,9 @@ void log_out(char *pLogin) {
 // #############################################################################
 void rmAccount(char *pLogin) {
 
-    // logoff the user
+	DEBUG("Remove the account %s",pLogin);
+    
+	// logoff the user
     log_out(pLogin);
 
     // remove the  rights
@@ -119,7 +121,7 @@ void rmAccessRights(char *pLogin){
     char *pKey;
     int i,iLoginLen;
 
-    DEBUG("Remove Access Rights for %s",pLogin);
+    DEBUG("Remove access rights from %s",pLogin);
 
     // remove as master
     del_db(ACCESS_DB,pLogin);
@@ -148,6 +150,7 @@ void rmDeadAccounts(long lCheckTime) {
 
     pthread_mutex_lock(&account_mutex);
     ppLogins=list_db(TIMELOG_DB);
+    
 
     // get the  list
     for (i=0;ppLogins[i]!=NULL;i++) {
