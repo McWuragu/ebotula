@@ -332,13 +332,13 @@ char ** splitString(char const * pString,int nRetArraySize) {
 // #############################################################################
 char * getBanmmask(char const *pLine){ 
 	char *pBanmask,*pStr;
-	char * pChar,pChar2;
+	register char * pChar;
 	// getting netmask to get banmask
 	pStr=getNetmask(pLine);
 	if (pStr[0]!='\0')
 	{
 		// get the position of '!'
-		pChar=strchr(pStr,"!");
+		pChar=(char *)strchr(pStr,'!');
 		// jump over '!'
 		pChar++;
 		// copy from '!'+1 to pStr
@@ -350,10 +350,10 @@ char * getBanmmask(char const *pLine){
 		strcpy(pBanmask,pChar);
 		strcpy(pStr,pBanmask);
 		// setting after @ a NULL-Byte
-		pChar=strchr(pBanmask,"@");
+		pChar=(char *)strchr(pBanmask,'@');
 		pChar[1]='*';
 		pChar[2]='\0';
-		pChar=strchr(pStr,".");
+		pChar=(char *)strchr(pStr,'.');
 		// add rest of the netmask
 		strcat(pBanmask,pChar);
 		
