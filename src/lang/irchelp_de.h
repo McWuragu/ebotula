@@ -1,11 +1,12 @@
-/* -------------------------------------------------------------
-*
-* This is a part of ebotula.
-* It is distributed under the GNU General Public License
-* See the file COPYING for details.
-*
-* (c)2003 Steffen Laube <realebula@gmx.de>
- -------------------------------------------------------------*/
+/* #############################################################
+ *
+ * This is a part of ebotula.
+ * It is distributed under the GNU General Public License
+ * See the file COPYING for details.
+ *
+ * (c)2003 Steffen Laube <realebula@gmx.de>
+ * ############################################################# 
+ */
 
 #ifndef IRCHELP_GER_H
 #define IRCHELP_GER_H

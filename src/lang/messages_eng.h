@@ -1,11 +1,12 @@
-/* -------------------------------------------------------------
-*
-* This is a part of ebotula.
-* It is distributed under the GNU General Public License
-* See the file COPYING for details.
-*
-* (c)2003 Steffen Laube <realebula@gmx.de>
- -------------------------------------------------------------*/
+/* #############################################################
+ *
+ * This is a part of ebotula.
+ * It is distributed under the GNU General Public License
+ * See the file COPYING for details.
+ *
+ * (c)2003 Steffen Laube <realebula@gmx.de>
+ * ############################################################# 
+ */
 
 #ifndef MESSAGES_ENG_H
 #define MESSAGES_ENG_H
@@ -74,6 +75,7 @@
 	#define MSG_RM_TOPIC			"The topic is removed"
 	#define MSG_KICK_OK			"The user is kicked by the bot"
     #define MSG_BAN_OK			"The user is banned by the bot"
+    #define MSG_DEBAN_OK			"The ban is removed by the bot"
 	#define MSG_USERMODE_OK			"The user mod are changed"
 	#define MSG_RMUSER_OK			"The account is removed"
 	#define MSG_MASTER			"You are a bot master"
@@ -129,6 +131,7 @@
 	#define MSG_SAY_ERR			"Invalid command: !say [#channel] <message>"			
 	#define MSG_KICK_ERR			"Invalid command: !kick [#channel] <nickname> [reason]"
     #define MSG_BAN_ERR			"Invalid command: !ban [#channel] <nickname>"
+    #define MSG_DEBAN_ERR			"Invalid command: !deban [#channel] <banmask>"
 	#define MSG_USERMODE_ERR		"Invalid command: !usermode [#channel] <login> <+/-><mod>"
 	#define MSG_CHANMODE_ERR		"Invalid command: !chamode [#channel] <+/-><mods>"
 	

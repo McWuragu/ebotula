@@ -1,11 +1,12 @@
-/* -------------------------------------------------------------
-*
-* This is a part of ebotula.
-* It is distributed under the GNU General Public License
-* See the file COPYING for details.
-*
-* (c)2003 Steffen Laube <realebula@gmx.de>
- -------------------------------------------------------------*/
+/* #############################################################
+ *
+ * This is a part of ebotula.
+ * It is distributed under the GNU General Public License
+ * See the file COPYING for details.
+ *
+ * (c)2003 Steffen Laube <realebula@gmx.de>
+ * ############################################################# 
+ */
 
 #ifndef MESSAGE_GER_H
 #define MESSAGE_GER_H
@@ -59,26 +60,27 @@
 	
 	
 	// command acknowledgment
-	#define MSG_HELLO			"Schön dich zu treffen"
-	#define MSG_HELLO2			"Du hast einen neuen Account erhalten"
-	#define MSG_PASSWD			"Password wurde geändert"
-	#define MSG_IDENT_OK			"Du bist nun identifiziert"
-	#define MSG_JOIN_OK			"Der Bot ist in den Channel gejoint"
-	#define MSG_PART_OK			"Der Bot hat den Channel verlassen"
+	#define MSG_HELLO			    "Schön dich zu treffen"
+	#define MSG_HELLO2			    "Du hast einen neuen Account erhalten"
+	#define MSG_PASSWD			    "Password wurde geändert"
+	#define MSG_IDENT_OK		    "Du bist nun identifiziert"
+	#define MSG_JOIN_OK			    "Der Bot ist in den Channel gejoint"
+	#define MSG_PART_OK			    "Der Bot hat den Channel verlassen"
 	#define MSG_RMCHANNEL_OK		"Der Channel wurde von der Liste entfernt"
 	#define MSG_ADDCHANNEL_OK		"Der Channel wurde der Liste hinzugefügt"
 	#define MSG_NICK_SET			"Der bot versucht den neuen Nickname zusetzen"
-	#define MSG_LOGOFF			"Du bist ausgeloggt"
+	#define MSG_LOGOFF			    "Du bist ausgeloggt"
 	#define MSG_SET_GREATING		"Die neue Begrüssung wurde gesetzt"
 	#define MSG_RM_GREATING			"Die Begrüssung wurde entfernt"
 	#define MSG_SET_TOPIC			"Die neue Topic wurde gesetzt"
 	#define MSG_RM_TOPIC			"Die Topic wurde entfernt"
-	#define MSG_KICK_OK			"Der Benutzer wurde vom Bot gekickt"
-	#define MSG_BAN_OK			"Der Benutzer wurde vom Bot gebannt"
+	#define MSG_KICK_OK			    "Der Benutzer wurde vom Bot gekickt"
+	#define MSG_BAN_OK			    "Der Benutzer wurde vom Bot gebannt"
+    #define MSG_DEBAN_OK			"Der Ban wurde vom Bot aufgehoben"
     #define MSG_USERMODE_OK			"Die Benutzermodus wurde geändert "
 	#define MSG_RMUSER_OK			"Der Account wurde entfernt"
-	#define MSG_MASTER			"Du bist ein Bot Master"
-	#define MSG_DIE_OK			"Der Bot beendet sich"
+	#define MSG_MASTER			    "Du bist ein Bot Master"
+	#define MSG_DIE_OK			    "Der Bot beendet sich"
 	#define MSG_RESTART_OK			"Der Bot startet neu"
 	
 	// Informations for invalid input or using of the bot
@@ -96,11 +98,11 @@
     #define MSG_NOT_BAN            	"Kann leider diesen User nicht bannen"
 	
 	// Errors
-	#define MSG_ADDCHANNEL_ALREADY		"Dieser Channel ist schon auf der Channelliste"
+	#define MSG_ADDCHANNEL_ALREADY	"Dieser Channel ist schon auf der Channelliste"
 	#define MSG_NICK_INVALID		"Der Nickname ist ungültig"
 	#define MSG_NICK_EXIST			"Es gibt schon ein Account mit diesem Nicknamen"
 	#define MSG_ALREADY_LOGON		"Du bist schon identifiziert"
-	#define MSG_NEED_OP			"Ich benötige Operatorrechte"
+	#define MSG_NEED_OP			    "Ich benötige Operatorrechte"
 	#define MSG_UNKNOWN_MODS		"Dieser Modus ist ungültig"
 	#define MSG_MASTER_PASS_ERR		"Passwörter nicht identisch"
 	#define MSG_MASTER_ERR			"Kann den Account nicht als Master anlegen"
@@ -114,11 +116,11 @@
 	#define MSG_HELP_FOR			"Hilfe für"
 	#define MSG_USERLIST_BEGIN		"Bentuzerliste:"
 	#define MSG_USERLIST_END		"Ende der Benutzerliste."
-	#define MSG_CHANNELLIST_BEGIN		"Channelliste:"
+	#define MSG_CHANNELLIST_BEGIN	"Channelliste:"
 	#define MSG_CHANNELLIST_END		"Ende der Channelliste."
-	#define MSG_CHANNELLIST_MODE    	"Channelmodus:"
-	#define MSG_CHANNELLIST_TOPIC		"Topic:"
-	#define MSG_CHANNELLIST_GREAT		"Begrüssung:"
+	#define MSG_CHANNELLIST_MODE    "Channelmodus:"
+	#define MSG_CHANNELLIST_TOPIC	"Topic:"
+	#define MSG_CHANNELLIST_GREAT	"Begrüssung:"
 	#define MSG_DEFAULT_REASON		"Du wurdest vom bot gekickt"
 	#define MSG_INIT_CHANNEL		"Ich habe den Channel eingerichtet"
 	
@@ -127,9 +129,10 @@
 	#define MSG_JOIN_ERR			"Ungültiges Kommando: !join <#channel>"
 	#define MSG_IDENT_ERR			"Ungültiges Kommando: !ident <login password>"
 	#define MSG_NICK_ERR			"Ungültiges Kommando: !nick <nickname>"			
-	#define MSG_SAY_ERR			"Ungültiges Kommando: !say [#channel] <message>"			
+	#define MSG_SAY_ERR			    "Ungültiges Kommando: !say [#channel] <message>"			
 	#define MSG_KICK_ERR			"Ungültiges Kommando: !kick [#channel] <nickname> [reason]"
-    #define MSG_BAN_ERR			"Ungültiges Kommando: !ban [#channel] <nickname>"
+    #define MSG_BAN_ERR			    "Ungültiges Kommando: !ban [#channel] <nickname>"
+    #define MSG_DEBAN_ERR			"Ungültiges Kommando: !deban [#channel] <banmask>"
     #define MSG_USERMODE_ERR		"Ungültiges Kommando: !usermode [#channel] <login> <+/-><mod>"
 	#define MSG_CHANMODE_ERR		"Ungültiges Kommando: !chamode [#channel] <+/-><mods>"
 	
