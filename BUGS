@@ -1,5 +1,2 @@
-- not all time the bot stop and  restart. He block. 
-- security bug  in the mode safe routine
-- slow performance
 - The bot can't join a keyword  protected channel
 - The bot don't join a channel after the  inviting from a other user
