@@ -304,7 +304,7 @@ int logger(int priority, char *format, ...)
 	vsprintf(buf,format,az);
 #ifdef NDEBUG
     #ifdef HAVE_SYSLOG_H
-	syslog(priority,&buf);
+	syslog(priority,buf);
     #endif
 #else
     clock_gettime(CLOCK_REALTIME,&stamp);
