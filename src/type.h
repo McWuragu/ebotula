@@ -40,7 +40,7 @@ typedef struct ConfStruct{
     /** the secondary delay for sending in millisecond */
     int iSendSafeDelay;
     /** number of line whiche send with the normal delay */
-    int iSendSafeLine;
+    int nFastSendingCharLimit;
     /** the connection timeout in second */
     int iTimeout;
     /** a flag to signal that a new master want create */
