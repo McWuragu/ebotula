@@ -171,7 +171,14 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
     send_line(buffer);
     free (buffer);
 }
-
+// #############################################################################
+void who(char *pNickname) {
+    char *buffer;
+    buffer=(char*)calloc(strlen("WHO ")+strlen(pNickname)+3,sizeof(char));
+    sprintf(buffer,"WHO %s\r\n",pNickname);
+    send_direct(buffer);
+    free (buffer);
+}
 
 
 
