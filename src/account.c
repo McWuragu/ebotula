@@ -97,12 +97,12 @@ void rmDeadLogins(long lCheckTime) {
 }
 /* ############################################################################# */
 void log_on(char *pNetmask,char *pLogin) {
-    extern pthread_mutex_t account_mutex;
+    extern pthread_mutex_t mutexAccount;
     time_t timestamp;
     char pTime[32];
     char *pOldNetmask;
 
-    pthread_mutex_lock(&account_mutex);
+    pthread_mutex_lock(&mutexAccount);
     if (exist_db(USERTONICK_DB,pLogin)) {
         // relog on
         if ((pOldNetmask=get_db(USERTONICK_DB,pLogin))) {
@@ -116,7 +116,7 @@ void log_on(char *pNetmask,char *pLogin) {
         add_db(NICKTOUSER_DB,pNetmask,pLogin);
         add_db(USERTONICK_DB,pLogin,pNetmask);
     }
-    pthread_mutex_unlock(&account_mutex);
+    pthread_mutex_unlock(&mutexAccount);
 
     DEBUG("User log in\n");
 
@@ -135,13 +135,13 @@ void log_on(char *pNetmask,char *pLogin) {
 }
 /* ############################################################################# */
 void log_out(char *pLogin) {
-    extern pthread_mutex_t account_mutex;
+    extern pthread_mutex_t mutexAccount;
 
-    pthread_mutex_lock(&account_mutex);
+    pthread_mutex_lock(&mutexAccount);
     
     __log_out(pLogin);
 
-    pthread_mutex_unlock(&account_mutex);
+    pthread_mutex_unlock(&mutexAccount);
 }
 
 /* ############################################################################# */
@@ -156,11 +156,11 @@ void __log_out(char *pLogin) {
 }
 /* ############################################################################# */
 void rmAccount(char *pLogin) {
-    extern pthread_mutex_t account_mutex;
+    extern pthread_mutex_t mutexAccount;
     
 	DEBUG("Remove the account %s\n",pLogin);
 
-    pthread_mutex_lock(&account_mutex);
+    pthread_mutex_lock(&mutexAccount);
 	/* logoff the user */
     __log_out(pLogin);
     
@@ -172,7 +172,7 @@ void rmAccount(char *pLogin) {
 
     /* remove the time log */
     del_db(TIMELOG_DB,pLogin);
-    pthread_mutex_unlock(&account_mutex);
+    pthread_mutex_unlock(&mutexAccount);
 }
 /* ############################################################################# */
 void rmAccessRights(char *pLogin){
