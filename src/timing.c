@@ -42,7 +42,7 @@ void *synchron(void *argv){
 		ping(setup.server);
 
 		// remove dead logins
-		if ((newTime-lastRemoveDeadLogins)>=7200) {
+		if ((newTime-lastRemoveDeadLogins)>=3600) {
 			DEBUG("Remove dead logins");
 			rmDeadLogins(newTime-setup.AutoLoggoff*86400);
 			time(&lastRemoveDeadLogins);
@@ -51,6 +51,7 @@ void *synchron(void *argv){
 		// remove dead accounts
 		if ((newTime-lastRemoveDeadAccounts)>=3600) {
 			DEBUG("Remove dead accounts");
+			rmDeadAccounts(newTime-setup.AccountLiveTime*86400);
 			time(&lastRemoveDeadAccounts);
 		}
     }
