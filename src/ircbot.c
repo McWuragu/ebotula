@@ -24,6 +24,7 @@
 #endif
 
 #include "messages.h"
+#include "callbacklist.h"
 #include "utilities.h"
 #include "parameter.h"
 #include "network.h"
@@ -41,7 +42,7 @@ boolean again;
 pthread_mutex_t account_mutex;      // mutex for synchronize the access of the login db 
 
 
-PQueue pCallbackQueue;
+CallbackDList CallbackList;
 
 int main(int argc,char * const argv[]) {
     int i;
@@ -208,7 +209,7 @@ int main(int argc,char * const argv[]) {
 	 
 	// init the command queue
 	pCommandQueue=initQueue();
-    pCallbackQueue=initQueue();
+    init_extended_CallbackDList(&CallbackList, destroyCallbackItem);
 
 
 	// create the threads
@@ -285,9 +286,9 @@ int main(int argc,char * const argv[]) {
     // destroy the mutex
     pthread_mutex_destroy(&account_mutex);
 
-    // clear the wait queue
+    // clear the wait queue and  callback list
 	deleteQueue(pCommandQueue);   	
-    deleteQueue(pCallbackQueue);
+    destroyCallbackDList(&CallbackList);
 
     // disconnect from server
     disconnectServer();
@@ -298,7 +299,7 @@ int main(int argc,char * const argv[]) {
     if (again) {
         syslog(LOG_NOTICE,SYSLOG_RESTART);
         closelog();
-        execv(argv[0],argv);
+        execvp(argv[0],argv);
         perror(ERR_RESTART);
     } else {
         syslog(LOG_NOTICE,SYSLOG_STOPPED);
