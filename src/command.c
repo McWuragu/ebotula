@@ -155,11 +155,11 @@ void help(char *line) {
 // Bot comand: !hello
 // ######################################################################### 
 void hello(char *line) {
-	char *netmask=NULL;
+	char *netmask;
 	char *nick;
 	char *login;
 	
-	
+	netmask=getNetmask(line);
 	nick=getNickname(line);
 	login=malloc((strlen(nick)+1)*sizeof(char));
 	
@@ -719,7 +719,6 @@ void usermode(char *line){
 			if (i>0) {
 				break;
 			}
-		case 'O':
 		case 'o':
 		case 'v':
 		case 'm':
@@ -780,18 +779,24 @@ void usermode(char *line){
 		free(key);
 		key=(char *)malloc((strlen(login)+1)*sizeof(char));
 		strcpy(key,login);
+		
+		if (strlen(newmods)) {
+			strcpy(newmods,"ov");
+		}
+
 	}
 
 	// remove by  empty mods
-	if (strlen(oldmods)==0) {
+	if (strlen(newmods)==0) {
 		del_db(ACCESS_DB,key);
 	} else 
-		if (!(add_db(ACCESS_DB,key,oldmods))) {
-		replace_db(ACCESS_DB,key,oldmods);
+		if (!(add_db(ACCESS_DB,key,newmods))) {
+		replace_db(ACCESS_DB,key,newmods);
 	}
 	
 	// identify the  login and set the rights
-	usernick=get_db(USERTONICK_DB,login);
+	usernick=getNickname(get_db(USERTONICK_DB,login));
+
 	if (strlen(usernick)) {
 		mode(channel,mods,usernick);
 	}

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <pthread.h>
 #include <time.h>
 
@@ -24,13 +25,13 @@ void rmDeadLogins(long checkTime) {
 			if (checkTime>atol(time)) {
 				netmask=get_db(USERTONICK_DB,login[i]);
 				
-				log_out(netmask,login[i]);
-	
-				syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,login[i],netmask);
-	
-				free(time);
-				free(netmask);
+				if (strlen(netmask)) {
+					log_out(netmask,login[i]);
+                    syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,login[i],netmask);
+					free(netmask);
+				}
 			}
+			free(time);
 		}
 	}
 

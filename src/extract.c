@@ -18,14 +18,14 @@
 char *getNickname(char *line){
 	char *nick,*str;
 	
-	str=(char*)malloc((strlen(line)+1)*sizeof(char));
-	strcpy(str,line);
+	str=getNetmask(line);
 
-	if (!strtok(str,"!") || str[0]!=':') {
+
+	if (!strtok(str,"!")) {
 		return "";
 	} else {
-		nick=(char *)malloc((strlen(str))*sizeof(char));
-		strcpy(nick,&str[1]);
+		nick=(char *)malloc((strlen(str)+1)*sizeof(char));
+		strcpy(nick,str);
 		return nick;
 	}
 
@@ -38,12 +38,17 @@ char *getNetmask(char *line){
 		
 	str=(char *)malloc((strlen(line)+1)*sizeof(char));
 	strcpy(str,line);
-    
-	if ((str[0]!=':') || !strchr(&str[1],':') || !strchr(str,'!') || !strchr(str,'@') || !strtok(str," ")) {
+    strtok(&str[1]," ");
+
+	if (!strchr(str,'!') || !strchr(str,'@')) {
 		return "";
-	} else {
+	} else if (str[0]==':'){
 		netmask=(char *)malloc(strlen(str)*sizeof(char));
 		strcpy(netmask,&str[1]);
+		return netmask;
+	} else {
+		netmask=(char *)malloc((strlen(str)+1)*sizeof(char));
+		strcpy(netmask,str);
 		return netmask;
 	}
 

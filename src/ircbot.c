@@ -61,7 +61,11 @@ int main(int argc,const char *argv[]) {
 	// versions ausgabe
 	printf(VERSIONSTR);
 
+	#ifndef	_DEBUG
 	openlog(PROGNAME,0,LOG_DAEMON);
+	#else
+	openlog(PROGNAME,LOG_PERROR,LOG_DAEMON);
+	#endif
 	syslog(LOG_NOTICE,SYSLOG_BOT_START);
 
 	// check for parameter

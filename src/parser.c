@@ -230,8 +230,7 @@ int AccessRight(char *line,CmdType cmd_id) {
 	char *nick;
 	char *netmask;
 	char *access;
-	char *mods;
-	char *channelstr;
+	char *accessrights;
 
 	netmask=getNetmask(line);
 	nick=getNickname(line);
@@ -280,9 +279,9 @@ int AccessRight(char *line,CmdType cmd_id) {
 		access=(char*)malloc((strlen(login)+strlen(channel)+1)*sizeof(char*));
 		sprintf(access,"%s%s",login,channel);
 
-		channelstr=get_db(ACCESS_DB,access);
-		mods=getMode(channelstr);
-		if (strchr(mods,'o')) {
+		accessrights=get_db(ACCESS_DB,access);
+		
+		if (strchr(accessrights,'o')) {
 				return true;
 		}
 
