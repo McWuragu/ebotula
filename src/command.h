@@ -123,16 +123,18 @@ typedef struct MsgItem_s {
     char *pAccessChannel;
     /** nick name of the comamnd  caller */
     char *pCallingNick;
+    /** the netmask of  this user */
+    char *pNetmask;
     /** the complete string which receive from the irc server */
     char *pRawLine;
 } MsgItem_t;  
 
 /* ######################### Bot commands ################################ */
 
-void help(char *pLine);
-void password(char *pLine);
-void ident(char *pLine);
-void logoff(char *pLine,int iRemoveMode);
+void help(MsgItem_t *pMsg);
+void password(MsgItem_t *pMsg);
+void ident(MsgItem_t *pMsg);
+void logoff(MsgItem_t *pMsg,int iRemoveMode);
 void version(char *pLine);
 void hello(char *pLine);
 void addChannel(char *pLine);

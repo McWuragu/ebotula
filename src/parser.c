@@ -136,6 +136,7 @@ void *ComandExecutionThread(void *argv) {
                 pMsgItem=(MsgItem_t *)malloc(sizeof(MsgItem_t));
                 pMsgItem->pAccessChannel=pChannel;
                 pMsgItem->pCallingNick=pNick;
+                pMsgItem->pNetmask=pNetmask;
                 pMsgItem->UserLevel=Level;
                 pMsgItem->pRawLine=pMsg->pMsgLine;
                 
@@ -146,12 +147,12 @@ void *ComandExecutionThread(void *argv) {
                     pong();
                     break;
                 case CMD_ONQUIT:
-                    logoff(pMsg->pMsgLine,false);
+                    logoff(pMsgItem,false);
                 case CMD_LOGOFF:
-                    logoff(pMsg->pMsgLine,true);
+                    logoff(pMsgItem,true);
                     break;
                 case CMD_HELP:
-                    help(pMsg->pMsgLine);
+                    help(pMsgItem);
                     break;
                 case CMD_VERSION:
                     version(pMsg->pMsgLine);
@@ -160,10 +161,10 @@ void *ComandExecutionThread(void *argv) {
                     hello(pMsg->pMsgLine);
                     break;
                 case CMD_PASS:
-                    password(pMsg->pMsgLine);
+                    password(pMsgItem);
                     break;
                 case CMD_IDENT:
-                    ident(pMsg->pMsgLine);
+                    ident(pMsgItem);
                     break;
                 case CMD_ADDCHANNEL:
                     addChannel(pMsg->pMsgLine);

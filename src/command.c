@@ -35,20 +35,15 @@
 /* ######################################################################### 
    Bot comand: !help <command>
    ######################################################################### */
-void help(char *pLine) {
-    char *pNetmask;
-    char *pNick;
+void help(MsgItem_t *pMsg) {
     char *pParameter;
     char *pTmp;
     char *pMsgStr;
     char *pMsgPart;
     unsigned int i,j,iLength;
-    boolean bIsLogin=false,bIsMaster=false;
+   
 
-    pNetmask=getNetmask(pLine);
-    pNick=getNickname(pLine);
-    
-    pParameter=getParameters(pLine);
+    pParameter=getParameters(pMsg->pRawLine);
 
 
     /* check for parameters */
@@ -59,20 +54,14 @@ void help(char *pLine) {
 
         for (i=0;pIrcHelp[0][i]!=NULL;i++) {
             /* look for the end  of msg */
-            privmsg(pNick,pIrcHelp[0][i]);
+            privmsg(pMsg->pCallingNick,pIrcHelp[0][i]);
         }
-
-        /* checking  login and  master status */
-        if ((bIsLogin=exist_db(NICKTOUSER_DB,pNetmask))) {
-            bIsMaster=exist_db(ACCESS_DB,get_db(NICKTOUSER_DB,pNetmask));
-        }
-
 
         for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
             /* checking  for allow commands */
-            if (!bIsLogin && i>=CMD_LOGGED) {
+            if (pMsg->UserLevel < LoggedLevel && i>=CMD_LOGGED) {
                 continue;
-            } else if (!bIsMaster && i >= CMD_MASTER) {
+            } else if (pMsg->UserLevel < MasterLevel && i >= CMD_MASTER) {
                 continue;
             }
 
@@ -88,10 +77,10 @@ void help(char *pLine) {
             }
             strcat(pMsgStr,(char*)pIrcHelp[CmdIdToHelpId(i)][0]);
             /* send notice */
-            privmsg(pNick,pMsgStr);
+            privmsg(pMsg->pCallingNick,pMsgStr);
         }
         /* the tail */
-        privmsg(pNick,getMsgString(INFO_HELP_END));
+        privmsg(pMsg->pCallingNick,getMsgString(INFO_HELP_END));
     } else {
         DEBUG("Spezial information for a command\n");
 
@@ -117,24 +106,24 @@ void help(char *pLine) {
                 pMsgPart=getMsgString(INFO_HELP_FOR);
                 pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdList[i])+3)*sizeof(char));
                 sprintf(pTmp,"%s %s:",pMsgPart,pParameter);
-                privmsg(pNick,pTmp);
+                privmsg(pMsg->pCallingNick,pTmp);
 
                 /* print  the  help text */
                 for (j=1;pIrcHelp[CmdIdToHelpId(i)][j]!=NULL;j++) {
-                    privmsg(pNick,(char*)
+                    privmsg(pMsg->pCallingNick,(char*)
                            pIrcHelp[CmdIdToHelpId(i)][j]);
                 }
 
                 /* syntax from the command */
-                privmsg(pNick,pIrcSyntax[0][0]);
+                privmsg(pMsg->pCallingNick,pIrcSyntax[0][0]);
                 for (j=0;pIrcSyntax[CmdIdToHelpId(i)][j]!=NULL;j++) {
-                    privmsg(pNick,(char*)pIrcSyntax[CmdIdToHelpId(i)][j]);
+                    privmsg(pMsg->pCallingNick,(char*)pIrcSyntax[CmdIdToHelpId(i)][j]);
                 }
-                privmsg(pNick,getMsgString(INFO_HELP_END));
+                privmsg(pMsg->pCallingNick,getMsgString(INFO_HELP_END));
                 return;
             }
         }
-        privmsg(pNick,getMsgString(ERR_NOT_COMMAND));
+        privmsg(pMsg->pCallingNick,getMsgString(ERR_NOT_COMMAND));
     }
 }
 /* #########################################################################
@@ -174,41 +163,35 @@ void hello(char *pLine) {
 /* #########################################################################
    Bot comand: !pass <password>
    ######################################################################### */
-void password(char *pLine) {
+void password(MsgItem_t *pMsg) {
     char *pLogin;
     char *pPasswd;
-    char *pNick;
-    char *pNetmask;
 
-    pNetmask=getNetmask(pLine);
-    pNick=getNickname(pLine);
     
-    if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
+    if ((pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
 
 	    DEBUG("Check the  password for the account %s\n",pLogin);
 
 	    /* get  the  login name */
 	    if (strlen(pLogin)) {
-        	pPasswd=getParameters(pLine);
+        	pPasswd=getParameters(pMsg->pRawLine);
 
 	        /* parse the  password  form  parameter list */
 	        if (!pPasswd) {
-        	    notice(pNick,getMsgString(INFO_NOT_PASS));
+        	    notice(pMsg->pCallingNick,getMsgString(INFO_NOT_PASS));
 	        }
 
         	/* set password */
 	        replace_db(USER_DB,pLogin,pPasswd);
-        	notice(pNick,getMsgString(OK_PASSWD));        
+        	notice(pMsg->pCallingNick,getMsgString(OK_PASSWD));        
 	    }
     }
 }
 /* #########################################################################
    Bot comand: !logoff
    ######################################################################### */
-void logoff(char *pLine,int nRemoveMode) {
+void logoff(MsgItem_t *pMsg,int nRemoveMode) {
     char *pLogin;
-    char *pNick;
-    char *pNetmask;
 	char *pKey;
 	char *pMode;
 
@@ -217,11 +200,8 @@ void logoff(char *pLine,int nRemoveMode) {
 
     int i, nLength;
 
-    pNetmask=getNetmask(pLine);
-    pNick=getNickname(pLine);
-	
 	/* check login status */
-   	if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
+   	if ((pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
 	    log_out(pLogin);
    
 		/* only by manuel logoff then remove  the modes */
@@ -240,26 +220,26 @@ void logoff(char *pLine,int nRemoveMode) {
 					pMode[0]='-';
 					mode(pChannel->data,pMode,pLogin);	
 					free(pMode);
-				}
+				} else if (pMsg->UserLevel==MasterLevel){
+                    mode(pChannel->data,"-o",pLogin);
+                }
 				free(pKey);
 				free(pChannel);	
 			}
 
 			/* delete the queue */
             deleteQueue(pChannelQueue);
-			notice(pNick,getMsgString(OK_LOGOFF));
+			notice(pMsg->pCallingNick,getMsgString(OK_LOGOFF));
 		}
 	}
 }
 /* #########################################################################
    Bot comand: !ident login <password>
    ######################################################################### */
-void ident(char *pLine) {
+void ident(MsgItem_t *pMsg) {
     char *pLogin;
     char *pPasswd;
     char *pPos;
-    char *pNick;
-    char *pNetmask;
     char *pParameter;
     PQueue pChannelQueue;
 	QueueData *pChannel;
@@ -269,14 +249,12 @@ void ident(char *pLine) {
 
     int i,login_len;
 
-    pNetmask=getNetmask(pLine);
-    pNick=getNickname(pLine);
 
-    DEBUG("try to identify %s\n",pNick);
+    DEBUG("try to identify %s\n",pMsg->pCallingNick);
 
     
-    if (!exist_db(NICKTOUSER_DB,pNetmask)) {
-        pParameter=getParameters(pLine);
+    if (!exist_db(NICKTOUSER_DB,pMsg->pNetmask)) {
+        pParameter=getParameters(pMsg->pRawLine);
     
         /* no parameter found */
         if (pParameter) {
@@ -284,7 +262,7 @@ void ident(char *pLine) {
             if ((pPos=strstr(pParameter," "))==NULL) {
                 /* no Passwd found */
                 /* try empty pass */
-                notice(pNick,getMsgString(INFO_NOT_PASS));
+                notice(pMsg->pCallingNick,getMsgString(INFO_NOT_PASS));
                 pPasswd="";
             } else {
                 pPasswd=(char *)malloc(strlen(pPos)*sizeof(char));
@@ -303,8 +281,8 @@ void ident(char *pLine) {
             /* check the account */
             if (check_db(USER_DB,pLogin,pPasswd)) {
                 DEBUG("User %s found\n",pLogin);
-                log_on(pNetmask,pLogin);
-                notice(pNick,getMsgString(OK_IDENT));
+                log_on(pMsg->pNetmask,pLogin);
+                notice(pMsg->pCallingNick,getMsgString(OK_IDENT));
         
                 isMaster=exist_db(ACCESS_DB,pLogin);
         
@@ -317,12 +295,12 @@ void ident(char *pLine) {
                     pChannel=popQueue(pChannelQueue);
 
                     if (isMaster) {
-                        mode((char*)pChannel->data,"+o",pNick);
+                        mode((char*)pChannel->data,"+o",pMsg->pCallingNick);
                     } else {
                         pKey=(char*)malloc((pChannel->t_size+login_len+1)*sizeof(char));
                         sprintf(pKey,"%s%s",pLogin,(char*)pChannel->data);
                         if ((pMod=get_db(ACCESS_DB,pKey))) {
-   	                        mode((char*)pChannel->data,pMod,pNick);
+   	                        mode((char*)pChannel->data,pMod,pMsg->pCallingNick);
       	                    free(pMod);
           	            }
                        	free(pKey);
@@ -331,13 +309,13 @@ void ident(char *pLine) {
                 }
 				deleteQueue(pChannelQueue);
             } else {
-                notice(pNick,getMsgString(ERR_NOT_ACCOUNT));
+                notice(pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
             }    
         } else {
-            notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+            notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         }
     } else {
-        notice(pNick,getMsgString(ERR_ALREADY_LOGON));
+        notice(pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
     }
 }
 /* #########################################################################
