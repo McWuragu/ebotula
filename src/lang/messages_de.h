@@ -66,7 +66,8 @@ static MsgStruct_t Msg[] ={
 	{ ERR_PINGTIMEOUT_RANGE,"Die Pingtimeoutzeit ist ungültig" },
 	{ ERR_SENDDELAY_RANGE,	"Die Sendeverzögerung ist ungültig" },
     { ERR_SENDLINE_RANGE,	"Das Limit für das Senden mit der 1. Verzögerung ist ungültig" },
-	{ ERR_LOGOFF_RANGE,	"Die Auslogzeit ist ungültig" },
+	{ ERR_INIT_DELAY,       "Die Verzögerung für das Einrichten der Channels ist ungültig"}
+    { ERR_LOGOFF_RANGE,	"Die Auslogzeit ist ungültig" },
 	{ ERR_THREAD_RANGE,	"Das Threadlimit liegt ausserhalb des Bereiches" },
 	{ ERR_NICK,		"Kann Nicknamen nicht setzen" },
 	{ ERR_MUTEX,		"Synchronisation der Threads nicht möglich" },
@@ -164,7 +165,8 @@ static MsgStruct_t Msg[] ={
 		"\t-f Datei\tSetzt Pfad zur Konfigurationsdatei\n",
 		"\t-g group\tSetzt die Group unter der gestartet werden soll (nur root).\n",
         "\t-h\t\tGibt diese Hilfe aus.\n",
-		"\t-k Tage\t\tSetzt die maximal Lebenszeit eines Account.\n",
+		"\t-i Sek\t\tSetzt die Verzögerung für die Initialisierung.\n",
+        "\t-k Tage\t\tSetzt die maximal Lebenszeit eines Account.\n",
 		"\t-l Zeichen/min\tLimit für das schnelle Senden.\n"
 		"\t-m\t\tLegt neuen Master an.\n",
 		"\t-n ms\t\tSetzt die Verzögerung für das schnelle Senden.\n",
