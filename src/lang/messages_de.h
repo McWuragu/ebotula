@@ -136,7 +136,7 @@ static MsgStruct_t Msg[] ={
 	{ INFO_CHANNELLIST_GREET,	"Begrüssung:" },
 	{ INFO_DEFAULT_REASON,	"Du wurdest vom bot gekickt" },
 	{ INFO_INIT_CHANNEL,	"hat den Channel eingerichtet" },
-	{ INFO_NEED_OP,		"benötige Operatorrechte" },
+	{ INFO_NEED_OP,		"benötigt Operatorrechte" },
 	{ INFO_NOT_PASS,	"Du hast ein leeres Passwort gesetzt" }
 };
 
