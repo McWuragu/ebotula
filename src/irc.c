@@ -30,7 +30,7 @@
 void irc_connect(void){
 	char recv_buffer[RECV_BUFFER_SIZE], *tmp;
 	int i,trying=0;
-	extern CONFIG_TYPE setup;
+	extern ConfType setup;
 	
 
 	// send the  USER commado
@@ -67,7 +67,7 @@ void irc_connect(void){
 
 // ############################################################################# 
 void user(void) {
-	extern CONFIG_TYPE setup;
+	extern ConfType setup;
 	struct passwd *pw;
 	char hostname[HOSTNAME_BUFFER_SIZE];
 	char *buffer;
