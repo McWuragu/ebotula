@@ -11,7 +11,12 @@
 #define ACCOUNT_H
 
 void log_on(char *netmask,char *login);
-void log_out(char *netmask,char *login);
+void log_out(char *login);
+
+void rmAccount(char *login);
+void rmAccessRights(char *login);
+
 void rmDeadLogins(long checkTime);
+void rmDeadAccounts(long chackTime);
 
 #endif

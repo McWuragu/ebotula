@@ -7,6 +7,7 @@
 * (c)2003 Steffen Laube <realebula@gmx.de>
 *************************************************************/
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
@@ -20,7 +21,7 @@
 // ############################################################################# 
 void rmDeadLogins(long checkTime) {
 	char **login;
-	char *time,*netmask;
+	char *time;
 	int i;
     
 	// get the  list
@@ -32,13 +33,8 @@ void rmDeadLogins(long checkTime) {
 			
 			// check the time
 			if (checkTime>atol(time)) {
-				netmask=get_db(USERTONICK_DB,login[i]);
-				
-				if (strlen(netmask)) {
-					log_out(netmask,login[i]);
-                    syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,login[i],netmask);
-					free(netmask);
-				}
+				log_out(login[i]);
+                syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,login[i]);
 			}
 			free(time);
 		}
@@ -85,8 +81,11 @@ void log_on(char *netmask,char *login) {
 	}
 }
 // ############################################################################# 
-void log_out(char *netmask,char *login) {
+void log_out(char *login) {
 	extern pthread_mutex_t account_mutex;
+	char *netmask;
+
+	netmask=get_db(USERTONICK_DB,login);
 
 	pthread_mutex_lock(&account_mutex);
 	del_db(NICKTOUSER_DB,netmask);
@@ -94,3 +93,65 @@ void log_out(char *netmask,char *login) {
 	pthread_mutex_unlock(&account_mutex);
 }
 
+// ############################################################################# 
+void rmAccount(char *login) {
+
+	// log off the user
+	log_out(login);
+
+	// remove the  rights
+	rmAccessRights(login);
+	
+	// remove login
+	del_db(USER_DB,login);
+}
+// ############################################################################# 
+void rmAccessRights(char *login){
+	char **channels;
+	char *key;
+	int i,login_len;
+
+	// remove as master
+	del_db(ACCESS_DB,login);
+	
+	channels=list_db(CHANNEL_DB);
+
+	login_len=strlen(login);
+	// remove access rights from the user
+    if (channels) {
+		for (i=0;channels[i]!=NULL;i++) {
+			
+			// build  the key for access.dbf
+			key=malloc((strlen(channels[i])+login_len+1)*sizeof(char));
+			sprintf(key,"%s%s",login,channels[i]);
+			
+			del_db(ACCESS_DB,key);
+				
+			free(key);
+		}
+
+    }
+}
+// ############################################################################# 
+void rmDeadAccounts(long checkTime) {
+	char **login;
+	char *time;
+	int i;
+    
+	// get the  list
+	if ((login=list_db(TIMELOG_DB)))	{
+		for (i=0;login[i]!=NULL;i++) {
+			
+			// read time
+			time=get_db(TIMELOG_DB,login[i]);
+			
+			// check the time
+			if (checkTime>atol(time)) {
+				rmAccount(login[i]);
+                syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,login[i]);
+			}
+			free(time);
+		}
+	}
+
+}
