@@ -34,6 +34,7 @@
 MsgBufType preParser(char *pLine) {
     MsgBufType sMsg;
 	char *pStr,*pPreamble,*pPos;
+	int i;
 
 	// init the buffer with zero
 	bzero(&sMsg,sizeof(MsgBufType));
@@ -47,104 +48,43 @@ MsgBufType preParser(char *pLine) {
 								 
 	// preparse the line
 	// identify events and commands
-	if (!strncmp(pPreamble,"PING",strlen("PING"))) {
+
+	if (!strncmp(pPreamble,CmdList[CMD_ONPING],strlen(CmdList[CMD_ONPING]))) {
 		sMsg.mtype=2;
 		sMsg.identify=CMD_ONPING;
-	} else if (strstr(pPos,"QUIT")) {
+	} else if (strstr(pPos,CmdList[CMD_ONQUIT])) {
 		sMsg.mtype=2;
 		sMsg.identify=CMD_ONQUIT;
-	} else if (strstr(pPos,"JOIN")) {
+	} else if (strstr(pPos,CmdList[CMD_ONJOIN])) {
 		sMsg.mtype=2;
 		sMsg.identify=CMD_ONJOIN;
-	} else if (strstr(pPos,"NICK")) {
+	} else if (strstr(pPos,CmdList[CMD_ONNICKCHG])) {
 		sMsg.mtype=2;
 		sMsg.identify= CMD_ONNICKCHG;
-	} else if (strstr(pPos,"MODE")) {
+	} else if (strstr(pPos,CmdList[CMD_ONMODE])) {
 		sMsg.mtype=2;
 		sMsg.identify= CMD_ONMODE;
-	} else if (strstr(pPos,"TOPIC")) {
+	} else if (strstr(pPos,CmdList[CMD_ONTOPIC])) {
 		sMsg.mtype=2;
 		sMsg.identify= CMD_ONTOPIC;
-	} else if (strstr(pPos,"353")) {
+	} else if (strstr(pPos,CmdList[CMD_ONNAMES])) {
 		sMsg.mtype=2;
 		sMsg.identify=CMD_ONNAMES;
 	} else if ((pStr=strstr(pLine," :!"))!=NULL) {
 
 		if (strlen(pStr)>=3) {
 			pStr+=3;
-	
-			if (!strncmp(pStr,"help",strlen("help"))){
-				sMsg.mtype=1;
-				sMsg.identify=CMD_HELP;
-			} else if (!strncmp(pStr,"version",strlen("version"))){
-				sMsg.mtype=1;
-				sMsg.identify=CMD_VERSION;
-			}  else if (!strncmp(pStr,"hello",strlen("hello"))){
-				sMsg.mtype=1;
-				sMsg.identify=CMD_HELLO;
-			} else if (!strncmp(pStr,"pass",strlen("pass"))){
-				sMsg.mtype=1;
-				sMsg.identify=CMD_PASS;
-			} else if (!strncmp(pStr,"ident",strlen("ident"))){
-				sMsg.mtype=1;
-				sMsg.identify=CMD_IDENT;
-			} else if (!strncmp(pStr,"addchannel",strlen("addchannel"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_ADDCHANNEL;
-			} else if (!strncmp(pStr,"rmchannel",strlen("rmchannel"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_RMCHANNEL;
-			} else if (!strncmp(pStr,"join",strlen("join"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_JOIN;
-			} else if (!strncmp(pStr,"part",strlen("part"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_PART;
-			} else if (!strncmp(pStr,"logoff",strlen("logoff"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_LOGOFF;
-			} else if (!strncmp(pStr,"die",strlen("die"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_DIE;
-			} else if (!strncmp(pStr,"nick",strlen("nick"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_NICK;
-			} else if (!strncmp(pStr,"chanlist",strlen("chanlist"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_CHANNELS;
-			} else if (!strncmp(pStr,"greeting",strlen("greeting"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_SET_GREATING;
-			} else if (!strncmp(pStr,"viewgreet",strlen("viewgreet"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_VIEWGREAT;
-			} else if (!strncmp(pStr,"topic",strlen("topic"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_SET_TOPIC;
-			} else if (!strncmp(pStr,"say",strlen("say"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_SAY;
-			} else if (!strncmp(pStr,"kick",strlen("kick"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_KICK;
-			} else if (!strncmp(pStr,"usermode",strlen("usermode"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_USERMODE;
-			} else if (!strncmp(pStr,"rmuser",strlen("rmuser"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_RMUSER;
-			} else if (!strncmp(pStr,"userlist",strlen("userlist"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_USERLIST;
-			} else if (!strncmp(pStr,"allsay",strlen("allsay"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_ALLSAY;
-			} else if (!strncmp(pStr,"chanmode",strlen("chanmode"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_CHANMODE;
-			} else if (!strncmp(pStr,"restart",strlen("restart"))) {
-				sMsg.mtype=1;
-				sMsg.identify=CMD_RESTART;
+			DEBUG("%s",pStr);
+			// command parser
+			for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
+				DEBUG("Look for %s",CmdList[i]);
+
+				if (!strncmp(pStr,CmdList[i],strlen(CmdList[i]))){
+					sMsg.mtype=1;
+					sMsg.identify=i;
+
+					i=CMDCOUNT;
+				}
 			}
 		}
 	}
@@ -284,103 +224,75 @@ static int AccessRight(char *pLine,CmdType cmd_id) {
 	char *pKey;
 	char *pMod;
 
+
 	pNetmask=getNetmask(pLine);
 	pNick=getNickname(pLine);
 
-	switch (cmd_id) {
-	// handlers
-	case CMD_ONPING:
-	case CMD_ONNAMES:
-	case CMD_ONJOIN:
-	case CMD_ONMODE:
-	case CMD_ONTOPIC:
-	// any users
-	case CMD_HELP:
-	case CMD_HELLO:
-	case CMD_VERSION:
-	case CMD_IDENT:
-	case CMD_VIEWGREAT:
-		return true;
-	// logged in user
-	case CMD_ONNICKCHG:
-	case CMD_ONQUIT:
-	case CMD_LOGOFF:
-	case CMD_PASS:
+
+	// check Accesslevel
+	if (cmd_id >= CMD_MASTER) {
+		// check the  login status
 		if (!exist_db(NICKTOUSER_DB,pNetmask)) {
 			notice(pNick,MSG_NOT_LOGON);	
-			return false;
 		} else {
-			return true;
-		}
-	// owner
-	case CMD_SET_GREATING:
-	case CMD_SET_TOPIC:
-	case CMD_USERLIST:
-	case CMD_SAY:
-	case CMD_KICK:
-	case CMD_USERMODE:
-	case CMD_CHANMODE:
-		if (!exist_db(NICKTOUSER_DB,pNetmask)) {
-			notice(pNick,MSG_NOT_LOGON);	
-			return false;
-		}
-
-		pLogin=get_db(NICKTOUSER_DB,pNetmask);
-		pChannel=getAccessChannel(pLine);
-
-		if (!strlen(pChannel)) {
-			notice(pNick,MSG_NOT_CHANNELOPT);
-			return false;
-		}
-
-		pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char*));
-		sprintf(pKey,"%s%s",pLogin,pChannel);
-
-		pMod=get_db(ACCESS_DB,pKey);
-		
-		if (strchr(pMod,'o')) {
+			pLogin=get_db(NICKTOUSER_DB,pNetmask);
+			if (exist_db(ACCESS_DB,pLogin)) {
 				return true;
+			}
+			notice(pNick,MSG_NOT_MASTER);  
 		}
-
-		notice(pNick,MSG_NOT_OWNER);
-		
-	// master with necassary channel
-	case CMD_JOIN:
-	case CMD_PART:
-	case CMD_RMCHANNEL:
-	case CMD_ADDCHANNEL:
-	case CMD_ALLSAY:
-	case CMD_RMUSER:
-		pChannel=getAccessChannel(pLine);
-
-		if (!strlen(pChannel)) {
-			notice(pNick,MSG_NOT_CHANNELOPT);
-			return false;
-		}
-	// master without necassary channel
-	case CMD_NICK:
-	case CMD_CHANNELS:
-	case CMD_DIE:
-	case CMD_RESTART:
+	}  else if (cmd_id >= CMD_OWNER) {
+		// check the  login status
 		if (!exist_db(NICKTOUSER_DB,pNetmask)) {
 			notice(pNick,MSG_NOT_LOGON);	
-			return false;
-		}
-
-
-
-		pLogin=get_db(NICKTOUSER_DB,pNetmask);
-
-		if (!exist_db(ACCESS_DB,pLogin)) {
-			notice(pNick,MSG_NOT_MASTER);  
 		} else {
-			notice(pNick,MSG_MASTER);  
+			// check the existe of a channel parameter
+			if (strlen(pChannel)) {
+				pLogin=get_db(NICKTOUSER_DB,pNetmask);
+				pChannel=getAccessChannel(pLine);
+		
+				pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char*));
+				sprintf(pKey,"%s%s",pLogin,pChannel);
+		
+				pMod=get_db(ACCESS_DB,pKey);
+				
+				if (strchr(pMod,'o')) {
+						return true;
+				} else {
+					if (exist_db(ACCESS_DB,pLogin)) {
+						notice(pNick,MSG_MASTER);  
+						return true;
+					}
+				}
+			}
+			notice(pNick,MSG_NOT_CHANNELOPT);
+		}
+		
+		notice(pNick,MSG_NOT_OWNER);
+
+	}  else if (cmd_id >= CMD_LOGGED) {
+		// check  login status
+		if (!exist_db(NICKTOUSER_DB,pNetmask)) {
+			notice(pNick,MSG_NOT_LOGON);	
+		} else {
 			return true;
 		}
-	default:
-		notice(pNick,MSG_NOT_ACCESS);
-		return false;
+	}  else if (cmd_id >= CMD_OTHERS) {
+		return true;
+	}  else if (cmd_id >= CMD_EVENT) {
+	   if ((cmd_id == CMD_ONNICKCHG) || (cmd_id==CMD_ONQUIT)) {
+		   // check  login status
+			if (exist_db(NICKTOUSER_DB,pNetmask)) {
+				return true;
+			}
+	   } else {
+		   return true;
+	   }
+	   return false;
 	}
+		
+	notice(pNick,MSG_NOT_ACCESS);
+    return false;	
 }
 // ############################################################################# 
 void stopParser(int sig) {

@@ -10,7 +10,9 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "type.h"
+
+
+#include "command.h"
 
 /**
 * This parse a line whiche was receive by the  client
