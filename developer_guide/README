@@ -109,7 +109,7 @@ Kommandos
 !version
 	- gibt die Versionsinformation aus
 
-!channels
+!chanlist
 	- listet die channel in den der Bot ist
 	- darf nur Master
 
