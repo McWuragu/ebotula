@@ -122,6 +122,7 @@ static MsgStruct_t Msg[] ={
 	{ ERR_UNKNOW_MODE,	"Unbekannter Parameter" },
 	{ ERR_NOTSELF_KICK,	"Kann mich nicht selbst kicken."  },
     { ERR_NOTSELF_BAN,		"Kann mich nicht selbst bannen."  },
+    { ERR_WRONG_PW,     "Falsches Passwort"},
 
 	// other informations
 	{ INFO_HELP_END,	"Ende der Hilfe." },

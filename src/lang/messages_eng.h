@@ -119,6 +119,7 @@ static MsgStruct_t Msg[] = {
 	{ ERR_UNKNOW_MODE,		"Unknown mode parameter"},
     { ERR_NOTSELF_KICK,			"Can't kick myself"},
     { ERR_NOTSELF_BAN,			"Can't ban myself"},
+    { ERR_WRONG_PW,             "Invalid password"},
 
 	// other informations
 	{ INFO_HELP_END,		"End of help."},
