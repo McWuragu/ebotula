@@ -555,28 +555,31 @@ void channel_list(char *line){
 
 	// checking of login
 	CHECK_LOGIN(netmask,nick);
+	
 	login=get_db(LOGIN_DB,netmask);
 
 	CHECK_MASTER(nick,login);	
 
 	// get  the channel list form the DB
 	channels=list_db(CHANNEL_DB);
-
 	
 	while (channels[i]!=NULL) {
 		buffer_size+=strlen(channels[i])+1;
 		i++;
 	}
-
+	
 	// create the buffer
-	buffer=(char *)malloc((strlen(MSG_CHANNELS)+buffer_size+2 )+sizeof(char));
-	sprintf(buffer,"%s ",MSG_CHANNELS);
-
+	buffer=(char *)malloc((strlen(MSG_CHANNELS)+buffer_size+1 )*sizeof(char));
+	sprintf(buffer,MSG_CHANNELS);
+	
+	DEBUG("%s",buffer);
+	
 	i=0;
     while (channels[i]!=NULL) {
+        strcat(buffer," ");
 		strcat(buffer,channels[i]);
-		strcat(buffer," ");
+		i++;
 	}
-
-	notice(nick,buffer);
+	DEBUG("%s",buffer);
+	notice(nick,buffer); 
 }
