@@ -34,7 +34,6 @@ typedef enum {
      ERR_INIT_DELAY,
 	 ERR_LOGOFF_RANGE,	    
 	 ERR_THREAD_RANGE,	    
-	 ERR_MUTEX,			   
     
 
     // command acknowledgment
@@ -62,10 +61,7 @@ typedef enum {
 	 OK_RESTART,	    
 	
 	// Informations for invalid input or using of the bot
-	 ERR_NOT_LOGON,	  
 	 ERR_NOT_MASTER,    
-	 ERR_NOT_OWNER,
-     ERR_NOT_FRIEND,
 	 ERR_NOT_CHANNELOPT,
      ERR_NOT_PARAMETER,
      ERR_NOT_COMMAND,	  
@@ -81,8 +77,6 @@ typedef enum {
      ERR_NICK_INVALID,	     
 	 ERR_ALREADY_LOGON,	     
 	 ERR_UNKNOWN_MODS,	      
-	 ERR_USERLIST_EMPTY,      
-	 ERR_UNKNOW_MODE,	    
 	 ERR_NOTSELF_KICK,    
      ERR_NOTSELF_BAN,        
      ERR_WRONG_PW,
@@ -94,7 +88,6 @@ typedef enum {
 	 INFO_USERLIST_END,	    
 	 INFO_CHANNELLIST_BEGIN,  
 	 INFO_CHANNELLIST_END,	  
-	 INFO_CHANNELLIST_MODE,    
 	 INFO_CHANNELLIST_TOPIC,   
 	 INFO_CHANNELLIST_GREET,  
 	 INFO_DEFAULT_REASON,	  

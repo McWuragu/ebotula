@@ -32,7 +32,6 @@ static MsgStruct_t Msg[] ={
 	{ ERR_INIT_DELAY,       "Die Verzögerung für das Einrichten der Channels ist ungültig"},
     { ERR_LOGOFF_RANGE,	"Die Auslogzeit ist ungültig" },
 	{ ERR_THREAD_RANGE,	"Das Threadlimit liegt ausserhalb des Bereiches" },
-	{ ERR_MUTEX,		"Synchronisation der Threads nicht möglich" },
 
 
     // command acknowledgment
@@ -60,10 +59,7 @@ static MsgStruct_t Msg[] ={
 	{ OK_RESTART,		"Der Bot startet neu" },
 
 	// Informations for invalid input or using of the bot
-	{ ERR_NOT_LOGON,	"Du bist nicht identifiziert" },
 	{ ERR_NOT_MASTER,	"Du bist kein Botmaster" },
-	{ ERR_NOT_OWNER,	"Du bist nicht der Channeleigentümer" },
-	{ ERR_NOT_FRIEND,	"Du bist kein Freund des Channels" },
 	{ ERR_NOT_CHANNELOPT,	"Dieses Kommando benötigt einen Channel" },
     { ERR_NOT_PARAMETER,	"Es konnnten keine gültigen Parameter gefunden werden."},
     { ERR_NOT_COMMAND,		"Es wurde keine Hilfe für das Kommando gefunden" },
@@ -79,8 +75,6 @@ static MsgStruct_t Msg[] ={
 	{ ERR_NICK_INVALID,	"Der Nickname ist ungültig" },
 	{ ERR_ALREADY_LOGON,	"Du bist schon identifiziert" },
 	{ ERR_UNKNOWN_MODS,	"Dieser Modus ist ungültig"  },
-	{ ERR_USERLIST_EMPTY,	"Die Benutzerliste ist leer"  },
-	{ ERR_UNKNOW_MODE,	"Unbekannter Parameter" },
 	{ ERR_NOTSELF_KICK,	"Kann mich nicht selbst kicken."  },
     { ERR_NOTSELF_BAN,		"Kann mich nicht selbst bannen."  },
     { ERR_WRONG_PW,     "Falsches Passwort"},
@@ -92,7 +86,6 @@ static MsgStruct_t Msg[] ={
 	{ INFO_USERLIST_END,	"Ende der Benutzerliste." },
 	{ INFO_CHANNELLIST_BEGIN,	"Channelliste:" },
 	{ INFO_CHANNELLIST_END,		"Ende der Channelliste." },
-	{ INFO_CHANNELLIST_MODE,    "Channelmodus:"  },
 	{ INFO_CHANNELLIST_TOPIC,	"Topic:"  },
 	{ INFO_CHANNELLIST_GREET,	"Begrüssung:" },
 	{ INFO_DEFAULT_REASON,	"Du wurdest vom bot gekickt" },

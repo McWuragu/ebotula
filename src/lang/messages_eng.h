@@ -30,7 +30,6 @@ static MsgStruct_t Msg[] = {
     { ERR_INIT_DELAY,           "The delay of the startup initialization is invalid."},
     { ERR_LOGOFF_RANGE,			"The auto logoff time is invalid."},
 	{ ERR_THREAD_RANGE,		"The threadlimit is out of range." },
-    { ERR_MUTEX,			"Can't synchronize the threads." },
 
 
 	// command acknowledgment
@@ -58,10 +57,7 @@ static MsgStruct_t Msg[] = {
 	{ OK_RESTART,			"The bot is going to restart"},
 
 	// Informations for invalid input or using of the bot
-	{ ERR_NOT_LOGON,			"You're not identified."},
 	{ ERR_NOT_MASTER,			"You're not a irc bot master."},
-	{ ERR_NOT_OWNER,			"You're not the bot owner of this channel."},
-    	{ ERR_NOT_FRIEND,			"You're not a friend of this channel."},
 	{ ERR_NOT_CHANNELOPT,		"This command requieres a channel name."},
     	{ ERR_NOT_PARAMETER,       	"I couldn't found regulare parameters."},
 	{ ERR_NOT_COMMAND,		"No help found for this command."},
@@ -77,8 +73,6 @@ static MsgStruct_t Msg[] = {
 	{ ERR_NICK_INVALID,		"Nickname is invalid."},
 	{ ERR_ALREADY_LOGON,		"You're already identified." },
 	{ ERR_UNKNOWN_MODS,		"This mod is invalid."},
-	{ ERR_USERLIST_EMPTY,		"The userlist is empty"},
-	{ ERR_UNKNOW_MODE,		"Unknown mode parameter"},
     { ERR_NOTSELF_KICK,			"Can't kick myself"},
     { ERR_NOTSELF_BAN,			"Can't ban myself"},
     { ERR_WRONG_PW,             "Invalid password"},
@@ -90,7 +84,6 @@ static MsgStruct_t Msg[] = {
 	{ INFO_USERLIST_END,		"End of user list."},
 	{ INFO_CHANNELLIST_BEGIN,	"Channel list:"},
 	{ INFO_CHANNELLIST_END,		"End of channel list."},
-	{ INFO_CHANNELLIST_MODE,    	"Channel modes:"},
 	{ INFO_CHANNELLIST_TOPIC,	"Topic:"},
 	{ INFO_CHANNELLIST_GREET,	"Greeting:"},
 	{ INFO_DEFAULT_REASON,		"You are kicked from the bot."},
