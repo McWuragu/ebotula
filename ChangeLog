@@ -1,7 +1,7 @@
 ebotula-0.1.15
 --------------------
 - Bugfix: fixed the command !logoff
-- Bugfix: fixed memory leaks
+- Bugfix: fixed a lot of memory leaks
 - Bugfix: fixed the identification of a unkown option at the command line
 - removed the sending thread
 - maked the reaction time of commands shorter
