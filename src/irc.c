@@ -78,6 +78,7 @@ void privmsg(char *pTarget, char *pMsgStr){
 
     sprintf(buffer,"PRIVMSG %s :%s\r\n",pTarget,pMsgStr);
     send_line(buffer);
+    free(buffer);
 }
 // #############################################################################
 void notice(char * pNick,char *pMsgStr) {

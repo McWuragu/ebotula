@@ -323,10 +323,17 @@ static void channelInit(char *pChannel) {
       
     if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
         pChannelData=StrToChannelData(pChannelSet);
+        free(pChannelSet);
+
+        // clean up the memory
+        if (pChannelData->pGreeting) {
+            free(pChannelData->pGreeting);
+        }
 
         // set Topic
         if (pChannelData->pTopic) {
             topic(pChannel,pChannelData->pTopic);
+            free(pChannelData->pTopic);
         }
 
         // set Modes
@@ -334,6 +341,8 @@ static void channelInit(char *pChannel) {
         if (strlen(pMode)) {
             mode(pChannel,pMode,NULL);
         }
+        free(pMode);
+
 
         privmsg(pChannel,getMsgString(INFO_INIT_CHANNEL));
         DEBUG("Initialize the channel %s\n", pChannel);
@@ -377,6 +386,9 @@ void hCallback(char *pLine) {
     
             /* destroy  callback item */
             destroyCallbackItem(CB_Data);
+
+            free(pNetmask);
         }
     }
+    free(pNick);
 }
