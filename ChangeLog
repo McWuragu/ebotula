@@ -5,6 +5,7 @@ ebotula-0.1.9-dev
 - Bugfix: fixed segmentation fault caused by logoff command
 - Bugfix: fixed kicking because of excess flooding at the initialization of
           the channels
+- Bugfix: fixed the blocking around the logoff feature
 - added simple ban command
 - added simple deban command
 
