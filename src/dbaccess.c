@@ -243,14 +243,16 @@ char * get_db(int db,char *_key){
 
 	datum=malloc(sizeof(char)*value.dsize);
 	strcpy(datum,value.dptr);
-
+	
+	free(value.dptr);
+	
 	return datum;
 }
 
 char ** list_db(int db){
 	char ** channellist;
 	GDBM_FILE dbf;
-	datum key;
+	datum key,nextkey;
 	unsigned int count=0,i;
 	
 	// get the database handle
@@ -266,7 +268,10 @@ char ** list_db(int db){
 	// calculat the  size of  database
 	do {
 		count++;
-		key=gdbm_nextkey(dbf,key);
+		nextkey=gdbm_nextkey(dbf,key);
+		free(key.dptr);
+		key=nextkey;
+
     } while ( key.dptr );
 
 	DEBUG("%d channels found",count);
@@ -281,7 +286,9 @@ char ** list_db(int db){
 		channellist[i]=malloc(sizeof(char)*key.dsize);
 		strcpy(channellist[i],key.dptr);
 		
-		key=gdbm_nextkey(dbf,key);
+		nextkey=gdbm_nextkey(dbf,key);
+		free(key.dptr);
+		key=nextkey;
 
 		DEBUG("Found channel %s",channellist[i]);
 	}

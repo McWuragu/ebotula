@@ -86,7 +86,7 @@ void version(char *line) {
     char *str=malloc(sizeof(char)*(strlen(PROGNAME)+strlen("Version ")+strlen(VERSION)+3));
 			
 	// creat Versions String
-	sprintf(str,"%s Version	%s\n",PROGNAME,VERSION);
+	sprintf(str,"%s Version %s\n",PROGNAME,VERSION);
 	notice(getNickname(line),str);
 }
 
