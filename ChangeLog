@@ -7,6 +7,7 @@ ebotula-devel-0.1.10
 - added  ebotula.spec file
 - maked the  first rpm release of this version
 - modified the access level checking  implementation
+- modified the command handler parameter and used cached information
 
 ebotula-0.1.9-dev
 -----------------
