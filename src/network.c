@@ -41,6 +41,7 @@
 static int sockid;
 
 int nCharSendingCounter=0;
+int nCharSendingIncrement=0;
 
 /* #############################################################################  */
 void connectServer(void) {
@@ -114,9 +115,9 @@ void * SendingThread(void *argv){
             if (nCharSendingCounter < sSetup.nFastSendingCharLimit) {
                 msleep(sSetup.iSendDelay);
             } else {
-                msleep(sSetup.iSendSafeDelay);
+                msleep(sSetup.nSlowSendDelay);
             }
-        
+                    
             /* send the line */
             if (!send(sockid,Data->data,Data->t_size-1,0)){
                 syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));
@@ -124,7 +125,9 @@ void * SendingThread(void *argv){
             }
             DEBUG("send(%d/%d): %s",nCharSendingCounter,sSetup.nFastSendingCharLimit,(char*)Data->data);
         
-            nCharSendingCounter+=strlen((char*)Data->data);                           
+            int nSendLength=strlen((char*)Data->data);
+            nCharSendingCounter+=nSendLength;                           
+            nCharSendingIncrement=(nCharSendingIncrement+nSendLength)/2;
 
             free(Data->data);
             free(Data);
