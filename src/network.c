@@ -108,9 +108,6 @@ void  send_line(char *pLine) {
 		syslog(LOG_CRIT,SYSLOG_SEND);
 		stop=true;
 	}
-
-	DEBUG("Send(%d): %s",getpid(),pLine);
-
 	pthread_mutex_unlock(&send_mutex);
 
 	
@@ -180,13 +177,13 @@ void ConnectToIrc(void){
 }
 // ############################################################################# 
 void join_all_channels(void) {
-	char **channelliste;
+	char **ppChannelList;
 	unsigned int i;
-	channelliste=list_db(CHANNEL_DB);
+	ppChannelList=list_db(CHANNEL_DB);
 	
 	// join_Channels
-	for (i=0;channelliste[i]!=NULL;i++) {
-		join(channelliste[i]);
+	for (i=0;ppChannelList[i]!=NULL;i++) {
+		join(ppChannelList[i]);
 	}
 	
 }
