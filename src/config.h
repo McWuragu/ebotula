@@ -2,15 +2,12 @@
 #define CONFIG_H
 
 
+#define PROGNAME				"ebotula"
+#define CONFFILE 				"ebotula.conf"
 
-#define CONF_FILE 				"ebotula.conf"
-#define DATABASEPATH			"./"
-
-#define DEFAULT_REALNAME		"LUGse Bot"
-#define DEFAULT_BOTNAME			"Ircbot"
-#define DEFAULT_SERVERNAME		"irc.fh-lausitz.de"
-#define DEFAULT_PORT			6667
-#define DEFAULT_THREAD_LIMIT	1
+#define DEFAULT_THREAD_LIMIT	3
+#define DEFAULT_REALNAME		"I'm a stupid bot"
+#define DEFAULT_BOTNAME			"Ebotula"
 
 #define MAX_NICKS				3
 #define MAX_THREADS_LIMIT       25

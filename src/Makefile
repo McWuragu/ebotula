@@ -1,10 +1,19 @@
+#########################################################################
+VERSION=0.05-alpha
+DATABASEPATH=./
+CONFDIR=./
+SRC_DIR=./
 
-SRC_DIR=.
-INCLUDS=-I $(SRC_DIR)
-OPTS=-Wall -g $(INCLUDS) -D_DEBUG
-LIBS=-lpthread -lgdbm -lcrypt
-TARGET=ebotula
 MAKEFLAGS+= -j2
+
+CC=gcc
+CFLAGS=	-Wall -g -D_DEBUG -DVERSION=\"$(VERSION)\" \
+	-DDATABASEPATH=\"$(DATABASEPATH)\" \
+	-DCONFDIR=\"$(CONFDIR)\" 
+LDFLAGS= -lpthread -lgdbm -lcrypt
+
+
+TARGET=ebotula
 
 #########################################################################
 .SUFFIXES: .C .c .o .d
@@ -18,18 +27,19 @@ OBJS=   parameter.o \
 	dbaccess.o \
 	ircbot.o 
 
+DEPS= $(patsubst %.o,%.d,$(OBJS))
+#########################################################################
+
+
 %.o: %.c
-	@echo Gcc $<
-	@gcc -c  -pipe $(OPTS) $< -o $@
+	$(CC) -c  -pipe $(CFLAGS) $< -o $@
 
 %.d: %.c
-	@echo DEP $<
-	@gcc -MM $(OPTS) $< | tee $@.tmp > $@
-	@sed <$@.tmp s/\\.o/.d/ >> $@
-	@rm $@.tmp
+	$(CC) -MM $(CFLAGS) $< > $@
 
-$(TARGET) : $(OBJS) $(DEPS)
-	gcc $(OBJS) $(OPTS) $(LIBS) -o $(TARGET)
+
+$(TARGET) : $(DEPS) $(OBJS)
+	$(CC) $(OBJS) $(CFLAGS) $(LDFLAGS) -o $(TARGET)
 
 .PHONY : clean
 clean :
