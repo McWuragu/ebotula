@@ -910,7 +910,7 @@ void chanmode(char *pLine) {
 			}
 		} else if (pNewMode->pModeStr[MOD_TYPE]=='-'){
 			// remove  flags from the pChanneldata
-			if (pNewMode->pModeStr[i]==' ') {
+			if (pNewMode->pModeStr[i]!=' ') {
 				
 				// remove the  mode flag
 				pChannelData->pModes->pModeStr[i]=' ';
