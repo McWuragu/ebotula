@@ -343,7 +343,7 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
     return ret;
 }
 // #############################################################################
-void stopParser(int sig) {
+RETSIGTYPE stopParser(int sig) {
     extern int stop;
     if (!stop) {
         quit();

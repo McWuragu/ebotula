@@ -12,7 +12,7 @@
 #define PARSER_H
 
 
-
+#include "config.h"
 #include "command.h"
 
 
@@ -34,6 +34,6 @@ void *ComandExecutionThread(void *argv);
 static int AccessRight(UserLevel_t Level,Cmd_t cmd_id);
 
 
-void stopParser(int sig);
+RETSIGTYPE stopParser(int sig);
 
 #endif
