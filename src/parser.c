@@ -109,7 +109,7 @@ MsgBufType preParser(char *pLine) {
 			} else if (!strncmp(pStr,"nick",strlen("nick"))) {
 				sMsg.mtype=1;
 				sMsg.identify=CMD_NICK;
-			} else if (!strncmp(pStr,"channels",strlen("channels"))) {
+			} else if (!strncmp(pStr,"chanlist",strlen("chanlist"))) {
 				sMsg.mtype=1;
 				sMsg.identify=CMD_CHANNELS;
 			} else if (!strncmp(pStr,"greating",strlen("greating"))) {
@@ -210,7 +210,7 @@ void *ComandExecutionThread(void *argv) {
 				setNick(sMsg.pMsgLine);
 				break;
 			case CMD_CHANNELS:
-				listChannels(sMsg.pMsgLine);
+				chanlist(sMsg.pMsgLine);
 				break;
 			case CMD_ONNAMES:
 				hBotNeedOp(sMsg.pMsgLine);
