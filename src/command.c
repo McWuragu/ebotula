@@ -1377,7 +1377,7 @@ void inviteuser(MsgItem_t *pMsg){
    ######################################################################### */
 void ctcpping(MsgItem_t *pMsg) {
     char *pPing;
-    char *pPong;
+    char pPong[64];
    if ((pPing=strstr(pMsg->pRawLine," :\001"))==NULL) {
  	/* ignoring errors */
         return;
