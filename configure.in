@@ -14,7 +14,7 @@ dnl to build the configure script
 dnl *************************************************************
 
 AC_INIT(src/ircbot.c)
-AM_INIT_AUTOMAKE(ebotula,0.1.8-dev)
+AM_INIT_AUTOMAKE(ebotula,0.1.9-dev)
 
 AM_SANITY_CHECK
 
