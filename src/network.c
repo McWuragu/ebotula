@@ -61,7 +61,7 @@ boolean connectServer(void) {
 
     errno=0;
 
-    if ((sSetup.server==NULL) && (sSetup.port==NULL)) {
+    if ((sSetup.sHostname==NULL) && (sSetup.sPort==NULL)) {
         errno=EINVAL;
         #ifdef NDEBUG
         fprintf(stderr,"%s\n",gettext("The hostname or portnumber isn't set."));
@@ -71,10 +71,10 @@ boolean connectServer(void) {
     }
 
     #ifdef NDEBUG
-    printf(gettext("Try to connect to %s"),sSetup.server);
+    printf(gettext("Try to connect to %s"),sSetup.sHostname);
     printf("\n");
     #endif 
-    logger(LOG_INFO,gettext("Try to connect to %s"),sSetup.server);
+    logger(LOG_INFO,gettext("Try to connect to %s"),sSetup.sHostname);
 
 
     pthread_mutex_init(&mutexSend,NULL);
@@ -82,16 +82,16 @@ boolean connectServer(void) {
     /* init the  socketaddr */
     bzero((char*) &socketaddr,sizeof(socketaddr));
     socketaddr.sin_family=AF_INET;
-    socketaddr.sin_port=htons(atoi(sSetup.port));
+    socketaddr.sin_port=htons(atoi(sSetup.sPort));
 
     /* resolve hostname */
-    hostaddr=gethostbyname(sSetup.server);
+    hostaddr=gethostbyname(sSetup.sHostname);
     if (!hostaddr) {
         #ifdef NDEBUG
-        fprintf(stderr,gettext("Couldn't resolve the hostname %s."),sSetup.server);
+        fprintf(stderr,gettext("Couldn't resolve the hostname %s."),sSetup.sHostname);
         fprintf(stderr,"\n");
         #endif
-        logger(LOG_ERR,gettext("Couldn't resolve the hostname %s."),sSetup.server);
+        logger(LOG_ERR,gettext("Couldn't resolve the hostname %s."),sSetup.sHostname);
         return false;
     }
     
@@ -121,19 +121,19 @@ boolean connectServer(void) {
     /* connect to server */
     if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
         #ifdef NDEBUG
-        fprintf(stderr,gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
+        fprintf(stderr,gettext("Couldn't connect to %s:%s"),sSetup.sHostname,sSetup.sPort);
         fprintf(stderr,"\n");
         #endif
-        logger(LOG_ERR,gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
+        logger(LOG_ERR,gettext("Couldn't connect to %s:%s"),sSetup.sHostname,sSetup.sPort);
         return false;
     }
 
     #ifdef NDEBUG
-    printf(gettext("The bot is connect to %s"),sSetup.server);
+    printf(gettext("The bot is connect to %s"),sSetup.sHostname);
     printf("\n");
     #endif
     
-    logger(LOG_NOTICE,gettext("The bot is connect to %s"),sSetup.server);
+    logger(LOG_NOTICE,gettext("The bot is connect to %s"),sSetup.sHostname);
 
     return true;
 }

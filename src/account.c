@@ -89,7 +89,7 @@ void rmDeadLogins(long lCheckTime) {
                 /* check the time */
         	    if (lCheckTime>atol(pTime)) {
     	            log_out((char*)pLogin->data);
-                	logger(LOG_DEBUG,"The account %s was automatically logged off",(char*)pLogin->data);
+                	logger(LOG_DEBUG,gettext("The account %s was automatically logged off"),(char*)pLogin->data);
             	}
             }
     	    free(pTime);
@@ -135,10 +135,10 @@ void log_on(char *pNetmask,char *pLogin) {
     /* set the last login timestamp */
     if (exist_db(TIMELOG_DB,pLogin)) {
         replace_db(TIMELOG_DB,pLogin,pTime);
-        logger(LOG_DEBUG,"Update timestamp %s for %s",pTime,pLogin);
+        logger(LOG_DEBUG,gettext("Update the timestamp %s for the account %s"),pTime,pLogin);
     } else {
         add_db(TIMELOG_DB,pLogin,pTime);
-        logger(LOG_DEBUG,"Add timepstamp %s for %s",pTime,pLogin);
+        logger(LOG_DEBUG,gettext("Add the timepstamp %s for the account %s"),pTime,pLogin);
     }
 }
 /* ############################################################################# */
@@ -191,7 +191,7 @@ void rmAccessRights(char *pLogin){
     char *pKey;
     int iLoginLen;
 
-    logger(LOG_DEBUG,"Remove access rights from %s",pLogin);
+    logger(LOG_DEBUG,gettext("Remove the access rights for the account %s"),pLogin);
 
     /* remove as master */
     del_db(ACCESS_DB,pLogin);

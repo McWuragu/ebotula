@@ -360,11 +360,11 @@ void addChannel(MsgItem_t *pMsg) {
 		add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
         free(channelmod);
 
-		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
+		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The channel is added to the channel list"));
 
 		/* join the channel */
 		join(pMsg->pAccessChannel);
-		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
+		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The bot is joined the channel."));
 	}
 }
 
@@ -386,14 +386,14 @@ void rmChannel(MsgItem_t *pMsg){
     if (!del_db(CHANNEL_DB,pMsg->pAccessChannel)) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
     } else {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RMCHANNEL));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The channel is removed from the channel list."));
     }
 
     // TODO: remove old access  rights for this channel
 
     /* part the channel */
     part(pMsg->pAccessChannel);
-    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_PART));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The bot has left the channel."));
 
 }
 /* #########################################################################
@@ -419,7 +419,7 @@ void joinChannel(MsgItem_t *pMsg) {
 	
 	/* join the channel */
 	join(pMsg->pAccessChannel);
-	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
+	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The bot is joined the channel."));
 }
 /* #########################################################################
    Bot comand: !part <#channel>
@@ -433,7 +433,7 @@ void partChannel(MsgItem_t *pMsg) {
 
         /* part the channel */
         part(pMsg->pAccessChannel);
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_PART));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The bot has left the channel."));
     }
 }
 /* #########################################################################
@@ -471,7 +471,7 @@ void setNick(MsgItem_t *pMsg){
         } else {
             /* set the nickname for the bot on the irc */
             nick(pParameter);
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_NICK_SET));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The bot tries to set the new nickname."));
 
             /* set  the new  nickname in the configuration struct*/
             free(sSetup.pBotname);

@@ -40,7 +40,7 @@ void user(void) {
     gethostname(hostname,HOSTNAME_BUFFER_SIZE);
 
     // calculat the command size
-    buffer_size=strlen("USER")+strlen(pw->pw_name)+strlen(hostname)+strlen(sSetup.server)+strlen(sSetup.realname)+8;
+    buffer_size=strlen("USER")+strlen(pw->pw_name)+strlen(hostname)+strlen(sSetup.sHostname)+strlen(sSetup.realname)+8;
 
 	if ((buffer=(char *)malloc(sizeof(char)*buffer_size))==NULL)
    	{
@@ -48,7 +48,7 @@ void user(void) {
 	   return;
    	}	   
     // create the  commando string
-    sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.server,sSetup.realname);
+    sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.sHostname,sSetup.realname);
 
     // send commando
     SendLine(buffer);

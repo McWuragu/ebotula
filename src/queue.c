@@ -27,8 +27,8 @@ PQueue initQueue()
 	if (!(pqueueInit=(PQueue)malloc(sizeof(Queue))))
 	{
 		/** Error not enough memory **/
-		logger(LOG_DEBUG,"initQueue() - Can't allocate memory!");
-		return NULL;
+		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+        return NULL;
 	}
 	
 	/** creating Sentinel pointer **/
@@ -79,8 +79,8 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	if ((pqueueNew=(PQueue)malloc(sizeof(Queue)))==NULL)
 	{
 		/** Error not enough memory **/
-		logger(LOG_DEBUG,"pushQueue() - Can't allocate memory!");
-			pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
+		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+        pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 		return QUEUE_MEMORY_ALLOC_ERROR;
 	}
 	/** assembling Queue **/
@@ -108,13 +108,13 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	if(( pqueueNew->queuedataData=(QueueData*) malloc(sizeof(QueueData)))==NULL)
 	{
 		/** Error not enough memory **/
-		logger(LOG_DEBUG,"pushQueue() - Can't allocate memory!");
-		pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
+		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
+        pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 		return QUEUE_MEMORY_ALLOC_ERROR;
 
 	}
 
-	/** allocate the memmory and copy data */
+	/** allocate the memory and copy data */
 	pqueueNew->queuedataData->t_size=queuedataElement.t_size;
 	pqueueNew->queuedataData->data=malloc(queuedataElement.t_size);	
 	
@@ -162,7 +162,7 @@ QueueData * popQueue(PQueue pqueueIn)
 			return (QueueData *)queuedataElement;
 		}	
 	} else {
-		logger(LOG_DEBUG,"ERROR: popQueue() - empty Queue!");
+		logger(LOG_DEBUG,gettext("Queue is empty"));
 	}
 
 	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
@@ -252,7 +252,7 @@ QueueData * getNextitrQueue(PQueue pqueueIn) {
 		pQueueData=(QueueData *)pqueueSentinel->iterator->queuedataData;	
 	}	
     } else {
-	logger(LOG_DEBUG,"ERROR: popQueue() - empty Queue!");
+	logger(LOG_DEBUG,gettext("Queue is empty"));
     }
 
     pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	

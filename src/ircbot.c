@@ -120,10 +120,10 @@ int main(int argc,char * const argv[]) {
     strcpy(sSetup.realname,DEFAULT_REALNAME);
     
     // irc connection
-    sSetup.server=(char *)malloc((strlen(DEFAULT_IRC)+1)*sizeof(char));
-    strcpy(sSetup.server,DEFAULT_IRC);
-    sSetup.port=(char *)malloc((strlen(DEFAULT_PORT)+1)*sizeof(char));
-    strcpy(sSetup.port,DEFAULT_PORT);
+    sSetup.sHostname=(char *)malloc((strlen(DEFAULT_IRC)+1)*sizeof(char));
+    strcpy(sSetup.sHostname,DEFAULT_IRC);
+    sSetup.sPort=(char *)malloc((strlen(DEFAULT_PORT)+1)*sizeof(char));
+    strcpy(sSetup.sPort,DEFAULT_PORT);
 
     // user & group
     sSetup.sExeGroup=(char *)malloc((strlen(DEFAULT_GROUP)+1)*sizeof(char));
@@ -258,8 +258,8 @@ int main(int argc,char * const argv[]) {
    
 
     logger(LOG_INFO,"--------------- current setup -------------------");
-    logger(LOG_INFO,"Server %s",sSetup.server);
-    logger(LOG_INFO,"Port %s",sSetup.port);
+    logger(LOG_INFO,"Server %s",sSetup.sHostname);
+    logger(LOG_INFO,"Port %s",sSetup.sPort);
     logger(LOG_INFO,"Nickname %s", sSetup.pBotname);
     logger(LOG_INFO,"Realname %s", sSetup.realname);
     logger(LOG_INFO,"Execute as %s.%s",sSetup.sExeUser,sSetup.sExeGroup);
@@ -471,8 +471,8 @@ int main(int argc,char * const argv[]) {
     free (sSetup.configfile);
     free (sSetup.pDatabasePath);
     free (sSetup.realname);
-    free (sSetup.server);
-    free (sSetup.port);
+    free (sSetup.sHostname);
+    free (sSetup.sPort);
     free (sSetup.sExeGroup);
     free (sSetup.sExeUser);
 

@@ -37,7 +37,7 @@ void printCmdLineHelp() {
         printf(gettext("\t-l char/min\tSet the charakter limit for the first sending delay level.\n"));
 		printf(gettext("\t-m\t\tStart the dialog for creating of a new master.\n"));
 		printf(gettext("\t-n ms\t\tSet the delay time in millisecond for the fast sending.\n"));
-		printf(gettext("\t-p port\t\tSet the port of the irc server.\n"));
+		printf(gettext("\t-p port\t\tSet the portnumber of the irc server.\n"));
 		printf(gettext("\t-r string\tSet the output for a request of the real name.\n"));
 		printf(gettext("\t-s server\tSet the irc server name.\n"));
 		printf(gettext("\t-t count\tSet the number of created  threads.\n"));

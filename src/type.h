@@ -22,9 +22,9 @@ typedef struct ConfStruct{
     /** the string  for  the field realname */
     char *realname;
     /** the url of the  irc server */
-    char *server;
-    /** the port for connection to the server */
-    char *port;
+    char *sHostname;
+    /** the portnumber for connection to the server */
+    char *sPort;
     /** the path to a not default configuration file */
     char *configfile;
     /** the path to the database */

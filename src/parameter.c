@@ -56,8 +56,8 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                
-                sSetup.server=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-                strcpy(sSetup.server,argv[i]);
+                sSetup.sHostname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+                strcpy(sSetup.sHostname,argv[i]);
                 
                 break;
             case 'b':
@@ -121,16 +121,16 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set port
+                // set portnumber
                 if ((atoi(argv[i])<1) || (atoi(argv[i])>65535)) {
                     errno=EDOM;
-                    fprintf(stderr,gettext("The port %i value is out of range.\n"),atoi(argv[i]));
+                    fprintf(stderr,gettext("The portnumber %i value is out of range.\n"),atoi(argv[i]));
                     exit(errno);
                 }
                 
-                free(sSetup.port);
-                sSetup.port=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-                strcpy(sSetup.port,argv[i]);
+                free(sSetup.sPort);
+                sSetup.sPort=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+                strcpy(sSetup.sPort,argv[i]);
     
                 break;
             case 't':
@@ -345,19 +345,19 @@ void ConfigFileParser(void) {
                         exit(errno);
                     }
                     // set hostname
-                    free(sSetup.server);
-                    sSetup.server=(char *)malloc((strlen(value)+1)*sizeof(char));
-                    strcpy(sSetup.server,value);
+                    free(sSetup.sHostname);
+                    sSetup.sHostname=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.sHostname,value);
                 } else if (!strcmp(key,KEY_PORT)) {
                     if ((atoi(value)<1) || (atoi(value)>65535)) {
                         errno=EINVAL;
-                        fprintf(stderr,gettext("The port %i value is out of range.\n"),atoi(value));
+                        fprintf(stderr,gettext("The portnumber %i value is out of range.\n"),atoi(value));
                         exit(errno);
                     }
                     // set port
-                    free(sSetup.port);
-                    sSetup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
-                    strcpy(sSetup.port,value);
+                    free(sSetup.sPort);
+                    sSetup.sPort=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.sPort,value);
                 } else if (!strcmp(key,KEY_BOTNAME)) {
                     if (!NickStringCheck(value)) {
                         errno=EINVAL;
