@@ -721,7 +721,8 @@ void usermode(char *pLine){
     extern pthread_mutex_t account_mutex;
     char *pChannel;
     char *pNick;
-    char *pParameter;
+    char *pNetmask;
+	char *pParameter;
     char *pPos;
     char *accesslogin;
     char *pLogin;
@@ -829,39 +830,41 @@ void usermode(char *pLine){
     	// set the end mark
 	    mod[2]='\0';
 
-    	// set end mark for the  mode line
 	    DEBUG("Found mod %s",mod);
 
-    	// check for old or new master
-	    if (strchr(oldmod,'m') || (mod[1]=='m')) {
-    	    DEBUG("Modify a master account");
+		// look for old master rights
+		if (mod[1]!='m' && oldmod) {
+	    	// check for old or new master
+		    if (oldmod[1]=='m') {
+	      	    // remove master account
+    		    del_db(ACCESS_DB,pLogin);
+		    } 
+		}
+				
+		// set the new key and remove old rights for new master
+		if (mod[1]=='m')  {
+			if (oldmod) {
+				if (oldmod[1]!='m') {
+			        // remove old access right
+    	    	   	rmAccessRights(pLogin);
+				}
+			}
 
-        	// remove old  access rights if make a user to bot master or
-	        // remove  old  master access rights if a master put of a other access level
-    	    if (mod[1]=='m' && !strchr(oldmod,'m')) {
-        	    // remove old access right
-            	rmAccessRights(pLogin);
-
-	            // replace the  old key by the login as new key
-    	        free(pKey);
-        	    pKey=(char *)malloc((strlen(pLogin)+1)*sizeof(char));
-            	strcpy(pKey,pLogin);
-
-	        } else if (mod[1]!='m' && strchr(oldmod,'m')) {
-        	    // remove master account
-    	        del_db(ACCESS_DB,pLogin);
-	        }
+            // replace the  old key by the login as new key
+	   	    free(pKey);
+    	   	pKey=(char *)malloc((strlen(pLogin)+1)*sizeof(char));
+        	strcpy(pKey,pLogin);
     	}
 	    
 		// add or remove the mod
    		if (mod[0]=='+') {
-        DEBUG("Set new mode");
+        	DEBUG("Set new mode");
 
-        if (!(add_db(ACCESS_DB,pKey,mod))) {
+	        if (!(add_db(ACCESS_DB,pKey,mod))) {
             replace_db(ACCESS_DB,pKey,mod);
-        }
-	    } else {
-    	    DEBUG("Remove new mode");
+    	    }
+	  	} else {
+    	DEBUG("Remove new mode");
 	        // remove mod
         	del_db(ACCESS_DB,pKey);
 
@@ -869,30 +872,31 @@ void usermode(char *pLine){
 
 
 	    // identify the  login and set the rights
-    	usernick=getNickname(get_db(USERTONICK_DB,pLogin));	
-	    if (strlen(usernick) && oldmod[1]!= mod[1]) {
-    	    DEBUG("Modify the current mode");
-	        if (mod[0]=='-') {
-            	// remove mods
-        	    mode(pChannel,mod,usernick);
-    	    } else {
-	            // remove old mods
-        	    if (strchr(oldmod,'v')) {
-    	            // remove -o
-	                mode(pChannel,"-v",usernick);
-            	} else if (strlen(oldmod)) {
-        	        // remove -v
-    	            mode(pChannel,"-o",usernick);
-	            }
+		if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
+	    	if (strlen(getNickname(pNetmask)) && oldmod[1]!= mod[1]) {
+    	    	DEBUG("Modify the current mode");
+		        if (mod[0]=='-') {
+    	        	// remove mods
+        		    mode(pChannel,mod,usernick);
+	    	    } else {
+		            // remove old mods
+        		    if (strchr(oldmod,'v')) {
+    	    			// remove -o
+		                mode(pChannel,"-v",usernick);
+    	        	} else if (strlen(oldmod)) {
+        		        // remove -v
+    	    	        mode(pChannel,"-o",usernick);
+	            	}
 
-            	// set the new mods
-        	    if (mod[1]=='v') {
-    	            mode(pChannel,"+v",usernick);
-	            } else {
-            	    mode(pChannel,"+o",usernick);
-        	    }
-    	    }
-	    }
+	            	// set the new mods
+    	    	    if (mod[1]=='v') {
+    		            mode(pChannel,"+v",usernick);
+	        	    } else {
+            		    mode(pChannel,"+o",usernick);
+	        	    }
+    		    }
+	    	}
+		}
 		pthread_mutex_unlock(&account_mutex);
 	    notice(pNick,MSG_USERMODE_OK);
 	} 
