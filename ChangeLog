@@ -3,20 +3,22 @@ ebotula-0.1.17
 - Bugfix: fixed the rejoin-after-kick bug
 - Bugfix: fixed the invalid prefix handling of a irc message
 - Bugfix: fixed the compilation without the header file syslog.h
-- Bugfix: disabled the compiler comptimazation of the gcc (bug 16)
+- Bugfix: fixed the SIGSEGV on the using of the command accountlist
+- Bugfix: fixed the SIGSEGV on the command invite (bug 17,16)
+- Bugfix: fixed the SIGSEGV on the command line parameter -f (bug 19)
 - added the nls for the command line and log strings
 - added the nls for all error or information strings of the bot
 - added a seperate thread for the joing of the channels
 - added a parameter to controll the delay of the startup intialization
 - added more as one debug level
 - added a parameter to control the log output
+- added the suport of variable parameter list to the SendMsg()
 - modified the debug logging
 - modified the global sending mutex to a static mutex
-- adjusted the command line help
 - modified the configuration file generator
 - modified the SendMsg()
-- added the  suport of  variable parameter list to the SendMsg()
-
+- adjusted the command line help
+- renamed the command rmuser to rmaccount
 
 ebotula-0.1.16
 --------------------
