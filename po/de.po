@@ -988,8 +988,8 @@ msgstr ""
 "\n"
 
 #: src/parameter.c:489
-msgid "Type the login: "
-msgstr "Eingabe des Logins: "
+msgid "Type the login (max. 8): "
+msgstr "Eingabe des Logins (max. 8): "
 
 #: src/parameter.c:497 src/parameter.c:532
 msgid "Forbidden characters used.\n"
