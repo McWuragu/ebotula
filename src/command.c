@@ -13,7 +13,11 @@
 #include <unistd.h>
 #include <errno.h>
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
+		  
+#include "ircbot.h"
 #include "extract.h"
 #include "utilities.h"
 #include "messages.h"
@@ -135,7 +139,7 @@ void help(char *pLine) {
 				DEBUG("Commando found");
 				
 				// the head	for help
-				pTmp=malloc((strlen(MSG_HELP_FOR)+strlen((char *)irchelp_msg[i])+3)*sizeof(char));
+				pTmp=(char*)malloc((strlen(MSG_HELP_FOR)+strlen((char *)irchelp_msg[i])+3)*sizeof(char));
 				sprintf(pTmp,"%s %s:",MSG_HELP_FOR,irchelp_msg[i]);
 				notice(pNick,pTmp);
 
@@ -167,7 +171,7 @@ void hello(char *pLine) {
 	
 	pNetmask=getNetmask(pLine);
 	pNick=getNickname(pLine);
-	pLogin=malloc((strlen(pNick)+1)*sizeof(char));
+	pLogin=(char*)malloc((strlen(pNick)+1)*sizeof(char));
 	
 	strcpy(pLogin,pNick);
 	
@@ -287,8 +291,7 @@ void ident(char *pLine) {
 		// no Passwd found 
 		// try empty pass
 		notice(pNick,MSG_NOT_PASS);
-		pPasswd=(char *)malloc(sizeof(char));
-		*pPasswd='\0';
+		pPasswd="";
 	} else {
 		pPasswd=(char *)malloc(strlen(pPos)*sizeof(char));
 		strcpy(pPasswd,&pPos[1]);
@@ -316,7 +319,7 @@ void ident(char *pLine) {
 			if (isMaster) {
 				mode(ppChannels[i],"+o",pNick);
 			} else {
-				pKey=malloc((strlen(ppChannels[i])+login_len+1)*sizeof(char));
+				pKey=(char*)malloc((strlen(ppChannels[i])+login_len+1)*sizeof(char));
 				sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
 				pMod=get_db(ACCESS_DB,pKey);
 
@@ -505,39 +508,38 @@ void version(char *pLine) {
 // ######################################################################### 
 void setGreating(char *pLine) {
 	char *pChannel;
-	char *channelstr;
-	char *_channelstr;
-	char *mode;
-	char *pTopic;
+	char *pChannelSet;
+	char *pMode;
 	char *pNick;
-	char *greatLine;
+
+	ChannelDataType *pChannelData;
 
 	pNick=getNickname(pLine);
 	pChannel=getAccessChannel(pLine);
 
 	DEBUG("Greating seting for %s",pChannel);
 
-	greatLine=getParameters(pLine);
 
     // check of  existenz of the channel
-	channelstr=get_db(CHANNEL_DB,pChannel);
+	pChannelSet=get_db(CHANNEL_DB,pChannel);
 	
-	if (!strlen(channelstr)) {
+	if (!strlen(pChannelSet)) {
 		notice(pNick,MSG_NOT_CHANNEL);
 		return;
+	} else {
+		pChannelData=StrToChannelData(pChannelSet);
+		free(pChannelData->pGreating);
+		pChannelData->pGreating=getParameters(pLine);
 	}
 
-	// insert or replace the greating  in the DB
-	mode=getMode(channelstr);
-	pTopic=getTopic(channelstr);
-	
-	_channelstr=(char *)malloc((strlen(mode)+strlen(pTopic)+strlen(greatLine)+3)*sizeof(char));
-	sprintf(_channelstr,"%s\t%s\t%s",mode,pTopic,greatLine);
+	free(pChannelSet);
+	pChannelSet=ChannelDataToStr(pChannelData);
+	sprintf(pChannelSet,"%s\t%s\t%s",pMode,pChannelData->pTopic,pChannelData->pGreating);
 
-	replace_db(CHANNEL_DB,pChannel,_channelstr);
+	replace_db(CHANNEL_DB,pChannel,pChannelSet);
     
 	// message
-	if (greatLine[0]=='\0') {
+	if (pChannelData->pGreating[0]=='\0') {
 		notice(pNick,MSG_RM_GREATING);
 	} else {
 		notice(pNick,MSG_SET_GREATING);
@@ -548,50 +550,48 @@ void setGreating(char *pLine) {
 // ######################################################################### 
 void setTopic(char *pLine) {
 	char *pChannel;
-	char *channelstr;
-	char *_channelstr;
-	char *mode;
-	char *pTopic;
+	char *pChannelSet;
 	char *pNick;
-	char *greatLine;
+	
+
+	ChannelDataType *pChannelData;
 
 	pNick=getNickname(pLine);
 	pChannel=getAccessChannel(pLine);
 	
 	DEBUG("Topic seting for %s",pChannel);
-	pTopic=getParameters(pLine);
-	channelstr=get_db(CHANNEL_DB,pChannel);
+	pChannelSet=get_db(CHANNEL_DB,pChannel);
 
 	// check of  existenz of the channel
-	if (!strlen(channelstr)) {
+	if (!strlen(pChannelSet)) {
 		notice(pNick,MSG_NOT_CHANNEL);
 		return;
+	} else {
+		pChannelData=StrToChannelData(pChannelSet);
+		free(pChannelData->pTopic);
+		pChannelData->pTopic=getTopic(pChannelSet);
 	}
 
-	// insert or replace the greating  in the DB
-	mode=getMode(channelstr);
-	greatLine=getGreating(channelstr);
 	
-	_channelstr=(char *)malloc((strlen(mode)+strlen(pTopic)+strlen(greatLine)+3)*sizeof(char));
-	sprintf(_channelstr,"%s\t%s\t%s",mode,pTopic,greatLine);
-
-	replace_db(CHANNEL_DB,pChannel,_channelstr);
+	free(pChannelSet);
+	pChannelSet=ChannelDataToStr(pChannelData);
+	replace_db(CHANNEL_DB,pChannel,pChannelSet);
     
 	// message
-	if (pTopic[0]=='\0') {
+	if (pChannelData->pTopic[0]=='\0') {
 		notice(pNick,MSG_RM_TOPIC);
 	} else {
 		notice(pNick,MSG_SET_TOPIC);
 	}
 
-	topic(pChannel,pTopic);
+	topic(pChannel,pChannelData->pTopic);
 }
 // ######################################################################### 
 // Bot comand: !viewgreat <#channel>
 // ######################################################################### 
 void greating(char *pLine) {
 	char *pChannel;
-	char *channelstr;
+	char *pChannelSet;
 	char *greating;
 	char *pNick;
 
@@ -600,8 +600,8 @@ void greating(char *pLine) {
 
 	DEBUG("Greating for %s",pChannel);
 
-	channelstr=get_db(CHANNEL_DB,pChannel);
-	greating=getGreating(channelstr);
+	pChannelSet=get_db(CHANNEL_DB,pChannel);
+	greating=getGreating(pChannelSet);
 
 	if (!strlen(greating)) {
 		return;
@@ -669,8 +669,7 @@ void kickuser(char *pLine) {
 	// parse reason
 	if (!(pPos=strchr(pParameter,' '))) {
 		// empty reason
-		reason=(char*)malloc(sizeof(char));
-		*reason='\0';
+		reason="";
     } else {
 		// set null byte  for  nick
 		*pPos='\0';
@@ -682,7 +681,7 @@ void kickuser(char *pLine) {
 	}
 
 	// parse nick
-	kicknick=malloc((strlen(pParameter)+1)*sizeof(char));
+	kicknick=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
 	strcpy(kicknick,pParameter);
 
 	kick(pChannel,kicknick,reason);
@@ -862,6 +861,78 @@ void usermode(char *pLine){
 // Bot comand: !chanmode [#channel] <mod>
 // ######################################################################### 
 void chanmode(char *pLine) {
+	char *pNick;
+	char *pChannel;
+	char *pChannelSet;
+	char *pParameters;
+
+	int i;
+
+	ChannelModeType *pNewMode;			
+	ChannelDataType *pChannelData;
+
+
+	pNick=getNickname(pLine);
+	pChannel=getAccessChannel(pLine);
+	pParameters=getParameters(pLine);
+
+	// read the old channel parameters
+	pChannelSet=get_db(CHANNEL_DB,pChannel);
+	if (strlen(pChannelSet)) {
+		pChannelData=StrToChannelData(pChannelSet);
+	} else {
+		notice(pNick,MSG_NOT_CHANNEL);
+		return;
+	}
+
+	// read the new channel parameters
+	pNewMode=StrToChannelMode(getParameters(pLine));
+    
+	
+	// build the new channel parameters
+	for (i=1;i<12;i++) {
+		if (pNewMode->pModeStr[MOD_TYPE]=='+') {
+			// add  the new mode in the pChannelData
+			if (pNewMode->pModeStr[i]!=' ') {
+				// set the new flag
+				pChannelData->pModes->pModeStr[i]=pNewMode->pModeStr[i];
+
+				// set keyword and limit
+				if (pNewMode->pModeStr[i]=='k') {
+					free(pChannelData->pModes->pKeyword);
+					pChannelData->pModes->pKeyword=(char*)malloc((strlen(pNewMode->pKeyword)+1)*sizeof(char));
+					strcpy(pChannelData->pModes->pKeyword,pNewMode->pKeyword);
+				} else if (pNewMode->pModeStr[i]=='l') {
+					free(pChannelData->pModes->pLimit);
+					pChannelData->pModes->pLimit=(char*)malloc((strlen(pNewMode->pLimit)+1)*sizeof(char));
+					strcpy(pChannelData->pModes->pLimit,pNewMode->pLimit);
+				}
+			}
+		} else if (pNewMode->pModeStr[MOD_TYPE]=='-'){
+			// remove  flags from the pChanneldata
+			if (pNewMode->pModeStr[i]==' ') {
+				
+				// remove the  mode flag
+				pChannelData->pModes->pModeStr[i]=' ';
+				
+				// remove keyword and limit
+				if (pChannelData->pModes->pModeStr[i]=='k') {
+					pChannelData->pModes->pKeyword[0]='\0';
+				} else if (pChannelData->pModes->pModeStr[i]=='l') {
+					pChannelData->pModes->pLimit[0]='\0';
+				}
+			}
+		}
+	}
+
+	// set the new mode in database
+	free(pChannelSet);
+	pChannelSet=ChannelDataToStr(pChannelData);
+	replace_db(CHANNEL_DB,pChannel,pChannelSet);
+	
+
+	// set the mods
+	mode(pChannel,ChannelModeToStr(pNewMode),NULL);
 }
 // ######################################################################### 
 // Bot comand: !rmuser <login>
@@ -940,7 +1011,7 @@ void userlist(char *pLine){
 			// check for master or normal user
 			if (exist_db(ACCESS_DB,ppLogins[i])) {
 				// user is master
-				pMsgStr=malloc((USERLIST_TAB+strlen("Master   Status:")+5)*sizeof(char));
+				pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Master   Status:")+5)*sizeof(char));
 				strcpy(pMsgStr,ppLogins[i]);
 				
 				// fill
@@ -967,11 +1038,11 @@ void userlist(char *pLine){
 						iChanLen=strlen(ppChannels[j]);
 
 						// build key for access.dbf
-						pKey=malloc((iLoginLen+iChanLen+1)*sizeof(char));
+						pKey=(char*)malloc((iLoginLen+iChanLen+1)*sizeof(char));
 						sprintf(pKey,"%s%s",ppLogins[i],ppChannels[j]);
 
 						if((pMod=get_db(ACCESS_DB,pKey))) {
-							pMsgStr=malloc((USERLIST_TAB+iChanLen+strlen("Status:")+16)*sizeof(char));
+							pMsgStr=(char*)malloc((USERLIST_TAB+iChanLen+strlen("Status:")+16)*sizeof(char));
 							strcpy(pMsgStr,ppLogins[i]);
 							
 							// fill
@@ -1019,11 +1090,11 @@ void userlist(char *pLine){
 				iLoginLen=strlen(ppLogins[i]);
 				
 				// build the key  for  access.dbf
-				pKey=malloc((iChanLen+1+iLoginLen)*sizeof(char));
+				pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
 				sprintf(pKey,"%s%s",ppLogins[i],pAccessChannel);
 
 				if((pMod=get_db(ACCESS_DB,pKey))) {
-					pMsgStr=malloc((USERLIST_TAB+strlen("Status:")+14)*sizeof(char));
+					pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Status:")+14)*sizeof(char));
 					strcpy(pMsgStr,ppLogins[i]);
 					
 					// fill
