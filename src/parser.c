@@ -128,7 +128,7 @@ void *ComandExecutionThread(void *argv) {
     // set the thread cancelable
     pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
 
-    DEBUG("Execution thread is running\n");
+    DEBUG("Execution thread is running (%d)\n",getpid());
 
     // execute loop
     while(!stop) {
