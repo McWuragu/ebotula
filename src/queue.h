@@ -67,7 +67,6 @@ typedef struct tag_Queue
 
 /**
  * initialization and creating a empty queue
- * @author Uwe Strempel							
  *		  	   	
  * @return  pointer to queue	
  */
@@ -75,7 +74,6 @@ PQueue initQueue();
 
 /**							
  * pushing 1 element to queue
- * @author Uwe Strempel
  *			
  * @param pqueueIn pointer to queue	
  * @param queuedataElement pointer to the datum	 		
@@ -85,7 +83,6 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement);
 
 /**
  * popping one element from Queue until Queue is empty
- * @author Uwe Strempel
  *							
  * @param pqueueIn pointer to queue	
  * @Return pointer of the datum	 		
@@ -94,7 +91,6 @@ QueueData * popQueue(PQueue pqueueIn);
 
 /**							
  * checking the fill status of the queue
- * @author Uwe Strempel
  *			
  * @Param pqueueIn pointer to queue	
  * @Return true if emtpy
@@ -103,7 +99,6 @@ int isemptyQueue(PQueue pqueueIn);
 
 /**							
  * checking the fill status of the queue
- * @author Uwe Strempel
  *			
  * @Param pqueueIn pointer to queue	
  * @Return true if full
@@ -112,7 +107,6 @@ int isfullQueue(PQueue pqueueIn);
 
 /**
  * popping until queue is empty and deleting queue
- * @author Uwe Strempel
  *							
  * @param pqueueIn pointer to queue	
  * @return 0 if success		
@@ -121,7 +115,6 @@ QueueExeStatus deleteQueue(PQueue pqueueIn);
 
 /**
  * flushing queue until queue is empty
- * @author Steffen Laube		  
  *   			
  * @param pqueueIn pointer to queue	
  * @return 0 if Success		
