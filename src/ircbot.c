@@ -139,7 +139,7 @@ int main(int argc,char * const argv[]) {
     DEBUG("Sending  line limit %d\n",sSetup.iSendSafeLine);
     DEBUG("Account live time %dd\n",sSetup.AccountLiveTime);
     DEBUG("Autolog of after %dd\n",sSetup.AutoLoggoff);
-    DEBUG("-----------------------------------------------");
+    DEBUG("-----------------------------------------------\n");
 
     syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));
 
