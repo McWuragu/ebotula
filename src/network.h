@@ -10,17 +10,9 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include "command.h"
 
-#define RECV_BUFFER_SIZE		0x1000
-#define HOSTNAME_BUFFER_SIZE	0xFF
-
-typedef struct MsgBufStruct {
-	long	mtype;
-	CmdType	identify;
-	char	msg_line[RECV_BUFFER_SIZE];
-} MsgBufType; 
-
+void irc_connect(void);
+void join_all_channels(void);
 
 /// connect to the server
 void connectServer(void);
@@ -39,20 +31,6 @@ void send_line(char *line);
 */
 void recv_line(char *line,unsigned int len);
 
-/**
-* This parse a line whiche was receive by the  client
-* @param line  a pointer of a string
-* @return a struct withe the command id, the type of 
-* message and a string as  argument for the  command
-*/
-MsgBufType preParser(char *line);
-
-/**
-* the function for  the  thread
-* @param argv a pointer  of arguements for  the
-* starting of  this thread
-*/
-void *action_thread(void *argv);
 
 
 

@@ -22,12 +22,12 @@
 #include <pthread.h>
 
 #include "config.h"
-#include "extract.h"
+#include "dbaccess.h"
+#include "type.h"
 #include "utilities.h"
 #include "messages.h"
 #include "irc.h"
 #include "command.h"
-#include "handles.h"
 #include "network.h"
 
 int sockid;
@@ -85,6 +85,7 @@ void disconnectServer(void){
 }
 
 void  send_line(char *line) {
+	extern ConfType setup;
 	extern int sockid;
 	extern pthread_mutex_t send_mutex;
 
@@ -92,7 +93,7 @@ void  send_line(char *line) {
 	pthread_mutex_lock(&send_mutex);
 
 	// protect excess flood
-	millisleep(1500);
+	millisleep(setup.sendDelay);
 	
 	if (!send(sockid,line,strlen(line),0)){
 		perror(ERR_SEND);
@@ -119,171 +120,53 @@ void  recv_line(char *line,unsigned int len) {
 }
 
 
-MsgBufType preParser(char *line) {
-    MsgBufType msg;
-	char *str,*first_part,*pos;
-
-	// init the buffer with zero
-	bzero(&msg,sizeof(MsgBufType));
-		
-	// get the first part of the  answer from server
-	if (!(first_part=getCommand(line))) {
-		return msg;
-	}
-
-	if (!(pos=strchr(first_part,' '))){
-		return msg;
-	}
-								 
-	// preparse the line
-	if (!strncmp(first_part,"PING",strlen("PING"))) {
-		msg.mtype=2;
-		msg.identify=CMD_PING;
-	} else if (strstr(pos,"QUIT")) {
-		msg.mtype=2;
-		msg.identify=CMD_LOGOFF;
-	} else if (strstr(pos,"JOIN")) {
-		msg.mtype=2;
-		msg.identify=CMD_JOIN_GREATING;
-	} else if (strstr(pos,"353")) {
-		msg.mtype=2;
-		msg.identify=CMD_NAMES;
-	} else if ((str=strstr(line," :!"))!=NULL) {
-
-		if (strlen(str)>=3) {
-			str+=3;
+// ############################################################################# 
+void irc_connect(void){
+	char recv_buffer[RECV_BUFFER_SIZE], *tmp;
+	int i,trying=0;
+	extern ConfType setup;
 	
-			if (!strncmp(str,"help",strlen("help"))){
-				msg.mtype=1;
-				msg.identify=CMD_HELP;
-			} else if (!strncmp(str,"version",strlen("version"))){
-				msg.mtype=1;
-				msg.identify=CMD_VERSION;
-			} else if (!strncmp(str,"help",strlen("help"))){
-				msg.mtype=1;
-				msg.identify=CMD_HELP;
-			} else if (!strncmp(str,"hello",strlen("hello"))){
-				msg.mtype=1;
-				msg.identify=CMD_HELLO;
-			} else if (!strncmp(str,"pass",strlen("pass"))){
-				msg.mtype=1;
-				msg.identify=CMD_PASS;
-			} else if (!strncmp(str,"ident",strlen("ident"))){
-				msg.mtype=1;
-				msg.identify=CMD_IDENT;
-			} else if (!strncmp(str,"addchannel",strlen("addchannel"))) {
-				msg.mtype=1;
-				msg.identify=CMD_ADDCHANNEL;
-			} else if (!strncmp(str,"rmchannel",strlen("rmchannel"))) {
-				msg.mtype=1;
-				msg.identify=CMD_RMCHANNEL;
-			} else if (!strncmp(str,"join",strlen("join"))) {
-				msg.mtype=1;
-				msg.identify=CMD_JOIN;
-			} else if (!strncmp(str,"part",strlen("part"))) {
-				msg.mtype=1;
-				msg.identify=CMD_PART;
-			} else if (!strncmp(str,"logoff",strlen("logoff"))) {
-				msg.mtype=1;
-				msg.identify=CMD_LOGOFF;
-			} else if (!strncmp(str,"die",strlen("die"))) {
-				msg.mtype=1;
-				msg.identify=CMD_DIE;
-			} else if (!strncmp(str,"nick",strlen("nick"))) {
-				msg.mtype=1;
-				msg.identify=CMD_NICK;
-			} else if (!strncmp(str,"channels",strlen("channels"))) {
-				msg.mtype=1;
-				msg.identify=CMD_CHANNELS;
-			} else if (!strncmp(str,"greating",strlen("greating"))) {
-				msg.mtype=1;
-				msg.identify=CMD_GREATING;
-			}
-		}
-	}
 
-	strcpy(msg.msg_line,line);
-	return msg;
+	// send the  USER commado
+	user();
+    
+	// Try to set the nickname
+	// If the nickname are  using then try again with a leading underline.
+    do {
+		i=0;
+		trying++;
+		
+		
+		nick(setup.botname);
+        recv_line(recv_buffer,RECV_BUFFER_SIZE);
+
+		// check fpr  nickname alread in use
+		// if he in use then put a leading underline on the front of the name 
+		if (strstr(recv_buffer,"Nickname is already in use.")) {
+			tmp=(char *)calloc(strlen(setup.botname)+2,sizeof(char));
+			sprintf(tmp,"_%s",setup.botname);
+			free(setup.botname);
+			setup.botname=tmp;
+			i=1;
+		}
+		
+		// Try MAX_NICKS times to set
+		if ( trying>MAX_NICKS) {
+			errno=EAGAIN;
+			perror(ERR_NICK);
+			exit(errno);
+		}
+	} while (i==1);
 }
+// ############################################################################# 
+void join_all_channels(void) {
+	char **channelliste;
+	unsigned int i;
 
-void *action_thread(void *argv) {
-	int msgid;
-	extern int key;
-	MsgBufType msg;
-
-	// set the thread cancelable 
-	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
-	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
-	
-	// open the message queue 
-	msgid=msgget(key,0600 | IPC_EXCL );
-
-	// execute loop 
-	while(1) {
-		msgrcv(msgid,&msg,sizeof(MsgBufType)-sizeof(msg.mtype),0,0);
-
-		if (AccessRight(msg.msg_line,msg.identify)) {
-		
-			switch (msg.identify) {
-			case CMD_PING:
-				pong();
-				break;
-			case CMD_LOGOFF:
-				logoff(msg.msg_line);
-				break;
-			case CMD_HELP:
-				help(msg.msg_line);
-				break;
-			case CMD_VERSION:
-				version(msg.msg_line);
-				break;
-			case CMD_HELLO:
-				hello(msg.msg_line);
-				break;
-			case CMD_PASS:
-				password(msg.msg_line);
-				break;
-			case CMD_IDENT:
-				ident(msg.msg_line);
-				break;
-			case CMD_ADDCHANNEL:
-				channel_add(msg.msg_line);
-				break;
-			case CMD_RMCHANNEL:
-				channel_rm(msg.msg_line);
-				break;
-			case CMD_JOIN:
-				join_channel(msg.msg_line);
-				break;
-			case CMD_PART:
-				part_channel(msg.msg_line);
-				break;
-			case CMD_DIE:
-				die(msg.msg_line);
-				break;
-			case CMD_NICK:
-				change_nick(msg.msg_line);
-				break;
-			case CMD_CHANNELS:
-				channel_list(msg.msg_line);
-				break;
-			case CMD_NAMES:
-				bot_op(msg.msg_line);
-				break;
-			case CMD_JOIN_GREATING:
-				print_greating(msg.msg_line);
-				break;
-			case CMD_GREATING:
-				greating(msg.msg_line);
-				break;
-			default:
-				break;
-			}
+	if ((channelliste=list_db(CHANNEL_DB))) {
+		for (i=0;channelliste[i]!=NULL;i++) {
+			join(channelliste[i]);
 		}
-		
-		// clear buffer	
-		bzero(&msg,sizeof(MsgBufType));
 	}
-
-	return NULL;
+	
 }
