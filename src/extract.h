@@ -15,7 +15,9 @@ char *getNetmask(char *line);
 char *getArgument(char *line);
 char *getCommand(char *line);
 char *getChannel(char *line);
-char  *getTopic(char *channelstr);
-char  *getGreating(char *channelstr);
+char *getAccessChannel(char *line);
+char *getTopic(char *channelstr);
+char *getGreating(char *channelstr);
+char *getMode(char *channelstr);
 
 #endif
