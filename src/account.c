@@ -59,6 +59,8 @@ UserLevel_t getUserLevel(char *const pChannel, char *const pNetmask) {
             } else if ((pLevel=get_db(ACCESS_DB,pLogin))) {
                 UserLevel=MasterLevel;
             }
+
+            free(pAccessLevelKey);
         } else if ((pLevel=get_db(ACCESS_DB,pLogin))) {
                 UserLevel=MasterLevel;
         }
@@ -245,7 +247,10 @@ boolean checkUserLevel(char *pCmdLogin, char *pLogin, char const *pChannel) {
         else if ((pMod=get_db(ACCESS_DB,pLogin))) {
                 
         }
-        else pMod=NULL;
+        else 
+            pMod=NULL;
+
+        free(pAccessKey);
     }
 
     /* look for ban */
