@@ -143,3 +143,24 @@ void hResetModUser(char *pLine) {
 		}
 	}
 }
+// ######################################################################### 
+// Event handler: TOPIC 
+// Action: reset the top  for the chanel if this change not by bot self
+// #########################################################################
+void hResetTopic(char *pLine){
+	extern ConfType sSetup;
+	char *pChannel;
+	char *pChannelSet;
+	char *pTopic;
+
+	if (strcmp(getNickname(pLine),sSetup.botname)) {
+		
+		// get the  right topic for this channel
+		pChannel=getChannel(pLine);
+		pChannelSet=get_db(CHANNEL_DB,pChannel);
+		pTopic=getTopic(pChannelSet);
+
+		// reset the topic
+		topic(pChannel,pTopic);
+	}
+}

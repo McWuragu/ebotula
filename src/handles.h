@@ -31,9 +31,17 @@ void hBotNeedOp(char *pLine);
 *   @param pLine is the complete line which was received from the irc server
 */
 void hSetModUser(char *pLine);
- /**
+/**
  * This is a handle function for MODE
  * This reset the user mod if this  change not from the bot self
  */
 void hResetModUser(char *pLine);
+
+/**
+ * This is the handle for rest the topic. he is call by chang the topic
+ * by other user as the bot self.
+ *
+ * @param pline the  pointer of the  receiving line  from the server
+ */
+void hResetTopic(char *pLine);
 #endif
