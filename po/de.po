@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-17 20:32+0200\n"
-"PO-Revision-Date: 2004-07-17 20:32+0200\n"
+"POT-Creation-Date: 2004-07-18 10:52+0200\n"
+"PO-Revision-Date: 2004-07-18 11:08+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -40,7 +40,7 @@ msgstr "Initialisierung der Datenbank"
 #: src/dbaccess.c:65 src/dbaccess.c:67
 #, c-format
 msgid "Couldn't create the directory %s for the database."
-msgstr "Konnte das Verzeichnis %s für die Datanbank nicht anlegen."
+msgstr "Konnte das Verzeichnis %s für die Datenbank nicht anlegen."
 
 #: src/dbaccess.c:72
 #, c-format
@@ -61,12 +61,17 @@ msgstr "Unbekannte Datenbank ID %d"
 msgid "Found debug level option."
 msgstr "Debug-Level-Option gefunden"
 
-#: src/ircbot.c:173 src/ircbot.c:198
+#: src/ircbot.c:173 src/ircbot.c:198 src/parameter.c:48 src/parameter.c:66
+#: src/parameter.c:84 src/parameter.c:96 src/parameter.c:108
+#: src/parameter.c:120 src/parameter.c:140 src/parameter.c:157
+#: src/parameter.c:174 src/parameter.c:191 src/parameter.c:207
+#: src/parameter.c:223 src/parameter.c:240 src/parameter.c:259
+#: src/parameter.c:269
 #, c-format
 msgid "\"%s\" need a parameter value.\n"
 msgstr "\"%s\" benötigt einen Parameterwert.\n"
 
-#: src/ircbot.c:181
+#: src/ircbot.c:181 src/parameter.c:459
 #, c-format
 msgid "The log level %i is invalid.\n"
 msgstr "Das Log-Level %i ist ungültig.\n"
@@ -115,7 +120,7 @@ msgstr "Gestoppt..."
 #: src/irc.c:202 src/irc.c:215 src/irc.c:233 src/irc.c:246 src/irc.c:259
 #: src/irc.c:277 src/irc.c:290
 msgid "Couldn't allocate memory!"
-msgstr "Könnte keinen Speicher allokieren."
+msgstr "Könnte keinen Speicher anfordern."
 
 #: src/messages.c:24
 #, c-format
@@ -124,7 +129,7 @@ msgid ""
 "%s [Options]\n"
 msgstr ""
 "\n"
-"%s [Options]\n"
+"%s [Optionen]\n"
 
 #: src/messages.c:25
 msgid ""
@@ -132,7 +137,7 @@ msgid ""
 "\tOptions:\n"
 msgstr ""
 "\n"
-"\tOptions:\n"
+"\tOptionen:\n"
 
 #: src/messages.c:26
 msgid "\t-a days\t\tSet the time in days for the automatic logoff.\n"
@@ -140,12 +145,11 @@ msgstr "\t-a Tage\t\tSetzt die Zeit in Tage für das automatische Abmelden.\n"
 
 #: src/messages.c:27
 msgid "\t-b name\t\tSet the name of the bot.\n"
-msgstr "\t-b Name\t\tSetzt den Namen des Bots im.\n"
+msgstr "\t-b Name\t\tSetzt den Namen des Boots im.\n"
 
 #: src/messages.c:28
 msgid "\t-c sec\t\tSet the ping timeout of the network connection.\n"
-msgstr ""
-"\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
+msgstr "\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
 
 #: src/messages.c:29
 msgid "\t-d path\t\tSet the path of the database direcotry\n"
@@ -168,7 +172,7 @@ msgstr "\t-f Datei\tSetzt den Pfad zu Konfigurationsdatei.\n"
 #: src/messages.c:33
 msgid "\t-g group\tSet the group under wich the bot run (only root).\n"
 msgstr ""
-"\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgeführt wird. (only "
+"\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgeführt wird. (nur "
 "root).\n"
 
 #: src/messages.c:34
@@ -183,12 +187,10 @@ msgstr ""
 
 #: src/messages.c:36
 msgid "\t-k days\t\tSet the account live time in days.\n"
-msgstr ""
-"\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Account inaktiv sein kann.\n"
+msgstr "\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Account inaktiv sein kann.\n"
 
 #: src/messages.c:37
-msgid ""
-"\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
+msgid "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
 msgstr ""
 "\t-l Char/min\tSetzt das Limit in Zeichen je Minute für das beschleunigte "
 "Senden.\n"
@@ -205,12 +207,11 @@ msgstr ""
 
 #: src/messages.c:40
 msgid "\t-p port\t\tSet the port of the irc server.\n"
-msgstr "\t-p Port\t\tSetzt den Netzwerkport des IRC-Servers.\n"
+msgstr "\t-p Port\t\tSetzt den Port des Servers des IRC-Servers.\n"
 
 #: src/messages.c:41
 msgid "\t-r string\tSet the output for a request of the real name.\n"
-msgstr ""
-"\t-r String\tSetzt die Zeichenkette des Real Name Fields für das IRC.\n"
+msgstr "\t-r String\tSetzt die Zeichenkette des Real Name Felds für das IRC.\n"
 
 #: src/messages.c:42
 msgid "\t-s server\tSet the irc server name.\n"
@@ -222,15 +223,14 @@ msgstr "\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n"
 
 #: src/messages.c:44
 msgid "\t-u user\t\tSet the user under which the bot run (root only).\n"
-msgstr ""
-"\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root only).\n"
+msgstr "\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
 
 #: src/messages.c:45
 msgid "\t-v\t\tPrint version.\n"
 msgstr "\t-v\t\tGibt die Version aus.\n"
 
 #: src/network.c:67 src/network.c:69
-msgid "The servername or portnumber isn't set."
+msgid "The hostname or portnumber isn't set."
 msgstr "Der Servername oder die Portnummer ist nicht gesetzt."
 
 #: src/network.c:74 src/network.c:77
@@ -263,7 +263,7 @@ msgstr "Der Bot ist mit %s verbunden."
 
 #: src/network.c:164
 msgid "Couldn't send a command."
-msgstr "Konnt kein Commando senden."
+msgstr "Konnte kein Kommando senden."
 
 #: src/network.c:167
 #, c-format
@@ -276,7 +276,7 @@ msgstr "Könnte keine Zeile empfangen."
 
 #: src/network.c:192
 msgid "Receiving timeout"
-msgstr "Empfangstimeout"
+msgstr "Zeitüberschreitung beim Empfang"
 
 #: src/network.c:294 src/network.c:297
 #, c-format
@@ -291,6 +291,48 @@ msgstr "Kommandozeilenparameter gefunden und werden gelesen."
 #, c-format
 msgid "Check option \"%s\""
 msgstr "Überprüfe Option %s"
+
+#: src/parameter.c:55 src/parameter.c:344
+msgid "The hostname is irregular.\n"
+msgstr "Der Servername ist ungültig.\n"
+
+#: src/parameter.c:73 src/parameter.c:364
+msgid "The botname is irregular.\n"
+msgstr "Der Botname ist ungültig.\n"
+
+#: src/parameter.c:127 src/parameter.c:354
+#, c-format
+msgid "The port %i value is out of range.\n"
+msgstr "Der Port %i ist ausserhalb des Bereichs.\n"
+
+#: src/parameter.c:148 src/parameter.c:380
+msgid "The thread limit is out of range.\n"
+msgstr "Das Limit für die Threads ist ungültig.\n"
+
+#: src/parameter.c:165 src/parameter.c:394
+msgid "The automatic logoff time is invalid.\n"
+msgstr "Die automatische Abmeldezeit ist ungültig.\n"
+
+#: src/parameter.c:182 src/parameter.c:199 src/parameter.c:403
+#: src/parameter.c:412
+msgid "The send delay time is invalid.\n"
+msgstr "Die Zeitverzögerung für das Senden ist ungültig.\n"
+
+#: src/parameter.c:215 src/parameter.c:421
+msgid "The limit for sending with the fast send delay is invalid.\n"
+msgstr "Das Limit für das schnelle Senden ist ungültig.\n"
+
+#: src/parameter.c:231 src/parameter.c:430
+msgid "The delay of the startup initialization is invalid.\n"
+msgstr "Die Verzögerung für die Startinitialisierung ist ungültig.\n"
+
+#: src/parameter.c:248 src/parameter.c:439
+msgid "The account living time is invalid.\n"
+msgstr "Die Lebenszeit eines Accounts ist ungültig.\n"
+
+#: src/parameter.c:277 src/parameter.c:448
+msgid "The ping timeout is invalid.\n"
+msgstr "Das Pingtimeout ist ungültig.\n"
 
 #: src/parameter.c:288
 #, c-format
@@ -351,7 +393,7 @@ msgstr ""
 
 #: src/parameter.c:528
 msgid "Typing error... passwords not equal\n"
-msgstr "Schreibfehler...Passworter ist nicht identisch.\n"
+msgstr "Schreibfehler...Passwörter ist nicht identisch.\n"
 
 #: src/parameter.c:539
 #, c-format
@@ -383,3 +425,4 @@ msgstr "Entfernt die toten Accounts"
 #: src/timing.c:71
 msgid "The timing thread is stopped"
 msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
+

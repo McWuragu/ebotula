@@ -50,7 +50,7 @@
 #define	PARAMETER_CHAR	'-'
 #define COMMENT_CHAR	'#'
 
-#define KEY_SERVER			"servername"
+#define KEY_SERVER			"hostname"
 #define KEY_PORT			"port"
 #define KEY_BOTNAME			"botname"
 #define KEY_REALNAME		"realname"

@@ -21,21 +21,6 @@
 // output of strerr
 typedef enum {
 
-    // output of strerr
-	 ERR_MISSING_PARAM,  
-	 ERR_PORT_PARAMETER,  
-	 ERR_WRONG_SERVERNAME,  
-	 ERR_WRONG_BOTNAME,	  
-	 ERR_ALT_RANGE,		  
-	 ERR_PINGTIMEOUT_RANGE,  
-	 ERR_LOGLEVEL_RANGE,
-     ERR_SENDDELAY_RANGE,   
-     ERR_SENDLINE_RANGE,
-     ERR_INIT_DELAY,
-	 ERR_LOGOFF_RANGE,	    
-	 ERR_THREAD_RANGE,	    
-    
-
     // command acknowledgment
 	 OK_HELLO,	  
 	 OK_HELLO2,	 

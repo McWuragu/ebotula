@@ -64,9 +64,9 @@ boolean connectServer(void) {
     if ((sSetup.server==NULL) && (sSetup.port==NULL)) {
         errno=EINVAL;
         #ifdef NDEBUG
-        fprintf(stderr,"%s\n",gettext("The servername or portnumber isn't set."));
+        fprintf(stderr,"%s\n",gettext("The hostname or portnumber isn't set."));
         #endif
-        logger(LOG_ERR,gettext("The servername or portnumber isn't set."));
+        logger(LOG_ERR,gettext("The hostname or portnumber isn't set."));
         return false;
     }
 

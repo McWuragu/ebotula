@@ -45,14 +45,14 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 's':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                
                 // set the server name
                 if (strpbrk(argv[i],SERVER_NOT_ALLOW_CHAR)) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_WRONG_SERVERNAME));
+                    fprintf(stderr,gettext("The hostname is irregular.\n"));
                     exit(errno);
                 }
                
@@ -63,14 +63,14 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 'b':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
                 // set the pBotname
                 if (!NickStringCheck(argv[i])) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_WRONG_BOTNAME));
+                    fprintf(stderr,gettext("The botname is irregular.\n"));
                     exit(errno);
                 }
                 
@@ -81,7 +81,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 'u':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
@@ -93,7 +93,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 'g':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
@@ -105,7 +105,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 'r':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
@@ -117,14 +117,14 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 'p':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
                 // set port
                 if ((atoi(argv[i])<1) || (atoi(argv[i])>65535)) {
                     errno=EDOM;
-                    fprintf(stderr,getMsgString(ERR_PORT_PARAMETER));
+                    fprintf(stderr,gettext("The port %i value is out of range.\n"),atoi(argv[i]));
                     exit(errno);
                 }
                 
@@ -137,7 +137,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
@@ -145,7 +145,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if ((tmp<1) || (tmp>MAX_THREADS_LIMIT)) {
                     errno=EDOM;
-                    fprintf(stderr,getMsgString(ERR_THREAD_RANGE));
+                    fprintf(stderr,gettext("The thread limit is out of range.\n"));
                     exit(errno);
                 }
                 sSetup.thread_limit=tmp;
@@ -154,7 +154,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
@@ -162,7 +162,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<MIN_LOGOFF) {
                     errno=EDOM;
-                    fprintf(stderr,getMsgString(ERR_LOGOFF_RANGE));
+                    fprintf(stderr,gettext("The automatic logoff time is invalid.\n"));
                     exit(errno);
                 }
                 sSetup.AutoLoggoff=tmp;
@@ -171,7 +171,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
@@ -179,7 +179,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<=0) {
                     errno=EDOM;
-                    fprintf(stderr,getMsgString(ERR_SENDDELAY_RANGE));
+                    fprintf(stderr,gettext("The send delay time is invalid.\n"));
                     exit(errno);
                 }
                 sSetup.iSendDelay=tmp;
@@ -188,7 +188,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
@@ -196,7 +196,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<=0) {
                     errno=EDOM;
-                    fprintf(stderr,getMsgString(ERR_SENDDELAY_RANGE));
+                    fprintf(stderr,gettext("The send delay time is invalid.\n"));
                     exit(errno);
                 }
                 sSetup.nSlowSendDelay=tmp;
@@ -204,7 +204,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 'l':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
 
@@ -212,7 +212,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<0) {
                     errno=EDOM;
-                    fprintf(stderr,getMsgString(ERR_SENDLINE_RANGE));
+                    fprintf(stderr,gettext("The limit for sending with the fast send delay is invalid.\n"));
                     exit(errno);
                 }
                 sSetup.nFastSendingCharLimit=tmp;
@@ -220,7 +220,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 'i':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
 
@@ -228,7 +228,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<0) {
                     errno=EDOM;
-                    fprintf(stderr,getMsgString(ERR_INIT_DELAY));
+                    fprintf(stderr,gettext("The delay of the startup initialization is invalid.\n"));
                     exit(errno);
                 }
                 sSetup.nSettling=tmp;
@@ -237,7 +237,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 
@@ -245,7 +245,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<MIN_ALT) {
                     errno=EDOM;
-                    fprintf(stderr,getMsgString(ERR_ALT_RANGE));
+                    fprintf(stderr,gettext("The account living time is invalid.\n"));
                     exit(errno);
                 }
                 sSetup.AccountLiveTime=tmp;
@@ -256,7 +256,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 'd':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
                 // set database path
@@ -266,7 +266,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
             case 'c':
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
 
@@ -274,7 +274,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<MIN_PINGTIME) {
                     errno=EDOM;
-                    fprintf(stderr,getMsgString(ERR_PINGTIMEOUT_RANGE));
+                    fprintf(stderr,gettext("The ping timeout is invalid.\n"));
                     exit(errno);
                 }
                 sSetup.iTimeout=tmp;
@@ -341,17 +341,17 @@ void ConfigFileParser(void) {
                 if (!strcmp(key,KEY_SERVER)) {
                     if (strpbrk(value,SERVER_NOT_ALLOW_CHAR)) {
                         errno=EINVAL;
-                        fprintf(stderr,getMsgString(ERR_WRONG_SERVERNAME));
+                        fprintf(stderr,gettext("The hostname is irregular.\n"));
                         exit(errno);
                     }
-                    // set servername
+                    // set hostname
                     free(sSetup.server);
                     sSetup.server=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.server,value);
                 } else if (!strcmp(key,KEY_PORT)) {
                     if ((atoi(value)<1) || (atoi(value)>65535)) {
                         errno=EINVAL;
-                        fprintf(stderr,getMsgString(ERR_PORT_PARAMETER));
+                        fprintf(stderr,gettext("The port %i value is out of range.\n"),atoi(value));
                         exit(errno);
                     }
                     // set port
@@ -361,7 +361,7 @@ void ConfigFileParser(void) {
                 } else if (!strcmp(key,KEY_BOTNAME)) {
                     if (!NickStringCheck(value)) {
                         errno=EINVAL;
-                        fprintf(stderr,getMsgString(ERR_WRONG_BOTNAME));
+                        fprintf(stderr,gettext("The botname is irregular.\n"));
                         exit(errno);
                     }
                     // set pBotname
@@ -377,7 +377,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if ((tmp<=0) || (tmp>MAX_THREADS_LIMIT)) {
                         errno=EDOM;
-                        fprintf(stderr,getMsgString(ERR_THREAD_RANGE));
+                        fprintf(stderr,gettext("The thread limit is out of range.\n"));
                         exit(errno);
                     }   
                     // set thread limit
@@ -391,7 +391,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<=0) {
                         errno=EDOM;
-                        fprintf(stderr,getMsgString(ERR_LOGOFF_RANGE));
+                        fprintf(stderr,gettext("The automatic logoff time is invalid.\n"));
                         exit(errno);
                     }   
                     // set auto logoff time
@@ -400,7 +400,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        fprintf(stderr,getMsgString(ERR_SENDDELAY_RANGE));
+                        fprintf(stderr,gettext("The send delay time is invalid.\n"));
                         exit(errno);
                     }   
                     // set first delay time
@@ -409,7 +409,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        fprintf(stderr,getMsgString(ERR_SENDDELAY_RANGE));
+                        fprintf(stderr,gettext("The send delay time is invalid.\n"));
                         exit(errno);
                     }   
                     // set second delay time
@@ -418,7 +418,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        fprintf(stderr,getMsgString(ERR_SENDLINE_RANGE));
+                        fprintf(stderr,gettext("The limit for sending with the fast send delay is invalid.\n"));
                         exit(errno);
                     }   
                     // set auto logoff time
@@ -427,7 +427,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        fprintf(stderr,getMsgString(ERR_INIT_DELAY));
+                        fprintf(stderr,gettext("The delay of the startup initialization is invalid.\n"));
                         exit(errno);
                     }   
                     // set auto logoff time
@@ -436,7 +436,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        fprintf(stderr,getMsgString(ERR_ALT_RANGE));
+                        fprintf(stderr,gettext("The account living time is invalid.\n"));
                         exit(errno);
                     }   
                     // set account live time
@@ -445,7 +445,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<=0) {
                         errno=EDOM;
-                        fprintf(stderr,getMsgString(ERR_PINGTIMEOUT_RANGE));
+                        fprintf(stderr,gettext("The ping timeout is invalid.\n"));
                         exit(errno);
                     }   
                     // set account live time
@@ -456,7 +456,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<=0 || tmp > MAX_LOGLEVEL) {
                         errno=EDOM;
-                        fprintf(stderr,getMsgString(ERR_LOGLEVEL_RANGE));
+                        fprintf(stderr,gettext("The log level %i is invalid.\n"),tmp);
                         exit(errno);
                     }
                     sSetup.nLogLevel=tmp;
