@@ -83,6 +83,7 @@ void help(char *pLine) {
 					   && strcmp(irchelp_msg[i],"!rmchannel")
 					   && strcmp(irchelp_msg[i],"!channels")
 					   && strcmp(irchelp_msg[i],"!rmuser")
+					   && strcmp(irchelp_msg[i],"!allsay")
 					   && strcmp(irchelp_msg[i],"!nick"))) {
 				// next command 
 				i+=HELP_ITEM_SIZE;
@@ -240,11 +241,10 @@ void logoff(char *pLine) {
 	
 
 	// remove the mod  for  this account
-    if ((ppChannels=list_db(CHANNEL_DB))) {
-		for (i=0;ppChannels[i]!=NULL;i++) {
-			mode(ppChannels[i],"-o",pNick);
-			mode(ppChannels[i],"-v",pNick);
-		}
+	ppChannels=list_db(CHANNEL_DB);
+	for (i=0;ppChannels[i]!=NULL;i++) {
+		mode(ppChannels[i],"-o",pNick);
+		mode(ppChannels[i],"-v",pNick);
 	}
 
 	notice(pNick,MSG_LOGOFF);
@@ -309,23 +309,22 @@ void ident(char *pLine) {
 		isMaster=exist_db(ACCESS_DB,pLogin);
 
 		// set the mod  for  this account
-		if ((ppChannels=list_db(CHANNEL_DB))) {
-			login_len=strlen(pLogin);
-	
-			for (i=0;ppChannels[i]!=NULL;i++) {
-				if (isMaster) {
-					mode(ppChannels[i],"+o",pNick);
-				} else {
-					pKey=malloc((strlen(ppChannels[i])+login_len+1)*sizeof(char));
-					sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
-					pMod=get_db(ACCESS_DB,pKey);
-	
-					if (strlen(pMod)) {
-						mode(ppChannels[i],pMod,pNick);
-						free(pMod);
-					} 
-					free(pKey);
-				}
+		ppChannels=list_db(CHANNEL_DB);
+		login_len=strlen(pLogin);
+
+		for (i=0;ppChannels[i]!=NULL;i++) {
+			if (isMaster) {
+				mode(ppChannels[i],"+o",pNick);
+			} else {
+				pKey=malloc((strlen(ppChannels[i])+login_len+1)*sizeof(char));
+				sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
+				pMod=get_db(ACCESS_DB,pKey);
+
+				if (strlen(pMod)) {
+					mode(ppChannels[i],pMod,pNick);
+					free(pMod);
+				} 
+				free(pKey);
 			}
 		}
 		return;
@@ -338,7 +337,7 @@ void ident(char *pLine) {
 // ######################################################################### 
 // Bot comand: !addchannel #channel
 // ######################################################################### 
-void channel_add(char *pLine) {
+void addChannel(char *pLine) {
 	char *pChannel;
 	char *pNick;
 	char *channelmod;
@@ -376,7 +375,7 @@ void channel_add(char *pLine) {
 // ######################################################################### 
 // Bot comand: !rmchannel <#channel>
 // ######################################################################### 
-void channel_rm(char *pLine){
+void rmChannel(char *pLine){
 	char *pChannel;
 	char *pNick;
 
@@ -398,7 +397,7 @@ void channel_rm(char *pLine){
 // ######################################################################### 
 // Bot comand: !join #channel
 // ######################################################################### 
-void join_channel(char *pLine) {
+void joinChannel(char *pLine) {
 	char *pChannel;
 	char *pNick;
 
@@ -420,7 +419,7 @@ void join_channel(char *pLine) {
 // ######################################################################### 
 // Bot comand: !part <#channel>
 // ######################################################################### 
-void part_channel(char *pLine) {
+void partChannel(char *pLine) {
 	char *pNick;
 	char *pChannel;
 
@@ -440,7 +439,7 @@ void die(char *pLine) {
 // ######################################################################### 
 // Bot comand: !nick nickname
 // ######################################################################### 
-void set_nick(char *pLine){
+void setNick(char *pLine){
 	char *pParameter;
 	char *pNick;
 
@@ -463,7 +462,7 @@ void set_nick(char *pLine){
 // ######################################################################### 
 // Bot comand: !channels
 // ######################################################################### 
-void channel_list(char *pLine){
+void listChannels(char *pLine){
 	char *pNick,*buffer;
 	char **ppChannels;
 	int i=0,buffer_size=0;
@@ -636,8 +635,15 @@ void say(char *pLine) {
 // ######################################################################### 
 void allsay(char *pline) {
 	char *pMsgStr;
+	char **ppChannels;
+	int i;
 	pMsgStr=getParameters(pline);
-	privmsg("#*",pMsgStr);
+	ppChannels=list_db(CHANNEL_DB);
+	
+	for (i=0;ppChannels[i]!=NULL;i++) {
+		privmsg(ppChannels[i],pMsgStr);
+	}
+
 }
 // ######################################################################### 
 // Bot comand: !kick <#channel> nick reason
@@ -874,7 +880,8 @@ void rmuser(char *pLine) {
 	rmAccount(pLogin);
 
 	// remove the mod  for  this account
-    if ((ppChannels=list_db(CHANNEL_DB)) && strlen(rmnick)) {
+	ppChannels=list_db(CHANNEL_DB);
+    if (strlen(rmnick)) {
 		for (i=0;ppChannels[i]!=NULL;i++) {
 			 mode(ppChannels[i],"-o",rmnick);
 			 mode(ppChannels[i],"-v",rmnick);
@@ -914,80 +921,78 @@ void userlist(char *pLine){
 		DEBUG("Genrate the Userlist for a master");
 		// Bot masters
 		
-		if (ppLogins) {
 			// get the kist of all channels
 			ppChannels=list_db(CHANNEL_DB);
             for (i=0;ppLogins[i]!=NULL;i++) {
 				iLoginLen=strlen(ppLogins[i]);
 				
-				// check for master or normal user
-				if (exist_db(ACCESS_DB,ppLogins[i])) {
-					// user is master
-					pMsgStr=malloc((USERLIST_TAB+strlen("Master   Status:")+5)*sizeof(char));
-					strcpy(pMsgStr,ppLogins[i]);
-					
-					// fill
-					for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
-					   strcat(pMsgStr," ");
-					}
-	
-					strcat(pMsgStr,"Master   Status: ");
-	
-					// insert  online status
-					// set  online Status
-					if (exist_db(USERTONICK_DB,ppLogins[i])) {
-						strcat(pMsgStr,"ON ");
-					} else {
-						strcat(pMsgStr,"OFF");
-					}
+			// check for master or normal user
+			if (exist_db(ACCESS_DB,ppLogins[i])) {
+				// user is master
+				pMsgStr=malloc((USERLIST_TAB+strlen("Master   Status:")+5)*sizeof(char));
+				strcpy(pMsgStr,ppLogins[i]);
+				
+				// fill
+				for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
+				   strcat(pMsgStr," ");
+				}
 
-					notice(pNick,pMsgStr);
-					free(pMsgStr);
-				}else {
-					// normal user
-					if (ppChannels) {
-                        for (j=0;ppChannels[j]!=NULL;j++) {
-							iChanLen=strlen(ppChannels[j]);
+				strcat(pMsgStr,"Master   Status: ");
 
-							// build key for access.dbf
-							pKey=malloc((iLoginLen+iChanLen+1)*sizeof(char));
-							sprintf(pKey,"%s%s",ppLogins[i],ppChannels[j]);
+				// insert  online status
+				// set  online Status
+				if (exist_db(USERTONICK_DB,ppLogins[i])) {
+					strcat(pMsgStr,"ON ");
+				} else {
+					strcat(pMsgStr,"OFF");
+				}
 
-							if((pMod=get_db(ACCESS_DB,pKey))) {
-				 				pMsgStr=malloc((USERLIST_TAB+iChanLen+strlen("Status:")+16)*sizeof(char));
-								strcpy(pMsgStr,ppLogins[i]);
-								
-								// fill
-								for (k=0;k<(USERLIST_TAB-iLoginLen);k++) {
-								   strcat(pMsgStr," ");
-								}
-			
-								strcat(pMsgStr,ppChannels[j]);
+				notice(pNick,pMsgStr);
+				free(pMsgStr);
+			}else {
+				// normal user
+				if (ppChannels) {
+					for (j=0;ppChannels[j]!=NULL;j++) {
+						iChanLen=strlen(ppChannels[j]);
 
-								// set access rights
-								if (pMod[1]=='o') {
-									strcat(pMsgStr,"- Owner ");
-								} else if (pMod[1]=='v'){
-									strcat(pMsgStr,"- Friend");
-								} else {
-									free(pMsgStr);
-									break;
-								}
-			
-								// set  online Status
-								strcat(pMsgStr,"   Status: ");
-								if (exist_db(USERTONICK_DB,ppLogins[i])) {
-									strcat(pMsgStr,"ON ");
-								} else {
-									strcat(pMsgStr,"OFF");
-								}
-			
-								// send notice out
-								notice(pNick,pMsgStr);
-								free(pMsgStr);
+						// build key for access.dbf
+						pKey=malloc((iLoginLen+iChanLen+1)*sizeof(char));
+						sprintf(pKey,"%s%s",ppLogins[i],ppChannels[j]);
+
+						if((pMod=get_db(ACCESS_DB,pKey))) {
+							pMsgStr=malloc((USERLIST_TAB+iChanLen+strlen("Status:")+16)*sizeof(char));
+							strcpy(pMsgStr,ppLogins[i]);
+							
+							// fill
+							for (k=0;k<(USERLIST_TAB-iLoginLen);k++) {
+							   strcat(pMsgStr," ");
 							}
-							free(pKey);
+		
+							strcat(pMsgStr,ppChannels[j]);
+
+							// set access rights
+							if (pMod[1]=='o') {
+								strcat(pMsgStr,"- Owner ");
+							} else if (pMod[1]=='v'){
+								strcat(pMsgStr,"- Friend");
+							} else {
+								free(pMsgStr);
+								break;
+							}
+		
+							// set  online Status
+							strcat(pMsgStr,"   Status: ");
+							if (exist_db(USERTONICK_DB,ppLogins[i])) {
+								strcat(pMsgStr,"ON ");
+							} else {
+								strcat(pMsgStr,"OFF");
+							}
+		
+							// send notice out
+							notice(pNick,pMsgStr);
+							free(pMsgStr);
 						}
+						free(pKey);
 					}
 				}
 			}
