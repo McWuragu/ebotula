@@ -1,9 +1,9 @@
-.TH EBOTULA 1 "10 March 03"
-.SH NAME
+.TH "EBOTULA" "1" "10 March 03" "" ""
+.SH "NAME"
 ebotula \- IRC bot
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 \fBebotula\fP [ options ]
-.SH DESCRIBTION
+.SH "DESCRIBTION"
 \fIEbotula\fP is an irc bot for general tasks in one or more channels. These
 tasks are the administration of users and channels. The bot can save the channel
 topic and modes. Also the modes of the user are set and saved by the bot.
@@ -11,129 +11,107 @@ topic and modes. Also the modes of the user are set and saved by the bot.
 There are two ways to set the options for the bot:
 Either you pass the options via command line or you use the
 configuration file (standard is /etc/ebotula.conf, you can alter this by
-the paramter -f). Parameters given in the command line are prior to
+the paramter \-f). Parameters given in the command line are prior to
 those in the configuration file.
-.TP
-\fB-a\fP days
+.TP 
+\fB\-a\fP days
 sets the limit for the automatic logoff in days
-.TP
-\fB-b\fP name
+.TP 
+\fB\-b\fP name
 sets the nickname of the bot
-.TP
-\fB-c\fP sec
+.TP 
+\fB\-c\fP sec
 sets the limit for ping timeout
-.TP
-\fB-d\fP path
+.TP 
+\fB\-d\fP path
 sets the path to the directory for the databases
-.TP
-\fB-f\fp file
+.TP 
+\fB\-f\fP file
 sets a custom configuration file
-.TP
-\fB-h, -?\fP
+.TP 
+\fB\-h\fP
 shows the help text and exit
 .TP
-\fB-k\fP days
+\fB\-?\fP
+same as -h
+.TP 
+\fB\-k\fP days
 sets the living time of an account in days
 To avoid "dead" accounts, unused accounts are removed after the time
 given by this parameter.
-.TP
-\fB-m\fP
+.TP 
+\fB\-m\fP
 enables the dialog for creating a new master
 A bot master is a kind of an administrator for the IRC server the bot is
 running on.
-.TP
-\fB-n\fP ms
+.TP 
+\fB\-n\fP ms
 sets the sending delay time in millisecond
-.TP
-\fB-p\fP port
+.TP 
+\fB\-p\fP port
 sets the portnumber for connecting
-.TP
-\fB-r\fP string
+.TP 
+\fB\-r\fP string
 sets a string for the realname field of the bot
-.TP
-\fB-s\fP server
+.TP 
+\fB\-s\fP server
 sets the irc servername the bot connects to
-.TP
-\fB-t\fP number
+.TP 
+\fB\-t\fP number
 sets the ammount of parallel working command threads
-.TP
-\fB-v\fP
+.TP 
+\fB\-v\fP
 show the version and exit
 .SS Access levels
 The bot has four access levels. This levels represent the privilege of the
 access to the bot.
-.PP
+.PP 
 The levels are:
-.TP
+.TP 
 \fBmaster\fP
 This level is used for the adimistrator of the bot. He has complete access to all
 functions and gets operator access in all channels the bot is in.
-.TP
+.TP 
 \fBchannel owner\fP
 This means that the user is administrator of a channel. A user can be an administrator
 in more than one channel, but it must set explicitly for any channel.
-.TP
+.TP 
 \fBfriend\fP
 A friend is a user with automatic voice. He has not realy extended access rights.
 It is a nice feature to show which persons are seen fain in a channel.
-.TP
+.TP 
 \fBothers\fP
 These are all other people which aren't logged on.
 .SS Commands
 The bot has a lot of commands for the work and manipulation in one or more
 channels. There is an online help for this bot. You can get a simple list of
 all commands or detailed information about a special command.
-.PP
+.PP 
 The following is a list of all supported commands and a little
 describtion to each command:
-.TP
+.TP 
 \fB!die\fP
 shuts the bot down
 
-The bot is stopped, but unlike RESTART DIE doesn't start the bot again.
-.TP
+The bot is stopped, but unlike RESTART, DIE doesn't start the bot again.
+.TP 
 \fB!greeting\fP < #channel > [ message ]
 Sets the greeting line displayed for users joining. If #channel is
 given, the greeting of the corresponding channel ist set. Otherwise the
 greeting of the current channel is set.
-.TP
+.TP 
 \fB!help\fP [ command ]
 If given without a parameter, !help lists all commands the bot
 understands. Any existing command can be used as parameter for !help. If so,
 detailed information about the selected command is displayed.
-.TP
-\fB!restart\fP
-shuts the bot down and restarts it again
-.TP
-\fB!say\fP < #channel > [ message ]
-sends the message to the current or selected channel. One could say, the
-bot talks into the channel.
-.TP
-\fB!topic\fP < #channel > [ topic ]
-sets the topic for the current or selected channel
-
-A topic is the line that can be seen near the channel name in the channel list.
-e.g. #LUGse -== LUGse - Linux User Group Senftenberg ==-
-
-The Channel #LUGse has got the topic "-== LUGse - Linux User
-Group Senftenberg ==-"
-Topics are used to discripe a channel.
-.TP
+.TP 
 \fB!invite\fP
 invites the user in a channel
 
-If a channel is set invite-only, you can only join this channel if a user in
-it asks you to (invites you). So if only the bot has joined the invite-only
+If a channel is set invite\-only, you can only join this channel if a user in
+it asks you to (invites you). So if only the bot has joined the invite\-only
 channel you can use this command to make the bot invite you so you can join.
-.TP
-\fB!version\fP
-prints the version of the bot
-.TP
-\fB!viewgreet\fP < #channel >
-If #channel is given, this command shows the greeting line from the
-selected channel. Otherwise the greeting of the current channel is
-displayed.
-.TP
+.TP 
 \fB!kick\fP < #channel > username
 If the parameter #channel is used, the given user is "kicked" (removed)
 from the corresponding channel. Otherwise the user is kicked from the
@@ -141,15 +119,43 @@ current channel. Only bot masters and channel administrators can kick
 other users. They have to authenticate themself at the bot before
 kicking any user. NOTE: masters can not be kicked (even by other
 masters).
-.SH FILES
+.TP 
+\fB!restart\fP
+shuts the bot down and restarts it again
+
+Usefull if configuration is changed. By restarting config is read again.
+.TP 
+\fB!say\fP < #channel > [ message ]
+sends the message to the current or selected channel. One could say, the
+bot talks into the channel.
+.TP 
+\fB!topic\fP < #channel > [ topic ]
+sets the topic for the current or selected channel
+
+A topic is the line that can be seen near the channel name in the channel list.
+e.g. #LUGse \-== LUGse \- Linux User Group Senftenberg ==\-
+
+The Channel #LUGse has got the topic "\-== LUGse \- Linux User
+Group Senftenberg ==\-"
+Topics are used to discripe a channel.
+.TP 
+\fB!version\fP
+prints the version of the bot
+.TP 
+\fB!viewgreet\fP < #channel >
+If #channel is given, this command shows the greeting line from the
+selected channel. Otherwise the greeting of the current channel is
+displayed.
+.TP 
+.SH "FILES"
 ebotula, ebotula.conf
 .SH "SEE ALSO"
 RFC1459, RFC2810, RFC2811, RFC2812, ebotula.conf(5)
-.SH AUTHORS
+.SH "AUTHORS"
 Steffen Laube <realebula@gmx.de>,
 Thomas Stein <linux@tstein.net>,
-Uwe Stremple <u.strempel@gmx.de>
-.SH VERSION
+Uwe Strempel <u.strempel@gmx.de>
+.SH "VERSION"
 v0.2b
-.SH BUGS
+.SH "BUGS"
 He isn't finished and not completely stable.
