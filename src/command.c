@@ -106,11 +106,12 @@ void help(MsgItem_t *pMsg) {
                 DEBUG("Command found %d\n",i);
                 nCmdHelpID=CmdIdToHelpId(i);
 
-                /* the headi for help */
+                /* the head for help */
                 pMsgPart=getMsgString(INFO_HELP_FOR);
                 pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdList[i])+3)*sizeof(char));
                 sprintf(pTmp,"%s %s:",pMsgPart,pParameter);
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pTmp);
+                free(pTmp);
 
 
                 /* print  the  help text */
@@ -125,6 +126,7 @@ void help(MsgItem_t *pMsg) {
                     sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pIrcSyntax[nCmdHelpID][j]);
                 }
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_HELP_END));
+                free (pParameter);
                 return;
             }
         }
@@ -142,9 +144,6 @@ void hello(MsgItem_t *pMsg) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
         return;
     }
-
-    StrToLower(pMsg->pCallingNick);
-
 
     if (add_db(USER_DB,pMsg->pCallingNick,"")) {
         
@@ -167,7 +166,6 @@ void password(MsgItem_t *pMsg) {
     char *pLogin;
     char *pPasswd;
 
-    
     if ((pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
 
 	    DEBUG("Check the  password for the account %s\n",pLogin);
@@ -537,6 +535,7 @@ void chanlist(MsgItem_t *pMsg){
             free(sChannelData.pTopic);
             free(sChannelData.pGreeting);
 		}
+        free(pChannel->data);
 		free(pChannel);
     }
 	deleteQueue(pChannelQueue);
@@ -653,10 +652,16 @@ void greeting(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
     char *pChannelSet;
     char *greeting;
+    char *pTmpBotName;
     
     if (pMsg->pCallingNick) {
+        /* make  a bot name with small letters */
+        pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
+        strcpy(pTmpBotName,sSetup.pBotname);
+        StrToLower(pTmpBotName);
+
         /* only greeting  send  to other user */
-        if (strcmp(pMsg->pCallingNick,sSetup.pBotname)) {
+        if (strcmp(pMsg->pCallingNick,pTmpBotName)) {
             
             if (!pMsg->pAccessChannel){
                 return;
@@ -672,6 +677,7 @@ void greeting(MsgItem_t *pMsg) {
                 free(pChannelSet);
     		}
         }
+        free (pTmpBotName);
     }
 }
 /* #########################################################################
@@ -715,6 +721,7 @@ void allsay(MsgItem_t *pMsg) {
     while (isfullQueue(pChannelQueue)) {
         pChannel=popQueue(pChannelQueue);
         privmsg((char*)pChannel->data,pMsgStr);
+        free(pChannel->data);
 		free(pChannel);
     }
 	deleteQueue(pChannelQueue);
@@ -728,8 +735,7 @@ void banuser(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
     CallbackItem_t *Callback;
     char *Data;
-
-    char **pArgv;
+    char *pTmpBotName;
     char *pParameter;
     char *pToBanNick;
     char *pLogin;
@@ -745,19 +751,24 @@ void banuser(MsgItem_t *pMsg) {
         return;
     }
 
-    pArgv=splitString(pParameter,2);
-    pToBanNick=pArgv[0];
+    pToBanNick=getFirstPart(pParameter,NULL);
 
     if (!pToBanNick) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
+    /* make  a bot name with small letters */
+    pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
+    strcpy(pTmpBotName,sSetup.pBotname);
+    StrToLower(pTmpBotName);
 
-    if (strcmp(pToBanNick,sSetup.pBotname)==0) {
+    if (strcmp(pToBanNick,pTmpBotName)==0) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOTSELF_BAN));
+        free(pTmpBotName);
         return;
     }
+    free (pTmpBotName);
 
     // read the login from the database
     pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask);
@@ -783,7 +794,7 @@ void banuser(MsgItem_t *pMsg) {
    ######################################################################### */
 void debanuser(MsgItem_t *pMsg) {
     char *pParameter;
-    char **pArgv;
+    char *pBanmask;
 
     
     if (!pMsg->pAccessChannel){
@@ -797,16 +808,13 @@ void debanuser(MsgItem_t *pMsg) {
         return;
     }
 
-    pArgv=splitString(pParameter,2);
-    
+    pBanmask=getFirstPart(pParameter,NULL);
 
     // reset the ban
-    if (pArgv) {
-        deban(pMsg->pAccessChannel,pArgv[0]);
+    if (pBanmask) {
+        deban(pMsg->pAccessChannel,pBanmask);
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_DEBAN));
     }
-
-    return;
 }
 
 /* #########################################################################
@@ -817,12 +825,12 @@ void kickuser(MsgItem_t *pMsg) {
     extern CallbackDList CallbackList;
     CallbackItem_t *Callback;
     char *pKicknick;
-    char *pReason;
+    char *pReason=NULL;
     char *pParameter;
-    char **pArgv;
     char *pPos;
     char *pLogin;
     char *pData;
+    char *pTmpBotName;
 
     if (!pMsg->pAccessChannel) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
@@ -834,21 +842,25 @@ void kickuser(MsgItem_t *pMsg) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
+    pKicknick=getFirstPart(pParameter,&pReason);
+    free(pParameter);
 
-    pArgv=splitString(pParameter,2);
-    
     /* parse nick */
-    pKicknick=pArgv[0];
     if (!pKicknick) {return;}
-    
-    if (strcmp(pKicknick,sSetup.pBotname)==0) {
+
+
+    /* make  a bot name with small letters */
+    pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
+    strcpy(pTmpBotName,sSetup.pBotname);
+    StrToLower(pTmpBotName);
+
+    if (strcmp(pKicknick,pTmpBotName)==0) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOTSELF_KICK));
+        free(pTmpBotName);
         return;
     }
 
-
-    /* parse reason */
-    pReason=pArgv[1];
+    /* check reason */
     if (!pReason) {
         /* empty reason */
         pReason=getMsgString(INFO_DEFAULT_REASON);
@@ -857,24 +869,24 @@ void kickuser(MsgItem_t *pMsg) {
     /* read  the  login name of the  kicking user */
     if (!(pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_KICK));
-        return;
-    }
-
-    /* built data for the callback */
-    pData=(char*)malloc((strlen(pLogin)+strlen(pMsg->pAccessChannel)+strlen(pReason)+5)*sizeof(char));
-    sprintf(pData,"%s %s %s",pLogin,pMsg->pAccessChannel,pReason);
+    } else {
+        /* built data for the callback */
+        pData=(char*)malloc((strlen(pLogin)+strlen(pMsg->pAccessChannel)+strlen(pReason)+5)*sizeof(char));
+        sprintf(pData,"%s %s %s",pLogin,pMsg->pAccessChannel,pReason);
+        
+                              
+        /* built  and add to callback list */
+        StrToLower(pKicknick);
+        Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
+        Callback->CallbackFkt=KickCb;
+        Callback->nickname=pKicknick;
+        Callback->data=pData;
     
-                          
-    /* built  and add to callback list */
-    StrToLower(pKicknick);
-    Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
-    Callback->CallbackFkt=KickCb;
-    Callback->nickname=pKicknick;
-    Callback->data=pData;
-
-    insert_next_CallbackDList(&CallbackList,CallbackList.tail,Callback);
-
-    whois(pKicknick);
+        insert_next_CallbackDList(&CallbackList,CallbackList.tail,Callback);
+    
+        whois(pKicknick);
+    }
+    free (pTmpBotName);
 }
 /* #########################################################################
    Bot comand: !usermode [#channel] <login> <mod>
@@ -1192,7 +1204,8 @@ void rmuser(MsgItem_t *pMsg) {
                     pChannel=popQueue(pChannelQueue);
                     mode((char*)pChannel->data,"-o",rmnick);
                     mode((char*)pChannel->data,"-v",rmnick);
-    				free(pChannel);
+    				free(pChannel->data);
+                    free(pChannel);
                 }
     			deleteQueue(pChannelQueue);
                 free(rmnick);
@@ -1400,7 +1413,7 @@ void userlist(MsgItem_t *pMsg){
    ######################################################################### */
 void inviteuser(MsgItem_t *pMsg){
     char *pParameter;
-    char **pParts;
+    char *pRest;
     char *pInviteNick;
 
     
@@ -1411,22 +1424,20 @@ void inviteuser(MsgItem_t *pMsg){
     }
     
     // extract the parameters
-    pParts=splitString(pParameter,3);
+    rmFirstPart(pParameter,&pRest);
+    pInviteNick=getFirstPart(pRest,NULL);
+    
+    free(pParameter);
+    free(pRest);
 
     // select the nickname
-    if (pParts[1]== NULL) {
+    if (pInviteNick== NULL) {
         pInviteNick=pMsg->pCallingNick;
-    } else {
-            if (pMsg->UserLevel==FriendLevel) {
-                pInviteNick=pMsg->pCallingNick;
-            } else {
-                pInviteNick=pParts[1];
-            }
     }
 
     // invite
     invite(pMsg->pAccessChannel,pInviteNick);
-
+    free(pInviteNick);
 }
 /* #########################################################################
    Bot comand: \001PING <ID>\001

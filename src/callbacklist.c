@@ -230,21 +230,21 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
     	/** check for empty list **/
 	if (list==NULL)
 	{
-		DEBUG("searchNicknameFromCallbackDList() - list=NULL!!!");
+		DEBUG("Callback list is NULL!!!");
 	 	pthread_mutex_unlock(list->callbacklist_mutex);
 		return NULL;
 	}
 	if (getHeadCallbackDList(list)==NULL || getTailCallbackDList(list)==NULL || getSizeCallbackDList(list)==0)
 	{
 		
-		DEBUG("searchNicknameFromCallbackDList() - empty list!\n");
+		DEBUG("Callback list empty list!\n");
 	 	pthread_mutex_unlock(list->callbacklist_mutex);
 		return NULL;
 	}
 	/** check for empty start element **/
 	if (element==NULL)
 	{
-		DEBUG("searchNicknameFromCallbackDList() - NULL-Item is nor allowed!\n");
+		DEBUG("NULL-Item is not allowed in the callback list !\n");
 	 	pthread_mutex_unlock(list->callbacklist_mutex);
 		return NULL;
 	}
@@ -260,16 +260,28 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
 	}
 	else if (istailCallbackDList(element))
 	{
-		while(!strcmp(temp->data->nickname,nickname) && temp->prev!=NULL)
+        DEBUG("current nick %s\n",temp->data->nickname);
+		while(strcmp(temp->data->nickname,nickname))
 		{
-			temp=temp->prev;
+            if (temp->prev) {
+                temp=temp->prev;
+            }else {
+                break;
+            }
+            DEBUG("current nick %s\n",temp->data->nickname);
 		}
 	}
 	else
 	{
-		while(strcmp(temp->data->nickname,nickname)!=0 && temp->next!=NULL)
+        DEBUG("current nick %s\n",temp->data->nickname);
+		while(strcmp(temp->data->nickname,nickname))
 		{
-			temp=temp->next;
+            if (temp->next) {
+                temp=temp->next;
+            }else {
+                break;
+            }
+            DEBUG("current nick %s\n",temp->data->nickname);
 		}
 	}
 	
@@ -280,7 +292,7 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
     }
 	else
 	{
-		DEBUG("searchNicknameFromCallbackDList() - Nickname not found!\n");
+		DEBUG("Nickname \"%s\" not found in the callback list!\n", nickname);
 	 	pthread_mutex_unlock(list->callbacklist_mutex);
 		return NULL;
 	}

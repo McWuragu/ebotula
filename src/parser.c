@@ -305,9 +305,9 @@ void *CommandExecutionThread(void *argv) {
             free (sMsgItem.pCallingNick);
             free (sMsgItem.pNetmask);
             free (sMsgItem.pRawLine);
-            free(pMsg);
+            free (pMsg);
             
-            free(pCommand);
+            free (pCommand);
         }
     }
     DEBUG("Execution thread is stopped\n");

@@ -59,6 +59,7 @@ char *getNetmask(char const *pLine){
         		pNetmask=(char *)malloc((strlen(pStr)+1)*sizeof(char));
         		strcpy(pNetmask,pStr);
         	}
+            StrToLower(pNetmask);
         }
         free(pStr);
     }
@@ -305,52 +306,46 @@ char *getParameters(char const *pLine){
     return pParameter;
 }
 // #############################################################################
-char ** splitString(char const * pString,int nRetArraySize) {
-    char **ppStrings;
-    char *pPos,*pSpacePos;
+char *getFirstPart(char const *pLine,char **pRest) {
+    char *pStr;
     char *pTmp;
-    unsigned int iCount=0,i,j,len;
+    char *pPos;
 
-    // check of NULL pointer
-    if (pString) {
-        pTmp=(char*)malloc((strlen(pString)+1)*sizeof(char));
-        strcpy(pTmp,pString);
-   
-        pPos=pTmp;
-    
-        ppStrings=(char**)malloc(nRetArraySize*sizeof(char*));
-    
-        // fill the array
-        for (i=0;i<nRetArraySize-1;i++) {
-            len=strlen(pPos);
-            for (j=0;j<len;j++) {
-                // look for the separator
-                if (pPos[j]==' ') {
-                    pPos[j]='\0';
-                    break;
-                }
-            }
-            len=strlen(pPos);
-            if (len!=0) {
-                // put the string in the array
-                ppStrings[i]=(char*)malloc((len+1)*sizeof(char));
-                strcpy(ppStrings[i],pPos);
-            } else {
-                ppStrings[i]=NULL;
-            }
 
-            // set the new start
-            pPos=pPos+j;
-            pPos++;
-                
-        }
-        // put the rest in the array
-        if ((len=strlen(pPos))) {
-            ppStrings[i]=(char*)malloc((len+1)*sizeof(char));
-            strcpy(ppStrings[i],pPos);
-        } 
+    if (!pLine) {
+        if  (pRest) {*pRest=pLine;};
+        return NULL;
     }
-    return ppStrings;
+
+    // copy the orginal
+    pTmp=(char*)malloc((strlen(pLine)+1)*sizeof(char));
+    strcpy(pTmp,pLine);
+
+    // separete the first part of the string
+    pPos=strchr(pTmp,' ');
+    if (pPos) {
+        *pPos='\0';
+        pPos++;
+        
+        // copy the rest
+        if  (pRest) {
+            free(*pRest);
+            
+            if (strlen(pPos)) {
+                *pRest=(char*)malloc((strlen(pPos)+1)*sizeof(char));
+                strcpy(*pRest,pPos);
+            } else {
+                *pRest=NULL;
+            }
+        }
+    }
+
+    // fill the return value
+    pStr=(char*)malloc((strlen(pTmp)+1)*sizeof(char));
+    strcpy(pStr,pTmp);
+    free(pTmp);
+
+    return pStr;
 }
 // #############################################################################
 char * getBanmask(char const *pLine){ 
@@ -362,10 +357,11 @@ char * getBanmask(char const *pLine){
 	pStr=getNetmask(pLine);
 	
     if (pStr) {
-		// get the position of '!'
+        // get the position of '!'
 		pChar=(char *)strchr(pStr,'!');
 		// jump over '!'
-		pChar;
+		//pChar++;
+        
 		// copy from '!' to pStr
         pBanmask=(char*) malloc(strlen(pChar)+3);
 
@@ -373,13 +369,19 @@ char * getBanmask(char const *pLine){
     		strcpy(pBanmask,"*");
     		strcat(pBanmask,pChar);
     		strcpy(pStr,pBanmask);
-    		// setting after @ a NULL-Byte
+    		
+            // setting after @ a NULL-Byte
     		pChar=(char *)strchr(pBanmask,'@');
     		pChar[1]='*';
     		pChar[2]='\0';
-    		pChar=(char *)strchr(pStr,'.');
-    		// add rest of the netmask
-    		strcat(pBanmask,pChar);
+            //strcat(pBanmask,pChar);
+
+            // add rest of the netmask
+            pChar=(char *)strchr(pStr,'.');
+            if (pChar) {
+                strcat(pBanmask,pChar);
+            }
+            
         }
 		
         free(pStr);
@@ -400,10 +402,8 @@ AnswerMode_t getAnswerMode(char const * pLine){
             _AnserMode=PrvMsgMode;
         }else {
             _AnserMode=NoticeMode;
+            free (pChannel);
         }
-
-        free (pChannel);
-        
     }
     return _AnserMode;
 }

@@ -28,94 +28,110 @@ void destroyCallbackItem(CallbackItem_t *data)
 // #############################################################################
 void ModeResetCb(char *pNetmask,void* data){
     extern ConfigSetup_t sSetup;
-    char **ppDataPart;
+    char *pChannel;
+    char *pOldMode=NULL;
     char *pAccessKey;
     char *pLogin;
     char *pNick;
     char *pMod;
+    char *pTmpBotName;
 
 	DEBUG("Callback for ResetMode\n");
 
     // split the  input datums
-    ppDataPart=splitString((char*)data,2);
-    
+    pChannel=getFirstPart((char*)data,&pOldMode);
     pNick=getNickname(pNetmask);
 
     if (pNick) {
+        StrToLower(pNetmask);
+        
+        /* make  a bot name with small letters */
+        pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
+        strcpy(pTmpBotName,sSetup.pBotname);
+        StrToLower(pTmpBotName);
+
         if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
             DEBUG("Reset the mode for the identified User %s\n",pLogin);
     
             // built the  key for the access_db
-            pAccessKey=(char*)malloc((strlen(ppDataPart[0])+strlen(pLogin)+1)*sizeof(char));
-            sprintf(pAccessKey,"%s%s",pLogin,ppDataPart[0]);
+            pAccessKey=(char*)malloc((strlen(pChannel)+strlen(pLogin)+1)*sizeof(char));
+            sprintf(pAccessKey,"%s%s",pLogin,pChannel);
     
     
             // read user rights
             if ((pMod=get_db(ACCESS_DB,pAccessKey))) {
                 // normal user
-                if (pMod[1]==ppDataPart[0][1]) {
+                if (pMod[1]==pChannel[1]) {
                     // check the  right status of mode and  set return
-                    if (ppDataPart[0][0]=='-') {
-                        ppDataPart[1][0]='+';
-                        mode(ppDataPart[0],ppDataPart[1],pNick);
+                    if (pChannel[0]=='-') {
+                        pOldMode[0]='+';
+                        mode(pChannel,pOldMode,pNick);
                     }
                 } else {
                     // reset the mode for identify user
-                    ppDataPart[1][0]='-';
-                    mode(ppDataPart[0],ppDataPart[1],pNick);
+                    pOldMode[0]='-';
+                    mode(pChannel,pOldMode,pNick);
                 }
     
             }  else if ((get_db(ACCESS_DB,pLogin))) {
                 DEBUG("Reset the master\n");
                 // master mod reset
-                if (strcmp(ppDataPart[1],"+o")!=0){
+                if (strcmp(pOldMode,"+o")!=0){
                     // reset all mod other mod until op
-                    ppDataPart[1][0]=(ppDataPart[1][0]=='-')?'+':'-';
-                    mode(ppDataPart[0],ppDataPart[1],pNick);
+                    pOldMode[0]=(pOldMode[0]=='-')?'+':'-';
+                    mode(pChannel,pOldMode,pNick);
                 }
             }
     
             free(pAccessKey);
     
-        } else if (ppDataPart[1][0]=='+' && strcmp(pNick,sSetup.pBotname)) {
+        } else if (pOldMode[0]=='+' && strcmp(pNick,pTmpBotName)) {
             DEBUG("Reset the mode for %s\n",pNick);
             // reset the mode for not identify user
-            ppDataPart[1][0]='-';
-            mode(ppDataPart[0],ppDataPart[1],pNick);
+            pOldMode[0]='-';
+            mode(pChannel,pOldMode,pNick);
         }
-    
+
+        free(pTmpBotName);
         free(pNick);
     }
+    
+    free(pChannel);
+    free(pOldMode);
 
 }
 // #############################################################################
 void SetBanCb(char *pNetmask,void * data){
     boolean doBan;
-	char **pDataVec;
+	char *pRest=NULL;
     char *pBanmask;
     char *pAccessKey;
     char *pMod=NULL;
-    //char *pNick;
+    char *pChannel;
     char *pLogin;
+    char *pDestLogin;
     char *pCmdNick;
     
 
     DEBUG("Callback for user banning\n");
 
     /* get user information */
-    pDataVec=splitString((char*)data,3);
-    pBanmask=getBanmask(pNetmask);
-    //pNick=getNickname(pNetmask);
-    pLogin=get_db(NICKTOUSER_DB,pNetmask);
-    
-    pCmdNick=getNickname(get_db(USERTONICK_DB,pDataVec[0]));
+    pLogin=getFirstPart((char*)data,&pRest);
+    pChannel=getFirstPart(pRest,NULL);
+    free(pRest);
 
+    StrToLower(pNetmask);
+    pBanmask=getBanmask(pNetmask);
+    pDestLogin=get_db(NICKTOUSER_DB,pNetmask);
+    pCmdNick=getNickname(get_db(USERTONICK_DB,pLogin));
+
+    
     if (pCmdNick) {
-        doBan=checkUserLevel(pCmdNick,pLogin,pDataVec[1]);
+        doBan=checkUserLevel(pCmdNick,pDestLogin,pChannel);
     
         /* try to ban */
         if (doBan) {
-            ban(pDataVec[1],pBanmask);
+            ban(pChannel,pBanmask);
             notice(pCmdNick,getMsgString(OK_BAN));
         } else {
             notice(pCmdNick,getMsgString(ERR_NOT_BAN));
@@ -123,42 +139,46 @@ void SetBanCb(char *pNetmask,void * data){
         free(pCmdNick);
     }
     free(pBanmask);
+    free(pDestLogin);
     free(pLogin);
+    free(pChannel);
     
 }
 
 // #############################################################################    
 void KickCb(char *pNetmask, void *data) {
     boolean doKick;
-    char **ppDataPart;
     char *pAccessKey;
-    char *pReason;
+    char *pReason=NULL;
     char *pNick;
     char *pMod=NULL;
     char *pLogin;
+    char *pCmdLogin;
+    char *pChannel;
     char *pCmdNick;
+    char *pCmdNetmask;
     
     DEBUG("Callback for user kicking\n");
 
 
     /* split Datums */
-    ppDataPart=splitString((char*)data,3);
+    pCmdLogin=getFirstPart((char*)data,&pReason);
+    pChannel=getFirstPart(pReason,&pReason);
 
     /* get user information */
+    StrToLower(pNetmask);
     pLogin=get_db(NICKTOUSER_DB,pNetmask);
-    pCmdNick=getNickname(get_db(USERTONICK_DB,ppDataPart[0]));
+    pCmdNetmask=get_db(USERTONICK_DB,pCmdLogin);
+    pCmdNick=getNickname(pCmdNetmask);
 
     if (pCmdNick) {
-        /* extract reason */
-        pReason=(char*)ppDataPart[2];
-       
-        doKick=checkUserLevel(pCmdNick,pLogin,ppDataPart[1]);
+        doKick=checkUserLevel(pCmdNick,pLogin,pChannel);
     
         /* try to kick */
         if (doKick) {
             pNick=getNickname(pNetmask);
             if (pNick) {
-                kick(ppDataPart[1],pNick,pReason);
+                kick(pChannel,pNick,pReason);
                 notice(pCmdNick,getMsgString(OK_KICK));
                 free(pNick);
             }
@@ -167,9 +187,11 @@ void KickCb(char *pNetmask, void *data) {
         }
 
         free(pCmdNick);
-        free(pReason);
     }
-    
+    free(pChannel);
+    free(pCmdLogin);
+    free(pCmdNetmask);
+    free(pReason);
     free(pLogin);
 }
 

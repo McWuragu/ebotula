@@ -60,7 +60,7 @@ void hNickChange(char *pLine) {
     			// build new netmask	
     			pNewNetmask=(char*)malloc((strlen(pNewNick)+strlen(pTmp)+1)*sizeof(char));
     			sprintf(pNewNetmask,"%s%s",pNewNick,pTmp);
-    
+
     			// reset Login Status
     			log_out(pLogin);
     			log_on(pNewNetmask,pLogin);
@@ -129,7 +129,12 @@ void hSetModUser(char *pLine) {
     pNick=getNickname(pLine);
 
     if (pNick) {
-        if (strcmp(pNick,sSetup.pBotname)) {
+        char *pTmpBotName;
+        pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
+        strcpy(pTmpBotName,sSetup.pBotname);
+        StrToLower(pTmpBotName);
+
+        if (strcmp(pNick,pTmpBotName)) {
             pNetmask=getNetmask(pLine);
             if (pNetmask) {
                 if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
@@ -158,6 +163,7 @@ void hSetModUser(char *pLine) {
                 free(pNetmask);
             }
         }
+        free(pTmpBotName);
         free(pNick);
     }
 }
@@ -172,36 +178,46 @@ void hResetModes(char *pLine) {
     char *pChannel;
     char *pData;
     char *pNick;
+    char *pNetmask;
     char *pAccessNick;
     char *pMode;
-    char **ppLinePart;
+    char *pRest=NULL;
     extern CallbackDList CallbackList;
     CallbackItem_t *Callback;
     
     
 
     //splitt the string
-    ppLinePart=splitString(pLine,6);
-    pChannel=(char*)ppLinePart[2];
-    pMode=(char*)ppLinePart[3];
-
-    // extract  the nick
-    pNick=(char*)ppLinePart[4];
-    pAccessNick=getNickname(ppLinePart[0]);
+    pNetmask=getFirstPart(pLine,&pRest);
+    rmFirstPart(pRest,&pRest);
     
+    pChannel=getFirstPart(pRest,&pRest);
+    pMode=getFirstPart(pRest,&pRest);
+    pNick=getFirstPart(pRest,&pRest);;
+    free(pRest);
+    
+    // extract  the nick
+    pAccessNick=getNickname(pNetmask);
+    free(pNetmask);
+
     if (pAccessNick) {
-        if (strcmp(pAccessNick,sSetup.pBotname)!=0) {
+        char *pTmpBotName;
+        pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
+        strcpy(pTmpBotName,sSetup.pBotname);
+        StrToLower(pTmpBotName);
+
+        if (strcmp(pAccessNick,pTmpBotName)!=0) {
             if (pMode[1]=='o' || pMode[1]=='v') {
               
                 // check of bot new mods or  other user
-                if (!strcmp(pNick,sSetup.pBotname)) {
+                if (!strcmp(pNick,pTmpBotName)) {
                     DEBUG("Bot get new mods\n");
                 // mode set for the bot from other user of operator
                     // then initiallize this  channel
                     if (strcmp(pMode,"+o")==0) {
-                    channelInit(pChannel);
+                        channelInit(pChannel);
                     } else {
-                    privmsg(pChannel,getMsgString(INFO_NEED_OP));
+                        privmsg(pChannel,getMsgString(INFO_NEED_OP));
                     }
                 } else {
                     // add callback for reset the modes for a user    
@@ -233,7 +249,7 @@ void hResetModes(char *pLine) {
                 mode(pChannel,pPos,NULL);
                 DEBUG("Reset the modes from the channel %s",pChannel);
             }
-        } else if (strcmp(pAccessNick,sSetup.pBotname)!=0) {
+        } else if (strcmp(pAccessNick,pTmpBotName)!=0) {
             DEBUG("Bot get new mods\n");
             // mode set for the bot from other user of operator
             // then initiallize this  channel
@@ -243,8 +259,13 @@ void hResetModes(char *pLine) {
                 privmsg(pChannel,getMsgString(INFO_NEED_OP));
             }
         }
+        free(pTmpBotName);
         free(pAccessNick);
+    } else {
+        free(pNick);
     }
+    free(pChannel);
+    free(pMode);
 
 }
 // #########################################################################
@@ -257,11 +278,17 @@ void hResetTopic(char *pLine){
     char *pChannelSet;
     char *pTopic;
     char *pNick;
+    char *pTmpBotName;
 
     pNick=getNickname(pLine);
 
     if (pNick) {
-        if (strcmp(pNick,sSetup.pBotname)) {
+        /* make  a bot name with small letters */
+        pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
+        strcpy(pTmpBotName,sSetup.pBotname);
+        StrToLower(pTmpBotName);
+
+        if (strcmp(pNick,pTmpBotName)) {
     
             // get the  right topic for this channel
             if (!(pChannel=getAccessChannel(pLine)))
@@ -283,6 +310,7 @@ void hResetTopic(char *pLine){
             free(pChannel);
         }
         free(pNick);
+        free(pTmpBotName);
     }
 }
 // #########################################################################
@@ -290,16 +318,32 @@ void hResetTopic(char *pLine){
 // Action: rejoin the channel fater  kick
 // #########################################################################
 void hRejoinAfterKick(char *pLine){
-    char ** pArgv;
+    char *pRest=NULL;
+    char *pChannel;
+    char *pNick;
+    char *pTmpBotName;
     extern ConfigSetup_t sSetup;
 
-    pArgv=splitString(pLine,5);
+    rmFirstPart(pLine,&pRest);
+    rmFirstPart(pRest,&pRest);
+    
+    pChannel=getFirstPart(pRest,&pRest);
+    pNick=getFirstPart(pRest,NULL);
+    free(pRest);
                                                
-    if (!strcmp(sSetup.pBotname,pArgv[3])) {
-        join(pArgv[2]);
+    /* make  a bot name with small letters */
+    pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
+    strcpy(pTmpBotName,sSetup.pBotname);
+    StrToLower(pTmpBotName);
 
-        DEBUG("Rejoin the  channel %s\n",pArgv[2]);
+    if (!strcmp(pTmpBotName,pNick)) {
+        join(pChannel);
+
+        DEBUG("Rejoin the  channel %s\n",pChannel);
     }
+    free(pTmpBotName);
+    free(pChannel);
+    free(pNick);
 
 }
 
@@ -361,14 +405,19 @@ void hCallback(char *pLine) {
     CallbackDListItem *pCallbackItem;
     CallbackDListItem *pCallbackItemReturn;
     char *pNetmask;
-    char **ppLinePart;
+    char *pRest=NULL;
     char *pNick;
+    char *pLogin;
+    char *pDomain;
 
-    ppLinePart=splitString(pLine,7);
-
-    /* identify nick name only small charakter */
-    pNick=(char*)malloc((strlen(ppLinePart[3])+1)*sizeof(char*));
-    strcpy(pNick,ppLinePart[3]);
+    rmFirstPart(pLine,&pRest); // 0
+    rmFirstPart(pRest,&pRest); // 1
+    rmFirstPart(pRest,&pRest); // 2
+    
+    pNick=getFirstPart(pRest,&pRest);
+    pLogin=getFirstPart(pRest,&pRest);
+    pDomain=getFirstPart(pRest,NULL);
+    free(pRest);
     StrToLower(pNick);
 
    /** lock for the Callback item for the nick **/
@@ -379,8 +428,8 @@ void hCallback(char *pLine) {
          */
         if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
             // built netmask
-            pNetmask=(char*)malloc((strlen(ppLinePart[3])+strlen(ppLinePart[4])+strlen(ppLinePart[5])+3)*sizeof(char));
-            sprintf(pNetmask,"%s!%s@%s",ppLinePart[3],ppLinePart[4],ppLinePart[5]);
+            pNetmask=(char*)malloc((strlen(pNick)+strlen(pLogin)+strlen(pDomain)+3)*sizeof(char));
+            sprintf(pNetmask,"%s!%s@%s",pNick,pLogin,pDomain);
     
             // execute the callback
             DEBUG("Callback\n");
@@ -393,6 +442,8 @@ void hCallback(char *pLine) {
         }                                          
     }
     free(pNick);
+    free(pLogin);
+    free(pDomain);
 }
 
 // #########################################################################
@@ -402,17 +453,16 @@ void hCallback(char *pLine) {
 void hWhoisFailed(char *pLine) {
     extern CallbackDList CallbackList;
     CallbackItem_t *CB_Data;
-    CallbackDListItem *pCallbackItem;
     CallbackDListItem *pCallbackItemReturn;
-    char *pNetmask;
-    char **ppLinePart;
+    char *pRest=NULL;
     char *pNick;
 
-    ppLinePart=splitString(pLine,7);
-
-    /* identify nick name only small charakter */
-    pNick=(char*)malloc((strlen(ppLinePart[3])+1)*sizeof(char*));
-    strcpy(pNick,ppLinePart[3]);
+    rmFirstPart(pLine,&pRest); // 0
+    rmFirstPart(pRest,&pRest); // 1
+    rmFirstPart(pRest,&pRest); // 2
+    
+    pNick=getFirstPart(pRest,NULL);
+    free(pRest);
     StrToLower(pNick);
 
     DEBUG("Callback Zombie %s\n",pNick);
@@ -426,7 +476,7 @@ void hWhoisFailed(char *pLine) {
         if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
             /* destroy  callback item */
             destroyCallbackItem(CB_Data);
-            DEBUG("Callback zombie removed\n");
+            DEBUG("Callback Zombie removed\n");
         }
     }
     free(pNick);

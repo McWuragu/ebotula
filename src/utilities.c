@@ -173,12 +173,15 @@ void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
                 break;
             case 'k':
                 pMode->pModeStr[MOD_KEYWORD]='k';
+                free(pMode->pKeyword);
                 pMode->pKeyword=(char*)malloc((strlen(ppArgv[j])+1)*sizeof(char));
                 strcpy(pMode->pKeyword,ppArgv[j]);
                 j++;
                 break;
             case 'l':
                 pMode->pModeStr[MOD_LIMIT]='l';
+                free(pMode->pLimit);
+
                 pMode->pLimit=(char*)malloc((strlen(ppArgv[j])+1)*sizeof(char));
                 strcpy(pMode->pLimit,ppArgv[j]);
                 j++;

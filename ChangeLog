@@ -7,7 +7,7 @@ ebotula-0.1.15
 - maked the reaction time of commands shorter
 - added the cleanup of the zombies in the callback list
 - spell checking
-
+- maked sturdier the bot 
 
 ebotula-0.1.14
 --------------------

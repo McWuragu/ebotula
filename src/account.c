@@ -95,6 +95,7 @@ void rmDeadLogins(long lCheckTime) {
             }
     	    free(pTime);
 		}
+        free(pLogin->data);
 		free(pLogin);
     }
 	deleteQueue(pLoginQueue);
@@ -106,11 +107,15 @@ void log_on(char *pNetmask,char *pLogin) {
     char pTime[32];
     char *pOldNetmask;
 
+    StrToLower(pLogin);
+    StrToLower(pNetmask);
+
+
     pthread_mutex_lock(&mutexAccount);
     if (exist_db(USERTONICK_DB,pLogin)) {
         // relog on
         if ((pOldNetmask=get_db(USERTONICK_DB,pLogin))) {
-        	
+
 			del_db(NICKTOUSER_DB,pOldNetmask);
         	add_db(NICKTOUSER_DB,pNetmask,pLogin);
 
@@ -151,7 +156,7 @@ void log_out(char *pLogin) {
 /* ############################################################################# */
 void __log_out(char *pLogin) {
     char *pNetmask;
-
+    StrToLower(pLogin);
     if ((pNetmask=get_db(USERTONICK_DB,pLogin))){
 	    del_db(NICKTOUSER_DB,pNetmask);
     	del_db(USERTONICK_DB,pLogin);
@@ -204,6 +209,7 @@ void rmAccessRights(char *pLogin){
         del_db(ACCESS_DB,pKey);
 
         free(pKey);
+        free(pChannel->data);
 		free(pChannel);
     }
 	deleteQueue(pChannelQueue);
@@ -231,6 +237,7 @@ void rmDeadAccounts(long lCheckTime) {
         	}
         	free(pTime);
 		}
+        free(pLogin->data);
 		free(pLogin);
     }
 	deleteQueue(pLoginQueue);

@@ -13,7 +13,8 @@
 
 #include "type.h"
 
-#define delSplitString(array,size) { int i; for (i=0;i<size;i++) {free (array[i]);} free (array);}
+
+#define rmFirstPart(STRING,RETURN) {char *pTmp=getFirstPart(STRING,RETURN); free(pTmp);}
 
 /**
 * This function extract the nickname from the network identify or complete
@@ -35,16 +36,6 @@ AnswerMode_t getAnswerMode(char const *pLine);
 char *getTopic(char const *pLine);
 char *getGreeting(char const *pLine);
 char *getChannelMode(char const *pLine);
-
-/**
-* This function splits a giving string  in seprate strings.
-* author Steffen Laube
-*
-* @param pString the input string
-* @param nRetArraySize the number of  wished parts
-* @return a array of char pointers with the giving size
-*/
-char **splitString(char const *pString,int nRetArraySize);
 /**
  * This functions gets the Banmask from a Netmask
  *
@@ -52,4 +43,7 @@ char **splitString(char const *pString,int nRetArraySize);
  * @return the banmask
  */
 char *getBanmask(char const *pLine);
+
+char *getFirstPart(char const *pLine,char **pRest);
+
 #endif
