@@ -56,7 +56,7 @@
 #define KEY_ALT				"accountlivetime"
 #define KEY_PINGTIMEOUT		"pingtimeout"
 #define KEY_SENDSAFEDELAY   "secsenddelay"
-#define KEY_SENDSAFELINE    "firstsendline"
+#define KEY_SENDSAFELINE    "sendlinelimit"
 #define KEY_EXEUSER         "user"
 #define KEY_EXEGROUP        "group"
 #endif												
