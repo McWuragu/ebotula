@@ -22,24 +22,25 @@
 
 // ############################################################################# 
 void trim(char* pStr) {
-	int alpha,i,j;
-	int line_len;
+	boolean bIsAlpha;
+	int iLineLength,i,j;
 
 	// remove leading space
 	// remove multispace
 	// remove newline
 	// remove carge return
 	// remove tabs
-	alpha=j=0;
-	line_len=strlen(pStr);
-	for (i=0;i<=line_len;i++) {
-		if ((pStr[i]==' ') && (alpha==1)) {
+	bIsAlpha=false;
+	j=0;
+	iLineLength=strlen(pStr);
+	for (i=0;i<=iLineLength;i++) {
+		if ((pStr[i]==' ') && bIsAlpha) {
 			pStr[j]=pStr[i];
-			alpha=0;
+			bIsAlpha=false;
 			j++;
 		} else if ((pStr[i]!='\n') && (pStr[i]!='\r') && (pStr[i]!=' ') && (pStr[i]!='\t')) {
 			pStr[j]=pStr[i];
-			alpha=1;
+			bIsAlpha=true;
 			j++;
 		}
 	}
@@ -52,11 +53,11 @@ void trim(char* pStr) {
 // ############################################################################# 
 void clearspace(char *pStr) {
 	int i,j,noclr;
-	int line_len;
+	int iLineLength;
 
-	line_len=strlen(pStr);
+	iLineLength=strlen(pStr);
 	j=noclr=0;
-	for (i=0;i<=line_len;i++) {
+	for (i=0;i<=iLineLength;i++) {
 		if ((pStr[i]!=' ') || (noclr==1)) {
 			if ((pStr[i]=='\"') && (noclr==0)) {
 				noclr=1;
