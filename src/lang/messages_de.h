@@ -33,16 +33,16 @@ static MsgStruct_t Syslog[]= {
 	{ SYSLOG_RESOLVE_PROTOCOL,	"TCP ist ein unbekanntes Protokoll"},
 	{ SYSLOG_SOCKET,		"Kann Socket nicht anlegen"},
 	{ SYSLOG_CONNECT,		"Verbindung fehlgeschlagen"},
-	{ SYSLOG_CONFIG_FILE,		"Kann Konfigurationsdatei nicht öffen"},
+	{ SYSLOG_CONFIG_FILE,		"Kann Konfigurationsdatei nicht	öffnen"},
 	{ SYSLOG_SEND,			"Kann nicht senden"},
 	{ SYSLOG_RECV,			"Kann nichts empfangen"},
 	{ SYSLOG_TIMEOUT,		"Timeout beim Empfang"},
 	{ SYSLOG_CREATE_DIR,		"Lege Verzeichnis für die Datenbank an"},
 	{ SYSLOG_CREATE_DIR_ERR,	"Kann kein Verzeichnis für die Datenbank anlegen"},
-	{ SYSLOG_DATABASE_ERR,		"Kann Datenbank nicht öffen"},
-    { SYSLOG_USER_NOT_FOUND,    "User nicht gefunden"},
-    { SYSLOG_USER_NOT_FOUND,    "Gruppe nicht gefunden"},
-    { SYSLOG_RESTART,		"Neustart..."},
+	{ SYSLOG_DATABASE_ERR,		"Kann Datenbank nicht öffnen"},
+	{ SYSLOG_USER_NOT_FOUND,	"User nicht gefunden"},
+	{ SYSLOG_USER_NOT_FOUND,	"Gruppe nicht gefunden"},
+	{ SYSLOG_RESTART,		"Neustart..."},
 	{ SYSLOG_STOPPED,		"Angehalten..."}
 };
 
@@ -91,7 +91,7 @@ static MsgStruct_t Msg[] ={
 	{ OK_KICK,		"Der Benutzer wurde vom Bot gekickt" },
 	{ OK_BAN,		"Der Benutzer wurde vom Bot gebannt" },
     { OK_DEBAN,			"Der Ban wurde vom Bot aufgehoben" },
-    { OK_USERMODE,		"Die Benutzermodus wurde geändert " },
+    { OK_USERMODE,		"Die Benutzermodus wurde geändert" },
 	{ OK_RMUSER,		"Der Account wurde entfernt" },
 	{ OK_MASTER,		"Du bist ein Bot Master" },
 	{ OK_DIE,		"Der Bot beendet sich" },
@@ -101,7 +101,7 @@ static MsgStruct_t Msg[] ={
 	{ ERR_NOT_LOGON,	"Du bist nicht identifiziert" },
 	{ ERR_NOT_MASTER,	"Du bist kein Botmaster" },
 	{ ERR_NOT_OWNER,	"Du bist nicht der Channeleigentümer" },
-	{ ERR_NOT_FRIEND,		"Du bist kein Freund des Channels" },
+	{ ERR_NOT_FRIEND,	"Du bist kein Freund des Channels" },
 	{ ERR_NOT_CHANNELOPT,	"Dieses Kommando benötigt einen Channel" },
     { ERR_NOT_PARAMETER,	"Es konnnten keine gültigen Parameter gefunden werden."},
     { ERR_NOT_COMMAND,		"Es wurde keine Hilfe für das Kommando gefunden" },
@@ -126,7 +126,7 @@ static MsgStruct_t Msg[] ={
 	// other informations
 	{ INFO_HELP_END,	"Ende der Hilfe." },
 	{ INFO_HELP_FOR,	"Hilfe für" },
-	{ INFO_USERLIST_BEGIN,	"Bentuzerliste:" },
+	{ INFO_USERLIST_BEGIN,	"Benutzerliste:" },
 	{ INFO_USERLIST_END,	"Ende der Benutzerliste." },
 	{ INFO_CHANNELLIST_BEGIN,	"Channelliste:" },
 	{ INFO_CHANNELLIST_END,		"Ende der Channelliste." },
@@ -144,7 +144,7 @@ static MsgStruct_t Msg[] ={
 	static char * unknow_parameter[]=
 	{
 		"Unbekannte Option\n",
-		"Gib \"",PACKAGE," -h\" für mehr Information ein.\n",
+		"Gib \"",PACKAGE," -h\" für mehr Informationen ein.\n",
 		"."
 	};
 
@@ -158,17 +158,17 @@ static MsgStruct_t Msg[] ={
 		"\t-a Tage\t\tSetzt die maximale Loginzeit.\n",
 		"\t-b Name\t\tSetzt den Namen des Bots.\n",
 		"\t-c Sek\t\tSetzt das Timeoutlimit.\n",
-		"\t-d Pfad\t\tsetzt den Pfad zu Datenbank an\n",
-		"\t-f Datei\tSetzt Pfad zur Konfigurationdatei\n",
+		"\t-d Pfad\t\tsetzt den Pfad zu Datenbank\n",
+		"\t-f Datei\tSetzt Pfad zur Konfigurationsdatei\n",
 		"\t-g group\tSetzt die Group unter der gestartet werden soll (nur root).\n",
         	"\t-h\t\tGibt diese Hilfe aus.\n",
-		"\t-k Tage\t\tSetzt die maximal Lebenszeit eines Account bei.\n",
+		"\t-k Tage\t\tSetzt die maximal Lebenszeit eines Account.\n",
 		"\t-m\t\tLegt neuen Master an.\n",
-		"\t-n ms\t\tSetzt die Verzögerung  für das Senden.\n",
+		"\t-n ms\t\tSetzt die Verzögerung für das Senden.\n",
 		"\t-p Port\t\tSetzt den Prot des IRC-Servers.\n"
 		"\t-r String\tSetzt den String für Realnamefeld.\n",
 		"\t-s Server\tSetzt den IRC Server.\n",
-		"\t-t Anzahl\tSetzt die Anzaahl der zu erzeugenden Threads.\n",
+		"\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n",
         	"\t-u user\t\tSetzt den User unter dem gestartet werden soll (nur root).\n",
 		"\t-v\t\tGibt die Version aus.\n",
 		"."
