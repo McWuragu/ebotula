@@ -19,7 +19,9 @@
 #include <pwd.h>
 #include <grp.h>
 #include <dirent.h>
-
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <sys/types.h>
 
@@ -37,7 +39,7 @@
 #include "dbaccess.h"
 #include "queue.h"
 #include "ircbot.h"
-  
+#include "baseconfig.h" 
 
 ConfigSetup_t sSetup;    // global config structure
 volatile boolean stop;       // singal for stop the endless loop
@@ -64,7 +66,7 @@ int main(int argc,char * const argv[]) {
     struct group *Group;
 	char *sDirDummy;
     DIR *pDir;
-
+    int iTemp;
     uid=geteuid();
     
     // init config
@@ -96,6 +98,12 @@ int main(int argc,char * const argv[]) {
         // config file path
         sSetup.configfile=(char *)malloc((strlen(sDirDummy)+strlen(CONFFILE)+1)*sizeof(char));
         sprintf(sSetup.configfile,"%s%s",sDirDummy,CONFFILE);
+	// generating basicconfig for ebotula
+	if ((iTemp=open(sSetup.configfile,O_EXCL|O_CREAT,0600))!=-1)
+	{
+		DEBUG("Creating Configfile: %s\n",sSetup.configfile);
+		write_baseconfig(sSetup.configfile);
+	}
     }
     
     // set the other default values
