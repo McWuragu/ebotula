@@ -10,42 +10,52 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <fcntl.h>
+#include <syslog.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+         
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 
-#include "baseconfig.h"
-#include "ircbot.h"
 
-char	* bstr[26]={"# Config file for the ebotula", 	
-/*2*/		"# copyright 2003 by Steffen Laube",	
-/*3*/		"# The name of the bot",		
-/*4*/		"botname=",
-/*5*/		"# String for the realname",
-/*6*/		"realname=",
-/*7*/		"# Number of the created threads",
-/*8*/		"threadlimit= ",
-/*9*/		"# The server the bot connects to",
-/*10*/		"servername=",
-/*11*/		"# The port the bot connects to",
-/*12*/		"port =",
-/*13*/		"# The location of the database for the bot",
-/*14*/		"#databasepath=/usr/local/var/ebotula",
-/*15*/		"# The delay time in millisecond for sending",
-/*16*/		"# It is used for the prevention of excess flooding",
-/*17*/		"firstsenddelay=",
-/*18*/		"secsenddelay=",
-/*19*/		"sendlinelimit=",
-/*20*/		"# The time in days an account exists.",
-/*21*/		"# Unused accounts will be removed after this time.",
-/*22*/		"accountlivetime=",
-/*23*/		"# The time limit in days for maximum login time",
-/*24*/		"autologoff=",
-/*25*/		"# The time limit in seconds for ping timeout.",
-/*26*/		"pingtimeout="};
+#include "messages.h"
+#include "ircbot.h"
+#include "type.h"
+#include "baseconfig.h"
+
+char	* bstr[]={
+    "# Config file for the ebotula", 	
+    "# The name of the bot",		
+    "botname=",
+    "\n# String for the realname",
+    "realname=",
+    "\n# execute the bot as this user and this group", 
+    "user=",
+    "group=",
+    "\n# Number of the created threads",
+	"threadlimit= ",
+	"\n# The server the bot connects to",
+    "servername=",
+	"\n# The port the bot connects to",
+	"port=",
+	"\n# The location of the database for the bot",
+	"databasepath=",
+	"\n# The delay time in millisecond for sending",
+	"# It is used for the prevention of excess flooding",
+	"firstsenddelay=",
+	"secsenddelay=",
+	"sendlinelimit=",
+	"\n# The time in days an account exists.",
+	"# Unused accounts will be removed after this time.",
+	"accountlivetime=",
+    "\n# The time limit in days for maximum login time",
+	"autologoff=",
+	"\n# The time limit in seconds for ping timeout.",
+	"pingtimeout="
+    };
 
 /**
   * gernerates baseconfig string for baseconfigfile and writes it 
@@ -55,66 +65,66 @@ char	* bstr[26]={"# Config file for the ebotula",
   * @return  pointer to baseconfigfile
  */
 
-int write_baseconfig(char *filename)
+void write_baseconfig()
 {
 	/* filediskriptor for output file*/
 	FILE * fd;
-	char tempstr[1024];
-	int tempint;
-	/* Create & Openfile*/
-	if ((fd=fopen(filename,"wb"))==NULL)
+    char tmpstr[128];
+    int i=0;
+	extern  ConfigSetup_t sSetup;
+
+    /* Create & Openfile*/
+	if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
 	{
-		return -1;
+        perror(getSyslogString(SYSLOG_CONFIG_FILE));
+        syslog(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE));
+        exit(errno);
 	}
 		/* writingd data to file */
 		/* Version string */
-		sprintf(tempstr,VERSIONSTR);
-		fprintf(fd,"%s\n",bstr[0]);
-		fprintf(fd,"%s\n",bstr[1]);
-		fprintf(fd,"# %s\n",tempstr);
+		sprintf(tmpstr,VERSIONSTR);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"# %s\n",tmpstr);
 		/* borname */
-		sprintf(tempstr,DEFAULT_BOTNAME);
-		fprintf(fd,"%s\n",bstr[2]);
-		fprintf(fd,"%s%s\n",bstr[3],tempstr);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s%s\n",bstr[i++],sSetup.botname);
 		/* realname */
-		sprintf(tempstr,DEFAULT_REALNAME);
-		fprintf(fd,"%s\n",bstr[4]);
-		fprintf(fd,"%s\"%s\"\n",bstr[5],tempstr);
-		/* Thread limit */
-		tempint=DEFAULT_THREAD_LIMIT;
-		fprintf(fd,"%s\n",bstr[6]);
-		fprintf(fd,"%s%d\n",bstr[7],tempint);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s\"%s\"\n",bstr[i++],sSetup.realname);
+		/* user & group */
+        fprintf(fd,"%s\n",bstr[i++]);
+        fprintf(fd,"%s%s\n",bstr[i++],sSetup.sExeUser);
+        fprintf(fd,"%s%s\n",bstr[i++],sSetup.sExeGroup);
+        /* Thread limit */
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s%d\n",bstr[i++],sSetup.thread_limit);
 		/* Servername */
-		fprintf(fd,"%s\n",bstr[8]);
-		fprintf(fd,"%sirc.fh-lausitz.de\n",bstr[9]);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s%s\n",bstr[i++],sSetup.server);
 		/* Serverport */
-		fprintf(fd,"%s\n",bstr[10]);
-		fprintf(fd,"%s 6667\n",bstr[11]);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s%s\n",bstr[i++],sSetup.port);
 		/* databasepath */
-		fprintf(fd,"%s\n",bstr[12]);
-		fprintf(fd,"%s\n",bstr[13]);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s%s\n",bstr[i++],sSetup.pDatabasePath);
 		/* delays */
-		fprintf(fd,"%s\n",bstr[14]);
-		fprintf(fd,"%s\n",bstr[15]);
-		tempint=DEFAULT_SEND_DELAY;
-		fprintf(fd,"%s%d\n",bstr[16],tempint);
-		tempint=DEFAULT_SEND_SAFE_DELAY;
-		fprintf(fd,"%s%d\n",bstr[17],tempint);
-		tempint=DEFAULT_SEND_SAFE_LINE;
-		fprintf(fd,"%s%d\n",bstr[18],tempint);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iSendDelay);
+		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iSendSafeDelay);
+		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iSendSafeLine);
 		/* Accountlivtime */
-		fprintf(fd,"%s\n",bstr[19]);
-		fprintf(fd,"%s\n",bstr[20]);
-		fprintf(fd,"%s 90\n",bstr[21]);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s%d\n",bstr[i++],sSetup.AccountLiveTime);
 		/* Autologoff */
-		fprintf(fd,"%s\n",bstr[22]);
-		fprintf(fd,"%s 3\n",bstr[23]);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s%d\n",bstr[i++],sSetup.AutoLoggoff);
 		/* Pingtimeout */
-		fprintf(fd,"%s\n",bstr[24]);
-		fprintf(fd,"%s 120\n",bstr[25]);
+		fprintf(fd,"%s\n",bstr[i++]);
+		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iTimeout);
 
 		/* closing file */
 		fclose(fd);
-	return 0;
 }
 

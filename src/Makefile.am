@@ -38,7 +38,9 @@ ebotula_SOURCES= \
 	utilities.h \
 	queue.h \
 	callback.h\
-	callbacklist.h
+	callbacklist.h \
+	baseconfig.c \
+	baseconfig.h 
 
 
 ebotula_LDADD= $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB) $(RT_LIB)

@@ -39,7 +39,6 @@
 #include "dbaccess.h"
 #include "queue.h"
 #include "ircbot.h"
-#include "baseconfig.h" 
 
 ConfigSetup_t sSetup;    // global config structure
 volatile boolean stop;       // singal for stop the endless loop
@@ -98,12 +97,7 @@ int main(int argc,char * const argv[]) {
         // config file path
         sSetup.configfile=(char *)malloc((strlen(sDirDummy)+strlen(CONFFILE)+1)*sizeof(char));
         sprintf(sSetup.configfile,"%s%s",sDirDummy,CONFFILE);
-	// generating basicconfig for ebotula
-	if ((iTemp=open(sSetup.configfile,O_EXCL|O_CREAT,0600))!=-1)
-	{
-		DEBUG("Creating Configfile: %s\n",sSetup.configfile);
-		write_baseconfig(sSetup.configfile);
-	}
+
     }
     
     // set the other default values
@@ -111,12 +105,28 @@ int main(int argc,char * const argv[]) {
     strcpy(sSetup.botname,DEFAULT_BOTNAME);
     sSetup.realname=(char *)malloc((strlen(DEFAULT_REALNAME)+1)*sizeof(char));
     strcpy(sSetup.realname,DEFAULT_REALNAME);
+    
+    // irc connection
+    sSetup.server=(char *)malloc((strlen(DEFAULT_IRC)+1)*sizeof(char));
+    strcpy(sSetup.server,DEFAULT_IRC);
+    sSetup.port=(char *)malloc((strlen(DEFAULT_PORT)+1)*sizeof(char));
+    strcpy(sSetup.port,DEFAULT_PORT);
+
+    // user & group
+    sSetup.sExeGroup=(char *)malloc((strlen(DEFAULT_GROUP)+1)*sizeof(char));
+    strcpy(sSetup.sExeGroup,DEFAULT_GROUP);
+    sSetup.sExeUser=(char *)malloc((strlen(DEFAULT_USER)+1)*sizeof(char));
+    strcpy(sSetup.sExeUser,DEFAULT_USER);
+
     sSetup.newMaster=false;
-    sSetup.AccountLiveTime=MIN_ALT;
-    sSetup.AutoLoggoff=MIN_LOGOFF;
+    sSetup.AccountLiveTime=DEFAULT_ALT;
+    sSetup.AutoLoggoff=DEFAULT_LOGOFF;
+    
+    // send dealy
     sSetup.iSendDelay=DEFAULT_SEND_DELAY;
     sSetup.iSendSafeDelay=DEFAULT_SEND_SAFE_DELAY;
     sSetup.iSendSafeLine=DEFAULT_SEND_SAFE_LINE;
+    
     sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
     sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
     

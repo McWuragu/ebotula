@@ -12,11 +12,8 @@
 #define __H_BASECONFIG
 /**
   * gernerates baseconfig string for baseconfigfile and writes it 
-  * to given filename
   * 
-  * @parm    filename with absolut path
-  * @return  pointer to baseconfigfile
  */
-int genbaseconfig(char *filename);
+void write_baseconfig();
 
 #endif												

@@ -20,11 +20,20 @@
 #define DEFAULT_THREAD_LIMIT	3
 #define DEFAULT_REALNAME		"I'm a stupid bot"
 #define DEFAULT_BOTNAME			"Ebotula"
+#define DEFAULT_PORT            "6667"
+#define DEFAULT_IRC             "irc.fh-lausitz.de"
+
 #define DEFAULT_PING_TIMEOUT	90
 
 #define DEFAULT_SEND_SAFE_DELAY 1750
 #define DEFAULT_SEND_DELAY      750
 #define DEFAULT_SEND_SAFE_LINE  20
+
+#define DEFAULT_LOGOFF           3
+#define DEFAULT_ALT             90
+
+#define DEFAULT_USER            "nobody"
+#define DEFAULT_GROUP           "nobody"
 
 #define MIN_LOGOFF				1
 #define MIN_ALT					1

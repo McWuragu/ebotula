@@ -23,9 +23,10 @@
 #include "irc.h"
 #include "utilities.h"
 #include "dbaccess.h"
+#include "baseconfig.h" 
 
 #define CMD_MSG
-#include "messages.h"
+    #include "messages.h"
 #undef CMD_MSG
 
 #include "parameter.h"
@@ -290,153 +291,154 @@ void ConfigFileParser(void) {
     char buffer[MAX_READ_BUFFER_SIZE], *c,*value,*key;
     errno=0;
 
-    if ((fd=fopen(sSetup.configfile,"r"))==NULL) {
-        perror(getSyslogString(SYSLOG_CONFIG_FILE));
-        syslog(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE));
-        exit(errno);
-    }
-
-    DEBUG("Config file is open\n");
-
-    while((fgets(buffer,MAX_READ_BUFFER_SIZE,fd)!=NULL) && (errno==0)){
-        // remove newline and leading spaces
-        trim(buffer);
-        clearspace(buffer);
-        
-        // ignore space lines and comments
-        if ((buffer[0]!=COMMENT_CHAR) && (buffer[0]!='\0')) {
-            DEBUG("Found config line %s\n",buffer);
+    if (!(fd=fopen(sSetup.configfile,"r"))) {
+	    // generating basicconfig for ebotula
+	    DEBUG("Creating Configfile: %s\n",sSetup.configfile);
+		write_baseconfig(sSetup.configfile);
+    }else {
+    
+        DEBUG("Config file is open\n");
+    
+        while((fgets(buffer,MAX_READ_BUFFER_SIZE,fd)!=NULL) && (errno==0)){
+            // remove newline and leading spaces
+            trim(buffer);
+            clearspace(buffer);
             
-
-            c=strchr(buffer,'=');
-            
-            // parse the value from the line
-            value=(char *)malloc(strlen(c)*sizeof(char));
-            strcpy(value,c+1);
-            
-            // parse the key from the line
-            key=(char *)malloc((strlen(buffer)-strlen(c)+1)*sizeof(char));
-            strtok(buffer,"=");
-            strcpy(key,buffer);
-            
-            // set  the  reading values
-            if (!strcmp(key,KEY_SERVER)) {
-                if (strpbrk(value,SERVER_NOT_ALLOW_CHAR)) {
-                    errno=EINVAL;
-                    perror(getMsgString(ERR_WRONG_SERVERNAME));
-                    exit(errno);
+            // ignore space lines and comments
+            if ((buffer[0]!=COMMENT_CHAR) && (buffer[0]!='\0')) {
+                DEBUG("Found config line %s\n",buffer);
+                
+    
+                c=strchr(buffer,'=');
+                
+                // parse the value from the line
+                value=(char *)malloc(strlen(c)*sizeof(char));
+                strcpy(value,c+1);
+                
+                // parse the key from the line
+                key=(char *)malloc((strlen(buffer)-strlen(c)+1)*sizeof(char));
+                strtok(buffer,"=");
+                strcpy(key,buffer);
+                
+                // set  the  reading values
+                if (!strcmp(key,KEY_SERVER)) {
+                    if (strpbrk(value,SERVER_NOT_ALLOW_CHAR)) {
+                        errno=EINVAL;
+                        perror(getMsgString(ERR_WRONG_SERVERNAME));
+                        exit(errno);
+                    }
+                    // set servername
+                    sSetup.server=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.server,value);
+                } else if (!strcmp(key,KEY_PORT)) {
+                    if ((atoi(value)<1) || (atoi(value)>65535)) {
+                        errno=EINVAL;
+                        perror(getMsgString(ERR_PORT_PARAMETER));
+                        exit(errno);
+                    }
+                    // set port
+                    sSetup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.port,value);
+                } else if (!strcmp(key,KEY_BOTNAME)) {
+                    if (!NickStringCheck(value)) {
+                        errno=EINVAL;
+                        perror(getMsgString(ERR_WRONG_BOTNAME));
+                        exit(errno);
+                    }
+                    // set botname
+                    free(sSetup.botname);
+                    sSetup.botname=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.botname,value);
+                } else if (!strcmp(key,KEY_REALNAME)) {
+                    // ser realname
+                    free(sSetup.realname);
+                    sSetup.realname=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.realname,value);
+                } else if (!strcmp(key,KEY_THREADLIMIT)) {
+                    tmp=atoi(value);
+                    if ((tmp<=0) || (tmp>MAX_THREADS_LIMIT)) {
+                        errno=EDOM;
+                        perror(getMsgString(ERR_THREAD_RANGE));
+                        exit(errno);
+                    }   
+                    // set thread limit
+                    sSetup.thread_limit=tmp;
+                } else  if (!strcmp(key,KEY_DATABASEPATH)) {
+                    // set database path
+                    free(sSetup.pDatabasePath);
+                    sSetup.pDatabasePath=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.pDatabasePath,value);
+                } else if (!strcmp(key,KEY_AUTOLOGOFF)) {
+                    tmp=atoi(value);
+                    if (tmp<=0) {
+                        errno=EDOM;
+                        perror(getMsgString(ERR_LOGOFF_RANGE));
+                        exit(errno);
+                    }   
+                    // set auto logoff time
+                    sSetup.AutoLoggoff=tmp;
+                } else if (!strcmp(key,KEY_SENDDELAY)) {
+                    tmp=atoi(value);
+                    if (tmp<0) {
+                        errno=EDOM;
+                        perror(getMsgString(ERR_SENDDELAY_RANGE));
+                        exit(errno);
+                    }   
+                    // set first delay time
+                    sSetup.iSendDelay=tmp;
+                } else if (!strcmp(key,KEY_SENDSAFEDELAY)) {
+                    tmp=atoi(value);
+                    if (tmp<0) {
+                        errno=EDOM;
+                        perror(getMsgString(ERR_SENDDELAY_RANGE));
+                        exit(errno);
+                    }   
+                    // set second delay time
+                    sSetup.iSendSafeDelay=tmp;
+                } else if (!strcmp(key,KEY_SENDSAFELINE)) {
+                    tmp=atoi(value);
+                    if (tmp<0) {
+                        errno=EDOM;
+                        perror(getMsgString(ERR_SENDLINE_RANGE));
+                        exit(errno);
+                    }   
+                    // set auto logoff time
+                    sSetup.iSendSafeLine=tmp;
+                } else if (!strcmp(key,KEY_ALT)) {
+                    tmp=atoi(value);
+                    if (tmp<0) {
+                        errno=EDOM;
+                        perror(getMsgString(ERR_ALT_RANGE));
+                        exit(errno);
+                    }   
+                    // set account live time
+                    sSetup.AccountLiveTime=tmp;
+                } else if (!strcmp(key,KEY_PINGTIMEOUT)) {
+                    tmp=atoi(value);
+                    if (tmp<=0) {
+                        errno=EDOM;
+                        perror(getMsgString(ERR_PINGTIMEOUT_RANGE));
+                        exit(errno);
+                    }   
+                    // set account live time
+                    sSetup.iTimeout=tmp;
+                }else if (!strcmp(key,KEY_EXEUSER)) {
+                    // set execution rights
+                    if (sSetup.sExeUser)free(sSetup.sExeUser);
+                    sSetup.sExeUser=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.sExeUser,value);
+                }else if (!strcmp(key,KEY_EXEGROUP)) {
+                    // set execution rights
+                    if (sSetup.sExeGroup) free(sSetup.sExeGroup);
+                    sSetup.sExeGroup=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.sExeGroup,value);
                 }
-                // set servername
-                sSetup.server=(char *)malloc((strlen(value)+1)*sizeof(char));
-                strcpy(sSetup.server,value);
-            } else if (!strcmp(key,KEY_PORT)) {
-                if ((atoi(value)<1) || (atoi(value)>65535)) {
-                    errno=EINVAL;
-                    perror(getMsgString(ERR_PORT_PARAMETER));
-                    exit(errno);
-                }
-                // set port
-                sSetup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
-                strcpy(sSetup.port,value);
-            } else if (!strcmp(key,KEY_BOTNAME)) {
-                if (!NickStringCheck(value)) {
-                    errno=EINVAL;
-                    perror(getMsgString(ERR_WRONG_BOTNAME));
-                    exit(errno);
-                }
-                // set botname
-                free(sSetup.botname);
-                sSetup.botname=(char *)malloc((strlen(value)+1)*sizeof(char));
-                strcpy(sSetup.botname,value);
-            } else if (!strcmp(key,KEY_REALNAME)) {
-                // ser realname
-                free(sSetup.realname);
-                sSetup.realname=(char *)malloc((strlen(value)+1)*sizeof(char));
-                strcpy(sSetup.realname,value);
-            } else if (!strcmp(key,KEY_THREADLIMIT)) {
-                tmp=atoi(value);
-                if ((tmp<=0) || (tmp>MAX_THREADS_LIMIT)) {
-                    errno=EDOM;
-                    perror(getMsgString(ERR_THREAD_RANGE));
-                    exit(errno);
-                }   
-                // set thread limit
-                sSetup.thread_limit=tmp;
-            } else  if (!strcmp(key,KEY_DATABASEPATH)) {
-                // set database path
-                free(sSetup.pDatabasePath);
-                sSetup.pDatabasePath=(char *)malloc((strlen(value)+1)*sizeof(char));
-                strcpy(sSetup.pDatabasePath,value);
-            } else if (!strcmp(key,KEY_AUTOLOGOFF)) {
-                tmp=atoi(value);
-                if (tmp<=0) {
-                    errno=EDOM;
-                    perror(getMsgString(ERR_LOGOFF_RANGE));
-                    exit(errno);
-                }   
-                // set auto logoff time
-                sSetup.AutoLoggoff=tmp;
-            } else if (!strcmp(key,KEY_SENDDELAY)) {
-                tmp=atoi(value);
-                if (tmp<0) {
-                    errno=EDOM;
-                    perror(getMsgString(ERR_SENDDELAY_RANGE));
-                    exit(errno);
-                }   
-                // set first delay time
-                sSetup.iSendDelay=tmp;
-            } else if (!strcmp(key,KEY_SENDSAFEDELAY)) {
-                tmp=atoi(value);
-                if (tmp<0) {
-                    errno=EDOM;
-                    perror(getMsgString(ERR_SENDDELAY_RANGE));
-                    exit(errno);
-                }   
-                // set second delay time
-                sSetup.iSendSafeDelay=tmp;
-            } else if (!strcmp(key,KEY_SENDSAFELINE)) {
-                tmp=atoi(value);
-                if (tmp<0) {
-                    errno=EDOM;
-                    perror(getMsgString(ERR_SENDLINE_RANGE));
-                    exit(errno);
-                }   
-                // set auto logoff time
-                sSetup.iSendSafeLine=tmp;
-            } else if (!strcmp(key,KEY_ALT)) {
-                tmp=atoi(value);
-                if (tmp<0) {
-                    errno=EDOM;
-                    perror(getMsgString(ERR_ALT_RANGE));
-                    exit(errno);
-                }   
-                // set account live time
-                sSetup.AccountLiveTime=tmp;
-            } else if (!strcmp(key,KEY_PINGTIMEOUT)) {
-                tmp=atoi(value);
-                if (tmp<=0) {
-                    errno=EDOM;
-                    perror(getMsgString(ERR_PINGTIMEOUT_RANGE));
-                    exit(errno);
-                }   
-                // set account live time
-                sSetup.iTimeout=tmp;
-            }else if (!strcmp(key,KEY_EXEUSER)) {
-                // set execution rights
-                if (sSetup.sExeUser)free(sSetup.sExeUser);
-                sSetup.sExeUser=(char *)malloc((strlen(value)+1)*sizeof(char));
-                strcpy(sSetup.sExeUser,value);
-            }else if (!strcmp(key,KEY_EXEGROUP)) {
-                // set execution rights
-                if (sSetup.sExeGroup) free(sSetup.sExeGroup);
-                sSetup.sExeGroup=(char *)malloc((strlen(value)+1)*sizeof(char));
-                strcpy(sSetup.sExeGroup,value);
+                free(value);
+                free(key);
             }
-            free(value);
-            free(key);
         }
+        fclose(fd);
     }
-    fclose(fd);
 }
 
 // ############################################################################# 
