@@ -108,7 +108,7 @@ int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
  * 		- returns 0 if OK
  *
  */
-int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data);
+int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t **data);
 
 /* searchNicknameFromCallbackDList
  *

@@ -229,7 +229,7 @@ int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
  * 		- returns 0 if OK
  *
  */
-int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data)
+int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t **data)
 {
 	 pthread_mutex_lock(list->callbacklist_mutex);
 	/** Don't delete a NULL-element from an empty list **/
@@ -240,7 +240,7 @@ int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, Callbac
 		return -1;
 	}
 	/** delete an element from list **/
-	data=element->data;
+	*data=element->data;
 	if (element == list->head)
 	{
 		/** deleteing from the head **/
