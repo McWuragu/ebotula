@@ -4,8 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <crypt.h>
+#include <pthread.h>
 
-#include "macro.h"
+
+#include "utilities.h"
 #include "messages.h"
 #include "config.h"
 #include "dbaccess.h"
@@ -15,19 +17,21 @@ GDBM_FILE dbf_channel;
 GDBM_FILE dbf_login;
 GDBM_FILE dbf_access;
 GDBM_FILE dbf_banlist;
+GDBM_FILE dbf_timelog;
 
-
+// ############################################################################# 
 void init_database(void) {
 	extern CONFIG_TYPE	setup;
 
-	char *user,*channel,*login,*access,*banlist;
+	char *user,*channel,*login,*access,*banlist,*timelog;
 			
 	// generate the filenames
-	user=malloc(sizeof(char)*(strlen(setup.database_path)+strlen("/user.dbf")+1));
-	channel=malloc(sizeof(char)*(strlen(setup.database_path)+strlen("/channel.dbf")+1));
-	login=malloc(sizeof(char)*(strlen(setup.database_path)+strlen("/login.dbf")+1));
-	access=malloc(sizeof(char)*(strlen(setup.database_path)+strlen("/access.dbf")+1));
-	banlist=malloc(sizeof(char)*(strlen(setup.database_path)+strlen("/banlist.dbf")+1));
+	user=(char *)malloc((strlen(setup.database_path)+strlen("/user.dbf")+1)*sizeof(char));
+	channel=(char *)malloc((strlen(setup.database_path)+strlen("/channel.dbf")+1)*sizeof(char));
+	login=(char *)malloc((strlen(setup.database_path)+strlen("/login.dbf")+1)*sizeof(char));
+	access=(char *)malloc((strlen(setup.database_path)+strlen("/access.dbf")+1)*sizeof(char));
+	banlist=(char *)malloc((strlen(setup.database_path)+strlen("/banlist.dbf")+1)*sizeof(char));
+	timelog=(char *)malloc((strlen(setup.database_path)+strlen("/timelog.dbf")+1)*sizeof(char));
 
 	// create filenames
 	sprintf(user,"%s/user.dbf",setup.database_path);
@@ -35,6 +39,7 @@ void init_database(void) {
 	sprintf(login,"%s/login.dbf",setup.database_path);
 	sprintf(access,"%s/access.dbf",setup.database_path);
 	sprintf(banlist,"%s/banlist.dbf",setup.database_path);
+	sprintf(timelog,"%s/timelog.dbf",setup.database_path);
 
 	// open the databases
 	dbf_user=gdbm_open(user,512,GDBM_WRCREAT,0600,NULL);
@@ -42,9 +47,10 @@ void init_database(void) {
 	dbf_login=gdbm_open(login,512,GDBM_NEWDB,0600,NULL);
 	dbf_access=gdbm_open(access,512,GDBM_WRCREAT,0600,NULL);
 	dbf_banlist=gdbm_open(banlist,512,GDBM_WRCREAT,0600,NULL);
+	dbf_timelog=gdbm_open(timelog,512,GDBM_WRCREAT,0600,NULL);
 	DEBUG("Initizale the database");
 }
-
+// ############################################################################# 
 void closeDatabase(void) {
 	// close the databases
 	gdbm_close(dbf_user);
@@ -52,12 +58,11 @@ void closeDatabase(void) {
 	gdbm_close(dbf_login);
 	gdbm_close(dbf_access);
 	gdbm_close(dbf_banlist);
+	gdbm_close(dbf_timelog);
 	DEBUG("Close databases");
 }
 
 //######################### database access ##############################
-
-
 GDBM_FILE get_dbf(int db) {
 
 	switch (db) {
@@ -76,21 +81,23 @@ GDBM_FILE get_dbf(int db) {
 	case LOGIN_DB:
 		return dbf_login;
 		break;
+	case TIMELOG_DB:
+		return dbf_timelog;
+		break;
 	default:
 		DEBUG("Unkown database");
 		return 0;
 
 	}
 }
-
+// ############################################################################# 
 int add_db(int db,char *_key, char *_value) {
 	datum key,value;
 	GDBM_FILE dbf;
+	extern pthread_mutex_t dbaccess_mutex;
 
 	// check of exist  of this key in the database
-	if (exist_db(db,_key)){
-		return false;
-	}
+    CHECK_EXIST(db,_key);
 
 	// get the datebase handle
 	if (!(dbf=get_dbf(db))) {
@@ -107,31 +114,29 @@ int add_db(int db,char *_key, char *_value) {
 		value.dptr=_value;
 	}
 	
-	
-	value.dsize=strlen(value.dptr)+1;
-
+    value.dsize=strlen(value.dptr)+1;
+	pthread_mutex_lock(&dbaccess_mutex);
 	gdbm_store(dbf,key,value,GDBM_INSERT);
+	pthread_mutex_unlock(&dbaccess_mutex);
+	
 	DEBUG("Add datum to database");
 
 	return true;
 }
-
+// ############################################################################# 
 int replace_db(int db,char *_key, char *_value){
 	datum key,value;
 	GDBM_FILE dbf;
-
+	extern pthread_mutex_t dbaccess_mutex;
 	
-	if (!exist_db(db,_key)){
-		return false;
-	}
-
-
+	CHECK_NO_EXIST(db,_key);
+    
+	// get the datebase handle
 	if (!(dbf=get_dbf(db))) {
 		return false;
 	}
-	
 
-
+	// build key
 	key.dptr=_key;
 	key.dsize=strlen(key.dptr)+1;
 
@@ -143,51 +148,60 @@ int replace_db(int db,char *_key, char *_value){
 	}
     value.dsize=strlen(value.dptr)+1;
 
+	pthread_mutex_lock(&dbaccess_mutex);
 	gdbm_store(dbf,key,value,GDBM_REPLACE);
+	pthread_mutex_unlock(&dbaccess_mutex);
+	
 	DEBUG("Replace datum to database");
 
 	return true;
 
 }
-
+// ############################################################################# 
 int del_db(int db,char *_key){
 	datum key;
 	GDBM_FILE dbf;
+	extern pthread_mutex_t dbaccess_mutex;
 
-	key.dptr=_key;
-	key.dsize=strlen(key.dptr)+1;
-	
-	if (!exist_db(db,_key)){
-		return false;
-	}
+	CHECK_NO_EXIST(db,_key);
 
 	if (!(dbf=get_dbf(db))) {
 		return false;
 	}
+
+	// build the  key
+	key.dptr=_key;
+	key.dsize=strlen(key.dptr)+1;
+    
 	
+	pthread_mutex_lock(&dbaccess_mutex);
 	gdbm_delete(dbf,key);
+	pthread_mutex_unlock(&dbaccess_mutex);
+
 	DEBUG("Datum removed");
 	return true;
 }
-
+// ############################################################################# 
 int check_db(int db,char *_key,char* _value){
 	datum key;
 	datum value;
 	char *__value;
 	GDBM_FILE dbf;
+	extern pthread_mutex_t dbaccess_mutex;
 
 	key.dptr=_key;
 	key.dsize=strlen(_key)+1;
 	
-	if (!exist_db(db,_key)){
-		return false;
-	}
+	CHECK_NO_EXIST(db,_key);
 	
 	if (!(dbf=get_dbf(db))) {
 		return false;
 	}
 
+	// fetch the entry
+	pthread_mutex_lock(&dbaccess_mutex);
 	value=gdbm_fetch(dbf,key);
+	pthread_mutex_unlock(&dbaccess_mutex);
 
 	if (db==USER_DB) {
 		__value=crypt(_value,"SL");	
@@ -203,11 +217,12 @@ int check_db(int db,char *_key,char* _value){
 	DEBUG("Datum equal");
 	return true;
 }
-
+// ############################################################################# 
 int exist_db(int db,char *_key){
 	datum key;
 	GDBM_FILE dbf;
-	
+	extern pthread_mutex_t dbaccess_mutex;
+
 	if (!(dbf=get_dbf(db))) {
 		return false;
 	}
@@ -215,22 +230,24 @@ int exist_db(int db,char *_key){
 	key.dptr=_key;
 	key.dsize=strlen(key.dptr)+1;
 
+	pthread_mutex_lock(&dbaccess_mutex);
 	if (!gdbm_exists(dbf,key)){
-		DEBUG("Datum not exist");
+		pthread_mutex_unlock(&dbaccess_mutex);
+		
 		return false;
 	}
-	DEBUG("Datum exist");
+	pthread_mutex_unlock(&dbaccess_mutex);
+	
 	return true;
 }
-
+// ############################################################################# 
 char * get_db(int db,char *_key){
 	datum key,value;
 	GDBM_FILE dbf;
-	char *datum;
-	
-	if (!exist_db(db,_key)){
-		return NULL;
-	}
+	char *str;
+	extern pthread_mutex_t dbaccess_mutex;
+
+	CHECK_NO_EXIST(db,_key);
 
 	if (!(dbf=get_dbf(db))) {
 		return false;
@@ -239,54 +256,67 @@ char * get_db(int db,char *_key){
 	key.dptr=_key;
 	key.dsize=strlen(key.dptr)+1;
 	
+	pthread_mutex_lock(&dbaccess_mutex);
 	value=gdbm_fetch(dbf,key);
+	pthread_mutex_unlock(&dbaccess_mutex);
 
-	datum=malloc(sizeof(char)*value.dsize);
-	strcpy(datum,value.dptr);
+	str=(char *)malloc(value.dsize*sizeof(char));
+	strcpy(str,value.dptr);
 	
 	free(value.dptr);
 	
-	return datum;
+	return str;
 }
-
+// ############################################################################# 
 char ** list_db(int db){
 	char ** channellist;
 	GDBM_FILE dbf;
 	datum key,nextkey;
 	unsigned int count=0,i;
-	
+	extern pthread_mutex_t dbaccess_mutex;
+
 	// get the database handle
 	if (!(dbf=get_dbf(db))) {
 		return NULL;
 	}
 
+	pthread_mutex_lock(&dbaccess_mutex);
 	key=gdbm_firstkey(dbf);
-	if (!key.dptr) {
-		return NULL;
+	pthread_mutex_unlock(&dbaccess_mutex);
+	
+	if (key.dptr) {
+		// calculat the  size of  database
+		do {
+			count++;
+			pthread_mutex_lock(&dbaccess_mutex);
+			nextkey=gdbm_nextkey(dbf,key);
+			pthread_mutex_unlock(&dbaccess_mutex);
+			free(key.dptr);
+			key=nextkey;
+	
+		} while ( key.dptr );
 	}
 
-	// calculat the  size of  database
-	do {
-		count++;
-		nextkey=gdbm_nextkey(dbf,key);
-		free(key.dptr);
-		key=nextkey;
 
-    } while ( key.dptr );
 
 	DEBUG("%d channels found",count);
 
 	// allocat the memory and set  end mark
-	channellist=malloc(sizeof(char *)*(count+1));
+	channellist=(char **)malloc((count+1)*sizeof(char *));
 	channellist[count]=NULL;
 
+	pthread_mutex_lock(&dbaccess_mutex);
 	key=gdbm_firstkey(dbf);
+	pthread_mutex_unlock(&dbaccess_mutex);
 
 	for (i=0;i<count;i++) {
-		channellist[i]=malloc(sizeof(char)*key.dsize);
+		channellist[i]=(char *)malloc(key.dsize*sizeof(char));
 		strcpy(channellist[i],key.dptr);
 		
+		pthread_mutex_lock(&dbaccess_mutex);
 		nextkey=gdbm_nextkey(dbf,key);
+		pthread_mutex_unlock(&dbaccess_mutex);
+
 		free(key.dptr);
 		key=nextkey;
 

@@ -8,11 +8,16 @@
 #define ACCESS_DB		3
 #define BANLIST_DB		4
 #define LOGIN_DB		5
+#define TIMELOG_DB		6
 
+#define CHECK_EXIST(_db,__key)			if (exist_db(_db,__key)){return false;}
+#define CHECK_NO_EXIST(_db,__key)		if (!exist_db(_db,__key)){return false;}
 
 void init_database(void);
 void closeDatabase(void);
 
+
+// ########################## DB commands ################################
 int add_db(int db,char *_key, char *_value);
 int replace_db(int db,char *_key, char *_value);
 int del_db(int db,char *_key);
