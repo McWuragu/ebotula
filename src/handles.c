@@ -230,7 +230,8 @@ void hResetModes(char *pLine) {
                     // build  the  element
                     StrToLower(pNick);
                     Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
-                    Callback->nickname=pNick;
+                    Callback->nickname=(char*)malloc((strlen(pNick)+1)*sizeof(char));
+                    strcpy(Callback->nickname,pNick);
                     Callback->CallbackFkt=ModeResetCb;
                     Callback->data=pData;
                     
@@ -261,11 +262,10 @@ void hResetModes(char *pLine) {
         }
         free(pTmpBotName);
         free(pAccessNick);
-    } else {
-        free(pNick);
     }
     free(pChannel);
     free(pMode);
+    free(pNick);
 
 }
 // #########################################################################

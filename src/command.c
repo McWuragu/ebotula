@@ -358,6 +358,8 @@ void addChannel(MsgItem_t *pMsg) {
 		channelmod=(char *)malloc(3*sizeof(char));
 		strcpy(channelmod,"\t\t");
 		add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
+        free(channelmod);
+
 		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
 
 		/* join the channel */
@@ -455,6 +457,8 @@ void restart(MsgItem_t *pMsg) {
    ######################################################################### */
 void setNick(MsgItem_t *pMsg){
     char *pParameter;
+    extern ConfigSetup_t sSetup;
+
 
     pParameter=getParameters(pMsg->pRawLine);
 
@@ -467,6 +471,12 @@ void setNick(MsgItem_t *pMsg){
         } else {
             nick(pParameter);
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_NICK_SET));
+
+            /* set  the new  nick name as default */
+            free(sSetup.pBotname);
+            sSetup.pBotname=(char*)malloc((strlen(pParameter)+1)*sizeof(char));
+            strcpy(sSetup.pBotname,pParameter);
+
         }
         free(pParameter);
     }
@@ -725,6 +735,8 @@ void allsay(MsgItem_t *pMsg) {
 		free(pChannel);
     }
 	deleteQueue(pChannelQueue);
+
+    free(pMsgStr);
 }
 
 /* #########################################################################
