@@ -42,7 +42,7 @@ boolean initDatabases(void);
 void closeDatabase(void);
 
 
-// ########################## DB commands ################################
+/* ########################## DB commands ################################ */
 /**
  * put a data pair to the database
  * 

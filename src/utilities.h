@@ -18,7 +18,7 @@
 #ifdef HAVE_SYSLOG_H
     #include <syslog.h>
 #else
-    // fixed the missing header file syslog.h
+    /* fixed the missing header file syslog.h*/
     #define LOG_EMERG   0
     #define LOG_ALERT   1
     #define LOG_CRIT    2

@@ -90,7 +90,7 @@ typedef enum {
 
 }Cmd_t;
 
-//#define CMD_COUNT    (CMD_PART-CMD_NONE+1)
+/*#define CMD_COUNT    (CMD_PART-CMD_NONE+1) */
 
 #define CMD_MASTER  CMD_RESTART
 #define CMD_OWNER   CMD_CHANMODE
@@ -153,7 +153,7 @@ typedef struct MsgItem_s {
 
 
 
-// new command format
+/* new command format */
 void help(MsgItem_t *pMsg);
 void password(MsgItem_t *pMsg);
 void ident(MsgItem_t *pMsg);

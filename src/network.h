@@ -22,9 +22,9 @@ void * JoinAllChannelsThread(void*);
 
 
 
-/// connect to the server
+/* connect to the server */
 boolean connectServer(void);
-/// close connection to the server
+/* close connection to the server */
 void disconnectServer(void);
 
 /**
