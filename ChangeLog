@@ -1,6 +1,7 @@
 ebotula-0.1.13
 --------------------
 - Bugfix: fixed -f option
+- Bugfix: fixed -s  option
 - Bugfix: fixed the command !userlist
 - Bugfix: fixed the command !help
 - renamed the version
@@ -8,6 +9,7 @@ ebotula-0.1.13
 - added support for ctcp: ping,version,time
 - modified the sending of a response
 - maked the sending type of a response depending from the request
+- modified the  fast and slow sending  system (excess floodinf protection)
 
 -ebotula-devel-0.1.12
 --------------------
