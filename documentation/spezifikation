@@ -9,6 +9,9 @@ Commandos
 !ident <login> <pass>
 	- identifizieren gegenüber dem Bot
 
+!logoff
+	- ausloggen beim Bot
+
 !mode [channel] <login> <option>
 	- setzt die Modes eines Login für den jeweiligen Channel
 	- darf nur master und owner
