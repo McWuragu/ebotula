@@ -18,3 +18,4 @@ ToDo List
 - join in channel with keyword
 - convert defines to constantes
 - make the answer type (msg/notice) dependent from the type of the request
+- adding CTCP support
