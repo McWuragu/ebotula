@@ -35,6 +35,8 @@
 #define SYSLOG_CONFIG_FILE		"Can't open the config file."
 #define SYSLOG_SEND				"Can't send a command."
 #define SYSLOG_RECV				"Can't receive a line."
+#define SYSLOG_TIMEOUT			"Receiving timeout"
+#define SYSLOG_DATABASE_ERR		"Can't open the databases."
 
 // excute error
 // output of strerr
@@ -138,7 +140,7 @@ static const char *help_msg[]=
 	"\t-b name\t\tSet  the name  of the bot.\n",
 	"\t-d path\t\tUse this path for the database\n",
 	"\t-f file\t\tUse this config file.\n",
-	"\t-h\t\tPrint this help info.\n",
+	"\t-h\t\tPrint this help information.\n",
 	"\t-k days\t\tSet the  account live time in days.\n",
 	"\t-m\t\tCreate a bot master.\n",
 	"\t-n ms\t\tSet the delay time in millisecond for sending.\n",
