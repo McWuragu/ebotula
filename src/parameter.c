@@ -214,6 +214,7 @@ void ComandLineParser(int argc,char *const argv[]) {
 				break;
 			default:
 				printMsg(unknow_parameter);
+				exit(-1);
 				break;
 			}
 		}
