@@ -12,6 +12,10 @@
 
 #define HELP_ITEM_SIZE	10
 
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
+
 #ifndef		EOM
 	#define	EOM		"."
 #endif
@@ -27,7 +31,7 @@
 * is a sentinel for the  help text. After this comes a dummy for new command help
 */
 
-#ifdef LANG_GERMAN
+#ifdef LANG_DE
 	// Here insert all help messages in german
 #else
 	static const char *irchelp_msg[]={
@@ -174,7 +178,7 @@
 		"",
 		"",
 		
-		"!channels",
+		"!chanlist",
 		"Print out a list of all channels from the bot",
 		"Only the bot master can use this command.",
 		"",
@@ -284,6 +288,17 @@
 		"",
 		"",
 	
+		"!chanmode",
+		"Set and remove the modes for a channel.",
+		"Only the bot master or a channel owner can use this command.",
+		"!chanmode +/-MODES          -> set or remove the modes for the current channel",
+		"!chanmode #CHANNEL +/-MODES -> set or remove the modes for the selected channel",
+		"Supported Modes:",
+		"tnmsprqakl -> equal the irc modes",
+		"",
+		"",
+		"",
+		
 		// end mark of the complete array
 		"."
 	
