@@ -21,6 +21,10 @@
 #include <sys/msg.h>
 #include <sys/types.h>
 
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
+
 #include "utilities.h"
 #include "parameter.h"
 #include "messages.h"
@@ -28,11 +32,11 @@
 #include "parser.h"
 #include "timing.h"
 #include "dbaccess.h"
-#include "config.h"
+#include "ircbot.h"
   
 	 
 
-ConfType sSetup;	// global config structur
+ConfType sSetup;	// global config structure
 int key;			// key of the message  queue
 int stop;			// singal for stop the endless loop
 
@@ -67,9 +71,9 @@ int main(int argc,const char *argv[]) {
 	printf(VERSIONSTR);
 
 	#ifndef	_DEBUG
-	openlog(PROGNAME,0,LOG_DAEMON);
+	openlog(PACKAGE,0,LOG_DAEMON);
 	#else
-	openlog(PROGNAME,LOG_PERROR,LOG_DAEMON);
+	openlog(PACKAGE,LOG_PERROR,LOG_DAEMON);
 	#endif
 	
 
@@ -93,7 +97,7 @@ int main(int argc,const char *argv[]) {
     syslog(LOG_NOTICE,SYSLOG_READ_CONFFILE);
 	
 
-	// check config datums
+	// check config datums and set this of default
 	if (!sSetup.thread_limit) {
 		sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
 	}
@@ -101,6 +105,11 @@ int main(int argc,const char *argv[]) {
 	if (!sSetup.botname) {
 		sSetup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
 		strcpy(sSetup.botname,DEFAULT_BOTNAME);
+	}
+	
+	if (!sSetup.pDatabasePath) {
+		sSetup.pDatabasePath=(char *)malloc((strlen(DATABASEDIR)+9)*sizeof(char));
+		sprintf(sSetup.pDatabasePath,"%s/ebotula",DATABASEDIR);
 	}
 
 	if (!sSetup.realname) {
@@ -136,7 +145,7 @@ int main(int argc,const char *argv[]) {
 	DEBUG("Realname %s", sSetup.realname);
 	DEBUG("Threads %d",sSetup.thread_limit);
 	DEBUG("Config file %s",sSetup.configfile);
-	DEBUG("Database path %s",sSetup.database_path);
+	DEBUG("Database path %s",sSetup.pDatabasePath);
 	DEBUG("Ping timeout %ds",sSetup.iTimeout);
 	DEBUG("Sending delay %dms",sSetup.sendDelay);
 	DEBUG("Account live time %dd",sSetup.AccountLiveTime);
