@@ -50,7 +50,7 @@ PQueue initQueue()
 	
 	/** create and init the  mutex */
 	pqueueInit->queue_mutex=(pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-	pthread_mutex_init(pqueueInit->queue_mutex);	
+	pthread_mutex_init(pqueueInit->queue_mutex,NULL);	
 	return	pqueueInit;
 }
 
