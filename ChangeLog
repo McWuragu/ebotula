@@ -1,3 +1,13 @@
+ebotula-0.1.9-dev
+-----------------
+- Bugfix: fixed segmantation fault by ident command
+- Bugfix: fixed the wrong channel joining at the start up
+- Bugfix: fixed segmentation fault by logoff command
+- Bugfix: fixed kicking becaus of excess flooding at the initialization of
+  the channels
+- added simple ban command
+- added simple deban
+
 ebotula-0.1.8-dev
 -----------------
 - Bugfix:  fixed the high cpu using
