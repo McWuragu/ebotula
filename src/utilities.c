@@ -230,10 +230,22 @@ ChannelDataType *StrToChannelData(char *pChannelSet) {
 char *ChannelDataToStr(ChannelDataType *pChannelData) {
 	char *pChannelSet;
 	char *pMode;
+	int iLenght;
 
 	pMode=ChannelModeToStr(pChannelData->pModes);
-	pChannelSet=(char*)malloc((strlen(pMode)+strlen(pChannelData->pTopic)+strlen(pChannelData->pGreating)+3)*sizeof(char));
-	sprintf(pChannelSet,"%s\t%s\t%s",pMode,pChannelData->pTopic,pChannelData->pGreating);
+	iLenght=strlen(pMode);
+
+	if (pChannelData->pGreating) {
+		iLenght+=strlen(pChannelData->pGreating);
+	}
+
+	if (pChannelData->pTopic) {
+		iLenght+=strlen(pChannelData->pTopic);
+	}
+	pChannelSet=(char*)malloc((iLenght+3)*sizeof(char));
+	sprintf(pChannelSet,"%s\t%s\t%s",pMode,
+		(pChannelData->pTopic)?pChannelData->pTopic:"",
+		(pChannelData->pGreating)?pChannelData->pGreating:"");
 	free(pMode);
 
 	return pChannelSet;

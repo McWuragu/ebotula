@@ -100,7 +100,7 @@ void hSetModUser(char *pLine) {
 		pChannel=getAccessChannel(pLine);
 
 		// build key for access.dbf
-		pKey=malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
+		pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
 		sprintf(pKey,"%s%s",pLogin,pChannel);
 	
 		// read  the  mod
@@ -109,12 +109,13 @@ void hSetModUser(char *pLine) {
 		// set the mod  for this nick
 		if (strlen(pMod)) {
 			mode(pChannel,pMod,pNick);
+			free(pMod);
 		} else if (exist_db(ACCESS_DB,pLogin)) {
 			mode(pChannel,"+o",pNick);
 		}
 		free(pChannel);
 		free(pKey);
-		free(pMod);
+		
 	}
 
 	free(pNick);
@@ -176,13 +177,15 @@ void hResetTopic(char *pLine){
 		// get the  right topic for this channel
 		pChannel=getChannel(pLine);
 		pChannelSet=get_db(CHANNEL_DB,pChannel);
-		pTopic=getTopic(pChannelSet);
-
-		// reset the topic
-		topic(pChannel,pTopic);
+		if ((pTopic=getTopic(pChannelSet))) {
+			// reset the topic
+			topic(pChannel,pTopic);
+			free(pTopic);
+		} else {
+			topic(pChannel,"");
+		}
 		
 		free(pChannel);
-		free(pTopic);
 		free(pChannelSet);
 	}
 }

@@ -497,15 +497,19 @@ void chanlist(char *pLine){
 		notice(pNick,pMsgStr);
 		free(pMsgStr);
 
-		pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_TOPIC)+strlen(pChannelData->pTopic)+2)*sizeof(char));
-		sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_TOPIC,pChannelData->pTopic);
-		notice(pNick,pMsgStr);
-		free(pMsgStr);
+		if (pChannelData->pTopic) {
+			pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_TOPIC)+strlen(pChannelData->pTopic)+2)*sizeof(char));
+			sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_TOPIC,pChannelData->pTopic);
+			notice(pNick,pMsgStr);
+			free(pMsgStr);
+		}
 
-		pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_GREAT)+strlen(pChannelData->pGreating)+2)*sizeof(char));
-		sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_GREAT,pChannelData->pGreating);
-		notice(pNick,pMsgStr);
-		free(pMsgStr);
+		if (pChannelData->pGreating) {
+			pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_GREAT)+strlen(pChannelData->pGreating)+2)*sizeof(char));
+			sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_GREAT,pChannelData->pGreating);
+			notice(pNick,pMsgStr);
+			free(pMsgStr);
+		}
 
 
 		free(pMode);
@@ -549,14 +553,14 @@ void setGreating(char *pLine) {
 		return;
 	} else {
 		pChannelData=StrToChannelData(pChannelSet);
-		free(pChannelData->pGreating);
+		if (pChannelData->pGreating) {
+			free(pChannelData->pGreating);
+		}
 		pChannelData->pGreating=getParameters(pLine);
 	}
 
 	free(pChannelSet);
 	pChannelSet=ChannelDataToStr(pChannelData);
-	sprintf(pChannelSet,"%s\t%s\t%s",pMode,pChannelData->pTopic,pChannelData->pGreating);
-
 	replace_db(CHANNEL_DB,pChannel,pChannelSet);
     
 	// message
@@ -589,8 +593,10 @@ void setTopic(char *pLine) {
 		return;
 	} else {
 		pChannelData=StrToChannelData(pChannelSet);
-		free(pChannelData->pTopic);
-		pChannelData->pTopic=getTopic(pChannelSet);
+		if (pChannelData->pTopic) {
+			free(pChannelData->pTopic);
+		}
+		pChannelData->pTopic=getParameters(pLine);
 	}
 
 	
@@ -622,15 +628,11 @@ void greating(char *pLine) {
 	DEBUG("Greating for %s",pChannel);
 
 	pChannelSet=get_db(CHANNEL_DB,pChannel);
-	greating=getGreating(pChannelSet);
-
-	if (!strlen(greating)) {
-		return;
+	
+	if ((greating=getGreating(pChannelSet))) {
+		DEBUG("Greating line %s",greating);
+		notice(pNick,greating);
 	}
-
-	DEBUG("Greating line %s",greating);
-	notice(pNick,greating);
-
 }
 // ######################################################################### 
 // Bot comand: !say <#channel> text

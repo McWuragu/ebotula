@@ -190,20 +190,20 @@ char  *getTopic(char *pChannelSet) {
 
 	// look for topic;
 	if (!(pPos=strchr(pStr,'\t'))) {
-		return ""; 
+		return NULL; 
 	}
 		
 	pPos++;
 
 	// look for the end  of topic
 	if (!(pPos2=strchr(pPos,'\t'))) {
-		return "";
+		return NULL;
 	}
 	*pPos2='\0';
 
 	// check length
 	if (!strlen(pPos)) {
-		return "";
+		return NULL;
 	}
 	pTopic=(char *)malloc((strlen(pPos)+1)*sizeof(char));
 	strcpy(pTopic,pPos);
@@ -217,14 +217,14 @@ char  *getGreating(char *pChannelSet) {
 
     // look for the begin  of greating
 	if (!(pPos=strrchr(pChannelSet,'\t'))) {
-		return "";		  
+		return NULL;		  
     }
 
 	pPos++;
 
 	// check length
 	if (!strlen(pPos)) {
-		return "";
+		return NULL;
 	}
 
 	pGreating=(char *)malloc((strlen(pPos)+1)*sizeof(char));
