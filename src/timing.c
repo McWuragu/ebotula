@@ -30,7 +30,7 @@
 
 void *TimingThread(void *argv){
     extern ConfigSetup_t sSetup;
-    extern int iLineCount;
+    extern int nCharSendingCounter;
     extern boolean stop;
     time_t newTime;
     time_t lastPing=0;
@@ -44,7 +44,7 @@ void *TimingThread(void *argv){
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
     */
 
-    DEBUG("Synchronize thread is running\n");
+    DEBUG("Synchronize thread is running (%d)\n",getpid());
 
     while (!stop) {
         time(&newTime);
@@ -72,8 +72,8 @@ void *TimingThread(void *argv){
         
         /* increment the line count */
         if ((newTime-lastLineCount)>=((sSetup.iSendSafeDelay*2)/1000)) {
-            if (iLineCount>=1) {
-                iLineCount--;
+            if (nCharSendingCounter>0) {
+                nCharSendingCounter=(nCharSendingCounter<64)?0:nCharSendingCounter-64;
             }
             lastLineCount=newTime;
         }
