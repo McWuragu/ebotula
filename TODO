@@ -7,15 +7,15 @@ ToDo Liste
 	- !banlist
 	- !allban
 	- !restart
-	- !allsay
 - Set topic and mode from channel if the bot join, become op or other user have changed
 - implement the banlist (set and execute)
 - complete the  help system
 - Code cleanup
 - Debuggen
 - emphasize per bold the messages
-- insert allow and  disallow filter for charaters in all  strings
+- insert allow and  disallow filter for characters in all  strings
 - set the bot channel op by the  server self 
 - make multilingual messages.h and irchelp.h
 - to complete the  documentation
 - to translate the documents
+- add a parameter for  ping timeout
