@@ -35,7 +35,7 @@ char *getGreeting(char const *pLine);
 char *getChannelMode(char const *pLine);
 
 /**
-* This function splitt a giving string  in seprate strings.
+* This function splits a giving string  in seprate strings.
 * @author Steffen Laube
 *
 * @param pString the input string
@@ -43,5 +43,12 @@ char *getChannelMode(char const *pLine);
 * @return a array of char pointers with the giving size
 */
 char **splitString(char const *pString,int nRetArraySize);
-
+/**
+ * This functions gets the Banmask from a Netmask
+ * @author Uwe Strempel
+ *
+ * @param pLine the input string
+ * @return the banmask
+ */
+char *getBanmask(char const *pLine);
 #endif
