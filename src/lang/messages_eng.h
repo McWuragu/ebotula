@@ -136,7 +136,7 @@ static MsgStruct_t Msg[] = {
 
 };
 
-	static  char *const unknow_parameter[]=
+	static  char * unknow_parameter[]=
 	{
 		"Unknow option\n",
 		"Type \"",PACKAGE," -h\" for help.\n",
@@ -145,7 +145,7 @@ static MsgStruct_t Msg[] = {
 
 
 
-	static  char *const help_msg[]=
+	static  char * help_msg[]=
 	{
 		"\n",
 		PACKAGE," [Options]\n",
