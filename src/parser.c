@@ -131,7 +131,7 @@ MsgBufType preParser(char *pLine) {
 				sMsg.identify=CMD_USERLIST;
 			} else if (!strncmp(pStr,"allsay",strlen("allsay"))) {
 				sMsg.mtype=1;
-				sMsg.identify=CMD_SAYALL;
+				sMsg.identify=CMD_ALLSAY;
 			}
 		}
 	}
@@ -140,7 +140,7 @@ MsgBufType preParser(char *pLine) {
 	return sMsg;
 }
 
-void *action_thread(void *argv) {
+void *ComandExecutionThread(void *argv) {
 	int msgid;
 	extern int key;
 	MsgBufType sMsg;
@@ -182,25 +182,25 @@ void *action_thread(void *argv) {
 				ident(sMsg.pMsgLine);
 				break;
 			case CMD_ADDCHANNEL:
-				channel_add(sMsg.pMsgLine);
+				addChannel(sMsg.pMsgLine);
 				break;
 			case CMD_RMCHANNEL:
-				channel_rm(sMsg.pMsgLine);
+				rmChannel(sMsg.pMsgLine);
 				break;
 			case CMD_JOIN:
-				join_channel(sMsg.pMsgLine);
+				joinChannel(sMsg.pMsgLine);
 				break;
 			case CMD_PART:
-				part_channel(sMsg.pMsgLine);
+				partChannel(sMsg.pMsgLine);
 				break;
 			case CMD_DIE:
 				die(sMsg.pMsgLine);
 				break;
 			case CMD_NICK:
-				set_nick(sMsg.pMsgLine);
+				setNick(sMsg.pMsgLine);
 				break;
 			case CMD_CHANNELS:
-				channel_list(sMsg.pMsgLine);
+				listChannels(sMsg.pMsgLine);
 				break;
 			case CMD_ONNAMES:
 				hBotNeedOp(sMsg.pMsgLine);
@@ -237,7 +237,7 @@ void *action_thread(void *argv) {
 			case CMD_ONMODE:
 				hResetModUser(sMsg.pMsgLine);
 				break;
-			case CMD_SAYALL:
+			case CMD_ALLSAY:
 				allsay(sMsg.pMsgLine);
 				break;
 			default:
@@ -326,7 +326,7 @@ int AccessRight(char *pLine,CmdType cmd_id) {
 	case CMD_PART:
 	case CMD_RMCHANNEL:
 	case CMD_ADDCHANNEL:
-	case CMD_SAYALL:
+	case CMD_ALLSAY:
 	case CMD_RMUSER:
 		pChannel=getAccessChannel(pLine);
 
