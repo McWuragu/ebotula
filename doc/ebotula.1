@@ -33,10 +33,14 @@ sets a custom configuration file
 shows the help text and exit
 .TP
 \fB-k\fP days
-sets the live time of an account in days
+sets the living time of an account in days
+To avoid "dead" accounts, unused accounts are removed after the time
+given by this parameter.
 .TP
 \fB-m\fP
 enables the dialog for creating a new master
+A bot master is a kind of an administrator for the IRC server the bot is
+running on.
 .TP
 \fB-n\fP ms
 sets the sending delay time in millisecond
@@ -85,6 +89,8 @@ describtion to each command:
 .TP
 \fB!die\fP
 shuts the bot down
+
+The bot is stopped, but unlike RESTART DIE doesn't start the bot again.
 .TP
 \fB!greeting\fP < #channel > [ message ]
 Sets the greeting line displayed for users joining. If #channel is
@@ -101,10 +107,17 @@ shuts the bot down and restarts it again
 .TP
 \fB!say\fP < #channel > [ message ]
 sends the message to the current or selected channel. One could say, the
-bots talks into the channel.
+bot talks into the channel.
 .TP
 \fB!topic\fP < #channel > [ topic ]
 sets the topic for the current or selected channel
+
+A topic is the line that can be seen near the channel name in the channel list.
+e.g. #LUGse -== LUGse - Linux User Group Senftenberg ==-
+
+The Channel #LUGse has got the topic "-== LUGse - Linux User
+Group Senftenberg ==-"
+Topics are used to discripe a channel.
 .TP
 \fB!version\fP
 prints the version of the bot
