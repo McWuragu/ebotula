@@ -66,6 +66,8 @@ MsgBuf_t* preParser(char *pLine) {
         pMsg->identify= CMD_ONNICKCHG;
     } else if (strstr(pPos,CmdList[CMD_ONMODE])) {
         pMsg->identify= CMD_ONMODE;
+    } else if (strstr(pPos,CmdList[CMD_ONKICK])) {
+        pMsg->identify= CMD_ONKICK;
     } else if (strstr(pPos,CmdList[CMD_ONTOPIC])) {
         pMsg->identify= CMD_ONTOPIC;
     } else if (strstr(pPos,CmdList[CMD_ONNAMES])) {
@@ -195,6 +197,9 @@ void *ComandExecutionThread(void *argv) {
                     break;
                 case CMD_ONMODE:
                     hResetModes(pMsg->pMsgLine);
+                    break;
+                case CMD_ONKICK:
+                    hRejoinAfterKick(pMsg->pMsgLine);
                     break;
                 case CMD_ALLSAY:
                     allsay(pMsg->pMsgLine);

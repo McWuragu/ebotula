@@ -33,6 +33,7 @@ typedef enum CmdEnum {
     CMD_ONQUIT,
     CMD_ONNICKCHG,
     CMD_ONMODE,
+    CMD_ONKICK,
     CMD_ONJOIN,
     CMD_ONNAMES,
     CMD_ONTOPIC,
@@ -89,7 +90,7 @@ typedef enum CmdEnum {
 static char * const CmdList[]= {
     "none",
     /* Events */
-    "PING","QUIT","NICK","MODE","JOIN","353","TOPIC","311",
+    "PING","QUIT","NICK","MODE","KICK","JOIN","353","TOPIC","311",
     /* any commands */
     "viewgreet","help","version","hello","ident",
     /* logged user commands */

@@ -55,6 +55,12 @@ void hResetModes(char *pLine);
 void hResetTopic(char *pLine);
 
 /**
+ * This is the handle for  the rejoining after  the  kick out the channel
+ * @param pLine a pointer  of the receiving line from the smerver
+ */
+void hRejoinAfterKick(char *pLine);
+
+/**
  * This is the handle for  initialize of a channel after get
  * operator rights. He read the information about this channel out the
  * database and set the  topic and the mode oft the channel.

@@ -263,12 +263,30 @@ void hResetTopic(char *pLine){
     }
 }
 // #########################################################################
+// Event handler: KICK
+// Action: rejoin the channel fater  kick
+// #########################################################################
+void hRejoinAfterKick(char *pLine){
+    char ** pArgv;
+    extern ConfigSetup_t sSetup;
+
+    pArgv=splitString(pLine,5);
+                                               
+    if (!strcmp(sSetup.botname,pArgv[3])) {
+        join(pArgv[2]);
+
+        DEBUG("Rejoin the  channel %s\n",pArgv[2]);
+    }
+}
+
+// #########################################################################
 // Event handler: MODE
 // Action: initialize the channel after  get operator access
 // #########################################################################
+
 void hInitAfterOp(char *pLine) {
     char *pChannel;
-
+                   
     if (!(pChannel=getAccessChannel(pLine)))
         return;
 
