@@ -176,13 +176,13 @@ char *getAccessChannel(char *pLine) {
 	return pChannel;
 }
 // ######################################################################### 
-char  *getTopic(char *pChannelData) {
+char  *getTopic(char *pChannelSet) {
 	char *pTopic;
 	char *pPos,*pPos2;
 	char *pStr;
 
-	pStr=(char *)malloc((strlen(pChannelData)+1)*sizeof(char));
-	strcpy(pStr,pChannelData);
+	pStr=(char *)malloc((strlen(pChannelSet)+1)*sizeof(char));
+	strcpy(pStr,pChannelSet);
 
 	// look for topic;
 	if (!(pPos=strchr(pStr,'\t'))) {
@@ -207,12 +207,12 @@ char  *getTopic(char *pChannelData) {
 	return pTopic;
 }
 // ######################################################################### 
-char  *getGreating(char *pChannelData) {
+char  *getGreating(char *pChannelSet) {
 	char *pGreating;
 	char *pPos;
 
     // look for the begin  of greating
-	if (!(pPos=strrchr(pChannelData,'\t'))) {
+	if (!(pPos=strrchr(pChannelSet,'\t'))) {
 		return "";		  
     }
 
@@ -229,13 +229,13 @@ char  *getGreating(char *pChannelData) {
 	return pGreating;
 }
 // ######################################################################### 
-char *getMode(char *pChannelData){
+char *getChannelMode(char *pChannelSet){
 	char *pMod;
 	char *pStr;
 	char *pPos;
 
-	pStr=(char *)malloc((strlen(pChannelData)+1)*sizeof(char));
-	strcpy(pStr,pChannelData);
+	pStr=(char *)malloc((strlen(pChannelSet)+1)*sizeof(char));
+	strcpy(pStr,pChannelSet);
 
 	if (!(pPos=strchr(pStr,'\t'))) {
 		return "";
@@ -266,3 +266,4 @@ char *getParameters(char *pLine){
 		return pParameter;
 	}
 }
+
