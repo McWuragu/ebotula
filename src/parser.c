@@ -93,8 +93,6 @@ MsgBuf_t* preParser(char *pLine) {
 }
 
 void *ComandExecutionThread(void *argv) {
-    int msgid;
-	extern pthread_mutex_t queue_mutex;
 	extern boolean stop;
     QueueData *pCommand;
 	MsgBuf_t *pMsg;
@@ -103,9 +101,8 @@ void *ComandExecutionThread(void *argv) {
 
     // set the thread cancelable
     pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
-    //pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
 
-    // open the message queue
+    DEBUG("Execution thread is running\n");
 
     // execute loop
     while(!stop) {
@@ -233,7 +230,7 @@ void *ComandExecutionThread(void *argv) {
             }
         }
     }
-
+    DEBUG("Execution thread is stopped\n");
     return NULL;
 }
 

@@ -44,7 +44,7 @@ void *TimingThread(void *argv){
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
     */
 
-    DEBUG("Synchronize Thread is running\n");
+    DEBUG("Synchronize thread is running\n");
 
     while (!stop) {
         time(&newTime);
@@ -80,6 +80,7 @@ void *TimingThread(void *argv){
         
         msleep(10);
     }
+    DEBUG("The timing thread stopped\n");
 }
 
 //#######################################################################

@@ -19,6 +19,12 @@
 void ConnectToIrc(void);
 void join_all_channels(void);
 
+/**
+* this  function represent  the sending  thread. He send all strings from
+* the out going  queue.
+*/
+void * SendingThread(void *argv);
+
 /// connect to the server
 void connectServer(void);
 /// close connection to the server

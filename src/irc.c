@@ -47,7 +47,7 @@ void user(void) {
     sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.server,sSetup.realname);
 
     // send commando
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -82,7 +82,7 @@ void join(char *pChannel) {
     char *buffer;
     buffer=(char *)malloc((strlen("JOIN ")+strlen(pChannel)+3)*sizeof(char));
     sprintf(buffer,"JOIN %s\r\n",pChannel);
-    send_direct(buffer);
+    send_line(buffer);
     free (buffer);
 }
 // #############################################################################

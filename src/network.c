@@ -39,7 +39,6 @@
 #include "network.h"
 
 static int sockid;
-static pthread_mutex_t	send_mutex;
 
 int iLineCount=0;
 
@@ -93,12 +92,45 @@ void connectServer(void) {
         exit(errno);
     }
 
-    pthread_mutex_init(&send_mutex,NULL);
 }
 /* ############################################################################# */
 void disconnectServer(void){
-	pthread_mutex_destroy(&send_mutex);
     shutdown(sockid,0);
+}
+/* ############################################################################ */
+void * SendingThread(void *argv){
+    extern ConfigSetup_t sSetup;
+    extern int stop;
+    QueueData *Data;
+    extern PQueue  pSendingQueue;
+
+    DEBUG("Sending thread is running\n");
+
+    while (!stop) {
+        Data=popQueue(pSendingQueue);
+        
+        if (Data) {
+            /* protect excess flood */
+            if (iLineCount < sSetup.iSendSafeLine) {
+                msleep(sSetup.iSendDelay);
+            } else {
+                msleep(sSetup.iSendSafeDelay);
+            }
+        
+            /* send the line */
+            if (!send(sockid,Data->data,Data->t_size-1,0)){
+                syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));
+                stop=true;
+            }
+            DEBUG("send(%d/%d): %s",iLineCount,sSetup.iSendSafeLine,(char*)Data->data);
+        
+            iLineCount++;                           
+
+            free(Data->data);
+            free(Data);
+        }
+    }
+    DEBUG("The sending thread stopped\n");
 }
 /* ############################################################################ */
 void  send_direct(char *pLine) {
@@ -115,32 +147,19 @@ void  send_direct(char *pLine) {
 }
 /* ############################################################################# */
 void  send_line(char *pLine) {
-    extern ConfigSetup_t sSetup;
-    extern int stop;
+    QueueData *Data;
+    extern PQueue  pSendingQueue;
 
+    if (!pLine) { return;}
+
+    // fill data object
+    Data=(QueueData*)malloc(sizeof(QueueData));
+    Data->t_size=(strlen(pLine)+1)*sizeof(char);
+    Data->data=pLine;
+
+    pushQueue(pSendingQueue,*Data);
     
-    pthread_mutex_lock(&send_mutex);
-     
-    /* protect excess flood */
-    if (iLineCount < sSetup.iSendSafeLine) {
-        msleep(sSetup.iSendDelay);
-    } else {
-        msleep(sSetup.iSendSafeDelay);
-    }
-
-    /* send the line */
-    if (!send(sockid,pLine,strlen(pLine),0)){
-        syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));
-        stop=true;
-    }
-    DEBUG("send(%d/%d): %s",iLineCount,sSetup.iSendSafeLine,pLine);
-
-
-    iLineCount++;
-
-    pthread_mutex_unlock(&send_mutex);
-
-    
+    DEBUG("presend: %s",pLine);
 }
 /* ############################################################################# */
 void  recv_line(char *pLine,unsigned int len) {

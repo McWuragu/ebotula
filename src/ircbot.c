@@ -44,6 +44,7 @@ pthread_mutex_t account_mutex;      // mutex for synchronize the access of the l
 
 
 CallbackDList CallbackList;
+PQueue pSendingQueue;
 
 int main(int argc,char * const argv[]) {
     int i;
@@ -51,6 +52,7 @@ int main(int argc,char * const argv[]) {
     char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;
     pthread_t *threads;
     pthread_t timeThread;
+    pthread_t sendThread;
     MsgBuf_t *pMsg;
     QueueData Command;	
     PQueue pCommandQueue;
@@ -201,24 +203,24 @@ int main(int argc,char * const argv[]) {
 	 
 	// init the command queue
 	pCommandQueue=initQueue();
+    pSendingQueue=initQueue();
     init_extended_CallbackDList(&CallbackList, destroyCallbackItem);
-
-
-	// create the threads
-    pthread_create(&timeThread,NULL,TimingThread,NULL);
-    threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
-    for (i=0;i<sSetup.thread_limit;i++) {
-        pthread_create(&threads[i],NULL,ComandExecutionThread,(void*)pCommandQueue);
-        DEBUG("Thread %d is running\n",i);
-    }
-    
-	// join the channels
-    join_all_channels();
-
 
     // Main execution loop
     stop=false;
     again=false;
+
+	// create the threads
+    pthread_create(&timeThread,NULL,TimingThread,NULL);
+    pthread_create(&sendThread,NULL,SendingThread,NULL);
+
+    threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
+    for (i=0;i<sSetup.thread_limit;i++) {
+        pthread_create(&threads[i],NULL,ComandExecutionThread,(void*)pCommandQueue);
+    }
+    
+	// join the channels
+    join_all_channels();
 
     while (!stop) {
 
@@ -235,7 +237,7 @@ int main(int argc,char * const argv[]) {
             strcpy(str,tmp);
 
             /* parse the part line */
-            DEBUG("Parse \"%s\"\n",str);
+            DEBUG("Parse: \"%s\"\n",str);
             pMsg=preParser(str);
 
             /* put the identified line  on the  queue */
@@ -264,15 +266,16 @@ int main(int argc,char * const argv[]) {
     }
 
     flushQueue(pCommandQueue);
+    flushQueue(pSendingQueue);
 
     syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));
     pthread_join(timeThread,NULL);
-    DEBUG("The timing thread stopped\n");
+    
+    pthread_join(sendThread,NULL);
 
     // wait of  terminat all threads
     for (i=0;i<sSetup.thread_limit;i++) { 
         pthread_join(threads[i],NULL);
-        DEBUG("Thread %d stopped\n",i);
     }
 
 
@@ -280,7 +283,8 @@ int main(int argc,char * const argv[]) {
     pthread_mutex_destroy(&account_mutex);
 
     // clear the wait queue and  callback list
-	deleteQueue(pCommandQueue);   	
+	deleteQueue(pCommandQueue);
+    deleteQueue(pSendingQueue);
     destroyCallbackDList(&CallbackList);
 
     // disconnect from server
