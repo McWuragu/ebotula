@@ -25,9 +25,9 @@
 
 #define DEFAULT_PING_TIMEOUT	90
 
-#define DEFAULT_SEND_SAFE_DELAY 1750
-#define DEFAULT_SEND_DELAY      750
-#define DEFAULT_SEND_SAFE_LINE  20
+#define DEFAULT_SLOW_SEND_DELAY 1750
+#define DEFAULT_FAST_SEND_DELAY      750
+#define DEFAULT_FAST_SEND_LIMIT  750
 
 #define DEFAULT_LOGOFF           3
 #define DEFAULT_ALT             90
@@ -52,11 +52,11 @@
 #define KEY_THREADLIMIT		"threadlimit"
 #define	KEY_DATABASEPATH	"databasepath"
 #define KEY_AUTOLOGOFF		"autologoff"
-#define KEY_SENDDELAY		"firstsenddelay"
+#define KEY_FASTSENDDELAY	"fastsenddelay"
 #define KEY_ALT				"accountlivetime"
 #define KEY_PINGTIMEOUT		"pingtimeout"
-#define KEY_SENDSAFEDELAY   "secsenddelay"
-#define KEY_SENDSAFELINE    "sendlinelimit"
+#define KEY_SLOWSENDDELAY   "slowsenddelay"
+#define KEY_FASTSENDLIMIT   "fastsendlimit"
 #define KEY_EXEUSER         "user"
 #define KEY_EXEGROUP        "group"
 #endif												
