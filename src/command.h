@@ -39,6 +39,9 @@ typedef enum {
     CMD_ONNAMES,
     CMD_ONTOPIC,
     CMD_ONWHOIS,
+    CMD_ONPRIVMSG,
+    CMD_ONNOTICE,
+
     /* CTCP commands */
     CMD_CTCPPING,
     CMD_CTCPVERSION,
@@ -104,7 +107,7 @@ typedef enum {
 static char * const CmdList[]= {
     "none",
     /* Events */
-    "PING","QUIT","NICK","MODE","KICK","JOIN","353","TOPIC","311",
+    "PING","QUIT","NICK","MODE","KICK","JOIN","353","TOPIC","311","PRIVMSG","NOTICE",
     /* CTCP commands */
     "\001PING","\001VERSION\001","\001TIME\001",
     /* any commands */
