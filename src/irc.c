@@ -193,6 +193,13 @@ void ping(char *pTarget) {
 /* ############################################################################# */
 void invite(char *pChannel,char *pNick) {
     char *buffer;
+    int aloc=0;
+    if (!pChannel)
+    {
+	    aloc=1;
+	    pChannel=malloc(sizeof(char));
+	    strcpy(pChannel,"");
+    }		    
     if ((buffer=(char*)malloc((strlen("INVITE")+strlen(pNick)+strlen(pChannel)+5)*sizeof(char)))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
@@ -202,6 +209,8 @@ void invite(char *pChannel,char *pNick) {
     sprintf(buffer,"INVITE %s %s\r\n",pNick,pChannel);
     SendLine(buffer);
     free(buffer);
+    if (aloc)
+	    free(pChannel);
 }
 /* ############################################################################# */
 void nick(char *pNick) {

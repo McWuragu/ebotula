@@ -1487,8 +1487,14 @@ void inviteuser(MsgItem_t *pMsg){
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Can't invite myself."));
         } else {
             /* invite */
-            invite(pMsg->pAccessChannel,pInviteNick);
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user %s to the channel %s."),pInviteNick,pMsg->pAccessChannel);
+		if (pMsg->pAccessChannel)
+		{
+	            invite(pMsg->pAccessChannel,pInviteNick);
+        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user %s to the channel %s."),pInviteNick,pMsg->pAccessChannel);
+		}else
+		{
+        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Can't invite the user %s to the channel %s. Invalid Channel!"),pInviteNick,pMsg->pAccessChannel);
+		}
         }
         free(pTmp);
     }
