@@ -72,8 +72,8 @@ void ModeResetCb(char *pNetmask,void* data){
                     pOldMode[0]='-';
                     mode(pChannel,pOldMode,pNick);
                 }
-    
-            }  else if ((get_db(ACCESS_DB,pLogin))) {
+                free(pMod);
+            }  else if ((pMod=get_db(ACCESS_DB,pLogin))) {
                 DEBUG("Reset the master\n");
                 // master mod reset
                 if (strcmp(pOldMode,"+o")!=0){
@@ -81,10 +81,10 @@ void ModeResetCb(char *pNetmask,void* data){
                     pOldMode[0]=(pOldMode[0]=='-')?'+':'-';
                     mode(pChannel,pOldMode,pNick);
                 }
+                free(pMod);
             }
-    
             free(pAccessKey);
-    
+            free(pLogin);
         } else if (pOldMode[0]=='+' && strcmp(pNick,pTmpBotName)) {
             DEBUG("Reset the mode for %s\n",pNick);
             // reset the mode for not identify user

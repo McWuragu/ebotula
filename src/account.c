@@ -158,9 +158,11 @@ void __log_out(char *pLogin) {
     char *pNetmask;
     StrToLower(pLogin);
     if ((pNetmask=get_db(USERTONICK_DB,pLogin))){
+        /* Log off */
 	    del_db(NICKTOUSER_DB,pNetmask);
     	del_db(USERTONICK_DB,pLogin);
     	DEBUG("%s logged off\n",pLogin);
+        free(pNetmask);
 	}
 }
 /* ############################################################################# */
