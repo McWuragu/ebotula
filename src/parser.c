@@ -58,6 +58,9 @@ MsgBufType preParser(char *pLine) {
 	} else if (strstr(pPos,"MODE")) {
 		sMsg.mtype=2;
 		sMsg.identify= CMD_ONMODE;
+	} else if (strstr(pPos,"TOPIC")) {
+		sMsg.mtype=2;
+		sMsg.identify= CMD_ONTOPIC;
 	} else if (strstr(pPos,"353")) {
 		sMsg.mtype=2;
 		sMsg.identify=CMD_ONNAMES;
@@ -240,6 +243,9 @@ void *ComandExecutionThread(void *argv) {
 			case CMD_ALLSAY:
 				allsay(sMsg.pMsgLine);
 				break;
+			case CMD_ONTOPIC:
+				hResetTopic(sMsg.pMsgLine);
+				break;
 			default:
 				syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,sMsg.identify);
 				break;
@@ -271,7 +277,7 @@ int AccessRight(char *pLine,CmdType cmd_id) {
 	case CMD_ONNAMES:
 	case CMD_ONJOIN:
 	case CMD_ONMODE:
-	case CMD_TOPIC:
+	case CMD_ONTOPIC:
 	// any users
 	case CMD_HELP:
 	case CMD_HELLO:
