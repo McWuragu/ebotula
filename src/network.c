@@ -137,6 +137,9 @@ struct MSGBUF_DS preParser(char *line) {
 		} else if (!strncmp(str,"part",strlen("part"))) {
 			msg.mtype=1;
 			msg.identify=CMD_PART;
+		} else if (!strncmp(str,"logoff",strlen("logoff"))) {
+			msg.mtype=1;
+			msg.identify=CMD_LOGOFF;
 		}
 	}
 
