@@ -27,22 +27,54 @@
 #include "baseconfig.h"
 extern ConfigSetup_t sSetup;
 ValueStruct_t vsConfig[VAL_COUNT]={
-	{ {{"# The name of the bot"},NULL},										KEY_BOTNAME,		PARAM_STRING,	MOD_NONE,	(void *)&(sSetup.pBotname)},
-	{ {{"# String for the realname"},NULL},										KEY_REALNAME,		PARAM_STRING,	MOD_QUOTED,	&sSetup.realname},
-	{ {{"# Execute the bot as this user "},NULL},									KEY_EXEUSER,		PARAM_STRING,	MOD_NONE,	&sSetup.sExeUser},
-	{ {{"# and this group"},NULL},											KEY_EXEGROUP,		PARAM_STRING,	MOD_NONE,	&sSetup.sExeGroup},
-	{ {{"# Number of the created threads"},NULL},									KEY_THREADLIMIT,	PARAM_INT,	MOD_NONE,	&sSetup.thread_limit},
-	{ {{"# The server the bot connects to"},NULL},									KEY_SERVER,		PARAM_STRING,	MOD_NONE,	&sSetup.server},
-	{ {{"# The port the bot connects to"},NULL},									KEY_PORT,		PARAM_STRING,	MOD_NONE,	&sSetup.port},
-	{ {{"# The location of the database for the bot"},NULL},								KEY_DATABASEPATH,	PARAM_STRING,	MOD_NONE,	&sSetup.pDatabasePath},
-	{ {{"# The delay time in millisecond for seding"},{"# It is used for prevention of excess flooding"},NULL},		KEY_FASTSENDDELAY,	PARAM_INT,	MOD_NONE,	&sSetup.iSendDelay},
-	{ {{""},NULL},													KEY_SLOWSENDDELAY,	PARAM_INT,	MOD_NONE,	&(sSetup.nSlowSendDelay)},
-	{ {{""},NULL},													KEY_FASTSENDLIMIT,	PARAM_INT,	MOD_NONE,	&(sSetup.nFastSendingCharLimit)},
-	{ {{"# The delay of the start from the startup initialization"},NULL},						KEY_INITDELAY,		PARAM_INT,	MOD_NONE,	&sSetup.nSettling},
-	{ {{"# The time in days an account exists."},{"# Unused accounts will be removed after this time."},NULL},		KEY_ALT,		PARAM_INT,	MOD_NONE,	&sSetup.AccountLiveTime},
-	{ {{"# The time limit in days for maximum login time"},NULL},							KEY_AUTOLOGOFF,		PARAM_INT,	MOD_NONE,	&sSetup.AutoLoggoff},
-	{ {{"# The time limit in seconds for ping timeout."},NULL},							KEY_PINGTIMEOUT,	PARAM_INT,	MOD_NONE,	&sSetup.iTimeout},
-	{ {{"# The level of the output (0-7)"},NULL},									KEY_LOGLEVEL,		PARAM_INT,	MOD_NONE,	&sSetup.nLogLevel}
+	{ {"# The name of the bot",
+	    NULL},
+	    KEY_BOTNAME,PARAM_STRING,MOD_NONE,(void*)&sSetup.pBotname},
+	{ {"# String for the realname",
+           NULL},
+	   KEY_REALNAME,PARAM_STRING,MOD_QUOTED,(void*)&sSetup.realname},
+	{ {"# Execute the bot as this user ",
+	    NULL},
+    	KEY_EXEUSER,PARAM_STRING,MOD_NONE,(void*)&sSetup.sExeUser},
+	{ {"# and this group",
+        NULL},
+        KEY_EXEGROUP,PARAM_STRING,MOD_NONE,(void*)&sSetup.sExeGroup},
+	{ {"# Number of the created threads",
+        NULL},
+        KEY_THREADLIMIT,PARAM_INT,MOD_NONE,(void*)&sSetup.thread_limit},
+	{ {"# The server the bot connects to",
+        NULL},
+        KEY_SERVER,PARAM_STRING,MOD_NONE,(void*)&sSetup.server},
+	{ {"# The port the bot connects to",
+        NULL},
+        KEY_PORT,PARAM_STRING,MOD_NONE,(void*)&sSetup.port},
+	{ {"# The location of the database for the bot",
+        NULL},
+        KEY_DATABASEPATH,PARAM_STRING,MOD_NONE,(void*)&sSetup.pDatabasePath},
+	{ {"# The delay time in millisecond for seding",
+       "# It is used for prevention of excess flooding",
+        NULL},		
+        KEY_FASTSENDDELAY,PARAM_INT,MOD_NONE,(void*)&sSetup.iSendDelay},
+	{ { NULL},
+        KEY_SLOWSENDDELAY,PARAM_INT,MOD_NONE,(void*)&sSetup.nSlowSendDelay},
+	{ { NULL},
+        KEY_FASTSENDLIMIT,PARAM_INT,MOD_NONE,(void*)&sSetup.nFastSendingCharLimit},
+	{ {"# The delay of the start from the startup initialization",
+        NULL},
+        KEY_INITDELAY,PARAM_INT,MOD_NONE,(void*)&sSetup.nSettling},
+	{ {"# The time in days an account exists.",
+	   "# Unused accounts will be removed after this time.",
+	   NULL},
+	   KEY_ALT,PARAM_INT,MOD_NONE,(void*)&sSetup.AccountLiveTime},
+	{ {"# The time limit in days for maximum login time",
+        NULL},
+        KEY_AUTOLOGOFF,PARAM_INT,MOD_NONE,(void*)&sSetup.AutoLoggoff},
+	{ {"# The time limit in seconds for ping timeout.",
+        NULL},
+        KEY_PINGTIMEOUT,PARAM_INT,MOD_NONE,(void*)&sSetup.iTimeout},
+	{ {"# The level of the output (0-7)",
+        NULL},
+        KEY_LOGLEVEL,PARAM_INT,MOD_NONE,(void*)&sSetup.nLogLevel}
 };
 
 void write_baseconfig()
@@ -57,7 +89,7 @@ void write_baseconfig()
 		
         FILE * fd;
 
-       logger(LOG_INFO,"Creating Configfile: %s",sSetup.configfile);
+       logger(LOG_NOTICE,"Creating Configfile: %s",sSetup.configfile);
 
       /* Create & Openfile*/
       if ((fd=fopen(sSetup.configfile,"wb"))==NULL)

@@ -48,8 +48,8 @@ enum Values_e{
 #define MAX_COMMENT_LINES 25
 typedef struct tag_ValueStruct
 {
-	char (sDescription)[MAX_COMMENT_LINES][255];
-	char sParamName[255];
+	char *sDescription[MAX_COMMENT_LINES];
+	char *sParamName;
 	Output_t iParamType;
 	Modefier_t iModefier;
 	void *pParam;
