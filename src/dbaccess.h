@@ -1,30 +1,26 @@
 #ifndef DBACCESS_H
 #define DBACCESS_H
 
+#include <gdbm.h>
+
+#define USER_DB			1
+#define CHANNEL_DB		2
+#define ACCESS_DB		3
+#define BANLIST_DB		4
+#define LOGIN_DB		5
+
+
 void init_database(void);
 void closeDatabase(void);
 
-int add_user(char *login, char* passwd);
-int replace_passwd(char *login, char* passwd);
-int del_user(char *login);
-int check_user(char *login, char *passwd);
-int exists_user(char *login);
+int add_db(int db,char *_key, char *_value);
+int replace_db(int db,char *_key, char *_value);
+int del_db(int db,char *_key);
+int check_db(int db,char *_key,char *_value);
+int exist_db(int db,char *_key);
+char * get_db(int db,char *_key);
+char ** list_db(int db);
+GDBM_FILE get_dbf(int db);
 
-int add_login(char *netmask,char *login);
-int check_login(char *netmask);
-int del_login(char *netmask);
-char *get_login(char *netmask);
-
-int add_channel_access(char *name,char *access);
-int replace_channel_access(char *name, char *access); 
-int check_channel_access(char *name);
-int del_channel_access(char *name);
-char *get_channel_access(char *name);
-
-int add_channel(char *channel,char *mode);
-int replace_channel(char *channel, char *mode); 
-int check_channel(char *channel);
-int del_channel(char *channel);
-char *get_channel(char *channel);
 
 #endif
