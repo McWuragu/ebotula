@@ -1,3 +1,12 @@
+/*************************************************************
+*
+* This is a part of ebotula.
+* It is distributed under the GNU General Public License
+* See the file COPYING for details.
+*
+* (c)2003 Steffen Laube <realebula@gmx.de>
+*************************************************************/
+
 /* callbacklist.c - handling and functions  to handle the callback list
  */
 #include <stdio.h>
@@ -194,13 +203,13 @@ int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
  * 		- returns 0 if OK
  *
  */
-int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t **data)
+int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data)
 {
 	/** Don't delete a NULL-element from an empty list **/
 	if (element == NULL || getSizeCallbackDList(list)==0)
 		return -1;
 	/** delete an element from list **/
-	*data=element->data;
+	data=element->data;
 	if (element == list->head)
 	{
 		/** deleteing from the head **/
@@ -250,6 +259,7 @@ int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, Callbac
 CallbackItem_t * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDListItem *element,char *nickname)
 {
 	CallbackDListItem *temp;
+    CallbackItem_t *data;
 	
 	/** check for empty list **/
 	if (list==NULL)
@@ -285,8 +295,10 @@ CallbackItem_t * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDL
 			temp=temp->next;
 		}
 	}
-	if (!strcmp(temp->data->nickname,nickname))
-		return temp->data;
+	if (!strcmp(temp->data->nickname,nickname)) {
+		removeCallbackDList(list,temp,data);
+        return data;
+    }
 	else
 		return NULL;
 }

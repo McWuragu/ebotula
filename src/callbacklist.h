@@ -1,3 +1,12 @@
+/*************************************************************
+*
+* This is a part of ebotula.
+* It is distributed under the GNU General Public License
+* See the file COPYING for details.
+*
+* (c)2003 Steffen Laube <realebula@gmx.de>
+*************************************************************/
+
 #ifndef _CALLBACK_LIST_H
 #define _CALLBACK_LIST_H
 #include <stdlib.h>
@@ -98,7 +107,7 @@ int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
  * 		- returns 0 if OK
  *
  */
-int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t **data);
+int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data);
 
 /* searchNicknameFromCallbackDList
  *
