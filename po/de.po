@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-24 21:43+0200\n"
+"POT-Creation-Date: 2004-07-24 23:36+0200\n"
 "PO-Revision-Date: 2004-07-24 21:50+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -108,7 +108,7 @@ msgstr "Callbackroutine für das Herrauswerfen eines Benutzers"
 msgid "The user is kicked by the bot"
 msgstr "Der Benutzer wurd vom Bot hinausgeworfen.."
 
-#: src/callback.c:186 src/command.c:888
+#: src/callback.c:186 src/command.c:892
 msgid "Couldn't kick this user"
 msgstr "Konnte diesen Benutzer nicht herauswerfen."
 
@@ -137,327 +137,327 @@ msgstr "Benutzer %s wurde in der Callbackliste nicht gefunden."
 msgid "Commands list"
 msgstr "Kommandoliste"
 
-#: src/command.c:86 src/command.c:128
+#: src/command.c:93 src/command.c:132
 msgid "Help end"
 msgstr "Ende der Hilfe"
 
-#: src/command.c:88
+#: src/command.c:95
 msgid "Spezial help text for a command"
 msgstr "Spezialer Hilfetext für ein Kommando"
 
-#: src/command.c:101
+#: src/command.c:108
 #, c-format
 msgid "Looking for the information about \"%s\""
 msgstr "Suche die Information über \"%s\""
 
-#: src/command.c:106
+#: src/command.c:113
 #, c-format
 msgid "Command found %d"
 msgstr "Kommando gefunden %d"
 
-#: src/command.c:110
+#: src/command.c:116
 msgid "Help for"
 msgstr "Hilfe für"
 
-#: src/command.c:134
+#: src/command.c:138
 msgid "No help found for this command."
 msgstr "Keine Hilfe für dieses Kommando gefunden."
 
-#: src/command.c:141
+#: src/command.c:145
 #, c-format
 msgid "Try to create an new account for %s"
 msgstr "Versucht einen neues Konto für %s anzulegen"
 
-#: src/command.c:144 src/command.c:327
+#: src/command.c:148 src/command.c:331
 msgid "You're already identified."
 msgstr "Du bist schon identifiziert."
 
-#: src/command.c:153
+#: src/command.c:157
 msgid "Nice to meet you."
 msgstr "Schön dich zu treffen."
 
-#: src/command.c:154
+#: src/command.c:158
 msgid "You have got a new account now."
 msgstr "Du hast nun einen neuen Konto."
 
-#: src/command.c:155 src/command.c:289
+#: src/command.c:159 src/command.c:293
 msgid "You're now identified."
 msgstr "Du bist identifiziert."
 
-#: src/command.c:158
+#: src/command.c:162
 msgid "A account with this nickname already exists."
 msgstr "Ein Konto mit diesem Namen existiert schon."
 
-#: src/command.c:171
+#: src/command.c:175
 #, c-format
 msgid "Check the  password for the account %s"
 msgstr "Überprüfe das Passwort für das Konto %s"
 
-#: src/command.c:179 src/command.c:269
+#: src/command.c:183 src/command.c:273
 msgid "You've set a empty password."
 msgstr "Du hast ein leeres Passwort gesetzt."
 
-#: src/command.c:184
+#: src/command.c:188
 msgid "Password is changed."
 msgstr "Passwort wurde geändert."
 
-#: src/command.c:235
+#: src/command.c:239
 msgid "You're now logged off."
 msgstr "Du bist nun abgemeldet."
 
-#: src/command.c:257
+#: src/command.c:261
 #, c-format
 msgid "try to identify %s"
 msgstr "Versuche %s zu identifizieren."
 
-#: src/command.c:283
+#: src/command.c:287
 #, c-format
 msgid "Look for the account %s"
 msgstr "Suche das Konto %s"
 
-#: src/command.c:287
+#: src/command.c:291
 #, c-format
 msgid "User %s found"
 msgstr "Der Benutzer %s wurde gefunden."
 
-#: src/command.c:297
+#: src/command.c:301
 msgid "Reconstruct the access rights for the channels"
 msgstr "Herstellung der Zugriffsrechte für alle Channels."
 
-#: src/command.c:318
+#: src/command.c:322
 msgid "Invalid password"
 msgstr "Ungültiges Passwort"
 
-#: src/command.c:324 src/command.c:467 src/command.c:712 src/command.c:728
-#: src/command.c:767 src/command.c:774 src/command.c:824 src/command.c:859
-#: src/command.c:937 src/command.c:946 src/command.c:1112 src/command.c:1220
-#: src/command.c:1466
+#: src/command.c:328 src/command.c:471 src/command.c:716 src/command.c:732
+#: src/command.c:771 src/command.c:778 src/command.c:828 src/command.c:863
+#: src/command.c:941 src/command.c:950 src/command.c:1116 src/command.c:1224
+#: src/command.c:1470
 msgid "Couldn't found regulare parameters."
 msgstr "Konnte keine gültigen Parameter finden."
 
-#: src/command.c:338 src/command.c:345 src/command.c:378 src/command.c:406
-#: src/command.c:413 src/command.c:430 src/command.c:575 src/command.c:623
-#: src/command.c:706 src/command.c:762 src/command.c:818 src/command.c:853
-#: src/command.c:923 src/command.c:1110 src/command.c:1387
+#: src/command.c:342 src/command.c:349 src/command.c:382 src/command.c:410
+#: src/command.c:417 src/command.c:434 src/command.c:579 src/command.c:627
+#: src/command.c:710 src/command.c:766 src/command.c:822 src/command.c:857
+#: src/command.c:927 src/command.c:1114 src/command.c:1391
 msgid "This command requieres a channel name."
 msgstr "Dieses Kommando benötigt einen Channelname."
 
-#: src/command.c:354
+#: src/command.c:358
 msgid "This channel is already on the channel list."
 msgstr "Der Channel ist schon zur Liste hinzugefügt."
 
-#: src/command.c:356
+#: src/command.c:360
 #, c-format
 msgid "Join and add the channnel %s"
 msgstr "Den Channel %s hinzugefügt und beigetretten"
 
-#: src/command.c:363
+#: src/command.c:367
 msgid "The channel is added to the channel list"
 msgstr "Der Channel wurde zu Liste hinzugefügt."
 
-#: src/command.c:367 src/command.c:422
+#: src/command.c:371 src/command.c:426
 msgid "The bot is joined the channel."
 msgstr "Der Bot ist dem Channel beigetretten."
 
-#: src/command.c:382
+#: src/command.c:386
 #, c-format
 msgid "Part and  try to remove the channnel %s"
 msgstr "Den Channel %s verlassen und wird versucht zu entfernen."
 
-#: src/command.c:387 src/command.c:608 src/command.c:663 src/command.c:931
-#: src/command.c:1204
+#: src/command.c:391 src/command.c:612 src/command.c:667 src/command.c:935
+#: src/command.c:1208
 msgid "This channel isn't in the channel list."
 msgstr "Dieser Channel ist nicht auf der Channelliste."
 
-#: src/command.c:389
+#: src/command.c:393
 msgid "The channel is removed from the channel list."
 msgstr "Der Channel wurde von der Liste entfernt."
 
-#: src/command.c:396 src/command.c:436
+#: src/command.c:400 src/command.c:440
 msgid "The bot has left the channel."
 msgstr "Der Bot hat den Channel verlassen."
 
-#: src/command.c:418
+#: src/command.c:422
 #, c-format
 msgid "Join the channel %s"
 msgstr "Dem Channel %s beigetretten."
 
-#: src/command.c:432
+#: src/command.c:436
 #, c-format
 msgid "Part the channel %s"
 msgstr "Den Channel %s verlassen."
 
-#: src/command.c:443
+#: src/command.c:447
 msgid "The bot is going down."
 msgstr "Der Bot stopt."
 
-#: src/command.c:451
+#: src/command.c:455
 msgid "The bot is going to restart."
 msgstr "Der Bot startet neu."
 
-#: src/command.c:470
+#: src/command.c:474
 msgid "The Nickname is invalid."
 msgstr "Der Nickname ist ungültig."
 
-#: src/command.c:474
+#: src/command.c:478
 msgid "The bot tries to set the new nickname."
 msgstr "Der Bot versucht den neuen Nickname zusetzen."
 
-#: src/command.c:499
+#: src/command.c:503
 msgid "Build channel list."
 msgstr "Erzeuge Channelliste"
 
-#: src/command.c:502
+#: src/command.c:506
 msgid "Channel list:"
 msgstr "Channelliste:"
 
-#: src/command.c:515
+#: src/command.c:519
 #, c-format
 msgid "...for channel %s"
 msgstr "...für den Channel %s"
 
-#: src/command.c:526
+#: src/command.c:530
 msgid "Topic:"
 msgstr "Thema:"
 
-#: src/command.c:534
+#: src/command.c:538
 msgid "Greeting:"
 msgstr "Begrüssung:"
 
-#: src/command.c:553
+#: src/command.c:557
 msgid "End of the channel list."
 msgstr "Ende der Channelliste"
 
-#: src/command.c:577
+#: src/command.c:581
 #, c-format
 msgid "Greeting seting for %s"
 msgstr "Begrüssung gesetzt für den Channel %s"
 
-#: src/command.c:598
+#: src/command.c:602
 msgid "The greeting is removed"
 msgstr "Die Begrüssung wurde entfernt."
 
-#: src/command.c:600
+#: src/command.c:604
 msgid "The new greeting is set"
 msgstr "Die neue Begrüssung  wurde gesetzt."
 
-#: src/command.c:625
+#: src/command.c:629
 #, c-format
 msgid "Topic seting for %s"
 msgstr "Thema gesetzt für den Channel %s"
 
-#: src/command.c:651
+#: src/command.c:655
 msgid "The topic is removed"
 msgstr "Das Thema wurde entfernt."
 
-#: src/command.c:653
+#: src/command.c:657
 msgid "The new topic is set"
 msgstr "Das neue Thema wurde gesetzt."
 
-#: src/command.c:684
+#: src/command.c:688
 #, c-format
 msgid "Greeting for %s"
 msgstr "Begrüssung für den Channel %s"
 
-#: src/command.c:784
+#: src/command.c:788
 msgid "Can't ban myself"
 msgstr "Kann mich nicht selbst bannen."
 
-#: src/command.c:833
+#: src/command.c:837
 msgid "The ban is removed by the bot"
 msgstr "Der Benutzer wurd vom Bot gebannt."
 
-#: src/command.c:875
+#: src/command.c:879
 msgid "Can't kick myself"
 msgstr "Kann mich nicht selbst herauswerfen."
 
-#: src/command.c:883
+#: src/command.c:887
 msgid "You are kicked from the bot."
 msgstr "Du wurd vom Bot hinausgeworfen."
 
-#: src/command.c:942
+#: src/command.c:946
 msgid "Modify user mod"
 msgstr "Verändere die Modi"
 
-#: src/command.c:962 src/command.c:1253
+#: src/command.c:966 src/command.c:1257
 msgid "Account wasn't found."
 msgstr "Konto wurde nicht gefunden."
 
-#: src/command.c:965
+#: src/command.c:969
 msgid "You can't modify yourself"
 msgstr "Du kannst dich nicht selbst ändern."
 
-#: src/command.c:980 src/command.c:1005
+#: src/command.c:984 src/command.c:1009
 msgid "You're not a bot master."
 msgstr "Du bist kein Master."
 
-#: src/command.c:988
+#: src/command.c:992
 #, c-format
 msgid "Modify account %s in the channel %s"
 msgstr "Verändere das Konto %s im Channel %s"
 
-#: src/command.c:1011
+#: src/command.c:1015
 msgid "This mod is invalid."
 msgstr "Diese Mode ist ungültig."
 
-#: src/command.c:1018
+#: src/command.c:1022
 #, c-format
 msgid "Found account modes %s"
 msgstr "Die Modi für das Konto %s gefunden."
 
-#: src/command.c:1046
+#: src/command.c:1050
 msgid "Set new account modes"
 msgstr "Setze neue Moden das Konto."
 
-#: src/command.c:1052
+#: src/command.c:1056
 msgid "Remove new account modes"
 msgstr "Entferne die Moden des Konto"
 
-#: src/command.c:1061
+#: src/command.c:1065
 msgid "Modify the current account modes"
 msgstr "Verändere die Modi des aktuellen Kontos."
 
-#: src/command.c:1092
+#: src/command.c:1096
 msgid "The user mode are changed."
 msgstr "Die Benutzermodi wurden geändert."
 
-#: src/command.c:1121
+#: src/command.c:1125
 #, c-format
 msgid "Found the new channel modes \"%s\" for the channel %s."
 msgstr "Neue Channelmodi \"%s\" für den Channel %s gefunden."
 
-#: src/command.c:1185
+#: src/command.c:1189
 #, c-format
 msgid "Write the new channel modes \"%s\" for the channel %s."
 msgstr "Schreibe neue Channelmodi \"%s\" für den Channel %s."
 
-#: src/command.c:1194
+#: src/command.c:1198
 #, c-format
 msgid "Set the new channel modes for the channel %s"
 msgstr "Setzte die neuen Channelmodi für den Channel %s"
 
-#: src/command.c:1250
+#: src/command.c:1254
 msgid "The account is removed"
 msgstr "Das Konto wurde gelöscht."
 
-#: src/command.c:1251
+#: src/command.c:1255
 #, c-format
 msgid "Remove %s from the user list"
 msgstr "Entferne den Benutzer %s von der Liste"
 
-#: src/command.c:1282 src/command.c:1391
+#: src/command.c:1286 src/command.c:1395
 msgid "Account list:"
 msgstr "Kontoliste:"
 
-#: src/command.c:1284
+#: src/command.c:1288
 msgid "Create the accountlist for a master"
 msgstr "Erzeuge eine Kontoliste für einen Master"
 
-#: src/command.c:1381 src/command.c:1449
+#: src/command.c:1385 src/command.c:1453
 msgid "End of the account list."
 msgstr "Ende der Kontoliste."
 
-#: src/command.c:1384
+#: src/command.c:1388
 msgid "Create the accountlist for a owner"
 msgstr "Erzeuge eine Kontoliste für einen Owner"
 
@@ -722,7 +722,8 @@ msgstr "\t-b Name\t\tSetzt den Namen des Boots im.\n"
 
 #: src/messages.c:17
 msgid "\t-c sec\t\tSet the ping timeout of the network connection.\n"
-msgstr "\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
+msgstr ""
+"\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
 
 #: src/messages.c:18
 msgid "\t-d path\t\tSet the path of the database direcotry\n"
@@ -760,10 +761,12 @@ msgstr ""
 
 #: src/messages.c:25
 msgid "\t-k days\t\tSet the account live time in days.\n"
-msgstr "\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Konto inaktiv sein kann.\n"
+msgstr ""
+"\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Konto inaktiv sein kann.\n"
 
 #: src/messages.c:26
-msgid "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
+msgid ""
+"\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
 msgstr ""
 "\t-l Char/min\tSetzt das Limit in Zeichen je Minute für das beschleunigte "
 "Senden.\n"
@@ -796,7 +799,8 @@ msgstr "\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n"
 
 #: src/messages.c:33
 msgid "\t-u user\t\tSet the user under which the bot run (root only).\n"
-msgstr "\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
+msgstr ""
+"\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
 
 #: src/messages.c:34
 msgid "\t-v\t\tPrint version.\n"
@@ -1036,4 +1040,3 @@ msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
 
 #~ msgid "Empty list!"
 #~ msgstr "Liste ist leer."
-
