@@ -66,8 +66,7 @@ AC_SUBST(PTHREAD_LIB)
 AC_FUNC_ALLOCA
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h inttypes.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h strings.h sys/param.h sys/socket.h syslog.h termios.h unistd.h],,AC_MSG_ERROR("Headers not found...
-Don't found all necessary header files. Please check your install."))
+AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h inttypes.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h strings.h sys/param.h sys/socket.h syslog.h termios.h unistd.h])
 
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -89,8 +88,7 @@ AC_FUNC_REALLOC
 AC_TYPE_SIGNAL
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify bzero clock_gettime getcwd gethostbyname gethostname mempcpy memset mkdir munmap nl_langinfo setlocale socket stpcpy strcasecmp strchr strcspn strdup strpbrk strrchr strstr strtoul uname],,AC_MSG_ERROR("Functions not found...
-Don't found all necessary functions on your system, Please check your install"))
+AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify bzero clock_gettime getcwd gethostbyname gethostname mempcpy memset mkdir munmap nl_langinfo setlocale socket stpcpy strcasecmp strchr strcspn strdup strpbrk strrchr strstr strtoul uname])
 
 
 
