@@ -40,6 +40,8 @@
 static int sockid;
 static pthread_mutex_t	send_mutex;
 
+int iLineCount=0;
+
 // ############################################################################# 
 void connectServer(void) {
     extern ConfigSetup_t sSetup;
@@ -97,22 +99,44 @@ void disconnectServer(void){
 	pthread_mutex_destroy(&send_mutex);
     shutdown(sockid,0);
 }
+// ############################################################################
+void  send_direct(char *pLine) {    
+    extern int stop;
+
+    // send the line
+    if (!send(sockid,pLine,strlen(pLine),0)){
+        syslog(LOG_CRIT,SYSLOG_SEND);
+        stop=true;
+    }
+
+    DEBUG("send: %s",pLine);
+
+}
 // ############################################################################# 
 void  send_line(char *pLine) {
     extern ConfigSetup_t sSetup;
     extern int stop;
 
-
-    pthread_mutex_lock(&send_mutex);
-
-    // protect excess flood
-    msleep(sSetup.sendDelay);
     
+    pthread_mutex_lock(&send_mutex);
+     
+    // protect excess flood
+    if (iLineCount < sSetup.iSendSafeLine) {
+        msleep(sSetup.iSendDelay);
+    } else {
+        msleep(sSetup.iSendSafeDelay);
+    }
+
+    // send the line
     if (!send(sockid,pLine,strlen(pLine),0)){
         syslog(LOG_CRIT,SYSLOG_SEND);
         stop=true;
     }
-    DEBUG("send: %s",pLine);
+    DEBUG("send(%d/%d): %s",iLineCount,sSetup.iSendSafeLine,pLine);
+
+
+    iLineCount++;
+
     pthread_mutex_unlock(&send_mutex);
 
     
