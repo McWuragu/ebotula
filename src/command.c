@@ -136,7 +136,6 @@ void help(char *pLine) {
 // Bot comand: !hello
 // #########################################################################
 void hello(char *pLine) {
-    extern pthread_mutex_t account_mutex;
     char *pNetmask;
     char *pNick;
     char *pLogin;
@@ -201,7 +200,7 @@ void password(char *pLine) {
         	notice(pNick,MSG_PASSWD);        
 	    }
     }
-    pthread_mutex_lock(&account_mutex);
+    pthread_mutex_unlock(&account_mutex);
 }
 // #########################################################################
 // Bot comand: !logoff
@@ -1029,7 +1028,7 @@ void rmuser(char *pLine) {
         }
         notice(pNick,MSG_RMUSER_OK);        
     }
-    pthread_mutex_lock(&account_mutex);
+    pthread_mutex_unlock(&account_mutex);
     notice(pNick,MSG_NOT_ACCOUNT);
 }
 // #########################################################################
