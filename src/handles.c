@@ -173,33 +173,41 @@ void hResetModes(char *pLine) {
     // extract  the nick
     pNick=(char*)ppLinePart[4];
     
-    if (strcmp(ppLinePart[4],sSetup.botname)!=0) {
+    if (strcmp(getNickname(ppLinePart[0]),sSetup.botname)!=0) {
         if (pMode[1]=='o' || pMode[1]=='v') {
-            // add callback for reset the modes for a user    
-            DEBUG("Added Callback for Mode Reset");
-           
-            
-            
-            // built the data for callback
-            pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
-            sprintf(pData,"%s %s",pChannel,pMode);
-            
-            // build  the  element
-            Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
-            Callback->nickname=pNick;
-            Callback->CallbackFkt=ModeResetCb;
-            Callback->data=pData;
-            
-            // put  the  element  in the  callback list  before tail
-            //insert_prev_CallbackDList(&CallbackList,&CallbackList.tail,&Callback);
-	        insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
-
-            // send the who
-            whois(pNick);
-
-
+          
+            // check of bot new mods or  other user
+            if (!strcmp(pNick,sSetup.botname)) {
+                DEBUG("Bot get new mods");
+                // mode set for the bot from other user of operator
+                // then initiallize this  channel
+                if (strcmp(pMode,"+o")==0) {
+                channelInit(pChannel);
+                } else {
+                privmsg(pChannel,MSG_NEED_OP);
+                }
+            } else {
+                // add callback for reset the modes for a user    
+                DEBUG("Added Callback for Mode Reset");
+                
+                // built the data for callback
+                pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
+                sprintf(pData,"%s %s",pChannel,pMode);
+                
+                // build  the  element
+                Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
+                Callback->nickname=pNick;
+                Callback->CallbackFkt=ModeResetCb;
+                Callback->data=pData;
+                
+                // put  the  element  in the  callback list  before tail
+                insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
+    
+                // send the who
+                whois(pNick);
+            }
         } else {
-            // reset channel
+            // reset other mods
             pPos=strstr(pLine,pMode);
             pPos[0]=(pPos[0]=='-')?'+':'-';
             mode(pChannel,pPos,NULL);
@@ -302,24 +310,35 @@ void hCallback(char *pLine) {
 
     ppLinePart=splitString(pLine);
 
-    /** lock for the Callback item for the nick **/
-    //    CB_Data=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
-	/** remove was removed from searchNicknameFromCallbackDList 
-	 * Remove all by hand 						**/
-    pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
-	 
-    // remove  entrie and read the  callback datum
-    if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
-        // built netmask
-        pNetmask=(char*)malloc((strlen(ppLinePart[3])+strlen(ppLinePart[4])+strlen(ppLinePart[5])+3)*sizeof(char));
-        sprintf(pNetmask,"%s!%s@%s",ppLinePart[3],ppLinePart[4],ppLinePart[5]);
-
-        // execute the callback
-        DEBUG("Callback");
-        CB_Data->CallbackFkt(pNetmask,CB_Data->data);
-
-        // destroy  callback item
-        destroyCallbackItem(CB_Data);
-    }
-  
+    /*
+     * this  loop stop if no item more found  in the  queue
+     * Any  call of  this  callback handler execute one callback item
+     */
+    do {
+        /** lock for the Callback item for the nick **/
+        if ((pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]))) {
+            /* 
+             * remove  entrie and read the  callback datum
+             * if  this item not more in the  queue then look for  the next
+             */
+            if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
+                // built netmask
+                pNetmask=(char*)malloc((strlen(ppLinePart[3])+strlen(ppLinePart[4])+strlen(ppLinePart[5])+3)*sizeof(char));
+                sprintf(pNetmask,"%s!%s@%s",ppLinePart[3],ppLinePart[4],ppLinePart[5]);
+        
+                // execute the callback
+                DEBUG("Callback");
+                CB_Data->CallbackFkt(pNetmask,CB_Data->data);
+        
+                /* destroy  callback item */
+                destroyCallbackItem(CB_Data);
+    
+                break;
+            }
+        } else {
+            /* no item found in the callback queue */
+            break;
+        }
+      
+    } while ( true );
 }
