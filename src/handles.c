@@ -118,22 +118,28 @@ void hResetModUser(char *pLine) {
 
 	if (strcmp(getNickname(pLine),sSetup.botname)) {
 		DEBUG("Reset the Mod");
-		if ((pPos=strpbrk(pLine,"+-"))) {
-			pChannel=getAccessChannel(pLine);
-			if (pPos[1]=='o' || pPos[1]=='v') {
-				// build the replacing mod string
-				pMod[0]=(pPos[0]=='+')?'-':'+';
-				pMod[1]=pPos[1];
-				pMod[3]='\0';
+		
+		// set pPos of the position of changed mode
+		pPos=strstr(pLine,"MODE");
+        pPos=strchr(pPos,' ');
+		pPos++;
+		pPos=strchr(pPos,' ');
+		pPos++;
 
-				// set the pointer of  the nick name
-				pNick=strchr(pPos,' ');
-				pNick++;
-				strtok(pNick," ");
-                
-				// remove
-				mode(pChannel,pMod,pNick);
-			}
+		pChannel=getAccessChannel(pLine);
+		if (pPos[1]=='o' || pPos[1]=='v') {
+			// build the replacing mod string
+			pMod[0]=(pPos[0]=='+')?'-':'+';
+			pMod[1]=pPos[1];
+			pMod[3]='\0';
+
+			// set the pointer of  the nick name
+			pNick=strchr(pPos,' ');
+			pNick++;
+			strtok(pNick," ");
+			
+			// remove
+			mode(pChannel,pMod,pNick);
 		}
 	}
 }
