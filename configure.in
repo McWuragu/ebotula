@@ -1,3 +1,18 @@
+dnl *************************************************************
+dnl *
+dnl * This is a part of ebotula.
+dnl * It is distributed under the GNU General Public License
+dnl * See the file COPYING for details.
+dnl *
+dnl * (c)2003 Steffen Laube <realebula@gmx.de>
+dnl *************************************************************
+dnl run first:
+dnl
+dnl aclocal && autoconf && automake -a
+dnl
+dnl to build the configure script
+dnl *************************************************************
+
 AC_INIT(src/ircbot.c)
 AM_INIT_AUTOMAKE(ebotula,0.1.4-dev)
 
