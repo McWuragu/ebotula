@@ -70,6 +70,12 @@ static char *pIrcHelp[][15] = {
 	"Selfexplaining. Change your account password (see also !help hello)",
 	"or set it if you don't have one yet.",
     },
+    
+    /* friend commands */
+    {
+        "invite the user in a channel",
+        "invite the user in a channel", 
+    },
 
     // owner commands
     // CHANMODE

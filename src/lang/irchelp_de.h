@@ -69,6 +69,14 @@ static char *pIrcHelp[][15] = {
         "des aktuell identifizieren Accounts.",
     },
 
+    /* friend commands */
+    /* INVITE */
+    {
+        "lädt den user in einen Channel ein",
+        "Das Kommando ermöglich es sich selbst in einen Channel, der Invite"
+        "gesetzt ist, einzuladen", 
+    },
+
     // owner commands
     // CHANMODE
     {
