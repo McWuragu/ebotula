@@ -60,6 +60,7 @@ void connectServer(void) {
 
     errno=0;
 
+
     /* init the  socketaddr */
     bzero((char*) &socketaddr,sizeof(socketaddr));
     socketaddr.sin_family=AF_INET;
@@ -106,74 +107,38 @@ void disconnectServer(void){
     shutdown(sockid,0);
 }
 /* ############################################################################ */
-void * SendingThread(void *argv){
+void SendLine(char* pMsg){
     extern ConfigSetup_t sSetup;
+    extern pthread_mutex_t mutexSend;
     extern int stop;
-    QueueData *Data;
-    extern PQueue  pSendingQueue;
     int nSendLength;
 
-    DEBUG("Sending thread is running (%d)\n",getpid());
-
-    while (!stop) {
-        Data=popQueue(pSendingQueue);
-        
-        if (Data) {
-            /* protect excess flood */
-            if (nCharPerMinute < sSetup.nFastSendingCharLimit) {
-                msleep(sSetup.iSendDelay);
-            } else {
-                msleep(sSetup.nSlowSendDelay);
-            }
-                    
-            /* send the line */
-            if (!send(sockid,Data->data,Data->t_size-1,0)){
-                syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));
-                stop=true;
-            }
-            DEBUG("send(%d/%d): %s",nCharPerMinute,sSetup.nFastSendingCharLimit,(char*)Data->data);
-        
-            nSendLength=strlen((char*)Data->data);
-            nCharPerMinute=GetCharPerMin(nSendLength);
-
-            free(Data->data);
-            free(Data);
+    if (pMsg) {
+        pthread_mutex_lock(&mutexSend);
+        /* protect excess flood */
+        if (nCharPerMinute < sSetup.nFastSendingCharLimit) {
+            msleep(sSetup.iSendDelay);
+        } else {
+            msleep(sSetup.nSlowSendDelay);
         }
+                
+        nSendLength=strlen(pMsg);
+
+        /* send the line */
+        if (!send(sockid,pMsg,nSendLength,0)){
+            syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));
+            stop=true;
+        }
+        DEBUG("send(%d/%d): %s",nCharPerMinute,sSetup.nFastSendingCharLimit,pMsg);
+    
+        
+        nCharPerMinute=GetCharPerMin(nSendLength);
+        pthread_mutex_unlock(&mutexSend);
     }
-    DEBUG("The sending thread stopped\n");
 }
-/* ############################################################################ */
-void  send_direct(char *pLine) {
-    extern int stop;
 
-    /* send the line */
-    if (!send(sockid,pLine,strlen(pLine),0)){
-        syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));
-        stop=true;
-    }
-
-    DEBUG("send: %s",pLine);
-
-}
 /* ############################################################################# */
-void  send_line(char *pLine) {
-    QueueData *Data;
-    extern PQueue  pSendingQueue;
-
-    if (!pLine) { return;}
-
-    // fill data object
-    Data=(QueueData*)malloc(sizeof(QueueData));
-    Data->t_size=(strlen(pLine)+1)*sizeof(char);
-    Data->data=pLine;
-
-    pushQueue(pSendingQueue,*Data);
-    free(Data);
-
-    DEBUG("presend: %s",pLine);
-}
-/* ############################################################################# */
-void  recv_line(char *pLine,unsigned int len) {
+void  RecvLine(char *pLine,unsigned int len) {
     extern int stop;
     extern ConfigSetup_t sSetup;
     struct pollfd  sPoll;
@@ -275,7 +240,7 @@ void ConnectToIrc(void){
         
         
         nick(sSetup.botname);
-        recv_line(recv_buffer,RECV_BUFFER_SIZE);
+        RecvLine(recv_buffer,RECV_BUFFER_SIZE);
 
         /* check for  nickname alread in use */
         /* if he in use then put a leading underline on the front of the name */

@@ -19,34 +19,25 @@
 void ConnectToIrc(void);
 void join_all_channels(void);
 
-/**
-* this  function represent  the sending  thread. He send all strings from
-* the out going  queue.
-*/
-void * SendingThread(void *argv);
+
 
 /// connect to the server
 void connectServer(void);
 /// close connection to the server
 void disconnectServer(void);
+
 /**
 * send a command string to the server
 * @param pLine the  commando string whiche  want  to send
 */
-void send_line(char *pLine);
-
-/**
-* send direkt a command  string to the server
-* @param pLine the commando string
-*/
-void send_direct(char *pLine);
+void SendLine(char* pMsg);
 
 /**
 * reveive  oneline from the server
 * @param pLine a pointer of a buffer for the  receiving string
 * @param len the  size of the buffer
 */
-void recv_line(char *pLine,unsigned int len);
+void RecvLine(char *pLine,unsigned int len);
 
 
 
