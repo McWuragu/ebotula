@@ -163,9 +163,9 @@ void hello(char *pLine) {
         notice(pNick,MSG_HELLO2);
         notice(pNick,MSG_IDENT_OK);
         
-    }
-    notice(pNick,MSG_NICK_EXIST);
-    
+    } else {
+	    notice(pNick,MSG_NICK_EXIST);
+	} 
     pthread_mutex_unlock(&account_mutex);
 
 }
@@ -873,29 +873,31 @@ void usermode(char *pLine){
 
 	    // identify the  login and set the rights
 		if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
-	    	if (strlen(getNickname(pNetmask)) && oldmod[1]!= mod[1]) {
     	    	DEBUG("Modify the current mode");
+				usernick=getNickname(pNetmask);
+
 		        if (mod[0]=='-') {
     	        	// remove mods
         		    mode(pChannel,mod,usernick);
 	    	    } else {
-		            // remove old mods
-        		    if (strchr(oldmod,'v')) {
-    	    			// remove -o
-		                mode(pChannel,"-v",usernick);
-    	        	} else if (strlen(oldmod)) {
-        		        // remove -v
-    	    	        mode(pChannel,"-o",usernick);
-	            	}
-
-	            	// set the new mods
-    	    	    if (mod[1]=='v') {
-    		            mode(pChannel,"+v",usernick);
-	        	    } else {
-            		    mode(pChannel,"+o",usernick);
-	        	    }
-    		    }
-	    	}
+					if (oldmod) {
+			        	// remove old mods
+    	    			if (strchr(oldmod,'v')) {
+    		    			// remove -o
+		    	        	mode(pChannel,"-v",usernick);
+    	        		} else if (strlen(oldmod)) {
+        		    	   // remove -v
+	    	    	       mode(pChannel,"-o",usernick);
+		            	}
+					}
+	           	
+					// set the new mods
+    	   	    	if (mod[1]=='v') {
+    	            	mode(pChannel,"+v",usernick);
+		       	    } else {
+           		    mode(pChannel,"+o",usernick);
+	       	    }
+    	    }
 		}
 		pthread_mutex_unlock(&account_mutex);
 	    notice(pNick,MSG_USERMODE_OK);
