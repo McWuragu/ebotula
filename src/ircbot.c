@@ -51,11 +51,13 @@ int main(int argc,const char *argv[]) {
 	
 	// init config
 	sSetup.newMaster=false;
-	sSetup.AccountLiveTime=MIN_ALT;
-	sSetup.AutoLoggoff=MIN_ALT;
+	sSetup.AccountLiveTime=0;
+	sSetup.AutoLoggoff=0;
 	sSetup.sendDelay=-1;
-	sSetup.iTimeout=-1;
+	sSetup.iTimeout=0;
 	sSetup.thread_limit=0;
+
+	
 
 	// container for a message for the queue
 	MsgBufType sMsg;
@@ -73,7 +75,7 @@ int main(int argc,const char *argv[]) {
 
 	// check for parameter
 	if (argc>1) {
-		cmd_line(argc,argv);
+		ComandLineParser(argc,argv);
 		syslog(LOG_NOTICE,SYSLOG_READ_CMD);
 	}
 
@@ -87,7 +89,7 @@ int main(int argc,const char *argv[]) {
 	DEBUG("File %s",sSetup.configfile);
 
 	// read config file
-	read_config_file();
+	ConfigFileParser();
     syslog(LOG_NOTICE,SYSLOG_READ_CONFFILE);
 	
 
@@ -112,7 +114,19 @@ int main(int argc,const char *argv[]) {
 
 	if (sSetup.iTimeout<0) {
 		sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
-		DEBUG("DEFAULT TIMEOUT");
+		DEBUG("Default ping timeout");
+	}
+
+	if (sSetup.AccountLiveTime<MIN_ALT) {
+		sSetup.AccountLiveTime=MIN_ALT;
+		DEBUG("Default accountl live time");
+	}
+
+	if (sSetup.AutoLoggoff<MIN_LOGOFF) {
+		sSetup.AutoLoggoff=MIN_LOGOFF;
+		DEBUG("Default accountl live time");
+	} else if (sSetup.AccountLiveTime<sSetup.AutoLoggoff) {
+		sSetup.AutoLoggoff=sSetup.AccountLiveTime;
 	}
 
 	DEBUG("-----------------------------------------------");
@@ -132,7 +146,7 @@ int main(int argc,const char *argv[]) {
 	syslog(LOG_NOTICE,SYSLOG_BOT_START);
 
 	// init Database and the mutex for  access to the database
-	init_database();
+	initDatabases();
 
 
 	if (sSetup.newMaster) {
@@ -142,6 +156,8 @@ int main(int argc,const char *argv[]) {
 		}
 	}
 	
+	
+
 	// create the network connection
 	if ((sSetup.server!=NULL) && (sSetup.port!=NULL)) {
 		printf(SYSLOG_TRY_CONNECT,sSetup.server,sSetup.port);
@@ -163,12 +179,14 @@ int main(int argc,const char *argv[]) {
 		exit(errno);
 	}
 
+	
+
 	// connect to the server and init the mutex  for sending
 	pthread_mutex_init(&send_mutex,NULL);
     pthread_mutex_init(&dbaccess_mutex,NULL);
 	pthread_mutex_init(&account_mutex, NULL);
 	
-	irc_connect();
+	ConnectToIrc();
     printf(SYSLOG_BOT_RUN);
 	printf("\n");
 	syslog(LOG_NOTICE,SYSLOG_BOT_RUN);
@@ -196,8 +214,8 @@ int main(int argc,const char *argv[]) {
 	pthread_create(&timeThread,NULL,synchron,NULL);
 	threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
 	for (i=0;i<sSetup.thread_limit;i++) {
-		pthread_create(&threads[i],NULL,action_thread,NULL);
-		syslog(LOG_NOTICE,SYSLOG_THREAD_RUN,i);
+		pthread_create(&threads[i],NULL,ComandExecutionThread,NULL);
+		DEBUG(SYSLOG_THREAD_RUN,i);
 	}
 
 	// join the channels
