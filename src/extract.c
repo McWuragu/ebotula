@@ -62,23 +62,26 @@ char *getNetmask(char const *pLine){
 char *getCommand(char const *pLine) {
 	char *pStr,*pTmp;
 
+    if (!pLine) {return "";}
+
 	// mirror  of the orginal string 
 	pTmp=(char *)malloc((strlen(pLine)+1)*sizeof(char));
 	strcpy(pTmp,pLine);
 
 	// find the  secondary double point
 	// and put after this a null byte
-	if (pTmp[0]==':' && pLine!=NULL) {
+	if (pTmp[0]==':' ) {
 		// find the next colon and replace  him with null byte
 		strtok(&pTmp[1],":");
 	
 		// cut out  the first part of the server answer 
 		pStr=(char *)malloc((strlen(pTmp)+1)*sizeof(char));
 		strcpy(pStr,pTmp);
-
+        free(pTmp);
 		return pStr;
 	}
-	return "";
+    free(pTmp);
+    return "";
 }
 // ############################################################################# 
 char *getArgument(char const *pLine) {
@@ -228,6 +231,7 @@ char  *getTopic(char const *pChannelSet) {
 	pTopic=(char *)malloc((strlen(pPos)+1)*sizeof(char));
 	strcpy(pTopic,pPos);
 
+    free(pStr);
 	return pTopic;
 }
 // ######################################################################### 
