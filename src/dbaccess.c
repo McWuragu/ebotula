@@ -17,13 +17,13 @@
 
 #include "utilities.h"
 #include "messages.h"
-#include "config.h"
 #include "dbaccess.h"
 
 GDBM_FILE dbf_user;
 GDBM_FILE dbf_channel;
-GDBM_FILE dbf_login;
 GDBM_FILE dbf_access;
+GDBM_FILE dbf_usertonick;
+GDBM_FILE dbf_nicktouser;
 GDBM_FILE dbf_banlist;
 GDBM_FILE dbf_timelog;
 
@@ -31,12 +31,13 @@ GDBM_FILE dbf_timelog;
 void init_database(void) {
 	extern ConfType	setup;
 
-	char *user,*channel,*login,*access,*banlist,*timelog;
+	char *user,*channel,*access,*nicktouser,*usertonick,*banlist,*timelog;
 			
 	// generate the filenames
 	user=(char *)malloc((strlen(setup.database_path)+strlen("/user.dbf")+1)*sizeof(char));
 	channel=(char *)malloc((strlen(setup.database_path)+strlen("/channel.dbf")+1)*sizeof(char));
-	login=(char *)malloc((strlen(setup.database_path)+strlen("/login.dbf")+1)*sizeof(char));
+	usertonick=(char *)malloc((strlen(setup.database_path)+strlen("/usertonick.dbf")+1)*sizeof(char));
+	nicktouser=(char *)malloc((strlen(setup.database_path)+strlen("/nicktouser.dbf")+1)*sizeof(char));
 	access=(char *)malloc((strlen(setup.database_path)+strlen("/access.dbf")+1)*sizeof(char));
 	banlist=(char *)malloc((strlen(setup.database_path)+strlen("/banlist.dbf")+1)*sizeof(char));
 	timelog=(char *)malloc((strlen(setup.database_path)+strlen("/timelog.dbf")+1)*sizeof(char));
@@ -44,7 +45,8 @@ void init_database(void) {
 	// create filenames
 	sprintf(user,"%s/user.dbf",setup.database_path);
 	sprintf(channel,"%s/channel.dbf",setup.database_path);
-	sprintf(login,"%s/login.dbf",setup.database_path);
+	sprintf(usertonick,"%s/usertonick.dbf",setup.database_path);
+	sprintf(nicktouser,"%s/nicktouser.dbf",setup.database_path);
 	sprintf(access,"%s/access.dbf",setup.database_path);
 	sprintf(banlist,"%s/banlist.dbf",setup.database_path);
 	sprintf(timelog,"%s/timelog.dbf",setup.database_path);
@@ -52,7 +54,8 @@ void init_database(void) {
 	// open the databases
 	dbf_user=gdbm_open(user,512,GDBM_WRCREAT,0600,NULL);
 	dbf_channel=gdbm_open(channel,512,GDBM_WRCREAT,0600,NULL);
-	dbf_login=gdbm_open(login,512,GDBM_NEWDB,0600,NULL);
+	dbf_usertonick=gdbm_open(usertonick,512,GDBM_NEWDB,0600,NULL);
+	dbf_nicktouser=gdbm_open(nicktouser,512,GDBM_NEWDB,0600,NULL);
 	dbf_access=gdbm_open(access,512,GDBM_WRCREAT,0600,NULL);
 	dbf_banlist=gdbm_open(banlist,512,GDBM_WRCREAT,0600,NULL);
 	dbf_timelog=gdbm_open(timelog,512,GDBM_WRCREAT,0600,NULL);
@@ -63,7 +66,8 @@ void closeDatabase(void) {
 	// close the databases
 	gdbm_close(dbf_user);
 	gdbm_close(dbf_channel);
-	gdbm_close(dbf_login);
+	gdbm_close(dbf_usertonick);
+	gdbm_close(dbf_nicktouser);
 	gdbm_close(dbf_access);
 	gdbm_close(dbf_banlist);
 	gdbm_close(dbf_timelog);
@@ -86,8 +90,11 @@ GDBM_FILE get_dbf(int db) {
 	case BANLIST_DB:
 		return dbf_banlist;
 		break;
-	case LOGIN_DB:
-		return dbf_login;
+	case USERTONICK_DB:
+		return dbf_usertonick;
+		break;
+	case NICKTOUSER_DB:
+		return dbf_nicktouser;
 		break;
 	case TIMELOG_DB:
 		return dbf_timelog;
@@ -99,7 +106,7 @@ GDBM_FILE get_dbf(int db) {
 	}
 }
 // ############################################################################# 
-int add_db(int db,char *_key, char *_value) {
+boolean add_db(int db,char *_key, char *_value) {
 	datum key,value;
 	GDBM_FILE dbf;
 	extern pthread_mutex_t dbaccess_mutex;
@@ -132,7 +139,7 @@ int add_db(int db,char *_key, char *_value) {
 	return true;
 }
 // ############################################################################# 
-int replace_db(int db,char *_key, char *_value){
+boolean replace_db(int db,char *_key, char *_value){
 	datum key,value;
 	GDBM_FILE dbf;
 	extern pthread_mutex_t dbaccess_mutex;
@@ -167,7 +174,7 @@ int replace_db(int db,char *_key, char *_value){
 
 }
 // ############################################################################# 
-int del_db(int db,char *_key){
+boolean del_db(int db,char *_key){
 	datum key;
 	GDBM_FILE dbf;
 	extern pthread_mutex_t dbaccess_mutex;
@@ -191,7 +198,7 @@ int del_db(int db,char *_key){
 	return true;
 }
 // ############################################################################# 
-int check_db(int db,char *_key,char* _value){
+boolean check_db(int db,char *_key,char* _value){
 	datum key;
 	datum value;
 	char *__value;
@@ -227,7 +234,7 @@ int check_db(int db,char *_key,char* _value){
 	return true;
 }
 // ############################################################################# 
-int exist_db(int db,char *_key){
+boolean exist_db(int db,char *_key){
 	datum key;
 	GDBM_FILE dbf;
 	extern pthread_mutex_t dbaccess_mutex;
