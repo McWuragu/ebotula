@@ -979,6 +979,7 @@ void chanmode(char *pLine) {
 void rmuser(char *pLine) {
     char *pLogin;
     char *pNick;
+    char *pNetmask;
     char *rmnick;
     char **ppChannels;
     int i;
@@ -986,8 +987,6 @@ void rmuser(char *pLine) {
     pNick=getNickname(pLine);
     pLogin=getParameters(pLine);
     
-
-
     DEBUG("Remove %s from the user list",pLogin);
     // extract the first parameter
     strtok(pLogin," ");
@@ -998,15 +997,17 @@ void rmuser(char *pLine) {
     
         // remove the mod  for  this account
         ppChannels=list_db(CHANNEL_DB);
-        if ((rmnick=getNickname(get_db(USERTONICK_DB,pLogin)))) {
+        if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
+			rmnick=getNickname(pNetmask);
             for (i=0;ppChannels[i]!=NULL;i++) {
                 mode(ppChannels[i],"-o",rmnick);
                 mode(ppChannels[i],"-v",rmnick);
             }
         }
         notice(pNick,MSG_RMUSER_OK);        
+    } else {
+    	notice(pNick,MSG_NOT_ACCOUNT);
     }
-    notice(pNick,MSG_NOT_ACCOUNT);
 }
 // #########################################################################
 // Bot comand: !userlist [#channel]
