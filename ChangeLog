@@ -1,13 +1,19 @@
+ebotula-0.1.8-dev
+-----------------
+- Bugfix:  fixed the high cpu using
+- Bugfix:  fixed the crash after a little execution time
+- modify a little bit the default parameters 
+
 ebotula-0.1.7-dev
 -----------------
 - Bugfix: fixed the security bug in the user mode protect system
 - Bugfix: fixed the restart problem
-- Bugfix: fixed the stoping  problem
-- Bugfix: maked theprotection for kick by excess flood better
+- Bugfix: fixed the stopping  problem
+- Bugfix: maked the protection for kick by excess flooding better
 - modify the output by the commands help, userlist and chanlist
-- added  two new configuration parameter for excess flood protection
+- added  two new configuration parameter for excess flooding protection
 - maked speed up
-- maked the kic commando safly
+- maked the command kick safly
 
 ebotula-0.1.6-dev
 -----------------
