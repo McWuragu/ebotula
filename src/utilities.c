@@ -230,7 +230,7 @@ void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData) {
     StrToChannelMode(pMode,&(pChannelData->sModes));
     free(pMode);
 
-    return pChannelData;
+    return;
 }
 // ############################################################################# 
 char *ChannelDataToStr(ChannelData_t *pChannelData) {
@@ -296,11 +296,11 @@ int logger(int priority, char *format, ...)
 	/**/
 	va_start(az,format);
 	/* put message in to data*/
-	vsprintf(&buf,format,az);
+	vsprintf(buf,format,az);
 #ifdef NDEBUG
 	syslog(priority,&buf);
 #else
-	DEBUG(&buf);
+	DEBUG(buf);
 #endif
 	/**/
 	va_end(az);

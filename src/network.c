@@ -172,7 +172,7 @@ void  RecvLine(char *pLine,unsigned int len) {
 
 int GetCharPerMin(unsigned int nCharCount) {
     time_t currTime;
-    int diffMinTime;
+    int diffMinTime=0;
     int i;
     int nSum=0;
 

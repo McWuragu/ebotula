@@ -421,9 +421,7 @@ int main(int argc,char * const argv[]) {
     }
 
     // clean up thread
-    for (i=0;i<sSetup.thread_limit;i++) {
-        free (threads[i]);
-    }
+    free (threads);
 
     free (sSetup.pBotname);
     free (sSetup.configfile);

@@ -304,7 +304,6 @@ void *CommandExecutionThread(void *argv) {
             free (sMsgItem.pAccessChannel);
             free (sMsgItem.pCallingNick);
             free (sMsgItem.pNetmask);
-            free (sMsgItem.pNetmask);
             free (sMsgItem.pRawLine);
             free(pMsg);
             
