@@ -11,6 +11,7 @@ Kommandos
 
 !ident <login> [pass]
 	- identifizieren gegenüber dem Bot
+	- nach !ident automatisches setzen der Modes des Users
 
 !logoff
 	- ausloggen beim Bot
@@ -128,7 +129,6 @@ Kommandos
 Properties
 ----------
 - Programiersprache C
-- nach !ident automatisches setzen der Modes des Users
 - Master immer op wo der Bot ist
 - One-File-DB für User (vielleicht dbm)
 - One-File-DB für Channels (vielleicht dbm)
