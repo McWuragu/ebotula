@@ -14,9 +14,8 @@
 #include <string.h>
 #include <errno.h>
 #include <pthread.h>
-#include <syslog.h>
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -294,7 +293,6 @@ void *CommandExecutionThread(void *argv) {
                     ctcptime(&sMsgItem);
                     break;
            		default:
-                    /*syslog(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));*/
                     logger(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
 		    break;
                 }

@@ -15,11 +15,10 @@
 #include <string.h>
 #include <crypt.h>
 #include <pthread.h>
-#include <syslog.h>
 #include <dirent.h>
 #include <sys/types.h>
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 

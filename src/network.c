@@ -23,9 +23,8 @@
 #include <string.h>
 #include <errno.h>
 #include <pthread.h>
-#include <syslog.h>
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -73,7 +72,6 @@ void connectServer(void) {
     hostaddr=gethostbyname(sSetup.server);
     if (!hostaddr) {
         perror(getSyslogString(SYSLOG_RESOLVE_HOSTNAME));
-        /*syslog(LOG_ERR,getSyslogString(SYSLOG_RESOLVE_HOSTNAME));*/
         logger(LOG_ERR,getSyslogString(SYSLOG_RESOLVE_HOSTNAME));
 	exit(errno);
     }
@@ -85,7 +83,6 @@ void connectServer(void) {
     protocol = getprotobyname("tcp");
     if (!protocol) {
         perror(getSyslogString(SYSLOG_RESOLVE_PROTOCOL));
-        /*syslog(LOG_CRIT,getSyslogString(SYSLOG_RESOLVE_PROTOCOL));*/
         logger(LOG_CRIT,getSyslogString(SYSLOG_RESOLVE_PROTOCOL));
 exit(errno);
     }
@@ -94,7 +91,6 @@ exit(errno);
     sockid=socket(PF_INET,SOCK_STREAM,protocol->p_proto);
     if (sockid <= 0) {
         perror(getSyslogString(SYSLOG_SOCKET));
-        /*syslog(LOG_CRIT,getSyslogString(SYSLOG_SOCKET));*/
 	logger(LOG_CRIT,getSyslogString(SYSLOG_SOCKET));
         exit(errno);
     }
@@ -103,8 +99,7 @@ exit(errno);
     /* connect to server */
     if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
         perror(getSyslogString(SYSLOG_CONNECT));
-        /*syslog(LOG_CRIT,getSyslogString(SYSLOG_CONNECT));*/
-        logger(LOG_CRIT,getSyslogString(SYSLOG_CONNECT));
+        logger(LOG_ERR,getSyslogString(SYSLOG_CONNECT));
 exit(errno);
     }
 
@@ -133,7 +128,6 @@ void SendLine(char* pMsg){
 
         /* send the line */
         if (!send(sockid,pMsg,nSendLength,0)){
-           /* syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));*/
             logger(LOG_CRIT,getSyslogString(SYSLOG_SEND));
 	     stop=true;
         }

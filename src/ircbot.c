@@ -15,7 +15,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <signal.h>
-#include <syslog.h>
+
 #include <pwd.h>
 #include <grp.h>
 #include <dirent.h>
@@ -25,8 +25,12 @@
 
 #include <sys/types.h>
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
     #include "config.h"
+#endif
+
+#ifdef HAVE_SYSLOG_H
+    #include <syslog.h>
 #endif
 
 #include "messages.h"
@@ -143,7 +147,9 @@ int main(int argc,char * const argv[]) {
     // versions ausgabe
     printf(VERSIONSTR);
     printf("\n");
+    #ifdef HAVE_SYSLOG_H
     openlog(PACKAGE,0,LOG_DAEMON);
+    #endif
     
     // Look for simple parameter and  custom config file
     for (i=1;i<argc;i++) {
@@ -260,7 +266,6 @@ int main(int argc,char * const argv[]) {
     logger(LOG_INFO,"Log level: %i",sSetup.nLogLevel);
     logger(LOG_INFO,"-------------------------------------------------");
 
-   /* syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));*/
     logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));
 
 
@@ -411,7 +416,6 @@ int main(int argc,char * const argv[]) {
 
     flushQueue(pCommandQueue);
 
-    /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));*/
     logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));
     pthread_join(timeThread,NULL);
     
@@ -437,16 +441,26 @@ int main(int argc,char * const argv[]) {
     
     //  check for restart option
     if (again) {
-        /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));*/
         logger(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));
+        
+        #ifdef HAVE_SYSLOG_H
         closelog();
+        #endif
+        
         execvp(argv[0],argv);
         #ifdef NDEBUG
         perror(getMsgString(ERR_RESTART));
         #endif
+        
+        #ifdef HAVE_SYSLOG_H
         openlog(PACKAGE,0,LOG_DAEMON);
+        #endif
+        
         logger(LOG_ERR,getSyslogString(SYSLOG_RESTART));
+        
+        #ifdef HAVE_SYSLOG_H
         closelog();
+        #endif
     } else {
         logger(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));
         closelog();

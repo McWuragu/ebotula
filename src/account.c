@@ -22,9 +22,8 @@
 #include <string.h>
 #include <pthread.h>
 #include <time.h>
-#include <syslog.h>
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 
@@ -234,7 +233,6 @@ void rmDeadAccounts(long lCheckTime) {
         	/* check the time */
     	    if (lCheckTime>atol(pTime)) {
 	            rmAccount((char*)pLogin->data);
-            	/* syslog(LOG_NOTICE,getSyslogString(SYSLOG_ACCOUNT_RM));*/
                 logger(LOG_INFO,getSyslogString(SYSLOG_ACCOUNT_RM));
         	}
         	free(pTime);

@@ -13,10 +13,9 @@
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
-#include <syslog.h>
 #include <termios.h>
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 

@@ -12,21 +12,21 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <syslog.h>
 #include <sys/types.h>
 #include <sys/stat.h>
          
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 
 
+#include "utilities.h"
 #include "messages.h"
 #include "ircbot.h"
 #include "type.h"
 #include "baseconfig.h"
 
-char	* bstr[]={
+static char	* bstr[]={
     "# Config file for the ebotula", 	
     "# The name of the bot",		
     KEY_BOTNAME,"=",
@@ -61,13 +61,6 @@ char	* bstr[]={
     KEY_LOGLEVEL,"="
     };
 
-/**
-  * gernerates baseconfig string for baseconfigfile and writes it 
-  * to given filename
-  * 
-  * @parm    filename with absolut path
-  * @return  pointer to baseconfigfile
- */
 
 void write_baseconfig()
 {
@@ -83,7 +76,6 @@ void write_baseconfig()
 	if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
 	{
         	perror(getSyslogString(SYSLOG_CONFIG_FILE));
-		/* syslog(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE));**/
 		logger(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE)); 
 		exit(errno);
 	}

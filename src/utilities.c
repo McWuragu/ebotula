@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <ctype.h>
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif 
  
@@ -311,7 +311,7 @@ int logger(int priority, char *format, ...)
 	/* put message in to data*/
 	vsprintf(buf,format,az);
 #ifdef NDEBUG
-    #if HAVE_SYSLOG_H
+    #ifdef HAVE_SYSLOG_H
 	syslog(priority,&buf);
     #endif
 #else
