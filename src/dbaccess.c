@@ -59,6 +59,14 @@ void init_database(void) {
 	dbf_access=gdbm_open(access,512,GDBM_WRCREAT,0600,NULL);
 	dbf_banlist=gdbm_open(banlist,512,GDBM_WRCREAT,0600,NULL);
 	dbf_timelog=gdbm_open(timelog,512,GDBM_WRCREAT,0600,NULL);
+	
+	if (!dbf_user || !dbf_channel || !dbf_usertonick || !dbf_nicktouser || !dbf_access || !dbf_banlist || !dbf_timelog) {
+		errno=EBUSY;
+		perror(SYSLOG_DATABASE_ERR);
+		exit(errno);
+		syslog(LOG_ERR,SYSLOG_DATABASE_ERR);
+	}
+
 	syslog(LOG_INFO,SYSLOG_INIT_DB);
 }
 // ############################################################################# 
