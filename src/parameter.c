@@ -1,14 +1,19 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <ctype.h>
+
 #include "config.h"
-#include "macro.h"
+#include "utilities.h"
 #include "dbaccess.h"
-#include "ircbot.h"
 
 #define	CMD_MSG
 #include "messages.h"
 #undef CMD_MSG
 
 #include "parameter.h"
-				  
+// ############################################################################# 				  
 void cmd_line(int argc,const char *argv[]) {
 	extern CONFIG_TYPE setup;
 	int i;
@@ -40,7 +45,7 @@ void cmd_line(int argc,const char *argv[]) {
 					exit(errno);
 				}
 			   
-				setup.server=malloc(sizeof(char)*(strlen(argv[i])+1));
+				setup.server=(char *)malloc(strlen((argv[i])+1)*sizeof(char));
 				strcpy(setup.server,argv[i]);
                 
 				break;
@@ -53,13 +58,13 @@ void cmd_line(int argc,const char *argv[]) {
 				}
 				
 				// set the botname
-				if (strpbrk(argv[i],NOT_ALLOW_CHAR)) {
+				if ((!strpbrk(argv[i],USER_ALLOW_CHAR)) && isalpha(argv[i][0])) {
 					errno=EINVAL;
 					perror(ERR_WRONG_BOTNAME);
 					exit(errno);
 				}
                 
-				setup.botname=malloc(sizeof(char)*(strlen(argv[i])+1));
+				setup.botname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
 				strcpy(setup.botname,argv[i]);
                 
 				break;
@@ -72,7 +77,7 @@ void cmd_line(int argc,const char *argv[]) {
                 }
 				
 				// set realname
-				setup.realname=malloc(sizeof(char)*(strlen(argv[i])+1));
+				setup.realname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
 				strcpy(setup.realname,argv[i]);
 				
 				break;
@@ -91,7 +96,7 @@ void cmd_line(int argc,const char *argv[]) {
 					exit(errno);
 				}
 				
-				setup.port=malloc(sizeof(char)*(strlen(argv[i])+1));
+				setup.port=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
 				strcpy(setup.port,argv[i]);
 	
 				break;
@@ -123,7 +128,7 @@ void cmd_line(int argc,const char *argv[]) {
 				}
 				
 				// set  path to config file
-				setup.configfile=malloc(sizeof(char)*(strlen(argv[i])+1));
+				setup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
 				strcpy(setup.configfile,argv[i]);
 				break;
 			case 'm':
@@ -138,7 +143,7 @@ void cmd_line(int argc,const char *argv[]) {
 					exit(errno);
 				}
 				// set database path
-				setup.database_path=malloc(sizeof(char)*(strlen(argv[i])+1));
+				setup.database_path=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
 				strcpy(setup.database_path,argv[i]);
 				break;
 			default:
@@ -148,7 +153,7 @@ void cmd_line(int argc,const char *argv[]) {
 		}
 	}
 }
-
+// ############################################################################# 
 void read_config_file(void) {
 	FILE *fd;
 	extern CONFIG_TYPE setup;
@@ -175,11 +180,11 @@ void read_config_file(void) {
 			c=strchr(buffer,'=');
 			
             // parse the value from the line
-			value=malloc(sizeof(char)*strlen(c));
+			value=(char *)malloc(strlen(c)*sizeof(char));
 			strcpy(value,c+1);
 			
 			// parse the key from the line
-			key=malloc(sizeof(char)*(strlen(buffer)-strlen(c)+1));
+			key=(char *)malloc((strlen(buffer)-strlen(c)+1)*sizeof(char));
 			strtok(buffer,"=");
 			strcpy(key,buffer);
             
@@ -191,7 +196,7 @@ void read_config_file(void) {
 					exit(errno);
 				}
 				// set servername
-				setup.server=malloc(sizeof(char)*(strlen(value)+1));
+				setup.server=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(setup.server,value);
 			} else if ((!strcmp(key,KEY_PORT)) && (setup.port==NULL)) {
 				if ((atoi(value)<1) || (atoi(value)>65535)) {
@@ -200,20 +205,20 @@ void read_config_file(void) {
 					exit(errno);
 				}
 				// set port
-				setup.port=malloc(sizeof(char)*(strlen(value)+1));
+				setup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(setup.port,value);
 			} else if ((!strcmp(key,KEY_BOTNAME)) && (setup.botname==NULL )) {
-				if (strpbrk(value,NOT_ALLOW_CHAR)) {
+				if (!strpbrk(value,USER_ALLOW_CHAR)) {
 					errno=EINVAL;
 					perror(ERR_WRONG_BOTNAME);
 					exit(errno);
 				}
 				// set botname
-				setup.botname=malloc(sizeof(char)*(strlen(value)+1));
+				setup.botname=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(setup.botname,value);
 			} else if ((!strcmp(key,KEY_REALNAME)) && (setup.realname==NULL)) {
 				// ser realname
-				setup.realname=malloc(sizeof(char)*(strlen(value)+1));
+				setup.realname=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(setup.realname,value);
 			} else if ((!strcmp(key,KEY_THREADLIMIT))&& (setup.thread_limit<=0)) {
 				int thread_limit=atoi(value);
@@ -226,7 +231,7 @@ void read_config_file(void) {
 				setup.thread_limit=thread_limit;
 			} else  if ((!strcmp(key,KEY_DATABASEPATH))&& (setup.database_path==NULL)) {
 				// set database path
-				setup.database_path=malloc(sizeof(char)*(strlen(value)+1));
+				setup.database_path=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(setup.database_path,value);
             }
 			free(value);
@@ -235,9 +240,7 @@ void read_config_file(void) {
 	}
 	fclose(fd);
 }
-
-
-
+// ############################################################################# 
 void print_msg(const char *msg[]) {
     int i;
 	for (i=0;msg[i][0]!=EOM;i++) {

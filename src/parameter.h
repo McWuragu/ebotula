@@ -1,22 +1,16 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-
-
 
 #define	PARAMETER_CHAR	'-'
 #define COMMENT_CHAR	'#'
 #define MAX_READ_BUFFER_SIZE 	256
 
-#define KEY_SERVER		"servername"
-#define KEY_PORT		"port"
-#define KEY_BOTNAME		"botname"
-#define KEY_REALNAME	"realname"
-#define KEY_THREADLIMIT	"threadlimit"
+#define KEY_SERVER			"servername"
+#define KEY_PORT			"port"
+#define KEY_BOTNAME			"botname"
+#define KEY_REALNAME		"realname"
+#define KEY_THREADLIMIT		"threadlimit"
 #define	KEY_DATABASEPATH	"databasepath"
 
 
