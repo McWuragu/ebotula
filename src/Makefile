@@ -6,11 +6,12 @@ CONFDIR=./
 SRC_DIR=./
 #MAKEFLAGS+= -j2
 CC=gcc
-CFLAGS=	-Wall -g -D_DEBUG -DVERSION=\"$(VERSION)\" \
+CFLAGS=	-Wall -DVERSION=\"$(VERSION)\" \
 	-DDATABASEPATH=\"$(DATABASEPATH)\" \
 	-DCONFDIR=\"$(CONFDIR)\" 
 LDFLAGS= -lpthread -lgdbm -lcrypt
 
+CFLAGS+=-g -D_DEBUG
 TARGET=ebotula
 
 #########################################################################
