@@ -16,6 +16,7 @@ void channel_add(char *line);
 void channel_rm(char *line);
 void join_channel(char *line);
 void part_channel(char *line);
+void die(char *line);
 
 void join_all_channels(void);
 void login(char *netmask,char *login);

@@ -488,3 +488,34 @@ void login(char *netmask,char *login) {
     
 	add_db(LOGIN_DB,netmask,login);
 }
+
+void die(char *line) {
+	char *netmask=getNetmask(line);
+	char *login;
+	char *nick=getNickname(line);
+
+
+	// checking of login
+	if (!exist_db(LOGIN_DB,netmask)) {
+		notice(nick,MSG_NOT_LOGON);
+		free(netmask);
+		free(nick);
+		return;
+	} else {
+		login=get_db(LOGIN_DB,netmask);
+		free(netmask);
+	}
+
+	
+    // checking of master
+	if (!exist_db(ACCESS_DB,login)) {
+		notice(nick,MSG_NOT_MASTER);
+		free(nick);
+		free(login);
+		return;
+	}
+	free(login);
+	free(nick);
+	
+	stopParser(0);
+}
