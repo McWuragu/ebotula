@@ -12,7 +12,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
-#include <time.h>
 
 
 #include "config.h"
@@ -22,6 +21,7 @@
 #include "dbaccess.h"
 #include "irc.h"
 #include "irchelp.h"
+#include "handles.h"
 #include "command.h"
 
 
@@ -325,20 +325,7 @@ void channel_rm(char *line){
 	notice(nick,MSG_PART_OK);
 
 }
-// ############################################################################# 
-void join_all_channels(void) {
-	char **channelliste;
-	unsigned int i;
 
-	if ((channelliste=list_db(CHANNEL_DB))) {
-
-		for (i=0;channelliste[i]!=NULL;i++) {
-			join(channelliste[i]);
-		}
-	}
-
-	
-}
 // ############################################################################# 
 void join_channel(char *line) {
 	char *netmask=getNetmask(line);
@@ -397,36 +384,7 @@ void part_channel(char *line) {
 	notice(nick,MSG_PART_OK);
 	
 }
-// ############################################################################# 
-void log_on(char *netmask,char *login) {
-	time_t timestamp;
-	char str_timestamp[32];
 
-	if (exist_db(LOGIN_DB,netmask)) {
-		return;
-	}
-    
-	add_db(LOGIN_DB,netmask,login);
-	DEBUG("User log in");
-	
-	// build the timestamp
-	
-	time(&timestamp);
-	sprintf(str_timestamp,"%ld",timestamp);
-
-	// set the last login timestamp
-	if (exist_db(TIMELOG_DB,login)) {
-		replace_db(TIMELOG_DB,login,str_timestamp);
-		DEBUG("Update timestamp %s for %s",str_timestamp,login);
-	} else {
-		add_db(TIMELOG_DB,login,str_timestamp);
-		add_db(TIMELOG_DB,netmask,str_timestamp);
-		DEBUG("Add timepstamp %s for %s",str_timestamp,login);
-		DEBUG("Add timepstamp %s for %s",str_timestamp,netmask);
-	}
-	
-
-}
 // ############################################################################# 
 void die(char *line) {
 	char *netmask=getNetmask(line);
@@ -509,57 +467,7 @@ void channel_list(char *line){
 	DEBUG("%s",buffer);
 	notice(nick,buffer); 
 }
-// ############################################################################# 
-void bot_op(char *line){
-	extern CONFIG_TYPE setup;
-	char *channel;
-	char *names;
-	char *pos;
-	char *searchstr;
 
-	channel=getChannel(line);
-	
-	// extrakt Namelist
-	pos=strchr(&line[1],':');
-	names=(char*)malloc((strlen(pos)+1)*sizeof(char));
-	strcpy(names,pos);
-
-	searchstr=(char *) malloc((strlen(setup.botname)+2)*sizeof(char));
-	sprintf(searchstr,"@%s",setup.botname);
-
-	DEBUG("Look for OP right for %s",searchstr);
-	if (strstr(names,searchstr)) {
-		return;
-	}
-
-  	privmsg(channel,MSG_NEED_OP);
-}
-// ############################################################################# 
-void print_greating(char *line) {
-	char *channel;
-	char *channelstr;
-	char *greating;
-
-	if (!(channel=strchr(line,'#'))) {
-		return;
-	}
-
-	DEBUG("Greating for %s",channel);
-
-	if (!(channelstr=get_db(CHANNEL_DB,channel))) {
-		return;
-	}
-
-	DEBUG("Channellins %s",channelstr);
-
-	if (!(greating=getGreating(channelstr))) {
-		return;
-	}
-
-	DEBUG("Greating line %s",greating);
-	notice(getNickname(line),greating);
-
-}
 // ############################################################################# 
 void version(char *line) {
     char *str;
@@ -568,4 +476,7 @@ void version(char *line) {
 	// creat Versions String
 	sprintf(str,"%s Version %s\r\n",PROGNAME,VERSION);
 	notice(getNickname(line),str);
+}
+// ############################################################################# 
+void greating(char *line) {
 }
