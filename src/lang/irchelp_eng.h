@@ -10,7 +10,7 @@
 #ifndef IRCHELP_ENG_H
 #define IRCHELP_ENG_H
 
-static char *irchelp_msg[][15] = {
+static char *pIrcHelp[][15] = {
 			// header
 			
 			{
