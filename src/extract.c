@@ -152,7 +152,7 @@ char *getAccessChannel(char const *pLine) {
 
 	pParameter=getArgument(pLine);
 
-	// look for  the  channel name  in preamble
+	/* look for  the  channel name  in preamble */
     if (!pParameter) {
         bFoundInPreamble=true;
     }else if (pParameter[0]!='#') {
@@ -175,6 +175,7 @@ char *getAccessChannel(char const *pLine) {
 				pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
 				strcpy(pChannel,pPos);
 			} else {
+                free(pChannel);
 				return NULL;
 			}
 		}
@@ -187,7 +188,8 @@ char *getAccessChannel(char const *pLine) {
 		if (ChannelStringCheck(pParameter)) {
 			pChannel=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
 			strcpy(pChannel,pParameter);
-        	} else {
+            free(pParameter);
+        } else {
 			return NULL;
 		}
     }
