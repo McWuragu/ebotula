@@ -45,10 +45,10 @@ MsgBufType preParser(char *pLine) {
 	// identify events and commands
 	if (!strncmp(pPreamble,"PING",strlen("PING"))) {
 		sMsg.mtype=2;
-		sMsg.identify=CMD_PING;
+		sMsg.identify=CMD_ONPING;
 	} else if (strstr(pPos,"QUIT")) {
 		sMsg.mtype=2;
-		sMsg.identify=CMD_LOGOFF;
+		sMsg.identify=CMD_ONQUIT;
 	} else if (strstr(pPos,"JOIN")) {
 		sMsg.mtype=2;
 		sMsg.identify=CMD_ONJOIN;
@@ -60,7 +60,7 @@ MsgBufType preParser(char *pLine) {
 		sMsg.identify= CMD_ONMODE;
 	} else if (strstr(pPos,"353")) {
 		sMsg.mtype=2;
-		sMsg.identify=CMD_NAMES;
+		sMsg.identify=CMD_ONNAMES;
 	} else if ((pStr=strstr(pLine," :!"))!=NULL) {
 
 		if (strlen(pStr)>=3) {
@@ -129,6 +129,9 @@ MsgBufType preParser(char *pLine) {
 			} else if (!strncmp(pStr,"userlist",strlen("userlist"))) {
 				sMsg.mtype=1;
 				sMsg.identify=CMD_USERLIST;
+			} else if (!strncmp(pStr,"allsay",strlen("allsay"))) {
+				sMsg.mtype=1;
+				sMsg.identify=CMD_SAYALL;
 			}
 		}
 	}
@@ -156,9 +159,10 @@ void *action_thread(void *argv) {
 		if (AccessRight(sMsg.pMsgLine,sMsg.identify)) {
 		
 			switch (sMsg.identify) {
-			case CMD_PING:
+			case CMD_ONPING:
 				pong();
 				break;
+			case CMD_ONQUIT:
 			case CMD_LOGOFF:
 				logoff(sMsg.pMsgLine);
 				break;
@@ -198,12 +202,13 @@ void *action_thread(void *argv) {
 			case CMD_CHANNELS:
 				channel_list(sMsg.pMsgLine);
 				break;
-			case CMD_NAMES:
+			case CMD_ONNAMES:
 				hBotNeedOp(sMsg.pMsgLine);
 				break;
 			case CMD_ONJOIN:
+				hSetModUser(sMsg.pMsgLine);
+            case CMD_VIEWGREAT:    
 				greating(sMsg.pMsgLine);
-                hSetModUser(sMsg.pMsgLine);
 				break;
 			case CMD_SET_GREATING:
 				setGreating(sMsg.pMsgLine);
@@ -226,14 +231,14 @@ void *action_thread(void *argv) {
 			case CMD_RMUSER:
 				rmuser(sMsg.pMsgLine);
 				break;
-			case CMD_VIEWGREAT:
-				greating(sMsg.pMsgLine);
-				break;
 			case CMD_USERLIST:
 				userlist(sMsg.pMsgLine);
 				break;
 			case CMD_ONMODE:
 				hResetModUser(sMsg.pMsgLine);
+				break;
+			case CMD_SAYALL:
+				allsay(sMsg.pMsgLine);
 				break;
 			default:
 				syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,sMsg.identify);
@@ -262,8 +267,8 @@ int AccessRight(char *pLine,CmdType cmd_id) {
 
 	switch (cmd_id) {
 	// handlers
-	case CMD_PING:
-	case CMD_NAMES:
+	case CMD_ONPING:
+	case CMD_ONNAMES:
 	case CMD_ONJOIN:
 	case CMD_ONMODE:
 	case CMD_TOPIC:
@@ -276,6 +281,7 @@ int AccessRight(char *pLine,CmdType cmd_id) {
 		return true;
 	// logged in user
 	case CMD_ONNICKCHG:
+	case CMD_ONQUIT:
 	case CMD_LOGOFF:
 	case CMD_PASS:
 		if (!exist_db(NICKTOUSER_DB,pNetmask)) {
@@ -320,6 +326,7 @@ int AccessRight(char *pLine,CmdType cmd_id) {
 	case CMD_PART:
 	case CMD_RMCHANNEL:
 	case CMD_ADDCHANNEL:
+	case CMD_SAYALL:
 	case CMD_RMUSER:
 		pChannel=getAccessChannel(pLine);
 
