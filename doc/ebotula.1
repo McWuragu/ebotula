@@ -90,41 +90,112 @@ all commands or detailed information about a special command.
 The following is a list of all supported commands and a little
 describtion to each command:
 .TP 
+\fB!addchannel\fP #channelname
+Lets the bot join a channel and add it to its channellist. The channel must
+be given as a parameter. The bot creates the channel, inserts it into its
+channel list and joins the channel.
+.TP
+\fB!allsay\fP message
+Sends a message to all channels. Similar to SAY, but message is shown in all
+channels the bot has joined.
+.TP
+\fB!ban\fP nickname
+Bans a user from the channnel. Ban means the user can't join the channel
+until he is debanned or changes his nick.
+.TP
+\fB!chanmode\fP #channelname modes
+Sets and/or removes the modes for a channel. Valid modes are:
+t (topic protected [topic can't be changed by users]),i	(invite only
+[no user can join unless he is invited]),m (moderated [only channel
+admins and users with voice can write into the channel]) and so on...
+.TP
+\fB!channels\fP
+Shows a list of all channels the bot is within.
+.TP
+\fB!deban\fP nickname
+Resets the ban from a user. Removes an existing ban from a user so he can
+join the channel again he was banned from.
+.TP
 \fB!die\fP
-shuts the bot down
-
-The bot is stopped, but unlike RESTART, DIE doesn't start the bot again.
+Shuts the bot down. The bot is stopped, but unlike RESTART, DIE doesn't
+start the bot again.
 .TP 
 \fB!greeting\fP < #channel > [ message ]
 Sets the greeting line displayed for users joining. If #channel is
 given, the greeting of the corresponding channel ist set. Otherwise the
 greeting of the current channel is set.
 .TP 
+\fB!hello\fP
+Creates a new account. Everyone who wants to use the bot needs an account.
+Using this command you get one. Your login is the nickname you had when
+sending this command. REMEMBER to set a password with !pass.
+.TP
 \fB!help\fP [ command ]
 If given without a parameter, !help lists all commands the bot
 understands. Any existing command can be used as parameter for !help. If so,
 detailed information about the selected command is displayed.
 .TP 
-\fB!invite\fP
-invites the user in a channel
+\fB!ident\fP nickname passwd
+Identify yourself to the bot. Any user who has got an account, must identify
+himself before bot commands are accepted. This is done by this command.
+NOTE: Use this command only in a query to the bo so no one else can see
+your passwd!
 
-If a channel is set invite\-only, you can only join this channel if a user in
-it asks you to (invites you). So if only the bot has joined the invite\-only
-channel you can use this command to make the bot invite you so you can join.
+e.g.: /msg ebotula JohnDoe johnspasswd
+.TP
+\fB!invite\fP nickname #channelname
+Invites the user in a channel. If a channel is set invite\-only, you can only
+join this channel if a user in it asks you to (invites you). So if only the
+bot has joined the invite\-only channel you can use this command to make the
+bot invite you so you can join.
 .TP 
+\fB!join\fP #channelname
+Lets the bot join a channel. The channel must be given as a parameter and must
+exist before the bot joins it.
+.TP
 \fB!kick\fP < #channel > username
 If the parameter #channel is used, the given user is "kicked" (removed)
 from the corresponding channel. Otherwise the user is kicked from the
 current channel. Only bot masters and channel administrators can kick
 other users. They have to authenticate themself at the bot before
 kicking any user. NOTE: masters can not be kicked (even by other
-masters).
+masters). The same restrictions apply to the commands BAN and DEBAN.
 .TP 
+\fB!logoff\fP
+
+Logoff from the bot. If you want to disconnect from the bot, you
+should logoff first.
+.TP
+\fB!nick\fP newnick
+Changes the nickname of the bot. The given nickname is only valid until
+the bot is restarted.
+.TP
+\fB!part\fP
+Lets the bot part a channel. The bot leaves the given channel. The channel
+is not removed from the bots channel list.
+.TP
+\fB!pass\fP newpasswd
+Changes the password for the current account. Selfexplaining.
+Changes your account password (see also !help hello) or sets it if
+you don't have got one yet. NOTE: For security reasons !pass should not
+be used within a channel. The proper way is to use it in a query to the
+bot so only the bot can read the password.
+
+e.g.: /msg ebotula !pass newpasswd
+.TP
 \fB!restart\fP
 shuts the bot down and restarts it again
 
 Usefull if configuration is changed. By restarting config is read again.
 .TP 
+\fB!rmchannel\fP #channelname
+Let the bot part and remove a old channel. The bot leaves the given channel
+and removes it from its channel list.
+.TP
+\fB!rmuser\fP nickname
+This removes an user account from the bot. Selfexplaining. Accounts no
+longer needed can be removed this way.
+.TP
 \fB!say\fP < #channel > [ message ]
 sends the message to the current or selected channel. One could say, the
 bot talks into the channel.
@@ -132,13 +203,23 @@ bot talks into the channel.
 \fB!topic\fP < #channel > [ topic ]
 sets the topic for the current or selected channel
 
-A topic is the line that can be seen near the channel name in the channel list.
+A topic is the line that can be seen near the channel name in the channel
+list.
 e.g. #LUGse \-== LUGse \- Linux User Group Senftenberg ==\-
 
 The Channel #LUGse has got the topic "\-== LUGse \- Linux User
 Group Senftenberg ==\-"
 Topics are used to discripe a channel.
 .TP 
+\fB!userlist\fP < #channelname >
+Prints a list of users from the channel or all. If a channel is given as
+parameter, all users with an account in this channel are listed. If no
+channel given, all users with an account in any channel are listed.
+.TP
+\fB!usermode\fP nickname modes
+This is used to set the mod for a user. User modes are for example
+channel operator (channel administrator, OP) (+o) or voice (+v).
+.TP
 \fB!version\fP
 prints the version of the bot
 .TP 
