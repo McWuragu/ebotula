@@ -1,6 +1,7 @@
-ebotula-devel-0.1.13
+ebotula-0.1.13
 --------------------
-- fixed -f option
+- Bugfix: fixed -f option
+- renamed the version
 
 -ebotula-devel-0.1.12
 --------------------
