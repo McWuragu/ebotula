@@ -56,6 +56,7 @@ int main(int argc,char * const argv[]) {
     char buffer[RECV_BUFFER_SIZE],*pStrPos,*pCurrLine,*pCurrString,*pCurrStringPos,*pUnparsed;
     pthread_t *threads;
     pthread_t timeThread;
+    pthread_t joinThread;
     MsgBuf_t sMsg;
     QueueData Command;	
     PQueue pCommandQueue;
@@ -66,6 +67,7 @@ int main(int argc,char * const argv[]) {
     DIR *pDir;
     int iTemp;
     uid=geteuid();
+    int nSettling;
     
     // init config
     if (uid==0) {
@@ -317,7 +319,10 @@ int main(int argc,char * const argv[]) {
     }
     
 	// join the channels
-    join_all_channels();
+    nSettling=30;
+    pthread_create(&joinThread,NULL,JoinAllChannelsThread,&nSettling);
+    
+        pthread_detach(joinThread);
 
     // init the  buffer  for unparsed string
     pUnparsed=(char*)malloc(sizeof(char));

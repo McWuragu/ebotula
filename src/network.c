@@ -268,12 +268,21 @@ void ConnectToIrc(void){
     } while (i==1);
 }
 /* ############################################################################# */
-void join_all_channels(void) {
+void * JoinAllChannelsThread(void * args) {
+    int nSettling;
     PQueue pChannelQueue;
 	QueueData *pChannel;
     unsigned int i;
     pChannelQueue=list_db(CHANNEL_DB);
     
+    if (args) {
+        nSettling=*(int*)args;
+    }  else {
+        nSettling=10;
+    }
+
+    sleep(nSettling);
+
     /* join_Channels */
 	while (isfullQueue(pChannelQueue)) {
         pChannel=popQueue(pChannelQueue);

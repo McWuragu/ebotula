@@ -41,21 +41,23 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
 
     // get the first part of the  answer from server
     pPreamble=getCommand(pLine);
-    if (!pPreamble) { return;}
-    
-    // look for  command position
-    if (!(pPos=strchr(pPreamble,' '))){
-        return;
+    if (pPreamble){
+        // look for  command position
+        if (!(pPos=strchr(pPreamble,' '))){
+            return;
+        } else {
+            //set the pointr to the comaman start
+            pPos++;
+        }
     } else {
-        //set the pointr to the comaman start
-        pPos++;
+        pPos=pLine;
     }
 
     
 
     // preparse the line
     // identify events and commands
-    if (!strncmp(pPreamble,CmdList[CMD_ONPING],strlen(CmdList[CMD_ONPING]))) {
+    if (!strncmp(pPos,CmdList[CMD_ONPING],strlen(CmdList[CMD_ONPING]))) {
         /*
          * The ping can't send over the threads. If you have high usage of the
          * threads then is the execution the pong request to slow. It must send
@@ -63,7 +65,7 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
          *
          * pMsg->identify=CMD_ONPING;
          */
-		if (!(pStr=strstr(pPreamble," "))) {		
+		if (!(pStr=strstr(pPos," "))) {		
 			pong(NULL);
 		}else {		
 			pStr++; /* get next symbol */

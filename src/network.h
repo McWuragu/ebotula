@@ -17,7 +17,7 @@
 #define HOSTNAME_BUFFER_SIZE    0xFF
 
 void ConnectToIrc(void);
-void join_all_channels(void);
+void * JoinAllChannelsThread(void*);
 
 
 
