@@ -72,9 +72,15 @@ static char *pIrcHelp[][15] = {
     },
     
     /* friend commands */
+    /* INVITE */
     {
         "invite the user in a channel",
-        "invite the user in a channel", 
+	"If a channel is set invite-only, you can only join this channel",
+	"if a user in it asks you to (invites you). So if only the bot has",
+	"joined the invite-only channel you can use this command to make the",
+	"bot invite you so you can join."
+    },
+
     },
 
     // owner commands
