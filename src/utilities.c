@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <errno.h>
 #include <ctype.h>
 
@@ -67,13 +68,8 @@ void clearspace(char *line) {
 	}
 }
 // ############################################################################# 
-void millisleep(unsigned long ms){
-	struct timeval wait;
-	
-	wait.tv_sec=0;
-	wait.tv_usec=ms*1000;
-
-	select(0,NULL,NULL,NULL,&wait);
+void msleep(unsigned long ms){
+	usleep(ms*1000);
 }
 // ############################################################################# 
 void print_msg(const char *msg[]) {

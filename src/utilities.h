@@ -44,7 +44,7 @@ void clearspace(char *line);
 * This is  a sleep call. The time for sleeping is giving in millesecond
 * @param ms the sleeping time in millisecond
 */
-void millisleep(unsigned long ms);
+void msleep(unsigned long ms);
 
 #endif
 
