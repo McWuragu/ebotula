@@ -106,12 +106,6 @@ AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$_localebasedir", Define the default path
 dnl ===========================
 dnl optional Features
 dnl ===========================
-lang=eng
-AC_ARG_WITH(lang,[  --with-lang=LANG        Select the output language (default eng)],,)
-if test "$with_lang" = de ; then
-    AC_DEFINE(LANG_DE,,Define if you want german output.)
-fi
-
 debug=no
 AC_ARG_ENABLE(debug,[  --enable-debug          Enable debugging],, enable_debug=no)
 
@@ -146,6 +140,5 @@ AC_CONFIG_FILES([Makefile
 		 po/Makefile.in
 		 intl/Makefile
                  etc/Makefile
-                 src/Makefile
-                 src/lang/Makefile])
+                 src/Makefile])
 AC_OUTPUT

@@ -269,9 +269,6 @@
 /* Define if integer division by zero raises signal SIGFPE. */
 #undef INTDIV0_RAISES_SIGFPE
 
-/* Define if you want german output. */
-#undef LANG_DE
-
 /* Undefine if you want create a debugging version */
 #undef NDEBUG
 
