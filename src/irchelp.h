@@ -62,6 +62,12 @@ static char *pIrcSyntax[][5] = {
         "!pass <Password>"
     },
     
+    /* friend commands */
+    // INVITE
+    {
+        "!invite <#channel> [nick]"
+    },
+
     // owner commands
     // CHANMODE
     {
