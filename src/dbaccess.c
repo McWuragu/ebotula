@@ -13,6 +13,7 @@
 #include <string.h>
 #include <crypt.h>
 #include <pthread.h>
+#include <syslog.h>
 
 #include "utilities.h"
 #include "messages.h"
@@ -28,27 +29,27 @@ GDBM_FILE dbf_timelog;
 
 // ############################################################################# 
 void init_database(void) {
-	extern ConfType	setup;
+	extern ConfType	sSetup;
 
 	char *user,*channel,*access,*nicktouser,*usertonick,*banlist,*timelog;
 			
 	// generate the filenames
-	user=(char *)malloc((strlen(setup.database_path)+strlen("/user.dbf")+1)*sizeof(char));
-	channel=(char *)malloc((strlen(setup.database_path)+strlen("/channel.dbf")+1)*sizeof(char));
-	usertonick=(char *)malloc((strlen(setup.database_path)+strlen("/usertonick.dbf")+1)*sizeof(char));
-	nicktouser=(char *)malloc((strlen(setup.database_path)+strlen("/nicktouser.dbf")+1)*sizeof(char));
-	access=(char *)malloc((strlen(setup.database_path)+strlen("/access.dbf")+1)*sizeof(char));
-	banlist=(char *)malloc((strlen(setup.database_path)+strlen("/banlist.dbf")+1)*sizeof(char));
-	timelog=(char *)malloc((strlen(setup.database_path)+strlen("/timelog.dbf")+1)*sizeof(char));
+	user=(char *)malloc((strlen(sSetup.database_path)+strlen("/user.dbf")+1)*sizeof(char));
+	channel=(char *)malloc((strlen(sSetup.database_path)+strlen("/channel.dbf")+1)*sizeof(char));
+	usertonick=(char *)malloc((strlen(sSetup.database_path)+strlen("/usertonick.dbf")+1)*sizeof(char));
+	nicktouser=(char *)malloc((strlen(sSetup.database_path)+strlen("/nicktouser.dbf")+1)*sizeof(char));
+	access=(char *)malloc((strlen(sSetup.database_path)+strlen("/access.dbf")+1)*sizeof(char));
+	banlist=(char *)malloc((strlen(sSetup.database_path)+strlen("/banlist.dbf")+1)*sizeof(char));
+	timelog=(char *)malloc((strlen(sSetup.database_path)+strlen("/timelog.dbf")+1)*sizeof(char));
 
 	// create filenames
-	sprintf(user,"%s/user.dbf",setup.database_path);
-	sprintf(channel,"%s/channel.dbf",setup.database_path);
-	sprintf(usertonick,"%s/usertonick.dbf",setup.database_path);
-	sprintf(nicktouser,"%s/nicktouser.dbf",setup.database_path);
-	sprintf(access,"%s/access.dbf",setup.database_path);
-	sprintf(banlist,"%s/banlist.dbf",setup.database_path);
-	sprintf(timelog,"%s/timelog.dbf",setup.database_path);
+	sprintf(user,"%s/user.dbf",sSetup.database_path);
+	sprintf(channel,"%s/channel.dbf",sSetup.database_path);
+	sprintf(usertonick,"%s/usertonick.dbf",sSetup.database_path);
+	sprintf(nicktouser,"%s/nicktouser.dbf",sSetup.database_path);
+	sprintf(access,"%s/access.dbf",sSetup.database_path);
+	sprintf(banlist,"%s/banlist.dbf",sSetup.database_path);
+	sprintf(timelog,"%s/timelog.dbf",sSetup.database_path);
 
 	// open the databases
 	dbf_user=gdbm_open(user,512,GDBM_WRCREAT,0600,NULL);

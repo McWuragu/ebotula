@@ -14,11 +14,11 @@
 
 /**
 * This parse a line whiche was receive by the  client
-* @param line  a pointer of a string
+* @param pLine  a pointer of a string
 * @return a struct withe the command id, the type of 
 * message and a string as  argument for the  command
 */
-MsgBufType preParser(char *line);
+MsgBufType preParser(char *pLine);
 
 /**
 * the function for  the  thread
@@ -27,7 +27,7 @@ MsgBufType preParser(char *line);
 */
 void *action_thread(void *argv);
 
-int AccessRight(char *line,CmdType cmd_id);
+int AccessRight(char *pLine,CmdType cmd_id);
 void stopParser(int sig);
 
 #endif

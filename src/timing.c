@@ -24,7 +24,7 @@
 
 
 void *synchron(void *argv){
-	extern ConfType setup;
+	extern ConfType sSetup;
 	time_t newTime;
 	time_t lastRemoveDeadLogins=0;
 	time_t lastRemoveDeadAccounts=0;
@@ -39,19 +39,19 @@ void *synchron(void *argv){
         sleep(90);
 		time(&newTime);
 
-		ping(setup.server);
+		ping(sSetup.server);
 
 		// remove dead logins
 		if ((newTime-lastRemoveDeadLogins)>=3600) {
 			DEBUG("Remove dead logins");
-			rmDeadLogins(newTime-setup.AutoLoggoff*86400);
+			rmDeadLogins(newTime-sSetup.AutoLoggoff*86400);
 			time(&lastRemoveDeadLogins);
 		}
 
 		// remove dead accounts
 		if ((newTime-lastRemoveDeadAccounts)>=3600) {
 			DEBUG("Remove dead accounts");
-			rmDeadAccounts(newTime-setup.AccountLiveTime*86400);
+			rmDeadAccounts(newTime-sSetup.AccountLiveTime*86400);
 			time(&lastRemoveDeadAccounts);
 		}
     }

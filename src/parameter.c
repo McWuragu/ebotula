@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
+#include <syslog.h>
 
 #include "config.h"
 #include "irc.h"
@@ -25,7 +26,7 @@
 #include "parameter.h"
 // ############################################################################# 				  
 void cmd_line(int argc,const char *argv[]) {
-	extern ConfType setup;
+	extern ConfType sSetup;
 	int i;
 	int tmp;
 
@@ -38,7 +39,7 @@ void cmd_line(int argc,const char *argv[]) {
                 break;
 			case 'h':
 			case '?':
-				print_msg(help_msg);
+				printMsg(help_msg);
 				break;
 			case 's':
 				DEBUG("Found server option");
@@ -55,8 +56,8 @@ void cmd_line(int argc,const char *argv[]) {
 					exit(errno);
 				}
 			   
-				setup.server=(char *)malloc(strlen((argv[i])+1)*sizeof(char));
-				strcpy(setup.server,argv[i]);
+				sSetup.server=(char *)malloc(strlen((argv[i])+1)*sizeof(char));
+				strcpy(sSetup.server,argv[i]);
                 
 				break;
 			case 'b':
@@ -74,8 +75,8 @@ void cmd_line(int argc,const char *argv[]) {
 					exit(errno);
 				}
                 
-				setup.botname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-				strcpy(setup.botname,argv[i]);
+				sSetup.botname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+				strcpy(sSetup.botname,argv[i]);
                 
 				break;
 			case 'r':
@@ -87,8 +88,8 @@ void cmd_line(int argc,const char *argv[]) {
                 }
 				
 				// set realname
-				setup.realname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-				strcpy(setup.realname,argv[i]);
+				sSetup.realname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+				strcpy(sSetup.realname,argv[i]);
 				
 				break;
 			case 'p':
@@ -106,8 +107,8 @@ void cmd_line(int argc,const char *argv[]) {
 					exit(errno);
 				}
 				
-				setup.port=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-				strcpy(setup.port,argv[i]);
+				sSetup.port=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+				strcpy(sSetup.port,argv[i]);
 	
 				break;
 			case 't':
@@ -126,7 +127,7 @@ void cmd_line(int argc,const char *argv[]) {
 					perror(ERR_THREAD_RANGE);
 					exit(errno);
 				}
-				setup.thread_limit=tmp;
+				sSetup.thread_limit=tmp;
 				break;
 			case 'a':
 				DEBUG("Found auto log off time option");
@@ -144,7 +145,7 @@ void cmd_line(int argc,const char *argv[]) {
 					perror(ERR_LOGOFF_RANGE);
 					exit(errno);
 				}
-				setup.AutoLoggoff=tmp;
+				sSetup.AutoLoggoff=tmp;
 				break;
 			case 'n':
 				DEBUG("Found sending delay option");
@@ -162,7 +163,7 @@ void cmd_line(int argc,const char *argv[]) {
 					perror(ERR_SENDDELAY_RANGE);
 					exit(errno);
 				}
-				setup.sendDelay=tmp;
+				sSetup.sendDelay=tmp;
 				break;
 			case 'k':
 				DEBUG("Found account live time option");
@@ -180,7 +181,7 @@ void cmd_line(int argc,const char *argv[]) {
 					perror(ERR_ALT_RANGE);
 					exit(errno);
 				}
-				setup.AccountLiveTime=tmp;
+				sSetup.AccountLiveTime=tmp;
 				break;
 			case 'f':
 				DEBUG("Found config file option");
@@ -192,12 +193,12 @@ void cmd_line(int argc,const char *argv[]) {
 				}
 				
 				// set  path to config file
-				setup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-				strcpy(setup.configfile,argv[i]);
+				sSetup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+				strcpy(sSetup.configfile,argv[i]);
 				break;
 			case 'm':
 				DEBUG("Found bot master option");
-				setup.newMaster=true;
+				sSetup.newMaster=true;
 				break;
 			case 'd':
 				DEBUG("Found  database path option");
@@ -207,11 +208,11 @@ void cmd_line(int argc,const char *argv[]) {
 					exit(errno);
 				}
 				// set database path
-				setup.database_path=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-				strcpy(setup.database_path,argv[i]);
+				sSetup.database_path=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+				strcpy(sSetup.database_path,argv[i]);
 				break;
 			default:
-				print_msg(unknow_parameter);
+				printMsg(unknow_parameter);
 				break;
 			}
 		}
@@ -220,12 +221,12 @@ void cmd_line(int argc,const char *argv[]) {
 // ############################################################################# 
 void read_config_file(void) {
 	FILE *fd;
-	extern ConfType setup;
+	extern ConfType sSetup;
 	int tmp;
 	char buffer[MAX_READ_BUFFER_SIZE], *c,*value,*key;
 	errno=0;
 
-	if ((fd=fopen(setup.configfile,"r"))==NULL) {
+	if ((fd=fopen(sSetup.configfile,"r"))==NULL) {
 		perror(SYSLOG_CONFIG_FILE);
 		syslog(LOG_ERR,SYSLOG_CONFIG_FILE);
         exit(errno);
@@ -255,38 +256,38 @@ void read_config_file(void) {
 			strcpy(key,buffer);
             
 			// set  the  reading values
-			if ((!strcmp(key,KEY_SERVER)) && (setup.server==NULL)) {
+			if ((!strcmp(key,KEY_SERVER)) && (sSetup.server==NULL)) {
 				if (strpbrk(value,NOT_ALLOW_CHAR)) {
 					errno=EINVAL;
 					perror(ERR_WRONG_SERVERNAME);
 					exit(errno);
 				}
 				// set servername
-				setup.server=(char *)malloc((strlen(value)+1)*sizeof(char));
-				strcpy(setup.server,value);
-			} else if ((!strcmp(key,KEY_PORT)) && (setup.port==NULL)) {
+				sSetup.server=(char *)malloc((strlen(value)+1)*sizeof(char));
+				strcpy(sSetup.server,value);
+			} else if ((!strcmp(key,KEY_PORT)) && (sSetup.port==NULL)) {
 				if ((atoi(value)<1) || (atoi(value)>65535)) {
 					errno=EINVAL;
 					perror(ERR_PORT_PARAMETER);
 					exit(errno);
 				}
 				// set port
-				setup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
-				strcpy(setup.port,value);
-			} else if ((!strcmp(key,KEY_BOTNAME)) && (setup.botname==NULL )) {
+				sSetup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
+				strcpy(sSetup.port,value);
+			} else if ((!strcmp(key,KEY_BOTNAME)) && (sSetup.botname==NULL )) {
 				if (strpbrk(value,USER_NOT_ALLOW_CHAR)) {
 					errno=EINVAL;
 					perror(ERR_WRONG_BOTNAME);
 					exit(errno);
 				}
 				// set botname
-				setup.botname=(char *)malloc((strlen(value)+1)*sizeof(char));
-				strcpy(setup.botname,value);
-			} else if ((!strcmp(key,KEY_REALNAME)) && (setup.realname==NULL)) {
+				sSetup.botname=(char *)malloc((strlen(value)+1)*sizeof(char));
+				strcpy(sSetup.botname,value);
+			} else if ((!strcmp(key,KEY_REALNAME)) && (sSetup.realname==NULL)) {
 				// ser realname
-				setup.realname=(char *)malloc((strlen(value)+1)*sizeof(char));
-				strcpy(setup.realname,value);
-			} else if ((!strcmp(key,KEY_THREADLIMIT))&& (setup.thread_limit<=0)) {
+				sSetup.realname=(char *)malloc((strlen(value)+1)*sizeof(char));
+				strcpy(sSetup.realname,value);
+			} else if ((!strcmp(key,KEY_THREADLIMIT))&& (sSetup.thread_limit<=0)) {
 				tmp=atoi(value);
 				if ((tmp<=0) || (tmp>MAX_THREADS_LIMIT)) {
 					errno=EDOM;
@@ -294,12 +295,12 @@ void read_config_file(void) {
 					exit(errno);
 				}	
 				// set thread limit
-				setup.thread_limit=tmp;
-			} else  if ((!strcmp(key,KEY_DATABASEPATH))&& (setup.database_path==NULL)) {
+				sSetup.thread_limit=tmp;
+			} else  if ((!strcmp(key,KEY_DATABASEPATH))&& (sSetup.database_path==NULL)) {
 				// set database path
-				setup.database_path=(char *)malloc((strlen(value)+1)*sizeof(char));
-				strcpy(setup.database_path,value);
-            } else if ((!strcmp(key,KEY_AUTOLOGOFF))&& (setup.AutoLoggoff==MIN_LOGOFF)) {
+				sSetup.database_path=(char *)malloc((strlen(value)+1)*sizeof(char));
+				strcpy(sSetup.database_path,value);
+            } else if ((!strcmp(key,KEY_AUTOLOGOFF))&& (sSetup.AutoLoggoff==MIN_LOGOFF)) {
 				tmp=atoi(value);
 				if (tmp<MIN_LOGOFF) {
 					errno=EDOM;
@@ -307,8 +308,8 @@ void read_config_file(void) {
 					exit(errno);
 				}	
 				// set auto log off time
-				setup.AutoLoggoff=tmp;
-			} else if ((!strcmp(key,KEY_SENDDELAY))&& (setup.sendDelay<0)) {
+				sSetup.AutoLoggoff=tmp;
+			} else if ((!strcmp(key,KEY_SENDDELAY))&& (sSetup.sendDelay<0)) {
 				tmp=atoi(value);
 				if (tmp<0) {
 					errno=EDOM;
@@ -316,8 +317,8 @@ void read_config_file(void) {
 					exit(errno);
 				}	
 				// set auto log off time
-				setup.sendDelay=tmp;
-			} else if ((!strcmp(key,KEY_ALT))&& (setup.AccountLiveTime==MIN_ALT)) {
+				sSetup.sendDelay=tmp;
+			} else if ((!strcmp(key,KEY_ALT))&& (sSetup.AccountLiveTime==MIN_ALT)) {
 				tmp=atoi(value);
 				if (tmp<0) {
 					errno=EDOM;
@@ -325,7 +326,7 @@ void read_config_file(void) {
 					exit(errno);
 				}	
 				// set account live time
-				setup.AccountLiveTime=tmp;
+				sSetup.AccountLiveTime=tmp;
 			}
 			free(value);
 			free(key);
@@ -381,7 +382,7 @@ boolean dialogMaster(void){
 	}
 
 
-	if (!add_db(ACCESS_DB,name,"")) {
+	if (!add_db(ACCESS_DB,name,"+m")) {
 		del_db(USER_DB,name);
 		fprintf(stderr,MSG_MASTER_ERR);
 		fprintf(stderr,"\n");
