@@ -214,7 +214,7 @@ void *ComandExecutionThread(void *argv) {
                     debanuser(pMsg->pMsgLine);
                     break;
                 default:
-                    syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,pMsg->identify);
+                    syslog(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
                     break;
                 }
 
@@ -249,7 +249,7 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
     if (cmd_id >= CMD_MASTER) {
         // check the  login status
         if (!exist_db(NICKTOUSER_DB,pNetmask)) {
-            notice(pNick,MSG_NOT_LOGON);
+            notice(pNick,getMsgString(ERR_NOT_LOGON));
         } else {
             if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 	            if (exist_db(ACCESS_DB,pLogin)) {
@@ -260,7 +260,7 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
     }  else if (cmd_id >= CMD_OWNER) {
         // check the  login status
         if (!exist_db(NICKTOUSER_DB,pNetmask)) {
-            notice(pNick,MSG_NOT_LOGON);
+            notice(pNick,getMsgString(ERR_NOT_LOGON));
         } else {
             // check the existe of a channel parameter
             if (strlen(pChannel)) {
@@ -273,22 +273,22 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
 					if ((pMod=get_db(ACCESS_DB,pKey))) {
 						if (strchr(pMod,'o')) {	return true;}
 					} else if (exist_db(ACCESS_DB,pLogin)) {
-						notice(pNick,MSG_MASTER);
+						notice(pNick,getMsgString(OK_MASTER));
 						return true;
 					}
 
 				}
             } else {
-				notice(pNick,MSG_NOT_CHANNELOPT);
+				notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
 			}
         }
 
-        notice(pNick,MSG_NOT_OWNER);
+        notice(pNick,getMsgString(ERR_NOT_OWNER));
 
     }  else if (cmd_id >= CMD_LOGGED) {
         // check  login status
         if (!exist_db(NICKTOUSER_DB,pNetmask)) {
-            notice(pNick,MSG_NOT_LOGON);
+            notice(pNick,getMsgString(ERR_NOT_LOGON));
         } else {
             return true;
         }
@@ -306,7 +306,7 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
        return false;
     }
 
-    notice(pNick,MSG_NOT_ACCESS);
+    notice(pNick,getMsgString(ERR_NOT_ACCESS));
     return false;
 }
 // #############################################################################

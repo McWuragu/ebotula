@@ -135,8 +135,7 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
 
     // check  optional parameters and  set  it of default values
     if (pMsgStr==NULL) {
-        pMsgStr=(char*)malloc((strlen(MSG_DEFAULT_REASON)+1)*sizeof(char));
-        strcpy(pMsgStr,MSG_DEFAULT_REASON);
+        pMsgStr=getMsgString(INFO_DEFAULT_REASON);;
     }
     buffer=(char*)calloc(strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6,sizeof(char));
     sprintf(buffer,"KICK %s %s :%s\r\n",pChannel,pNick,pMsgStr);

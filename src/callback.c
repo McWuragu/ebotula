@@ -106,9 +106,9 @@ void SetBanCb(char *pNetmask,void * data){
     /* try to ban */
     if (doBan) {
         ban(pDataVec[1],pBanmask);
-        notice(pCmdNick,MSG_BAN_OK);
+        notice(pCmdNick,getMsgString(OK_BAN));
     } else {
-        notice(pCmdNick,MSG_NOT_BAN);
+        notice(pCmdNick,getMsgString(ERR_NOT_BAN));
     }
 
 }
@@ -143,9 +143,9 @@ void KickCb(char *pNetmask, void *data) {
     /* try to kick */
     if (doKick) {
         kick(ppDataPart[1],pNick,pReason);
-        notice(pCmdNick,MSG_KICK_OK);
+        notice(pCmdNick,getMsgString(OK_KICK));
     } else {
-        notice(pCmdNick,MSG_NOT_KICK);
+        notice(pCmdNick,getMsgString(ERR_NOT_KICK));
     } 
 }
 

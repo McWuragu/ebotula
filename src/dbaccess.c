@@ -67,11 +67,11 @@ void initDatabases(void) {
     if (!(pDir=opendir(sSetup.pDatabasePath))) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
-            syslog(LOG_ERR,SYSLOG_CREAT_DIR_ERR);
-            perror(SYSLOG_CREAT_DIR_ERR);
+            syslog(LOG_ERR,getSyslogString(SYSLOG_CREATE_DIR_ERR));
+            perror(getSyslogString(SYSLOG_CONFIG_FILE));
             exit(errno);
         } else {
-            syslog(LOG_INFO,SYSLOG_CREATE_DIR);
+            syslog(LOG_INFO,getSyslogString(SYSLOG_CREATE_DIR));
         }
     }
     closedir(pDir);
@@ -87,8 +87,8 @@ void initDatabases(void) {
     
     if (!dbf_user || !dbf_channel || !dbf_usertonick || !dbf_nicktouser || !dbf_access || !dbf_banlist || !dbf_timelog) {
         //errno=EBUSY;
-        syslog(LOG_ERR,SYSLOG_DATABASE_ERR);
-        perror(SYSLOG_DATABASE_ERR);
+        syslog(LOG_ERR,getSyslogString(SYSLOG_DATABASE_ERR));
+        perror(getSyslogString(SYSLOG_DATABASE_ERR));
         exit(errno);
         
     }
@@ -98,7 +98,7 @@ void initDatabases(void) {
 		pthread_mutex_init(&dbaccess_mutex[i],NULL);
 	}
 	
-    syslog(LOG_INFO,SYSLOG_INIT_DB);
+    syslog(LOG_INFO,getSyslogString(SYSLOG_INIT_DB));
 }
 // ############################################################################# 
 void closeDatabase(void) {

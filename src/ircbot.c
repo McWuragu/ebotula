@@ -100,7 +100,7 @@ int main(int argc,char * const argv[]) {
                 break;
             case 'h':
             case '?':
-                printMsg(help_msg);
+                printMsg(getCmdLineHelp());
                 exit(0);
                 break;
             default:
@@ -113,7 +113,7 @@ int main(int argc,char * const argv[]) {
 
     // read config file
     ConfigFileParser();
-    syslog(LOG_NOTICE,SYSLOG_READ_CONFFILE);
+    syslog(LOG_NOTICE,getSyslogString(SYSLOG_READ_CONFFILE));
     
     // check for parameter
     if (argc>1) {
@@ -147,7 +147,7 @@ int main(int argc,char * const argv[]) {
     DEBUG("Autolog of after %dd",sSetup.AutoLoggoff);
     DEBUG("-----------------------------------------------");
 
-    syslog(LOG_NOTICE,SYSLOG_BOT_START);
+    syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));
 
     // init Database and the mutex for  access to the database
     initDatabases();
@@ -164,22 +164,20 @@ int main(int argc,char * const argv[]) {
 
     // create the network connection
     if ((sSetup.server!=NULL) && (sSetup.port!=NULL)) {
-        printf(SYSLOG_TRY_CONNECT,sSetup.server,sSetup.port);
-        printf("\n");
+        printf("%s\n",getSyslogString(SYSLOG_TRY_CONNECT));
         
-        syslog(LOG_INFO,SYSLOG_TRY_CONNECT,sSetup.server,sSetup.port);
+        syslog(LOG_INFO,getSyslogString(SYSLOG_TRY_CONNECT));
         
         connectServer();
         
-        syslog(LOG_INFO,SYSLOG_IS_CONNECT);
+        syslog(LOG_INFO,getSyslogString(SYSLOG_IS_CONNECT));
         
-        printf(SYSLOG_IS_CONNECT);
-        printf("\n");
+        printf("%s\n",getSyslogString(SYSLOG_IS_CONNECT));
     } else {
         closeDatabase();
         errno=EINVAL;
-        perror(SYSLOG_FAILED_NETPARA);
-        syslog(LOG_ERR,SYSLOG_FAILED_NETPARA);
+        perror(getSyslogString(SYSLOG_FAILED_NETPARA));
+        syslog(LOG_ERR,getSyslogString(SYSLOG_FAILED_NETPARA));
         exit(errno);
     }
 
@@ -187,9 +185,8 @@ int main(int argc,char * const argv[]) {
 
     // connect to the server
     ConnectToIrc();
-    printf(SYSLOG_BOT_RUN);
-    printf("\n");
-    syslog(LOG_NOTICE,SYSLOG_BOT_RUN);
+    printf("%s\n",getSyslogString(SYSLOG_BOT_RUN));
+    syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_RUN));
 
 
     // redefine the signal handler for to stop the bot
@@ -218,7 +215,7 @@ int main(int argc,char * const argv[]) {
     threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
     for (i=0;i<sSetup.thread_limit;i++) {
         pthread_create(&threads[i],NULL,ComandExecutionThread,(void*)pCommandQueue);
-        DEBUG(SYSLOG_THREAD_RUN,i);
+        DEBUG("Thread %d is running",i);
     }
     
 	// join the channels
@@ -274,7 +271,7 @@ int main(int argc,char * const argv[]) {
 
     flushQueue(pCommandQueue);
 
-    syslog(LOG_NOTICE,SYSLOG_BOT_STOP);
+    syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));
     pthread_join(timeThread,NULL);
     DEBUG("The timing thread stopped");
 
@@ -299,12 +296,12 @@ int main(int argc,char * const argv[]) {
     
     //  check for restart option
     if (again) {
-        syslog(LOG_NOTICE,SYSLOG_RESTART);
+        syslog(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));
         closelog();
         execvp(argv[0],argv);
-        perror(ERR_RESTART);
+        perror(getMsgString(ERR_RESTART));
     } else {
-        syslog(LOG_NOTICE,SYSLOG_STOPPED);
+        syslog(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));
         closelog();
     }
     return(0);

@@ -51,7 +51,7 @@ void rmDeadLogins(long lCheckTime) {
                 /* check the time */
         	    if (lCheckTime>atol(pTime)) {
     	            log_out((char*)pLogin->data);
-                	DEBUG(SYSLOG_LOGIN_RM,(char*)pLogin->data);
+                	DEBUG("The account %s was automatically logged off",(char*)pLogin->data);
             	}
             }
     	    free(pTime);

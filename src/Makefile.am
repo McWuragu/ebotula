@@ -5,6 +5,7 @@ ebotula_SOURCES= \
 	lang/irchelp_de.h \
 	lang/messages_eng.h \
 	lang/irchelp_eng.h \
+	messages.c \
 	account.c \
 	command.c \
 	dbaccess.c \

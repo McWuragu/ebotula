@@ -97,7 +97,7 @@ void hBotNeedOp(char *pLine){
     sprintf(pSearchStr,"@%s",sSetup.botname);
 
     if (!strstr(pNickList,pSearchStr)) {
-        privmsg(pChannel,MSG_NEED_OP);
+        privmsg(pChannel,getMsgString(INFO_NEED_OP));
     } else {
         channelInit(pChannel);
     }
@@ -185,7 +185,7 @@ void hResetModes(char *pLine) {
                 if (strcmp(pMode,"+o")==0) {
                 channelInit(pChannel);
                 } else {
-                privmsg(pChannel,MSG_NEED_OP);
+                privmsg(pChannel,getMsgString(INFO_NEED_OP));
                 }
             } else {
                 // add callback for reset the modes for a user    
@@ -224,7 +224,7 @@ void hResetModes(char *pLine) {
         if (strcmp(pMode,"+o")==0) {
             channelInit(pChannel);
         } else {
-            privmsg(pChannel,MSG_NEED_OP);
+            privmsg(pChannel,getMsgString(INFO_NEED_OP));
         }
     }
 }
@@ -295,7 +295,7 @@ static void channelInit(char *pChannel) {
             mode(pChannel,pMode,NULL);
         }
 
-        privmsg(pChannel,MSG_INIT_CHANNEL);
+        privmsg(pChannel,getMsgString(INFO_INIT_CHANNEL));
         DEBUG("Initialize the channel %s", pChannel);
     }
 }
