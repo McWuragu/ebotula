@@ -18,6 +18,7 @@
 #define MAX_READ_BUFFER_SIZE 	256
 
 
+
 /** This is definetion of boolean datatype */
 typedef enum boolEnum {false,true} boolean;
 		
@@ -43,6 +44,8 @@ typedef struct ConfStruct{
 	unsigned int AutoLoggoff;
 	/** the delay time for sending in  millisecond */
 	int sendDelay;
+	/// the connection timeout in second
+	int iTimeout;
 	/** a flag to signal that a new master want create */
 	boolean newMaster;
 } ConfType;
@@ -54,7 +57,12 @@ typedef struct ConfStruct{
 */	  
 typedef enum CmdEnum {
 	CMD_NONE,
-	CMD_PING, 
+	CMD_ONPING, 
+	CMD_ONQUIT,
+	CMD_ONNICKCHG,
+	CMD_ONMODE,
+	CMD_ONJOIN,
+	CMD_ONNAMES,
 	CMD_HELP,
     CMD_VERSION,
     CMD_HELLO,
@@ -65,22 +73,19 @@ typedef enum CmdEnum {
 	CMD_PART,
 	CMD_RMCHANNEL,
 	CMD_LOGOFF,
-	CMD_DIE,
+    CMD_DIE,
 	CMD_NICK,
 	CMD_CHANNELS,
-	CMD_NAMES,
-	CMD_ONJOIN,
-	CMD_SET_GREATING,
+    CMD_SET_GREATING,
 	CMD_TOPIC,
 	CMD_SET_TOPIC,
 	CMD_SAY,
 	CMD_KICK,
 	CMD_USERMODE,
-	CMD_ONNICKCHG,
 	CMD_RMUSER,
 	CMD_VIEWGREAT,
 	CMD_USERLIST,
-	CMD_ONMODE,
+	CMD_SAYALL
 }CmdType;
 
 /// This is the structur for the entries in the message queue
