@@ -475,7 +475,7 @@ void chanlist(MsgItem_t *pMsg){
     DEBUG("Build channel list...\n");
 
 
-    privmsg(pMsg->pCallingNick,getMsgString(INFO_CHANNELLIST_BEGIN));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_CHANNELLIST_BEGIN));
 
     /* get  the channel list form the DB */
     pChannelQueue=list_db(CHANNEL_DB);
@@ -489,19 +489,20 @@ void chanlist(MsgItem_t *pMsg){
     	    pMode=ChannelModeToStr(pChannelData->pModes);
 
         	DEBUG("...for channel %s\n",(char*)pChannel->data);
-	        privmsg(pMsg->pCallingNick,(char*)pChannel->data);
+	        //sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pChannel->data);
 
-            pMsgPart=getMsgString(INFO_CHANNELLIST_MODE);
-    	    pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(pMode)+2)*sizeof(char));
-        	sprintf(pMsgStr,"%s %s",pMsgPart,pMode);
-	        privmsg(pMsg->pCallingNick,pMsgStr);
+            //pMsgPart=getMsgString(INFO_CHANNELLIST_MODE);
+    	    
+            pMsgStr=(char*)malloc((pChannel->t_size+strlen(pMode)+2)*sizeof(char));
+        	sprintf(pMsgStr,"%s %s",pChannel->data,pMode);
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
     	    free(pMsgStr);
 
         	if (pChannelData->pTopic) {
                 pMsgPart=getMsgString(INFO_CHANNELLIST_TOPIC);
             	pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(pChannelData->pTopic)+2)*sizeof(char));
 	            sprintf(pMsgStr,"%s %s",pMsgPart,pChannelData->pTopic);
-    	        privmsg(pMsg->pCallingNick,pMsgStr);
+    	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
         	    free(pMsgStr);
 	        }
 
@@ -509,7 +510,7 @@ void chanlist(MsgItem_t *pMsg){
                 pMsgPart=getMsgString(INFO_CHANNELLIST_GREET);
         	    pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(pChannelData->pGreeting)+2)*sizeof(char));
             	sprintf(pMsgStr,"%s %s",pMsgPart,pChannelData->pGreeting);
-	            privmsg(pMsg->pCallingNick,pMsgStr);
+	            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
     	        free(pMsgStr);
         	}
 
@@ -521,7 +522,7 @@ void chanlist(MsgItem_t *pMsg){
 		free(pChannel);
     }
 	deleteQueue(pChannelQueue);
-    privmsg(pMsg->pCallingNick,getMsgString(INFO_CHANNELLIST_END));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_CHANNELLIST_END));
 }
 /* #########################################################################
    Bot comand: !version
@@ -1179,6 +1180,7 @@ void userlist(MsgItem_t *pMsg){
 	QueueData *pChannel;
     char *pMod;
     char *pMsgStr;
+    boolean bIsOther;
 
     unsigned int i,j,k,iChanLen,iLoginLen;
 
@@ -1196,7 +1198,7 @@ void userlist(MsgItem_t *pMsg){
         DEBUG("Genrate the Userlist for a master\n");
         pChannelQueue=list_db(CHANNEL_DB);
 		
-        /* get the kist of all channels */
+        /* get the list of all channels */
         while (isfullQueue(pLoginQueue)) {
             pLoginItem=popQueue(pLoginQueue);
             iLoginLen=pLoginItem->t_size;
@@ -1227,57 +1229,66 @@ void userlist(MsgItem_t *pMsg){
             } else {
                 /* normal user */
                 SetIterToFirstQueue(pChannelQueue);
+                bIsOther=true;
 
                 while (pChannel=getNextitrQueue(pChannelQueue)) {
-                iChanLen=pChannel->t_size;
+                    iChanLen=pChannel->t_size;
     
-    		    /* build the key  for  access.dbf */
-    			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
-    			sprintf(pKey,"%s%s",(char*)pLoginItem->data,(char*)pChannel->data);
+
+        		    /* build the key  for  access.dbf */
+        			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
+        			sprintf(pKey,"%s%s",(char*)pLoginItem->data,(char*)pChannel->data);
+        
+                    /* "Status:" + USERLIST_TAB + "Friend from " + strlen(pChannel->data) + "   Status: "+ "OFF" */
+                    pMsgStr=(char*)malloc((USERLIST_TAB+iChanLen+40)*sizeof(char));
+                    strcpy(pMsgStr,(char*)pLoginItem->data);
+        
+                    /* fill */
+                    for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
+                        strcat(pMsgStr," ");
+                    }
     
-                pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Status:")+14)*sizeof(char));
-                strcpy(pMsgStr,(char*)pLoginItem->data);
     
-                /* fill */
-                for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
-                    strcat(pMsgStr," ");
+        			if ((pMod=get_db(ACCESS_DB,pKey))) {
+        				/* set access rights */       
+        				if (pMod[1]=='o') {
+        					strcat(pMsgStr,"Owner of ");
+                            strcat(pMsgStr,(char*)pChannel->data);
+                            bIsOther=false;
+        				} else if (pMod[1]=='v') {
+        					strcat(pMsgStr,"Friend from ");
+                            strcat(pMsgStr,(char*)pChannel->data);
+                            bIsOther=false;
+        				} else {
+                            bIsOther=true;
+                        }
+                        free(pMod);
+        			}else {
+                        bIsOther=true;
+                    }
+
+                    /* set  online Status */
+                    strcat(pMsgStr,"   Status: ");
+                    if (exist_db(USERTONICK_DB,(char*)pLoginItem->data)) {
+                        strcat(pMsgStr,"ON ");
+                    } else {
+                        strcat(pMsgStr,"OFF");
+                    }
+
+                    if (!bIsOther) {
+                        /* send notice out */
+                        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
+                    }
+
+                    free(pMsgStr);
+                    free(pKey);
                 }
-    
-    
-    			if ((pMod=get_db(ACCESS_DB,pKey))) {
-    				/* set access rights */       
-    				if (pMod[1]=='o') {
-    					strcat(pMsgStr,"Owner of ");
-                        strcat(pMsgStr,(char*)pChannel->data);
-    				} else if (pMod[1]=='v') {
-    					strcat(pMsgStr,"Friend from ");
-                        strcat(pMsgStr,(char*)pChannel->data);
-    				} else {
-    					free(pMsgStr);
-    					break;
-    				}
-    
-    			} else {
-                    strcat(pMsgStr,"Other ");
-                }
-    
-                /* set  online Status */
-                strcat(pMsgStr,"   Status: ");
-                if (exist_db(USERTONICK_DB,(char*)pLoginItem->data)) {
-                    strcat(pMsgStr,"ON ");
-                } else {
-                    strcat(pMsgStr,"OFF");
-                }
-                /* send notice out */
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
-                free(pMsgStr);
-    			free(pKey);
     		}
-	    }
-	    free(pLoginItem);    
-	}
-	flushQueue(pChannelQueue);
-	deleteQueue(pChannelQueue);
+            free (pLoginItem->data);
+	        free(pLoginItem);    
+        }
+	    flushQueue(pChannelQueue);
+        deleteQueue(pChannelQueue);
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
     } else {
         
@@ -1293,15 +1304,17 @@ void userlist(MsgItem_t *pMsg){
         /* look for  rights of  user for  the channel */
 		iChanLen=strlen(pMsg->pAccessChannel);
 
-		 while (isfullQueue(pLoginQueue)) {
+		while (isfullQueue(pLoginQueue)) {
             pLoginItem=popQueue(pLoginQueue);
 			iLoginLen=pLoginItem->t_size;
+            bIsOther=true;
 
 			/* build the key  for  access.dbf */
 			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
 			sprintf(pKey,"%s%s",(char*)pLoginItem->data,pMsg->pAccessChannel);
 
-            pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Status:")+14)*sizeof(char));
+            /* "Status:" + USERLIST_TAB + "Owner "+ "   Status: "+"ON " */
+            pMsgStr=(char*)malloc((USERLIST_TAB+30)*sizeof(char));
             strcpy(pMsgStr,(char*)pLoginItem->data);
 
             /* fill */
@@ -1314,13 +1327,13 @@ void userlist(MsgItem_t *pMsg){
 				/* set access rights */
 				if (pMod[1]=='o') {
 					strcat(pMsgStr,"Owner ");
+                    bIsOther=false;
 				} else if (pMod[1]=='v') {
 					strcat(pMsgStr,"Friend");
+                    bIsOther=false;
 				} else {
-					free(pMsgStr);
-					break;
-				}
-
+                    bIsOther=true;
+                }
     			
                 /* set  online Status */
                 strcat(pMsgStr,"   Status: ");
@@ -1329,12 +1342,16 @@ void userlist(MsgItem_t *pMsg){
                 } else {
                     strcat(pMsgStr,"OFF");
                 }
-                /* send notice out */
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
+                             
+                if (!bIsOther) {
+                    /* send notice out */
+                    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
+                }
                 free(pMsgStr);
             }
 			free(pKey);
-
+            free(pLoginItem->data);
+            free(pLoginItem);
         }
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
     }
