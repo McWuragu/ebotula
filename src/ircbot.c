@@ -31,6 +31,9 @@ int main(int argc,const char *argv[]) {
 	char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;;
 	pthread_t *thread;
 	struct MSGBUF_DS msg;
+	
+	bzero(&msg,sizeof(struct MSGBUF_DS));
+
 
 	setup.createMaster=false;
 
@@ -41,12 +44,30 @@ int main(int argc,const char *argv[]) {
 	
 	//  checking  config  file path
 	if (setup.configfile==NULL) {
-		setup.configfile=malloc(sizeof(char)*strlen(CONF_FILE)+1);
-		strcpy(setup.configfile,CONF_FILE);
+		setup.configfile=malloc(sizeof(char)*(strlen(CONFDIR)+strlen(CONFFILE)+1));
+		sprintf(setup.configfile,"%s%s",CONFDIR,CONFFILE);
+		
 	}
+
+	DEBUG("File %s",setup.configfile);
 
 	// read config file
 	read_config_file();
+
+	// check config datums
+	if (!setup.thread_limit) {
+		setup.thread_limit=DEFAULT_THREAD_LIMIT;
+	}
+
+	if (!setup.botname) {
+		setup.botname=malloc(sizeof(char)*strlen(DEFAULT_BOTNAME)+1);
+		strcpy(setup.botname,DEFAULT_BOTNAME);
+	}
+
+	if (!setup.realname) {
+		setup.realname=malloc(sizeof(char)*strlen(DEFAULT_REALNAME)+1);
+		strcpy(setup.realname,DEFAULT_REALNAME);
+	}
 
 	DEBUG("-----------------------------------------------");
 	DEBUG("Server %s",setup.server);
@@ -149,6 +170,7 @@ int main(int argc,const char *argv[]) {
 
 void stopParser(int sig) {
     stop=true;
+	quit();
 	DEBUG("Stop IRCBot");
 }
 
@@ -188,7 +210,7 @@ void clearspace(char *line) {
 	j=noclr=0;
 	for (i=0;i<=strlen(line);i++) {
 		if((line[i]!=' ') || (noclr==1)) {
-			if ( ((line[i]=='\"') || (line[i]=='\'')) && (noclr==0)) {
+			if ( (line[i]=='\"') && (noclr==0)) {
 				noclr=1;
 			} else  if (((line[i]=='\"') || (line[i]=='\'')) && (noclr==1)) {
 				noclr=0;
