@@ -22,21 +22,21 @@
 #include "messages.h"
 #include "utilities.h"
 #include "account.h"
-// #############################################################################
+/* ############################################################################# */
 void rmDeadLogins(long lCheckTime) {
    	PQueue pLoginQueue;
 	QueueData *pLogin; 
     char *pTime=NULL;
 
-    // get the  list
+    /* get the  list */
 	pLoginQueue=list_db(USER_DB);
 		
     while ((pLogin=popQueue(pLoginQueue))) {
 
-        // read time
+        /* read time */
    	    if ((pTime=get_db(TIMELOG_DB,(char*)pLogin->data))) {
 	
-	        // check the time
+	        /* check the time */
     	    if (lCheckTime>atol(pTime)) {
 	            log_out((char*)pLogin->data);
             	syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,(char*)pLogin->data);
@@ -47,7 +47,7 @@ void rmDeadLogins(long lCheckTime) {
     }
 	deleteQueue(pLoginQueue);
 }
-// #############################################################################
+/* ############################################################################# */
 void log_on(char *pNetmask,char *pLogin) {
     extern pthread_mutex_t account_mutex;
     time_t timestamp;
@@ -71,11 +71,11 @@ void log_on(char *pNetmask,char *pLogin) {
 
     DEBUG("User log in");
 
-    // build the timestamp
+    /* build the timestamp */
     time(&timestamp);
     sprintf(pTime,"%ld",timestamp);
 
-    // set the last login timestamp
+    /* set the last login timestamp */
     if (exist_db(TIMELOG_DB,pLogin)) {
         replace_db(TIMELOG_DB,pLogin,pTime);
         DEBUG("Update timestamp %s for %s",pTime,pLogin);
@@ -84,7 +84,7 @@ void log_on(char *pNetmask,char *pLogin) {
         DEBUG("Add timepstamp %s for %s",pTime,pLogin);
     }
 }
-// #############################################################################
+/* ############################################################################# */
 void log_out(char *pLogin) {
     extern pthread_mutex_t account_mutex;
     char *pNetmask;
@@ -100,24 +100,24 @@ void log_out(char *pLogin) {
     pthread_mutex_unlock(&account_mutex);
 }
 
-// #############################################################################
+/* ############################################################################# */
 void rmAccount(char *pLogin) {
 
 	DEBUG("Remove the account %s",pLogin);
     
-	// logoff the user
+	/* logoff the user */
     log_out(pLogin);
 
-    // remove the  rights
+    /* remove the  rights */
     rmAccessRights(pLogin);
 
-    // remove login
+    /* remove login */
     del_db(USER_DB,pLogin);
 
-    // remove the time log
+    /* remove the time log */
     del_db(TIMELOG_DB,pLogin);
 }
-// #############################################################################
+/* ############################################################################# */
 void rmAccessRights(char *pLogin){
     PQueue pChannelQueue;
 	QueueData *pChannel;
@@ -126,16 +126,16 @@ void rmAccessRights(char *pLogin){
 
     DEBUG("Remove access rights from %s",pLogin);
 
-    // remove as master
+    /* remove as master */
     del_db(ACCESS_DB,pLogin);
 
     pChannelQueue=list_db(CHANNEL_DB);
 
     iLoginLen=strlen(pLogin);
-    // remove access rights from the user
+    /* remove access rights from the user */
     while ((pChannel=popQueue(pChannelQueue))) {
 
-        // build  the key for access.dbf
+        /* build  the key for access.dbf */
         pKey=(char *)malloc((pChannel->t_size+iLoginLen+1)*sizeof(char));
         sprintf(pKey,"%s%s",pLogin,(char*)pChannel->data);
 
@@ -146,7 +146,7 @@ void rmAccessRights(char *pLogin){
     }
 	deleteQueue(pChannelQueue);
 }
-// #############################################################################
+/* ############################################################################# */
 void rmDeadAccounts(long lCheckTime) {
     extern pthread_mutex_t account_mutex;
     PQueue pLoginQueue;
@@ -155,15 +155,15 @@ void rmDeadAccounts(long lCheckTime) {
 
     pthread_mutex_lock(&account_mutex);
     
-	// get the list of all Logins
+	/* get the list of all Logins */
 	pLoginQueue=list_db(TIMELOG_DB);
     
-    // get the  list
+    /* get the  list */
     while ((pLogin=popQueue(pLoginQueue))) {
 
-        // read time
+        /* read time */
         if ((pTime=get_db(TIMELOG_DB,(char*)pLogin->data))) {
-        	// check the time
+        	/* check the time */
     	    if (lCheckTime>atol(pTime)) {
 	            rmAccount((char*)pLogin->data);
             	syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,(char*)pLogin->data);

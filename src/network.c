@@ -42,7 +42,7 @@ static pthread_mutex_t	send_mutex;
 
 int iLineCount=0;
 
-// ############################################################################# 
+/* #############################################################################  */
 void connectServer(void) {
     extern ConfigSetup_t sSetup;
     
@@ -52,12 +52,12 @@ void connectServer(void) {
 
     errno=0;
 
-    // init the  socketaddr
+    /* init the  socketaddr */
     bzero((char*) &socketaddr,sizeof(socketaddr));
     socketaddr.sin_family=AF_INET;
     socketaddr.sin_port=htons(atoi(sSetup.port));
 
-    // resolve hostname
+    /* resolve hostname */
     hostaddr=gethostbyname(sSetup.server);
     if (!hostaddr) {
         perror(SYSLOG_RESOLVE_HOSTNAME);
@@ -68,7 +68,7 @@ void connectServer(void) {
     
     memcpy(&socketaddr.sin_addr,hostaddr->h_addr,hostaddr->h_length);
 
-    // resolve protocol
+    /* resolve protocol */
     protocol = getprotobyname("tcp");
     if (!protocol) {
         perror(SYSLOG_RESOLVE_PROTOCOL);
@@ -76,7 +76,7 @@ void connectServer(void) {
         exit(errno);
     }
 
-    // create the socket
+    /* create the socket */
     sockid=socket(PF_INET,SOCK_STREAM,protocol->p_proto);
     if (sockid <= 0) {
         perror(SYSLOG_SOCKET);
@@ -85,7 +85,7 @@ void connectServer(void) {
     }
 
 
-    // connect to server
+    /* connect to server */
     if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
         perror(SYSLOG_CONNECT);
         syslog(LOG_CRIT,SYSLOG_CONNECT);
@@ -94,16 +94,16 @@ void connectServer(void) {
 
     pthread_mutex_init(&send_mutex,NULL);
 }
-// ############################################################################# 
+/* ############################################################################# */
 void disconnectServer(void){
 	pthread_mutex_destroy(&send_mutex);
     shutdown(sockid,0);
 }
-// ############################################################################
+/* ############################################################################ */
 void  send_direct(char *pLine) {    
     extern int stop;
 
-    // send the line
+    /* send the line */
     if (!send(sockid,pLine,strlen(pLine),0)){
         syslog(LOG_CRIT,SYSLOG_SEND);
         stop=true;
@@ -112,7 +112,7 @@ void  send_direct(char *pLine) {
     DEBUG("send: %s",pLine);
 
 }
-// ############################################################################# 
+/* ############################################################################# */
 void  send_line(char *pLine) {
     extern ConfigSetup_t sSetup;
     extern int stop;
@@ -120,14 +120,14 @@ void  send_line(char *pLine) {
     
     pthread_mutex_lock(&send_mutex);
      
-    // protect excess flood
+    /* protect excess flood */
     if (iLineCount < sSetup.iSendSafeLine) {
         msleep(sSetup.iSendDelay);
     } else {
         msleep(sSetup.iSendSafeDelay);
     }
 
-    // send the line
+    /* send the line */
     if (!send(sockid,pLine,strlen(pLine),0)){
         syslog(LOG_CRIT,SYSLOG_SEND);
         stop=true;
@@ -141,7 +141,7 @@ void  send_line(char *pLine) {
 
     
 }
-// ############################################################################# 
+/* ############################################################################# */
 void  recv_line(char *pLine,unsigned int len) {
     extern int stop;
     extern ConfigSetup_t sSetup;
@@ -166,18 +166,18 @@ void  recv_line(char *pLine,unsigned int len) {
 }
 
 
-// ############################################################################# 
+/* ############################################################################# */
 void ConnectToIrc(void){
     char recv_buffer[RECV_BUFFER_SIZE], *tmp;
     int i,trying=0;
     extern ConfigSetup_t sSetup;
     
 
-    // send the  USER commado
+    /* send the  USER commado */
     user();
     
-    // Try to set the nickname
-    // If the nickname are  using then try again with a leading underline.
+    /* Try to set the nickname */
+    /* If the nickname are  using then try again with a leading underline. */
     do {
         i=0;
         trying++;
@@ -186,8 +186,8 @@ void ConnectToIrc(void){
         nick(sSetup.botname);
         recv_line(recv_buffer,RECV_BUFFER_SIZE);
 
-        // check fpr  nickname alread in use
-        // if he in use then put a leading underline on the front of the name 
+        /* check for  nickname alread in use */
+        /* if he in use then put a leading underline on the front of the name */
         if (strstr(recv_buffer,"Nickname is already in use.")) {
             tmp=(char *)calloc(strlen(sSetup.botname)+2,sizeof(char));
             sprintf(tmp,"_%s",sSetup.botname);
@@ -196,7 +196,7 @@ void ConnectToIrc(void){
             i=1;
         }
         
-        // Try MAX_NICKS times to set
+        /* Try MAX_NICKS times to set */
         if ( trying>MAX_NICKS) {
             errno=EAGAIN;
             perror(ERR_NICK);
@@ -204,14 +204,14 @@ void ConnectToIrc(void){
         }
     } while (i==1);
 }
-// ############################################################################# 
+/* ############################################################################# */
 void join_all_channels(void) {
     PQueue pChannelQueue;
 	QueueData *pChannel;
     unsigned int i;
     pChannelQueue=list_db(CHANNEL_DB);
     
-    // join_Channels
+    /* join_Channels */
 	while ((pChannel=popQueue(pChannelQueue))) {
         join((char*)pChannel->data);
 		free(pChannel);

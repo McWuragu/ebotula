@@ -27,7 +27,7 @@
 typedef enum CmdEnum {
     CMD_NONE,
 
-    // Event handler ids
+    /*  Event handler ids */
     CMD_ONPING,
     CMD_ONQUIT,
     CMD_ONNICKCHG,
@@ -37,7 +37,7 @@ typedef enum CmdEnum {
     CMD_ONTOPIC,
 
 
-    // others
+    /* others */
     CMD_VIEWGREAT,
     CMD_HELP,
     CMD_VERSION,
@@ -45,11 +45,11 @@ typedef enum CmdEnum {
     CMD_IDENT,
 
 
-    // Logged user
+    /* Logged user */
     CMD_LOGOFF,
     CMD_PASS,
 
-    // owner commands
+    /* owner commands */
     CMD_CHANMODE,
     CMD_USERLIST,
     CMD_USERMODE,
@@ -59,7 +59,7 @@ typedef enum CmdEnum {
     CMD_SET_GREATING,
     CMD_CHANNELS,
 
-    // Master commands
+    /* Master commands */
     CMD_RESTART,
     CMD_ALLSAY,
     CMD_RMUSER,
@@ -91,14 +91,14 @@ static char * const CmdList[]= {
     "restart","allsay","rmuser","nick","die","rmchannel","addchannel","join","part"
 };
 
-/// This is the structure for the entries in the message queue
+/** This is the structure for the entries in the message queue */
 typedef struct MsgBufStruct {
     Cmd_t identify;
-    /// the complete string which receive from the irc server
+    /** the complete string which receive from the irc server */
     char   *pMsgLine;
 } MsgBuf_t;
 
-// ######################### Bot commands ################################
+/* ######################### Bot commands ################################ */
 
 void help(char *pLine);
 void password(char *pLine);

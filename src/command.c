@@ -29,9 +29,9 @@
 #include "command.h"
 
 
-// #########################################################################
-// Bot comand: !help <command>
-// #########################################################################
+/* ######################################################################### 
+   Bot comand: !help <command>
+   ######################################################################### */
 void help(char *pLine) {
     char *pNetmask;
     char *pNick;
@@ -47,54 +47,54 @@ void help(char *pLine) {
     pParameter=getParameters(pLine);
 
 
-    // check for parameters
+    /* check for parameters */
     if (!strlen(pParameter)) {
         DEBUG("Default information");
 
-        // Header of help message
+        /* Header of help message */
 
         for (i=0;pIrcHelp[0][i]!=NULL;i++) {
-            // look for the end  of msg
+            /* look for the end  of msg */
             notice(pNick,pIrcHelp[0][i]);
         }
 
-        // checking  login and  master status
+        /* checking  login and  master status */
         if ((bIsLogin=exist_db(NICKTOUSER_DB,pNetmask))) {
             bIsMaster=exist_db(ACCESS_DB,get_db(NICKTOUSER_DB,pNetmask));
         }
 
 
         for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
-            // checking  for allow commands
+            /* checking  for allow commands */
             if (!bIsLogin && i>=CMD_LOGGED) {
                 continue;
             } else if (!bIsMaster && i >= CMD_MASTER) {
                 continue;
             }
 
-            // calculat the length of buffer
+            /* calculat the length of buffer */
             pMsgStr=(char *)calloc(HELP_TAB+1+strlen((char*)pIrcHelp[CmdIdToHelpId(i)][0]),sizeof(char));
 
-            // build string
+            /* build string */
             strcpy(pMsgStr,CmdList[i]);
             iLength=HELP_TAB-strlen(CmdList[i]);
-            // fill
+            /* fill */
             for (j=0;j<iLength;j++) {
                 strcat(pMsgStr," ");
             }
             strcat(pMsgStr,(char*)pIrcHelp[CmdIdToHelpId(i)][0]);
-            // send notice
+            /* send notice */
             notice(pNick,pMsgStr);
         }
-        // the tail
+        /* the tail */
         notice(pNick,MSG_HELP_END);
     } else {
         DEBUG("Spezial information for a command");
 
-        // cut the first word
+        /* cut the first word */
         strtok(pParameter," ");
 
-        // checking  of a leading '!'
+        /* checking  of a leading '!' */
         if (pParameter[0]!='!') {
             pTmp=(char*)malloc((strlen(pParameter)+2)*sizeof(char));
             sprintf(pTmp,"!%s",pParameter);
@@ -104,23 +104,23 @@ void help(char *pLine) {
 
         DEBUG("Looking for information about \"%s\"",pParameter);
 
-        // Help for a command
+        /* Help for a command */
         for (i=CMD_OTHERS+1;i<CMDCOUNT;i++) {
             if (!strcmp((char*)CmdList[i],&pParameter[1])) {
                 DEBUG("Command found %d",i);
 
-                // the headi for help
+                /* the headi for help */
                 pTmp=(char*)malloc((strlen(MSG_HELP_FOR)+strlen((char *)CmdList[i])+3)*sizeof(char));
                 sprintf(pTmp,"%s %s:",MSG_HELP_FOR,pParameter);
                 notice(pNick,pTmp);
 
-                // print  the  help text
+                /* print  the  help text */
                 for (j=1;pIrcHelp[CmdIdToHelpId(i)][j]!=NULL;j++) {
                     notice(pNick,(char*)
                            pIrcHelp[CmdIdToHelpId(i)][j]);
                 }
 
-                // syntax from the command
+                /* syntax from the command */
                 notice(pNick,pIrcSyntax[0][0]);
                 for (j=0;pIrcSyntax[CmdIdToHelpId(i)][j]!=NULL;j++) {
                     notice(pNick,(char*)pIrcSyntax[CmdIdToHelpId(i)][j]);
@@ -132,9 +132,9 @@ void help(char *pLine) {
         notice(pNick,MSG_NOT_COMMAND);
     }
 }
-// #########################################################################
-// Bot comand: !hello
-// #########################################################################
+/* #########################################################################
+   Bot comand: !hello
+   ######################################################################### */
 void hello(char *pLine) {
     char *pNetmask;
     char *pNick;
@@ -153,7 +153,7 @@ void hello(char *pLine) {
 
     if (add_db(USER_DB,pLogin,"")) {
         
-        // autoidentify after create an new account
+        /* autoidentify after create an new account */
         pNetmask=getNetmask(pLine);
         log_on(pNetmask,pLogin);
 
@@ -166,9 +166,9 @@ void hello(char *pLine) {
 	} 
 
 }
-// #########################################################################
-// Bot comand: !pass <password>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !pass <password>
+   ######################################################################### */
 void password(char *pLine) {
     char *pLogin;
     char *pPasswd;
@@ -182,24 +182,24 @@ void password(char *pLine) {
 
 	    DEBUG("Check the  password for the account %s",pLogin);
 
-	    // get  the  login name
+	    /* get  the  login name */
 	    if (strlen(pLogin)) {
         	pPasswd=getParameters(pLine);
 
-	        // parse the  password  form  parameter list
+	        /* parse the  password  form  parameter list */
 	        if (!strlen(pPasswd)) {
         	    notice(pNick,MSG_NOT_PASS);
 	        }
 
-        	// set password
+        	/* set password */
 	        replace_db(USER_DB,pLogin,pPasswd);
         	notice(pNick,MSG_PASSWD);        
 	    }
     }
 }
-// #########################################################################
-// Bot comand: !logoff
-// #########################################################################
+/* #########################################################################
+   Bot comand: !logoff
+   ######################################################################### */
 void logoff(char *pLine,int iRemoveMode) {
     char *pLogin;
     char *pNick;
@@ -215,21 +215,21 @@ void logoff(char *pLine,int iRemoveMode) {
     pNetmask=getNetmask(pLine);
     pNick=getNickname(pLine);
 	
-	// check login status
+	/* check login status */
    	if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 	    log_out(pLogin);
    
-		// only by manuel logof tmeove  the modes 
+		/* only by manuel logof tmeove  the modes */
 		if (iRemoveMode) {	
-			// get channel list
+			/* get channel list */
 			pChannelQueue=list_db(CHANNEL_DB);
 			iLength=strlen(pLogin);
-			// remove the mod  for  this account
+			/* remove the mod  for  this account */
 			while ((pChannel=popQueue(pChannelQueue))){
 				pKey=(char *)malloc((pChannel->t_size+iLength)*sizeof(char));
 				sprintf(pKey,"%s%s",pLogin,(char *)pChannel->data);
 				
-				// look for the  access rights and  remove this
+				/* look for the  access rights and  remove this */
 				if ((pMode=get_db(ACCESS_DB,pKey))){
 					pMode[0]='-';
 					mode(pChannel->data,pMode,pLogin);	
@@ -239,15 +239,15 @@ void logoff(char *pLine,int iRemoveMode) {
 				free(pChannel);	
 			}
 
-			// delete the queue
+			/* delete the queue */
 			delete(pChannelQueue);
 			notice(pNick,MSG_LOGOFF);
 		}
 	}
 }
-// #########################################################################
-// Bot comand: !ident login <password>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !ident login <password>
+   ######################################################################### */
 void ident(char *pLine) {
     char *pLogin;
     char *pPasswd;
@@ -272,12 +272,12 @@ void ident(char *pLine) {
     if (!exist_db(NICKTOUSER_DB,pNetmask)) {
         pParameter=getParameters(pLine);
     
-        // no parameter found
+        /* no parameter found */
         if (strlen(pParameter)) {
-            // parse the password
+            /* parse the password */
             if ((pPos=strstr(pParameter," "))==NULL) {
-                // no Passwd found
-                // try empty pass
+                /* no Passwd found */
+                /* try empty pass */
                 notice(pNick,MSG_NOT_PASS);
                 pPasswd="";
             } else {
@@ -286,7 +286,7 @@ void ident(char *pLine) {
             }
         
         
-            // parse the login
+            /* parse the login */
             strtok(pParameter," ");
             pLogin=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
             strcpy(pLogin,pParameter);
@@ -294,14 +294,14 @@ void ident(char *pLine) {
         
             DEBUG("Look for the account %s",pLogin);
         
-            // check the account
+            /* check the account */
             if (check_db(USER_DB,pLogin,pPasswd)) {
                 log_on(pNetmask,pLogin);
                 notice(pNick,MSG_IDENT_OK);
         
                 isMaster=exist_db(ACCESS_DB,pLogin);
         
-                // set the mod  for  this account
+                /* set the mod  for  this account */
                 pChannelQueue=list_db(CHANNEL_DB);
                 login_len=strlen(pLogin);
         
@@ -330,9 +330,9 @@ void ident(char *pLine) {
         notice(pNick,MSG_ALREADY_LOGON);
     }
 }
-// #########################################################################
-// Bot comand: !addchannel #channel
-// #########################################################################
+/* #########################################################################
+   Bot comand: !addchannel #channel
+   ######################################################################### */
 void addChannel(char *pLine) {
     char *pChannel;
     char *pNick;
@@ -351,25 +351,25 @@ void addChannel(char *pLine) {
 
     DEBUG("Join and  try to add the channnel %s",pChannel);
 
-    // checking of channel exist
+    /* checking of channel exist */
     if (exist_db(CHANNEL_DB,pChannel)) {
         notice(pNick,MSG_ADDCHANNEL_ALREADY);
     } else {
-        // add channel
+        /* add channel */
         channelmod=(char *)malloc(3*sizeof(char));
         strcpy(channelmod,"\t\t");
         add_db(CHANNEL_DB,pChannel,channelmod);
         notice(pNick,MSG_ADDCHANNEL_OK);
     }
 
-    // join the channel
+    /* join the channel */
     join(pChannel);
     notice(pNick,MSG_JOIN_OK);
 
 }
-// #########################################################################
-// Bot comand: !rmchannel <#channel>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !rmchannel <#channel>
+   ######################################################################### */
 void rmChannel(char *pLine){
     char *pChannel;
     char *pNick;
@@ -380,7 +380,7 @@ void rmChannel(char *pLine){
     DEBUG("Part and  try to remove the channnel %s",pChannel);
 
 
-    // checking of channel exists
+    /* checking of channel exists */
     if (!del_db(CHANNEL_DB,pChannel)) {
         notice(pNick,MSG_NOT_CHANNEL);
     } else {
@@ -388,14 +388,14 @@ void rmChannel(char *pLine){
     }
 
 
-    // part the channel
+    /* part the channel */
     part(pChannel);
     notice(pNick,MSG_PART_OK);
 
 }
-// #########################################################################
-// Bot comand: !join #channel
-// #########################################################################
+/* #########################################################################
+   Bot comand: !join #channel
+   ######################################################################### */
 void joinChannel(char *pLine) {
     char *pChannel;
     char *pNick;
@@ -403,7 +403,7 @@ void joinChannel(char *pLine) {
     pNick=getNickname(pLine);
     pChannel=getAccessChannel(pLine);
 
-    // compare the current channel and  the channel for joining
+    /* compare the current channel and  the channel for joining */
     if (!(strcmp(pChannel,getChannel(pLine)))) {
         notice(pNick,MSG_NOT_CHANNELOPT);
         notice(pNick,MSG_JOIN_ERR);
@@ -411,14 +411,14 @@ void joinChannel(char *pLine) {
     }
 
     DEBUG("Join the channel %s",pChannel);
-    // join the channel
+    /* join the channel */
     join(pChannel);
     notice(pNick,MSG_JOIN_OK);
 
 }
-// #########################################################################
-// Bot comand: !part <#channel>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !part <#channel>
+   ######################################################################### */
 void partChannel(char *pLine) {
     char *pNick;
     char *pChannel;
@@ -428,29 +428,29 @@ void partChannel(char *pLine) {
 
     DEBUG("Part the channel %s",pChannel);
 
-    // part the channel
+    /* part the channel */
     part(pChannel);
     notice(pNick,MSG_PART_OK);
 }
-// #########################################################################
-// Bot comand: !die
-// #########################################################################
+/* #########################################################################
+   Bot comand: !die
+   ######################################################################### */
 void die(char *pLine) {
     notice(getNickname(pLine),MSG_DIE_OK);
     stopParser(0);
 }
-// #########################################################################
-// Bot comand: !restart
-// #########################################################################
+/* #########################################################################
+   Bot comand: !restart
+   ######################################################################### */
 void restart(char *pLine) {
     extern boolean again;
     notice(getNickname(pLine),MSG_RESTART_OK);
     again=true;
     stopParser(0);
 }
-// #########################################################################
-// Bot comand: !nick nickname
-// #########################################################################
+/* #########################################################################
+   Bot comand: !nick nickname
+   ######################################################################### */
 void setNick(char *pLine){
     char *pParameter;
     char *pNick;
@@ -458,7 +458,7 @@ void setNick(char *pLine){
     pNick=getNickname(pLine);
     pParameter=getParameters(pLine);
 
-    // read parameters
+    /* read parameters */
     if (!strlen(pParameter)) {
         notice(pNick,MSG_NICK_ERR);
         return;
@@ -471,9 +471,9 @@ void setNick(char *pLine){
     nick(pParameter);
 
 }
-// #########################################################################
-// Bot comand: !chanlist
-// #########################################################################
+/* #########################################################################
+   Bot comand: !chanlist
+   ######################################################################### */
 void chanlist(char *pLine){
     char *pNick,*buffer;
     char *pMode;
@@ -490,7 +490,7 @@ void chanlist(char *pLine){
 
     notice(pNick,MSG_CHANNELLIST_BEGIN);
 
-    // get  the channel list form the DB
+    /* get  the channel list form the DB */
     pChannelQueue=list_db(CHANNEL_DB);
 
 
@@ -531,9 +531,9 @@ void chanlist(char *pLine){
 	deleteQueue(pChannelQueue);
     notice(pNick,MSG_CHANNELLIST_END);
 }
-// #########################################################################
-// Bot comand: !version
-// #########################################################################
+/* #########################################################################
+   Bot comand: !version
+   ######################################################################### */
 void version(char *pLine) {
     char pMsgStr[256];
     // creat Versions String
@@ -541,9 +541,9 @@ void version(char *pLine) {
     strcat(pMsgStr,"\r\n");
     notice(getNickname(pLine),pMsgStr);
 }
-// #########################################################################
-// Bot comand: !greeting <#channel> <text>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !greeting <#channel> <text>
+   ######################################################################### */
 void setGreeting(char *pLine) {
     char *pChannel;
     char *pChannelSet;
@@ -558,12 +558,12 @@ void setGreeting(char *pLine) {
     DEBUG("Greeting seting for %s",pChannel);
 
 
-    // check of  existenz of the channel
+    /* check of  existenz of the channel */
     if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
 	    pChannelData=StrToChannelData(pChannelSet);
     	free(pChannelSet);
 	    
-		// remive old greeting
+		/* remive old greeting */
 		if (pChannelData->pGreeting) {
     	    free(pChannelData->pGreeting);
 	    }
@@ -574,7 +574,7 @@ void setGreeting(char *pLine) {
 	    replace_db(CHANNEL_DB,pChannel,pChannelSet);
 
 
-    	// message
+    	/* message */
 	    if (pChannelData->pGreeting[0]=='\0') {
      	   notice(pNick,MSG_RM_GREATING);
 	    } else {
@@ -584,9 +584,9 @@ void setGreeting(char *pLine) {
         notice(pNick,MSG_NOT_CHANNEL);
 	}
 }
-// #########################################################################
-// Bot comand: !topic <#channel> <topic>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !topic <#channel> <topic>
+   ######################################################################### */
 void setTopic(char *pLine) {
     char *pChannel;
     char *pChannelSet;
@@ -606,7 +606,7 @@ void setTopic(char *pLine) {
 	    pChannelData=StrToChannelData(pChannelSet);
     	free(pChannelSet);
 
-		// remove old topic
+		/* remove old topic */
         if (pChannelData->pTopic) {
             free(pChannelData->pTopic);
         }
@@ -616,7 +616,7 @@ void setTopic(char *pLine) {
     	replace_db(CHANNEL_DB,pChannel,pChannelSet);
 
 
-	    // message
+	    /* message */
     	if (pChannelData->pTopic[0]=='\0') {
 	        notice(pNick,MSG_RM_TOPIC);
     	} else {
@@ -628,9 +628,9 @@ void setTopic(char *pLine) {
         notice(pNick,MSG_NOT_CHANNEL);
 	}
 }
-// #########################################################################
-// Bot comand: !viewgreet <#channel>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !viewgreet <#channel>
+   ######################################################################### */
 void greeting(char *pLine) {
     extern ConfigSetup_t sSetup;
     char *pChannel;
@@ -640,7 +640,7 @@ void greeting(char *pLine) {
 
     pNick=getNickname(pLine);
 
-    // only greeting  send  to other user
+    /* only greeting  send  to other user */
     if (strcmp(pNick,sSetup.botname)) {
         pChannel=getAccessChannel(pLine);
 
@@ -653,9 +653,9 @@ void greeting(char *pLine) {
 		}
     }
 }
-// #########################################################################
-// Bot comand: !say <#channel> text
-// #########################################################################
+/* #########################################################################
+   Bot comand: !say <#channel> text
+   ######################################################################### */
 void say(char *pLine) {
     char *pChannel;
     char *pParameter;
@@ -672,28 +672,28 @@ void say(char *pLine) {
 
     privmsg(pChannel,pParameter);
 }
-// #########################################################################
-// Bot comand: !allsay text
-// #########################################################################
+/* #########################################################################
+   Bot comand: !allsay text
+   ######################################################################### */
 void allsay(char *pline) {
     char *pMsgStr;
     PQueue pChannelQueue;
 	QueueData *pChannel;
     pMsgStr=getParameters(pline);
 
-	// get the channel list
+	/* get the channel list */
     pChannelQueue=list_db(CHANNEL_DB);
 
-	// send privmsg to all channels
+	/* send privmsg to all channels */
     while ((pChannel=popQueue(pChannelQueue))) {
         privmsg((char*)pChannel->data,pMsgStr);
 		free(pChannel);
     }
 	deleteQueue(pChannelQueue);
 }
-// #########################################################################
-// Bot comand: !kick <#channel> nick reason
-// #########################################################################
+/* #########################################################################
+   Bot comand: !kick <#channel> nick reason
+   ######################################################################### */
 void kickuser(char *pLine) {
     char *pNick;
     char *kicknick;
@@ -705,37 +705,37 @@ void kickuser(char *pLine) {
     pNick=getNickname(pLine);
     pChannel=getAccessChannel(pLine);
 
-    // get parameters
+    /* get parameters */
     pParameter=getParameters(pLine);
     if (!strlen(pParameter)) {
         notice(pNick,MSG_KICK_ERR);
         return;
     }
 
-    // parse reason
+    /* parse reason */
     if (!(pPos=strchr(pParameter,' '))) {
-        // empty reason
+        /* empty reason */
         reason="";
     } else {
-        // set null byte  for  nick
+        /* set null byte  for  nick */
         *pPos='\0';
-        // over jump the  space
+        /* over jump the  space */
         pPos++;
         reason=(char*)malloc((strlen(pPos)+1)*sizeof(char));
         strcpy(reason,pPos);
 
     }
 
-    // parse nick
+    /* parse nick */
     kicknick=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
     strcpy(kicknick,pParameter);
 
     kick(pChannel,kicknick,reason);
     notice(pNick,MSG_KICK_OK);
 }
-// #########################################################################
-// Bot comand: !usermode [#channel] <login> <mod>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !usermode [#channel] <login> <mod>
+   ######################################################################### */
 void usermode(char *pLine){
     char *pChannel;
     char *pNick;
@@ -754,35 +754,35 @@ void usermode(char *pLine){
     
     if ((accesslogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
 
-	    // check the channel
+	    /* check the channel */
     	if (!(exist_db(CHANNEL_DB,pChannel))) {
         	notice(pNick,MSG_NOT_CHANNEL);
     	    return;
 	    }
 
-    	// get parameters
+    	/* get parameters */
 	    pParameter=getParameters(pLine);
 
-    	// user mod
+    	/* user mod */
 	    DEBUG("Modify user mod");
 
-    	// look for the space and separat the login for the user which want modify
+    	/* look for the space and separat the login for the user which want modify */
 	    if (!(pPos=strchr(pParameter,' '))) {
 	        notice(pNick,MSG_USERMODE_ERR);
         	return;
     	}
 
-	    // set the end mark for login string and  place the pointer of the substr
+	    /* set the end mark for login string and  place the pointer of the substr */
     	*pPos='\0';
 	    pPos++;
 
-    	// extract the  login
+    	/* extract the  login */
 	    pLogin=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
     	strcpy(pLogin,pParameter);
 	    StrToLower(pLogin);
 
 
-    	// check login in the user db
+    	/* check login in the user db */
 	    if (!(exist_db(USER_DB,pLogin))) {
 	        notice(pNick,MSG_NOT_ACCOUNT);
         	return;
@@ -791,16 +791,16 @@ void usermode(char *pLine){
     	    return;
 	    }
 
-    	// build the key  for access rights  db
+    	/* build the key  for access rights  db */
 	    pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
 	    sprintf(pKey,"%s%s",pLogin,pChannel);
 
     
-	    // get the  old mod for  a  user from the  access db
+	    /* get the  old mod for  a  user from the  access db */
     	if (!(oldmod=get_db(ACCESS_DB,pKey))) {
-        	// get the old mod for user as master
+        	/* get the old mod for user as master */
 	        if ((oldmod=get_db(ACCESS_DB,pLogin))) {
-		   	    // only a master  can modify  a other master
+		   	    /* only a master  can modify  a other master */
     		    if (strchr(oldmod,'m') && !exist_db(ACCESS_DB,accesslogin)) {
             		notice(pNick,MSG_NOT_MASTER);
 	        	    return;
@@ -812,7 +812,7 @@ void usermode(char *pLine){
 
     	DEBUG("Modify account %s in channel %s",pLogin,pChannel);
 
-	    //check for add or remove  mod
+	    /* check for add or remove  mod */
     	if (pPos[0]!='+' && pPos[0]!='-') {
 	        notice(pNick,MSG_USERMODE_ERR);
     	    return;
@@ -820,7 +820,7 @@ void usermode(char *pLine){
     	    mod[0]=pPos[0];
 	    }
 
-    	// checke the mod
+    	/* checke the mod */
 	   	switch (pPos[1]) {
 	    case 'v':
     	case 'o':
@@ -838,36 +838,36 @@ void usermode(char *pLine){
     	    return;
 	    }
 
-    	// set the end mark
+    	/* set the end mark */
 	    mod[2]='\0';
 
 	    DEBUG("Found mod %s",mod);
 
-		// look for old master rights
+		/* look for old master rights */
 		if (mod[1]!='m' && oldmod) {
-	    	// check for old or new master
+	    	/* check for old or new master */
 		    if (oldmod[1]=='m') {
-	      	    // remove master account
+	      	    /* remove master account */
     		    del_db(ACCESS_DB,pLogin);
 		    } 
 		}
 				
-		// set the new key and remove old rights for new master
+		/* set the new key and remove old rights for new master */
 		if (mod[1]=='m')  {
 			if (oldmod) {
 				if (oldmod[1]!='m') {
-			        // remove old access right
+			        /* remove old access right */
     	    	   	rmAccessRights(pLogin);
 				}
 			}
 
-            // replace the  old key by the login as new key
+            /* replace the  old key by the login as new key */
 	   	    free(pKey);
     	   	pKey=(char *)malloc((strlen(pLogin)+1)*sizeof(char));
         	strcpy(pKey,pLogin);
     	}
 	    
-		// add or remove the mod
+		/* add or remove the mod */
    		if (mod[0]=='+') {
         	DEBUG("Set new mode");
 
@@ -876,33 +876,33 @@ void usermode(char *pLine){
     	    }
 	  	} else {
     	DEBUG("Remove new mode");
-	        // remove mod
+	        /* remove mod */
         	del_db(ACCESS_DB,pKey);
 
     	}
 
 
-	    // identify the  login and set the rights
+	    /* identify the  login and set the rights */
 		if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
     	    	DEBUG("Modify the current mode");
 				usernick=getNickname(pNetmask);
 
 		        if (mod[0]=='-') {
-    	        	// remove mods
+    	        	/* remove mods */
         		    mode(pChannel,mod,usernick);
 	    	    } else {
 					if (oldmod) {
-			        	// remove old mods
+			        	/* remove old mods */
     	    			if (strchr(oldmod,'v')) {
-    		    			// remove -o
+    		    			/* remove -o */
 		    	        	mode(pChannel,"-v",usernick);
     	        		} else if (strlen(oldmod)) {
-        		    	   // remove -v
+        		    	   /* remove -v */
 	    	    	       mode(pChannel,"-o",usernick);
 		            	}
 					}
 	           	
-					// set the new mods
+					/* set the new mods */
     	   	    	if (mod[1]=='v') {
     	            	mode(pChannel,"+v",usernick);
 		       	    } else {
@@ -913,9 +913,9 @@ void usermode(char *pLine){
 	    notice(pNick,MSG_USERMODE_OK);
 	} 
 }
-// #########################################################################
-// Bot comand: !chanmode [#channel] <mod>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !chanmode [#channel] <mod>
+   ######################################################################### */
 void chanmode(char *pLine) {
     char *pNick;
     char *pChannel;
@@ -933,25 +933,25 @@ void chanmode(char *pLine) {
     pParameters=getParameters(pLine);
 
 
-    // read the old channel parameters
+    /* read the old channel parameters */
     
     if (pChannelSet=get_db(CHANNEL_DB,pChannel)) {
         pChannelData=StrToChannelData(pChannelSet);
 
-	    // read the new channel parameters
+	    /* read the new channel parameters */
 	    pNewMode=StrToChannelMode(getParameters(pLine));
     	DEBUG("Found the new channel modes \"%s\"",ChannelModeToStr(pNewMode));
 
 	    DEBUG("Build the new modes for the channel %s",pChannel);
-    	// build the new channel parameters
+    	/* build the new channel parameters */
 	    for (i=1;i<MAX_MODES;i++) {
     	    if (pNewMode->pModeStr[MOD_TYPE]=='+') {
-        	    // add  the new mode in the pChannelData
+        	    /* add  the new mode in the pChannelData */
             	if (pNewMode->pModeStr[i]!=' ') {
-                	// set the new flag
+                	/* set the new flag */
 	                pChannelData->pModes->pModeStr[i]=pNewMode->pModeStr[i];
 	
-    	            // set keyword and limit
+    	            /* set keyword and limit */
         	        if (pNewMode->pModeStr[i]=='k') {
             	        free(pChannelData->pModes->pKeyword);
                 	    pChannelData->pModes->pKeyword=(char*)malloc((strlen(pNewMode->pKeyword)+1)*sizeof(char));
@@ -964,13 +964,13 @@ void chanmode(char *pLine) {
 	            }
 
     	    } else if (pNewMode->pModeStr[MOD_TYPE]=='-') {
-        	    // remove  flags from the pChanneldata
+        	    /* remove  flags from the pChanneldata */
             	if (pNewMode->pModeStr[i]!=' ') {
 
-	                // remove the  mode flag
+	                /* remove the  mode flag */
     	            pChannelData->pModes->pModeStr[i]=' ';
 
-        	        // remove keyword and limit
+        	        /* remove keyword and limit */
             	    if (pChannelData->pModes->pModeStr[i]=='k') {
                 	    pChannelData->pModes->pKeyword[0]='\0';
 	                } else if (pChannelData->pModes->pModeStr[i]=='l') {
@@ -982,8 +982,8 @@ void chanmode(char *pLine) {
     	}
 
 
-	    // check the exit  of channell modes
-    	// set or remove the leading plus
+	    /* check the exit  of channell modes */
+    	/* set or remove the leading plus */
 	    if (strpbrk(pChannelData->pModes->pModeStr,CHANNEL_MODES)) {
     	    pChannelData->pModes->pModeStr[0]='+';
 	    } else {
@@ -991,22 +991,22 @@ void chanmode(char *pLine) {
 	    }
 
     	DEBUG("Write the new modes channel \"%s\"",ChannelModeToStr(pChannelData->pModes))
-	    // set the new mode in database
+	    /* set the new mode in database */
     	free(pChannelSet);
 	    pChannelSet=ChannelDataToStr(pChannelData);
     	replace_db(CHANNEL_DB,pChannel,pChannelSet);
 
 
 	    DEBUG("Set the new channel modes")
-    	// set the mods
+    	/* set the mods */
 	    mode(pChannel,ChannelModeToStr(pNewMode),NULL);
     } else {
         notice(pNick,MSG_NOT_CHANNEL);
     }
 }
-// #########################################################################
-// Bot comand: !rmuser <login>
-// #########################################################################
+/* #########################################################################
+   Bot comand: !rmuser <login>
+   ######################################################################### */
 void rmuser(char *pLine) {
     char *pLogin;
     char *pNick;
@@ -1020,14 +1020,14 @@ void rmuser(char *pLine) {
 
 	StrToLower(pLogin);
     
-    // extract the first parameter
+    /* extract the first parameter */
     strtok(pLogin," ");
 
     if (exist_db(USER_DB,pLogin)) {
-        // remove the account
+        /* remove the account */
         rmAccount(pLogin);
     
-        // remove the mod  for  this account
+        /* remove the mod  for  this account */
         if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
 			rmnick=getNickname(pNetmask);
         	
@@ -1045,9 +1045,9 @@ void rmuser(char *pLine) {
     	notice(pNick,MSG_NOT_ACCOUNT);
     }
 }
-// #########################################################################
-// Bot comand: !userlist [#channel]
-// #########################################################################
+/* #########################################################################
+   Bot comand: !userlist [#channel]
+   ######################################################################### */
 void userlist(char *pLine){
     
     char *pNick;
@@ -1069,36 +1069,36 @@ void userlist(char *pLine){
     pAccessChannel=getAccessChannel(pLine);
     pArgv=getArgument(pLine);
 
-    // read the list of Logins
+    /* read the list of Logins */
     pLoginQueue=list_db(USER_DB);
 
     notice(pNick,MSG_USERLIST_BEGIN);
 
-    // build the  login list  for output
+    /* build the  login list  for output */
     if (exist_db(ACCESS_DB,pLogin) && !strlen(pArgv)) {
         DEBUG("Genrate the Userlist for a master");
-        // Bot masters
+        /* Bot masters */
 
-        // get the kist of all channels
+        /* get the kist of all channels */
         pChannelQueue=list_db(CHANNEL_DB);
         while ((pLoginItem=popQueue(pLoginQueue))) {
             iLoginLen=pLoginItem->t_size;
 
-            // check for master or normal user
+            /* check for master or normal user */
             if (exist_db(ACCESS_DB,(char*)pLoginItem->data)) {
-                // user is master
+                /* user is master */
                 pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Master   Status:")+5)*sizeof(char));
                 strcpy(pMsgStr,(char*)pLoginItem->data);
 
-                // fill
+                /* fill */
                 for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
                     strcat(pMsgStr," ");
                 }
 
                 strcat(pMsgStr,"Master   Status: ");
 
-                // insert  online status
-                // set  online Status
+                /* insert  online status */
+                /* set  online Status */
                 if (exist_db(USERTONICK_DB,(char*)pLoginItem->data)) {
                     strcat(pMsgStr,"ON ");
                 } else {
@@ -1108,11 +1108,11 @@ void userlist(char *pLine){
                 notice(pNick,pMsgStr);
                 free(pMsgStr);
             } else {
-                // normal user
+                /* normal user */
 				while ((pChannel=popQueue(pChannelQueue))) {
 					iChanLen=pChannel->t_size;
 
-					// build key for access.dbf
+					/* build key for access.dbf */
 					pKey=(char*)malloc((iLoginLen+iChanLen+1)*sizeof(char));
 					sprintf(pKey,"%s%s",(char*)pLoginItem->data,(char*)pChannel->data);
 
@@ -1120,14 +1120,14 @@ void userlist(char *pLine){
 						pMsgStr=(char*)malloc((USERLIST_TAB+iChanLen+strlen("Status:")+16)*sizeof(char));
 						strcpy(pMsgStr,(char*)pLoginItem->data);
 
-						// fill
+						/* fill */
 						for (k=0;k<(USERLIST_TAB-iLoginLen);k++) {
 							strcat(pMsgStr," ");
 						}
 
 						strcat(pMsgStr,(char*)pChannel->data);
 
-						// set access rights
+						/* set access rights */
 						if (pMod[1]=='o') {
 							strcat(pMsgStr,"->Owner ");
 						} else if (pMod[1]=='v') {
@@ -1137,7 +1137,7 @@ void userlist(char *pLine){
 							break;
 						}
 
-						// set  online Status
+						/* set  online Status */
 						strcat(pMsgStr,"   Status: ");
 						if (exist_db(USERTONICK_DB,(char*)pLoginItem->data)) {
 							strcat(pMsgStr,"ON ");
@@ -1145,7 +1145,7 @@ void userlist(char *pLine){
 							strcat(pMsgStr,"OFF");
 						}
 
-						// send notice out
+						/* send notice out */
 						notice(pNick,pMsgStr);
 						free(pMsgStr);
 					}
@@ -1159,13 +1159,13 @@ void userlist(char *pLine){
     } else {
         DEBUG("Genrate the Userlist for a owner");
 
-        // look for  rights of  user for  the channel
+        /* look for  rights of  user for  the channel */
 		iChanLen=strlen(pAccessChannel);
 
 		 while ((pLoginItem=popQueue(pLoginQueue))) {
 			iLoginLen=pLoginItem->t_size;
 
-			// build the key  for  access.dbf
+			/* build the key  for  access.dbf */
 			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
 			sprintf(pKey,"%s%s",(char*)pLoginItem->data,pAccessChannel);
 
@@ -1173,12 +1173,12 @@ void userlist(char *pLine){
 				pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Status:")+14)*sizeof(char));
 				strcpy(pMsgStr,(char*)pLoginItem->data);
 
-				// fill
+				/* fill */
 				for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
 					strcat(pMsgStr," ");
 				}
 
-				// set access rights
+				/* set access rights */
 				if (pMod[1]=='o') {
 					strcat(pMsgStr,"Owner ");
 				} else if (pMod[1]=='v') {
@@ -1188,7 +1188,7 @@ void userlist(char *pLine){
 					break;
 				}
 
-				// set  online Status
+				/* set  online Status */
 				strcat(pMsgStr,"   Status: ");
 				if (exist_db(USERTONICK_DB,(char*)pLoginItem->data)) {
 					strcat(pMsgStr,"ON ");
@@ -1196,7 +1196,7 @@ void userlist(char *pLine){
 					strcat(pMsgStr,"OFF");
 				}
 
-				// send notice out
+				/* send notice out */
 				notice(pNick,pMsgStr);
 				free(pMsgStr);
 			}
