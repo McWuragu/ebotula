@@ -97,6 +97,7 @@ static MsgStruct_t Msg[] = {
 	{ ERR_NOT_MASTER,			"You're not a irc bot master."},
 	{ ERR_NOT_OWNER,			"You're not the bot owner of this channel."},
 	{ ERR_NOT_CHANNELOPT,		"This command need a channel name."},
+    { ERR_NOT_PARAMETER,        "I couldn't found  regulare parameters."},
 	{ ERR_NOT_COMMAND,			"No help found for this command."},
 	{ ERR_NOT_ACCOUNT,			"Account isn't found." },
 	{ ERR_NOT_CHANNEL,			"This channel isn't in the channel list."},
@@ -116,19 +117,6 @@ static MsgStruct_t Msg[] = {
     { ERR_NOTSELF_KICK,    "Can't kick myself"},
     { ERR_NOTSELF_BAN,    "Can't ban myself"}, 
     
-    // command  format erros
-	{ ERR_CMD_ADDCHANNEL,		"Invalid command: !addchannel <#channel>"},
-	{ ERR_CMD_JOIN,			"Invalid command: !join <#channel>"},
-	{ ERR_CMD_IDENT,			"Invalid command: !ident <login password>"},
-	{ ERR_CMD_NICK,			"Invalid command: !nick <nickname>"},			
-	{ ERR_CMD_SAY,			"Invalid command: !say [#channel] <message>"},			
-	{ ERR_CMD_KICK,			"Invalid command: !kick [#channel] <nickname> [reason]"},
-    { ERR_CMD_BAN,			"Invalid command: !ban [#channel] <nickname>"},
-    { ERR_CMD_DEBAN,			"Invalid command: !deban [#channel] <banmask>" },
-	{ ERR_CMD_USERMODE,		"Invalid command: !usermode [#channel] <login> <+/-><mod>"},
-	{ ERR_CMD_CHANMODE,		"Invalid command: !chamode [#channel] <+/-><mods>" },
-
-
 	// other informations
 	{ INFO_HELP_END,			"End of help."},
 	{ INFO_HELP_FOR,			"Help for"},

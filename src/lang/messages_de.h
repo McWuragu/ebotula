@@ -100,7 +100,8 @@ static MsgStruct_t Msg[] ={
 	{ ERR_NOT_MASTER,		"Du bist kein Botmaster" },
 	{ ERR_NOT_OWNER,		"Du bist nicht der Channeleigentümer" },
 	{ ERR_NOT_CHANNELOPT,	"Dieses Kommando benötigt einen Channel" },
-	{ ERR_NOT_COMMAND,		"Es wurde keine Hilfe für das Kommando gefunden" },
+    { ERR_NOT_PARAMETER,    "Es konnnten keine gültigen Parameter gefunden werden."},
+    { ERR_NOT_COMMAND,		"Es wurde keine Hilfe für das Kommando gefunden" },
 	{ ERR_NOT_ACCOUNT,		"Der Account wurde nicht gefunden" },
 	{ ERR_NOT_CHANNEL,		"Dieser Channel ist nicht auf der Channelliste" },
 	{ ERR_NOT_ACCESS,		"Zugriff verweigert" },
@@ -119,19 +120,6 @@ static MsgStruct_t Msg[] ={
 	{ ERR_NOTSELF_KICK,         "Kann mich nicht selbst kicken."  },
     { ERR_NOTSELF_BAN,          "Kann mich nicht selbst bannen."  },
     
-	// command  format erros
-	{ ERR_CMD_ADDCHANNEL,		"Ungültiges Kommando: !addchannel <#channel>" },
-	{ ERR_CMD_JOIN,			    "Ungültiges Kommando: !join <#channel>" },
-	{ ERR_CMD_IDENT,			"Ungültiges Kommando: !ident <login password>" },
-	{ ERR_CMD_NICK,			    "Ungültiges Kommando: !nick <nickname>" },			
-	{ ERR_CMD_SAY,			    "Ungültiges Kommando: !say [#channel] <message>" },			
-	{ ERR_CMD_KICK,			    "Ungültiges Kommando: !kick [#channel] <nickname> [reason]" },
-    { ERR_CMD_BAN,			    "Ungültiges Kommando: !ban [#channel] <nickname>" },
-    { ERR_CMD_DEBAN,			"Ungültiges Kommando: !deban [#channel] <banmask>" },
-    { ERR_CMD_USERMODE,	    	"Ungültiges Kommando: !usermode [#channel] <login> <+/-><mod>" },
-	{ ERR_CMD_CHANMODE,		    "Ungültiges Kommando: !chamode [#channel] <+/-><mods>"  },
-
-
 	// other informations
 	{ INFO_HELP_END,			"Ende der Hilfe." },
 	{ INFO_HELP_FOR,			"Hilfe für" },
