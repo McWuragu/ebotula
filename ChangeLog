@@ -1,3 +1,7 @@
+ebotula-0.1.15
+--------------------
+- fixed memory leaks
+
 ebotula-0.1.14
 --------------------
 - fixed the pong return string
