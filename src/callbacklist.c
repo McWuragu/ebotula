@@ -254,9 +254,9 @@ CallbackItem_t * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDL
 	/** check for empty list **/
 	if (list==NULL)
 		return NULL;
-	if (getHeadCallbackDList(list)==NULL || getTailCallbackDList(tail)==NULL || getSizeCallbackDList(list)==NULL)
+	if (getHeadCallbackDList(list)==NULL || getTailCallbackDList(list)==NULL || getSizeCallbackDList(list)==0)
 	{
-		return 0;
+		return NULL;
 	}
 	/** check for empty start element **/
 	if (element==NULL)
@@ -265,7 +265,7 @@ CallbackItem_t * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDL
 	temp=element;
 	if (isheadCallbackDList(element))
 	{
-		while(!strcmp(temp->nickname,nickname) && temp->next!=NULL)
+		while(!strcmp(temp->data->nickname,nickname) && temp->next!=NULL)
 		{
 			temp=temp->next;
 		}
@@ -273,20 +273,20 @@ CallbackItem_t * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDL
 	}
 	else if (istailCallbackDList(element))
 	{
-		while(!strcmp(temp->nickname,nickname) && temp->prev!=NULL)
+		while(!strcmp(temp->data->nickname,nickname) && temp->prev!=NULL)
 		{
 			temp=temp->prev;
 		}
 	}
 	else
 	{
-		while(!strcmp(temp->nickname,nickname) && temp->next!=NULL)
+		while(!strcmp(temp->data->nickname,nickname) && temp->next!=NULL)
 		{
 			temp=temp->next;
 		}
 	}
-	if (!strcmp(temp->nickname,nickname))
-		return temp;
+	if (!strcmp(temp->data->nickname,nickname))
+		return temp->data;
 	else
 		return NULL;
 }
