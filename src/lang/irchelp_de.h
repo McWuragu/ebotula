@@ -70,7 +70,7 @@ static char *pIrcHelp[][15] = {
     },
 
     /* friend commands */
-    /* INVITE */
+    // INVITE
     {
         "lädt den user in einen Channel ein",
         "Das Kommando ermöglich es sich selbst in einen Channel, der Invite"
@@ -187,7 +187,7 @@ static char *pIrcHelp[][15] = {
     },
     // PART
     {
-        "verläst einen Channel",
+        "verlässt einen Channel",
         "Hiermit kann man einen Channel verlassen ohne ihn aus der Liste",
         "zu löschen.",
     }
