@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-18 10:52+0200\n"
-"PO-Revision-Date: 2004-07-18 11:08+0200\n"
+"POT-Creation-Date: 2004-07-18 12:13+0200\n"
+"PO-Revision-Date: 2004-07-18 12:27+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -29,9 +29,170 @@ msgstr "Der Account %s wurde gelöscht."
 msgid "Couldn't open the configuration file %s."
 msgstr "Könnte die Datenbank %s nicht öffnen."
 
+#: src/command.c:53
+msgid "Commands list"
+msgstr "Kommandoliste"
+
+#: src/command.c:88
+msgid "Spezial help text for a command"
+msgstr "Spezialer Hilfetext für ein Kommando"
+
+#: src/command.c:101
+#, c-format
+msgid "Looking for the information about \"%s\""
+msgstr "Suche die Information über \"%s\""
+
+#: src/command.c:106
+#, c-format
+msgid "Command found %d"
+msgstr "Kommando gefunden %d"
+
+#: src/command.c:141
+#, c-format
+msgid "Try to create an new account for %s"
+msgstr "Versucht einen neuen Account für %s anzulegen"
+
+#: src/command.c:153
+msgid "Nice to meet you."
+msgstr "Schön dich zu treffen."
+
+#: src/command.c:154
+msgid "You have got a new account now."
+msgstr "Du hast nun einen neuen Account."
+
+#: src/command.c:155 src/command.c:289
+msgid "You're now identified."
+msgstr "Du bist identifiziert."
+
 #: src/command.c:158
 msgid "A account with this nickname already exists."
 msgstr "Ein Account mit diesem Namen existiert schon."
+
+#: src/command.c:171
+#, c-format
+msgid "Check the  password for the account %s"
+msgstr "Überprüfe das PAsswort für den Account %s"
+
+#: src/command.c:184
+msgid "Password is changed."
+msgstr "Passwort wurde geändert."
+
+#: src/command.c:257
+#, c-format
+msgid "try to identify %s"
+msgstr "Versuche %s zu identifizieren."
+
+#: src/command.c:283
+#, c-format
+msgid "Look for the account %s"
+msgstr "Suche den Account %s"
+
+#: src/command.c:287
+#, c-format
+msgid "User %s found"
+msgstr "Der Benutzer %s wurde gefunden."
+
+#: src/command.c:297
+msgid "Reconstruct the access rights for the channels"
+msgstr "Herstellung der Zugriffsrechte für alle Channels."
+
+#: src/command.c:356
+#, c-format
+msgid "Join and add the channnel %s"
+msgstr "Channel %s hinzugefügt und beigetretten"
+
+#: src/command.c:382
+#, c-format
+msgid "Part and  try to remove the channnel %s"
+msgstr "Channel %s verlassen und wird versucht zu entfernen."
+
+#: src/command.c:418
+#, c-format
+msgid "Join the channel %s"
+msgstr "Channel %s beigetretten."
+
+#: src/command.c:432
+#, c-format
+msgid "Part the channel %s"
+msgstr "Channel %s verlassen."
+
+#: src/command.c:499
+msgid "Build channel list."
+msgstr "Erzeuge Channelliste"
+
+#: src/command.c:515
+#, c-format
+msgid "...for channel %s"
+msgstr "...für den Channel %s"
+
+#: src/command.c:577
+#, c-format
+msgid "Greeting seting for %s"
+msgstr "Begrüssung gesetzt für den Channel %s"
+
+#: src/command.c:625
+#, c-format
+msgid "Topic seting for %s"
+msgstr "Überschrift gesetzt für den Channel %s"
+
+#: src/command.c:684
+#, c-format
+msgid "Greeting for %s"
+msgstr "Begrüssung für den Channel %s"
+
+#: src/command.c:942
+msgid "Modify user mod"
+msgstr "Verändere Benutzermodien"
+
+#: src/command.c:988
+#, c-format
+msgid "Modify account %s in the channel %s"
+msgstr "Verändere den Account %s im Channel %s"
+
+#: src/command.c:1018
+#, c-format
+msgid "Found usermodes %s"
+msgstr "Benutzermodien \"%s\" gefunden"
+
+#: src/command.c:1046
+msgid "Set new usermodes"
+msgstr "Setze neue Benutzermodien"
+
+#: src/command.c:1052
+msgid "Remove new usermodes"
+msgstr "Entferne alte Benutzermodien"
+
+#: src/command.c:1061
+msgid "Modify the current usermodes"
+msgstr "Verändere die aktuellen Benutzermodien"
+
+#: src/command.c:1121
+#, c-format
+msgid "Found the new channel modes \"%s\" for the channel %s."
+msgstr "Neue Channelmodien \"%s\" für den Channel %s gefunden."
+
+#: src/command.c:1185
+#, c-format
+msgid "Write the new channel modes \"%s\" for the channel %s."
+msgstr "Schreibe neue Channelmodien \"%s\" für den Channel %s."
+
+#: src/command.c:1194
+#, c-format
+msgid "Set the new channel modes for the channel %s"
+msgstr "Setzte die neuen Channelmodien für den Channel %s"
+
+#: src/command.c:1251
+#, c-format
+msgid "Remove %s from the user list"
+msgstr "Entferne den Benutzer %s von der Liste"
+
+#: src/command.c:1284
+msgid "Create the userlist for a master"
+msgstr "Erzeuge eine Benutzerliste für einen Master"
+
+#: src/command.c:1384
+msgid "Create the userlist for a owner"
+msgstr "Erzeuge eine Benutzerliste für einen Owner"
 
 #: src/dbaccess.c:57
 msgid "Initialization of the database"
