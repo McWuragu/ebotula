@@ -15,7 +15,8 @@
 #include <errno.h>
 #include <pthread.h>
 #include <signal.h>
-
+#include <libintl.h>
+#include <locale.h>
 #include <pwd.h>
 #include <grp.h>
 #include <dirent.h>
@@ -71,6 +72,12 @@ int main(int argc,char * const argv[]) {
     int iTemp;
     
     uid=geteuid();
+   
+    // nls support
+    setlocale(LC_ALL, "");
+    bindtextdomain(PACKAGE,"/usr/share/locale");
+    textdomain(PACKAGE);
+    
     
     // init config
     if (uid==0) {
@@ -158,7 +165,7 @@ int main(int argc,char * const argv[]) {
             case 'D':
             {
                 int tmp;
-                logger(LOG_INFO,"Found debug level option");
+                logger(LOG_INFO,gettext("Found debug level option"));
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
