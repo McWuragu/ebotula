@@ -1,10 +1,23 @@
 /* #############################################################
  *
- * This is a part of ebotula.
- * It is distributed under the GNU General Public License
- * See the file COPYING for details.
+ *  This file is a part of ebotula. 
  *
- * (c)2003 Steffen Laube <Laube.Steffen@gmx.de>
+ *  Coypright (C)2003-2005 Steffen Laube <Laube.Steffen@gmx.de>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public
+ *  License along with this library; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
+ *
  * ############################################################# 
  */
 
@@ -176,12 +189,14 @@ void hResetModes(char *pLine) {
     extern ConfigSetup_t sSetup;
     char *pPos;
     char *pChannel;
+    char *pChannelStr;
     char *pData;
     char *pNick;
     char *pNetmask;
     char *pAccessNick;
     char *pMode;
     char *pRest=NULL;
+    ChannelData_t ChannelSet;
     extern CallbackDList CallbackList;
     CallbackItem_t *Callback;
     
@@ -190,7 +205,7 @@ void hResetModes(char *pLine) {
     /*splitt the string*/
     pNetmask=getFirstPart(pLine,&pRest);
     rmFirstPart(pRest,&pRest);
-    
+  
     pChannel=getFirstPart(pRest,&pRest);
     pMode=getFirstPart(pRest,&pRest);
     pNick=getFirstPart(pRest,&pRest);
@@ -245,11 +260,19 @@ void hResetModes(char *pLine) {
             } else if (pMode[1]=='b') {
                 logger(LOG_INFO,_("Ban reset not implemented jet"));
             } else {
+                if ((pChannelStr=get_db(CHANNEL_DB,pChannel))) {
+                    StrToChannelData(pChannelStr,&ChannelSet);
+
+
+                    free(pChannelStr);
+                }
                 /* reset other mods */
+                /*
                 pPos=strstr(pLine,pMode);
                 pPos[0]=(pPos[0]=='-')?'+':'-';
                 mode(pChannel,pPos,NULL);
                 logger(LOG_DEBUG,_("Reset the channelmodes of the channel %s"),pChannel);
+                */
             }
         } 
         free(pTmpBotName);
