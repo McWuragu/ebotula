@@ -48,6 +48,8 @@ static int nLastIndex=0;
 static int nItemCount=1;
 static int nFirstIndex=-1;
 
+static pthread_mutex_t mutexSend;
+
 
 static int GetCharPerMin(unsigned int nCharCount);
 /* #############################################################################  */
@@ -60,6 +62,7 @@ void connectServer(void) {
 
     errno=0;
 
+    pthread_mutex_init(&mutexSend,NULL);
 
     /* init the  socketaddr */
     bzero((char*) &socketaddr,sizeof(socketaddr));
@@ -109,11 +112,11 @@ exit(errno);
 /* ############################################################################# */
 void disconnectServer(void){
     shutdown(sockid,0);
+    pthread_mutex_destroy(&mutexSend);
 }
 /* ############################################################################ */
 void SendLine(char* pMsg){
     extern ConfigSetup_t sSetup;
-    extern pthread_mutex_t mutexSend;
     extern int stop;
     int nSendLength;
 

@@ -45,7 +45,6 @@ volatile boolean stop;       // singal for stop the endless loop
 boolean again;
 
 pthread_mutex_t mutexAccount;      // mutex for synchronize the access of the login db 
-pthread_mutex_t mutexSend;
 
 
 CallbackDList CallbackList;
@@ -60,13 +59,14 @@ int main(int argc,char * const argv[]) {
     MsgBuf_t sMsg;
     QueueData Command;	
     PQueue pCommandQueue;
-    int uid;
+    uid_t uid;
     struct passwd *User;
     struct group *Group;
 	char *sDirDummy;
     DIR *pDir;
     int iTemp;
     int nSettling;
+    
     uid=geteuid();
     
     // init config
@@ -300,7 +300,7 @@ int main(int argc,char * const argv[]) {
     #endif
    
 	pthread_mutex_init(&mutexAccount,NULL);
-    pthread_mutex_init(&mutexSend,NULL);
+    
 	 
 	// init the command queue
 	pCommandQueue=initQueue();
@@ -401,7 +401,7 @@ int main(int argc,char * const argv[]) {
 
     // destroy the mutex
     pthread_mutex_destroy(&mutexAccount);
-    pthread_mutex_destroy(&mutexSend);
+    
 
     // clear the wait queue and  callback list
 	deleteQueue(pCommandQueue);
