@@ -1,5 +1,5 @@
 AC_INIT(src/ircbot.c)
-AM_INIT_AUTOMAKE(ebotula,0.2.0b)
+AM_INIT_AUTOMAKE(ebotula,0.1.3-dev)
 
 AM_SANITY_CHECK
 
