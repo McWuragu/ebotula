@@ -5,6 +5,7 @@ ebotula-0.1.13
 - Bugfix: fixed the command !help
 - renamed the version
 - modified the  irc help struction
+- added support for ctcp: ping,version,time
 
 -ebotula-devel-0.1.12
 --------------------
