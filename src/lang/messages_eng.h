@@ -17,13 +17,7 @@
 static MsgStruct_t Msg[] = {
   
 	// command acknowledgment
-    { OK_LOGOFF,			"You're now logged off."},
-	{ OK_SET_GREETING,		"The new greeting is set" },
-	{ OK_RM_GREETING,		"The greeting is removed"},
-	{ OK_SET_TOPIC,			"The new topic is set"},
-	{ OK_RM_TOPIC,			"The topic is removed"},
-	{ OK_KICK,			"The user is kicked by the bot" },
-	{ OK_BAN,			"The user is banned by the bot" },
+    { OK_BAN,			"The user is banned by the bot" },
     	{ OK_DEBAN,			"The ban is removed by the bot" },
 	{ OK_USERMODE,			"The user mod are changed" },
 	{ OK_RMUSER,			"The account is removed"},
@@ -62,11 +56,7 @@ static MsgStruct_t Msg[] = {
 	{ INFO_CHANNELLIST_TOPIC,	"Topic:"},
 	{ INFO_CHANNELLIST_GREET,	"Greeting:"},
 	{ INFO_DEFAULT_REASON,		"You are kicked from the bot."},
-	{ INFO_INIT_CHANNEL,		"has initialized this channnel"},
-	{ INFO_NEED_OP,			"needs operator access rights." },
-    { INFO_NOT_PASS,			"You've set a empty password."},
-
-
+    
 };
 
 

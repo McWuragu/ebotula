@@ -20,12 +20,6 @@
 static MsgStruct_t Msg[] ={
 
     // command acknowledgment
-	{ OK_LOGOFF,		"Du bist ausgeloggt" },
-	{ OK_SET_GREETING,	"Die neue Begrüssung wurde gesetzt" },
-	{ OK_RM_GREETING,	"Die Begrüssung wurde entfernt" },
-	{ OK_SET_TOPIC,		"Die neue Topic wurde gesetzt" },
-	{ OK_RM_TOPIC,		"Die Topic wurde entfernt" },
-	{ OK_KICK,		"Der Benutzer wurde vom Bot gekickt" },
 	{ OK_BAN,		"Der Benutzer wurde vom Bot gebannt" },
     { OK_DEBAN,			"Der Ban wurde vom Bot aufgehoben" },
     { OK_USERMODE,		"Die Benutzermodus wurde geändert" },
@@ -65,9 +59,6 @@ static MsgStruct_t Msg[] ={
 	{ INFO_CHANNELLIST_TOPIC,	"Topic:"  },
 	{ INFO_CHANNELLIST_GREET,	"Begrüssung:" },
 	{ INFO_DEFAULT_REASON,	"Du wurdest vom bot gekickt" },
-	{ INFO_INIT_CHANNEL,	"hat den Channel eingerichtet" },
-	{ INFO_NEED_OP,		"benötigt Operatorrechte" },
-	{ INFO_NOT_PASS,	"Du hast ein leeres Passwort gesetzt" }
 };
 
 
