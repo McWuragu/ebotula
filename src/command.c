@@ -79,6 +79,8 @@ void help(MsgItem_t *pMsg) {
             strcat(pMsgStr,(char*)pIrcHelp[CmdIdToHelpId(i)][0]);
             /* send notice */
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
+
+            free (pMsgStr);
         }
         /* the tail */
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_HELP_END));
@@ -649,7 +651,7 @@ void greeting(MsgItem_t *pMsg) {
     
     if (pMsg->pCallingNick) {
         /* only greeting  send  to other user */
-        if (strcmp(pMsg->pCallingNick,sSetup.botname)) {
+        if (strcmp(pMsg->pCallingNick,sSetup.pBotname)) {
             
             if (!pMsg->pAccessChannel){
                 return;
@@ -745,7 +747,7 @@ void banuser(MsgItem_t *pMsg) {
     }
 
 
-    if (strcmp(pToBanNick,sSetup.botname)==0) {
+    if (strcmp(pToBanNick,sSetup.pBotname)==0) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOTSELF_BAN));
         return;
     }
@@ -796,6 +798,7 @@ void debanuser(MsgItem_t *pMsg) {
         deban(pMsg->pAccessChannel,pArgv[0]);
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_DEBAN));
     }
+
     return;
 }
 
@@ -831,7 +834,7 @@ void kickuser(MsgItem_t *pMsg) {
     pKicknick=pArgv[0];
     if (!pKicknick) {return;}
     
-    if (strcmp(pKicknick,sSetup.botname)==0) {
+    if (strcmp(pKicknick,sSetup.pBotname)==0) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOTSELF_KICK));
         return;
     }
@@ -1414,6 +1417,7 @@ void inviteuser(MsgItem_t *pMsg){
 
     // invite
     invite(pMsg->pAccessChannel,pInviteNick);
+
 }
 /* #########################################################################
    Bot comand: \001PING <ID>\001

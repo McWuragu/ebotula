@@ -18,7 +18,7 @@ typedef enum {false,true} boolean;
 /** This stuctur is a data container for  all setup parameters.*/
 typedef struct ConfStruct{
     /** the nickname of the bot */
-    char *botname;
+    char *pBotname;
     /** the string  for  the field realname */
     char *realname;
     /** the url of the  irc server */

@@ -90,14 +90,14 @@ void write_baseconfig()
 		fprintf(fd,"%s\n",bstr[i]);
 		i++;
 		fprintf(fd,"# %s\n",tmpstr);
-		/* botname */
+		/* Botname */
 		/*  "# The name of the bot",*/
 		fprintf(fd,"%s\n",bstr[i]);
 		i++;
 		/*    KEY_BOTNAME,"=",*/
 		fprintf(fd,"%s",bstr[i]);
 		i++;
-		fprintf(fd,"%s%s\n",bstr[i],sSetup.botname);
+		fprintf(fd,"%s%s\n",bstr[i],sSetup.pBotname);
 		i++;
 		/* realname */
 		/*    "\n# String for the realname",*/

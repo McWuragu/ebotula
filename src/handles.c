@@ -88,6 +88,8 @@ void hBotNeedOp(char *pLine){
     char *pPos;
     char *pSearchStr;
 
+    
+
     if (!(pChannel=getAccessChannel(pLine)))
         return;
 
@@ -96,8 +98,8 @@ void hBotNeedOp(char *pLine){
     pNickList=(char*)malloc((strlen(pPos)+1)*sizeof(char));
     strcpy(pNickList,pPos);
 
-    pSearchStr=(char *) malloc((strlen(sSetup.botname)+2)*sizeof(char));
-    sprintf(pSearchStr,"@%s",sSetup.botname);
+    pSearchStr=(char *) malloc((strlen(sSetup.pBotname)+2)*sizeof(char));
+    sprintf(pSearchStr,"@%s",sSetup.pBotname);
 
     if (!strstr(pNickList,pSearchStr)) {
         privmsg(pChannel,getMsgString(INFO_NEED_OP));
@@ -127,7 +129,7 @@ void hSetModUser(char *pLine) {
     pNick=getNickname(pLine);
 
     if (pNick) {
-        if (strcmp(pNick,sSetup.botname)) {
+        if (strcmp(pNick,sSetup.pBotname)) {
             pNetmask=getNetmask(pLine);
             if (pNetmask) {
                 if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
@@ -188,11 +190,11 @@ void hResetModes(char *pLine) {
     pAccessNick=getNickname(ppLinePart[0]);
     
     if (pAccessNick) {
-        if (strcmp(pAccessNick,sSetup.botname)!=0) {
+        if (strcmp(pAccessNick,sSetup.pBotname)!=0) {
             if (pMode[1]=='o' || pMode[1]=='v') {
               
                 // check of bot new mods or  other user
-                if (!strcmp(pNick,sSetup.botname)) {
+                if (!strcmp(pNick,sSetup.pBotname)) {
                     DEBUG("Bot get new mods\n");
                 // mode set for the bot from other user of operator
                     // then initiallize this  channel
@@ -231,7 +233,7 @@ void hResetModes(char *pLine) {
                 mode(pChannel,pPos,NULL);
                 DEBUG("Reset the modes from the channel %s",pChannel);
             }
-        } else if (strcmp(pAccessNick,sSetup.botname)!=0) {
+        } else if (strcmp(pAccessNick,sSetup.pBotname)!=0) {
             DEBUG("Bot get new mods\n");
             // mode set for the bot from other user of operator
             // then initiallize this  channel
@@ -243,6 +245,7 @@ void hResetModes(char *pLine) {
         }
         free(pAccessNick);
     }
+
 }
 // #########################################################################
 // Event handler: TOPIC
@@ -258,7 +261,7 @@ void hResetTopic(char *pLine){
     pNick=getNickname(pLine);
 
     if (pNick) {
-        if (strcmp(pNick,sSetup.botname)) {
+        if (strcmp(pNick,sSetup.pBotname)) {
     
             // get the  right topic for this channel
             if (!(pChannel=getAccessChannel(pLine)))
@@ -292,11 +295,12 @@ void hRejoinAfterKick(char *pLine){
 
     pArgv=splitString(pLine,5);
                                                
-    if (!strcmp(sSetup.botname,pArgv[3])) {
+    if (!strcmp(sSetup.pBotname,pArgv[3])) {
         join(pArgv[2]);
 
         DEBUG("Rejoin the  channel %s\n",pArgv[2]);
     }
+
 }
 
 // #########################################################################
@@ -324,25 +328,21 @@ static void channelInit(char *pChannel) {
     if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
         StrToChannelData(pChannelSet,&sChannelData);
         free(pChannelSet);
-
-        // clean up the memory
-        if (sChannelData.pGreeting) {
-            free(sChannelData.pGreeting);
-        }
-
+                                             
         // set Topic
         if (sChannelData.pTopic) {
             topic(pChannel,sChannelData.pTopic);
-            free(sChannelData.pTopic);
         }
 
         // set Modes
         pMode=ChannelModeToStr(&(sChannelData.sModes));
-	if (strlen(pMode)) {
+        if (strlen(pMode)) {
             mode(pChannel,pMode,NULL);
         }
         free(pMode);
 
+        free(sChannelData.pGreeting);
+        free(sChannelData.pTopic);
         free (sChannelData.sModes.pKeyword);
         free (sChannelData.sModes.pLimit);
 	

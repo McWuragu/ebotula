@@ -19,10 +19,10 @@
 /**
 * This parse a line whiche was receive by the  client
 * @param pLine  a pointer of a string
-* @return a struct withe the command id, the type of 
+* @param pMsg a struct withe the command id, the type of 
 * message and a string as  argument for the  command
 */
-MsgBuf_t *preParser(char *pLine);
+void preParser(char *pLine,MsgBuf_t *pMsg);
 
 /**
 * the function for  the  thread

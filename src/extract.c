@@ -67,7 +67,7 @@ char *getNetmask(char const *pLine){
 }
 // ############################################################################# 
 char *getCommand(char const *pLine) {
-	char *pStr,*pTmp;
+	char *pStr=NULL,*pTmp;
 
     if (!pLine) {return "";}
 
@@ -84,11 +84,9 @@ char *getCommand(char const *pLine) {
 		// cut out  the first part of the server answer 
 		pStr=(char *)malloc((strlen(pTmp)+1)*sizeof(char));
 		strcpy(pStr,pTmp);
-        free(pTmp);
-		return pStr;
 	}
     free(pTmp);
-    return "";
+    return pStr;
 }
 // ############################################################################# 
 char *getArgument(char const *pLine) {
@@ -129,27 +127,30 @@ char *getArgument(char const *pLine) {
 char *getChannel(char const *pLine){
 	char *pPreamble;
 	char *pPos;
-	char *pChannel;
+	char *pChannel=NULL;
 	
 	if (!pLine) return NULL;
 
 	// extract  the substring
 	pPreamble=getCommand(pLine);
 
-	// look for the channelname
-	if (!(pPos=strchr(pPreamble,'#'))) {
-		return NULL;
-	}
-
-	// market the end  of channelname
-	strtok(pPos," ");
-    
-	// extract the channelname
-	pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
-	strcpy(pChannel,pPos);
-
-	StrToLower(pChannel);
-	return pChannel;
+    if (pPreamble) {
+    	// look for the channelname
+    	if ((pPos=strchr(pPreamble,'#'))) {
+        
+        	// market the end  of channelname
+        	strtok(pPos," ");
+            
+        	// extract the channelname
+        	pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
+        	strcpy(pChannel,pPos);
+        
+        	StrToLower(pChannel);
+        }
+    	
+        free(pPreamble);
+    }
+    return pChannel;
 }
 // #########################################################################
 char *getAccessChannel(char const *pLine) {
@@ -283,6 +284,8 @@ char *getChannelMode(char const * pChannelSet){
 		pMod=(char*)malloc((strlen(pStr)+1)*sizeof(char));
 		strcpy(pMod,pStr);
 	}
+    free (pStr);
+
 	return pMod;
 }
 // ############################################################################# 
@@ -404,6 +407,9 @@ AnswerMode_t getAnswerMode(char const * pLine){
         }else {
             _AnserMode=NoticeMode;
         }
+
+        free (pChannel);
+        
     }
     return _AnserMode;
 }

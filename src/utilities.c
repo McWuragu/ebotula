@@ -153,63 +153,69 @@ void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
             ppArgv[i]=(char*)malloc((strlen(pPos2)+1)*sizeof(char));
             strcpy(ppArgv[i],pPos2);
         } else {
-            ppArgv[i]="";
+            ppArgv[i]=NULL;
         }
     }
 
     // fill the struct
-    iLength=strlen(ppArgv[0]);
-    j=1;
-    for (i=0;i<iLength;i++) {
-        switch (ppArgv[0][i]) {
-        case '+':
-            pMode->pModeStr[MOD_TYPE]='+';
-            break;
-        case '-':
-            pMode->pModeStr[MOD_TYPE]='-';
-            break;
-        case 'k':
-            pMode->pModeStr[MOD_KEYWORD]='k';
-            pMode->pKeyword=(char*)malloc((strlen(ppArgv[j])+1)*sizeof(char));
-            strcpy(pMode->pKeyword,ppArgv[j]);
-            j++;
-            break;
-        case 'l':
-            pMode->pModeStr[MOD_LIMIT]='l';
-            pMode->pLimit=(char*)malloc((strlen(ppArgv[j])+1)*sizeof(char));
-            strcpy(pMode->pLimit,ppArgv[j]);
-            j++;
-            break;
-        case 't':
-            pMode->pModeStr[MOD_TOPIC]='t';
-            break;
-        case 'n':
-            pMode->pModeStr[MOD_MESSAGE]='n';
-            break;
-        case 'm':
-            pMode->pModeStr[MOD_MODERAT]='m';
-            break;
-        case 'p':                   
-            pMode->pModeStr[MOD_PRIVAT]='p';
-            break;
-        case 's':
-            pMode->pModeStr[MOD_SECRET]='s';
-            break;
-        case 'a':
-            pMode->pModeStr[MOD_ANONYM]='a';
-            break;
-        case 'r':
-            pMode->pModeStr[MOD_REOP]='r';
-            break;
-        case 'q':
-            pMode->pModeStr[MOD_QUIET]='q';
-            break;
-        case 'i':
-            pMode->pModeStr[MOD_INVITE]='i';
-            break;
-        default:
-            break;
+    if (ppArgv[0]) {
+        iLength=strlen(ppArgv[0]);
+        j=1;
+        for (i=0;i<iLength;i++) {
+            switch (ppArgv[0][i]) {
+            case '+':
+                pMode->pModeStr[MOD_TYPE]='+';
+                break;
+            case '-':
+                pMode->pModeStr[MOD_TYPE]='-';
+                break;
+            case 'k':
+                pMode->pModeStr[MOD_KEYWORD]='k';
+                pMode->pKeyword=(char*)malloc((strlen(ppArgv[j])+1)*sizeof(char));
+                strcpy(pMode->pKeyword,ppArgv[j]);
+                j++;
+                break;
+            case 'l':
+                pMode->pModeStr[MOD_LIMIT]='l';
+                pMode->pLimit=(char*)malloc((strlen(ppArgv[j])+1)*sizeof(char));
+                strcpy(pMode->pLimit,ppArgv[j]);
+                j++;
+                break;
+            case 't':
+                pMode->pModeStr[MOD_TOPIC]='t';
+                break;
+            case 'n':
+                pMode->pModeStr[MOD_MESSAGE]='n';
+                break;
+            case 'm':
+                pMode->pModeStr[MOD_MODERAT]='m';
+                break;
+            case 'p':                   
+                pMode->pModeStr[MOD_PRIVAT]='p';
+                break;
+            case 's':
+                pMode->pModeStr[MOD_SECRET]='s';
+                break;
+            case 'a':
+                pMode->pModeStr[MOD_ANONYM]='a';
+                break;
+            case 'r':
+                pMode->pModeStr[MOD_REOP]='r';
+                break;
+            case 'q':
+                pMode->pModeStr[MOD_QUIET]='q';
+                break;
+            case 'i':
+                pMode->pModeStr[MOD_INVITE]='i';
+                break;
+            default:
+                break;
+            }
         }
+    }
+
+    for (i=0;i<3;i++) {
+        free (ppArgv[i]);
     }
     return;
 }

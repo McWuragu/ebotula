@@ -56,7 +56,7 @@ int main(int argc,char * const argv[]) {
     char buffer[RECV_BUFFER_SIZE],*pStrPos,*pCurrLine,*pCurrString,*pCurrStringPos,*pUnparsed;
     pthread_t *threads;
     pthread_t timeThread;
-    MsgBuf_t *pMsg;
+    MsgBuf_t sMsg;
     QueueData Command;	
     PQueue pCommandQueue;
     uid_t uid;
@@ -97,11 +97,12 @@ int main(int argc,char * const argv[]) {
         sSetup.configfile=(char *)malloc((strlen(sDirDummy)+strlen(CONFFILE)+1)*sizeof(char));
         sprintf(sSetup.configfile,"%s%s",sDirDummy,CONFFILE);
 
+        free (sDirDummy);
     }
     
     // set the other default values
-    sSetup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
-    strcpy(sSetup.botname,DEFAULT_BOTNAME);
+    sSetup.pBotname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
+    strcpy(sSetup.pBotname,DEFAULT_BOTNAME);
     sSetup.realname=(char *)malloc((strlen(DEFAULT_REALNAME)+1)*sizeof(char));
     strcpy(sSetup.realname,DEFAULT_REALNAME);
     
@@ -219,7 +220,7 @@ int main(int argc,char * const argv[]) {
     DEBUG("----------------------------------------------\n");
     DEBUG("Server %s\n",sSetup.server);
     DEBUG("Port %s\n",sSetup.port);
-    DEBUG("Nickname %s\n", sSetup.botname);
+    DEBUG("Nickname %s\n", sSetup.pBotname);
     DEBUG("Realname %s\n", sSetup.realname);
     DEBUG("Execute as %s.%s\n",sSetup.sExeUser,sSetup.sExeGroup);
     DEBUG("Threads %d\n",sSetup.thread_limit);
@@ -342,14 +343,15 @@ int main(int argc,char * const argv[]) {
 
             /* parse the part line */
             DEBUG("Parse: \"%s\"\n",pCurrLine);
-            pMsg=preParser(pCurrLine);
+            preParser(pCurrLine,&sMsg);
 
             /* put the identified line  on the  queue */
-            if (pMsg->identify!=CMD_NONE) {
-				Command.t_size=sizeof(MsgBuf_t);
-				Command.data=pMsg;
+            if (sMsg.identify!=CMD_NONE) {
+                Command.t_size=sizeof(MsgBuf_t);
+				Command.data=&sMsg;
 				pushQueue(pCommandQueue,Command);
-                free(pMsg);
+
+
             }
             free(pCurrLine);
             
@@ -376,6 +378,7 @@ int main(int argc,char * const argv[]) {
         
 
     }
+    free (sMsg.pMsgLine);
     free(pUnparsed);
 
     flushQueue(pCommandQueue);
@@ -416,6 +419,20 @@ int main(int argc,char * const argv[]) {
 	logger(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));
         closelog();
     }
+
+    // clean up thread
+    for (i=0;i<sSetup.thread_limit;i++) {
+        free (threads[i]);
+    }
+
+    free (sSetup.pBotname);
+    free (sSetup.configfile);
+    free (sSetup.pDatabasePath);
+    free (sSetup.realname);
+    free (sSetup.server);
+    free (sSetup.sExeGroup);
+    free (sSetup.sExeUser);
+
     return(0);
 
 }

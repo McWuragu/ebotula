@@ -58,11 +58,13 @@ UserLevel_t getUserLevel(char *const pChannel, char *const pNetmask) {
                 }
             } else if ((pLevel=get_db(ACCESS_DB,pLogin))) {
                 UserLevel=MasterLevel;
+                free(pLevel);
             }
 
             free(pAccessLevelKey);
         } else if ((pLevel=get_db(ACCESS_DB,pLogin))) {
                 UserLevel=MasterLevel;
+                free(pLevel);
         }
     }
     return UserLevel;

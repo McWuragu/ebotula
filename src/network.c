@@ -246,16 +246,16 @@ void ConnectToIrc(void){
         trying++;
         
         
-        nick(sSetup.botname);
+        nick(sSetup.pBotname);
         RecvLine(recv_buffer,RECV_BUFFER_SIZE);
 
         /* check for  nickname alread in use */
         /* if he in use then put a leading underline on the front of the name */
         if (strstr(recv_buffer,"Nickname is already in use.")) {
-            tmp=(char *)calloc(strlen(sSetup.botname)+2,sizeof(char));
-            sprintf(tmp,"_%s",sSetup.botname);
-            free(sSetup.botname);
-            sSetup.botname=tmp;
+            tmp=(char *)calloc(strlen(sSetup.pBotname)+2,sizeof(char));
+            sprintf(tmp,"_%s",sSetup.pBotname);
+            free(sSetup.pBotname);
+            sSetup.pBotname=tmp;
             i=1;
         }
         

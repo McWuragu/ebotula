@@ -299,8 +299,7 @@ PQueue list_db(int db){
     // get the database handle
     if ((dbf=get_dbf(db))) {
 	    pthread_mutex_lock(&dbaccess_mutex[db]);
-		firstkey=gdbm_firstkey(dbf);
-		key=firstkey;
+		key=gdbm_firstkey(dbf);
 
 		/* iterate the date base */
 		while (key.dptr) {
@@ -311,9 +310,11 @@ PQueue list_db(int db){
 			/* push in the  queue */
 			pushQueue(pList,QueueItem);
 			
+
 			/* read next key */
 			nextkey=gdbm_nextkey(dbf,key);
-			key=nextkey;
+            free (key.dptr);
+            key=nextkey;
 		}
 
 		pthread_mutex_unlock(&dbaccess_mutex[db]);

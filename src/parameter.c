@@ -68,15 +68,15 @@ void CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set the botname
+                // set the pBotname
                 if (!NickStringCheck(argv[i])) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_WRONG_BOTNAME));
                     exit(errno);
                 }
                 
-                sSetup.botname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-                strcpy(sSetup.botname,argv[i]);
+                sSetup.pBotname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+                strcpy(sSetup.pBotname,argv[i]);
                 
                 break;
             case 'u':
@@ -338,6 +338,7 @@ void ConfigFileParser(void) {
                         exit(errno);
                     }
                     // set servername
+                    free(sSetup.server);
                     sSetup.server=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.server,value);
                 } else if (!strcmp(key,KEY_PORT)) {
@@ -355,10 +356,10 @@ void ConfigFileParser(void) {
                         perror(getMsgString(ERR_WRONG_BOTNAME));
                         exit(errno);
                     }
-                    // set botname
-                    free(sSetup.botname);
-                    sSetup.botname=(char *)malloc((strlen(value)+1)*sizeof(char));
-                    strcpy(sSetup.botname,value);
+                    // set pBotname
+                    free(sSetup.pBotname);
+                    sSetup.pBotname=(char *)malloc((strlen(value)+1)*sizeof(char));
+                    strcpy(sSetup.pBotname,value);
                 } else if (!strcmp(key,KEY_REALNAME)) {
                     // ser realname
                     free(sSetup.realname);

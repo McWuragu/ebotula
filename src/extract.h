@@ -13,6 +13,8 @@
 
 #include "type.h"
 
+#define delSplitString(array,size) { int i; for (i=0;i<size;i++) {free (array[i]);} free (array);}
+
 /**
 * This function extract the nickname from the network identify or complete
 * string from the irc server

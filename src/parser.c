@@ -31,29 +31,30 @@
 #include "parser.h"
 
 
-MsgBuf_t* preParser(char *pLine) {
-    MsgBuf_t *pMsg;
+void preParser(char *pLine,MsgBuf_t *pMsg) {
     char *pStr,*pPreamble,*pPos;
     int i;
 
-    // init the buffer with zero
-    pMsg=(MsgBuf_t*)calloc(sizeof(MsgBuf_t),1);
+    // reset the buffer
+    pMsg->identify=CMD_NONE;
+    pMsg->pMsgLine=NULL;
 
     // get the first part of the  answer from server
     pPreamble=getCommand(pLine);
-
+    if (!pPreamble) { return;}
+    
     // look for  command position
     if (!(pPos=strchr(pPreamble,' '))){
-        return pMsg;
+        return;
     } else {
         //set the pointr to the comaman start
         pPos++;
     }
 
-    // preparse the line
     
-    // identify events and commands
 
+    // preparse the line
+    // identify events and commands
     if (!strncmp(pPreamble,CmdList[CMD_ONPING],strlen(CmdList[CMD_ONPING]))) {
         /*
          * The ping can't send over the threads. If you have high usage of the
@@ -118,25 +119,25 @@ MsgBuf_t* preParser(char *pLine) {
                 }
             }
         }
+    } else {
+        
     }
 	
-	pMsg->pMsgLine=(char*)malloc((strlen(pLine)+1)*sizeof(char));
-    strcpy(pMsg->pMsgLine,pLine);
-    return pMsg;
+    if (pMsg->identify!=CMD_NONE) {
+        pMsg->pMsgLine=(char*)malloc((strlen(pLine)+1)*sizeof(char));
+        strcpy(pMsg->pMsgLine,pLine);
+    }
+
+    free(pPreamble);
+    return;
 }
 
 void *CommandExecutionThread(void *argv) {
 	extern boolean stop;
     QueueData *pCommand;
 	MsgBuf_t *pMsg;
-    MsgItem_t *pMsgItem;
+    MsgItem_t sMsgItem;
 	
-    char *pNetmask;
-    char *pChannel;
-    char *pNick;
-    UserLevel_t Level;
-	AnswerMode_t AnswerMode;
-
 	PQueue pCommandQueue=(PQueue)argv;	
 
     // set the thread cancelable
@@ -155,25 +156,18 @@ void *CommandExecutionThread(void *argv) {
 
 
             // extract the needed values
-            pNetmask=getNetmask(pMsg->pMsgLine);
-            pChannel=getAccessChannel(pMsg->pMsgLine);
-            pNick=getNickname(pMsg->pMsgLine);
-            AnswerMode=getAnswerMode(pMsg->pMsgLine);
-            Level=getUserLevel(pChannel,pNetmask);
 
+            // fill the parameter
+            sMsgItem.pNetmask=getNetmask(pMsg->pMsgLine);
+            sMsgItem.pAccessChannel=getAccessChannel(pMsg->pMsgLine);
+            sMsgItem.pCallingNick=getNickname(pMsg->pMsgLine);
+            sMsgItem.AnswerMode=getAnswerMode(pMsg->pMsgLine);
+            sMsgItem.UserLevel=getUserLevel(sMsgItem.pAccessChannel,sMsgItem.pNetmask);
+            sMsgItem.pRawLine=pMsg->pMsgLine;
+            
             // check the access level
-            if (AccessRight(Level,pMsg->identify)) {
-                
-                // fill the parameter
-                pMsgItem=(MsgItem_t *)malloc(sizeof(MsgItem_t));
-                pMsgItem->pAccessChannel=pChannel;
-                pMsgItem->pCallingNick=pNick;
-                pMsgItem->pNetmask=pNetmask;
-                pMsgItem->UserLevel=Level;
-                pMsgItem->pRawLine=pMsg->pMsgLine;
-                pMsgItem->AnswerMode=AnswerMode;
-                
-
+            if (AccessRight(sMsgItem.UserLevel,pMsg->identify)) {
+            
                 // command router 
                 switch (pMsg->identify) {
                 // Event handler
@@ -181,142 +175,140 @@ void *CommandExecutionThread(void *argv) {
 					pong(NULL);
                     break;
                 case CMD_ONNICKCHG:
-                    hNickChange(pMsg->pMsgLine);
+                    hNickChange(sMsgItem.pRawLine);
                     break;
                 case CMD_ONMODE:
-                    hResetModes(pMsg->pMsgLine);
+                    hResetModes(sMsgItem.pRawLine);
                     break;
                 case CMD_ONKICK:
-                    hRejoinAfterKick(pMsg->pMsgLine);
+                    hRejoinAfterKick(sMsgItem.pRawLine);
                     break;
                 case CMD_ONTOPIC:
-                    hResetTopic(pMsg->pMsgLine);
+                    hResetTopic(sMsgItem.pRawLine);
                     break;
                 case CMD_ONWHOIS:
-                    hCallback(pMsg->pMsgLine);
+                    hCallback(sMsgItem.pRawLine);
                     break;
                 case CMD_ONNONICK:
-                    hWhoisFailed(pMsg->pMsgLine);
+                    hWhoisFailed(sMsgItem.pRawLine);
                     break;
                 case CMD_ONNAMES:
-                    hBotNeedOp(pMsg->pMsgLine);
+                    hBotNeedOp(sMsgItem.pRawLine);
                     break;
                 case CMD_ONJOIN:
-                    hSetModUser(pMsg->pMsgLine);
+                    hSetModUser(sMsgItem.pRawLine);
                 
                 // Command handler
                 case CMD_VIEWGREAT:
-                    greeting(pMsgItem);
+                    greeting(&sMsgItem);
                     break;
                 case CMD_ONQUIT:
-                    logoff(pMsgItem,false);
+                    logoff(&sMsgItem,false);
                 case CMD_LOGOFF:
-                    logoff(pMsgItem,true);
+                    logoff(&sMsgItem,true);
                     break;
                 case CMD_HELP:
-                    help(pMsgItem);
+                    help(&sMsgItem);
                     break;
                 case CMD_VERSION:
-                    version(pMsgItem);
+                    version(&sMsgItem);
                     break;
                 case CMD_HELLO:
-                    hello(pMsgItem);
+                    hello(&sMsgItem);
                     break;
                 case CMD_PASS:
-                    password(pMsgItem);
+                    password(&sMsgItem);
                     break;
                 case CMD_IDENT:
-                    ident(pMsgItem);
+                    ident(&sMsgItem);
                     break;
                 case CMD_ADDCHANNEL:
-                    addChannel(pMsgItem);
+                    addChannel(&sMsgItem);
                     break;
                 case CMD_RMCHANNEL:
-                    rmChannel(pMsgItem);
+                    rmChannel(&sMsgItem);
                     break;
                 case CMD_JOIN:
-                    joinChannel(pMsgItem);
+                    joinChannel(&sMsgItem);
                     break;
                 case CMD_PART:
-                    partChannel(pMsgItem);
+                    partChannel(&sMsgItem);
                     break;
                 case CMD_DIE:
-                    die(pMsgItem);
+                    die(&sMsgItem);
                     break;
                 case CMD_NICK:
-                    setNick(pMsgItem);
+                    setNick(&sMsgItem);
                     break;
                 case CMD_CHANNELS:
-                    chanlist(pMsgItem);
+                    chanlist(&sMsgItem);
                     break;
                 case CMD_SET_GREATING:
-                    setGreeting(pMsgItem);
+                    setGreeting(&sMsgItem);
                     break;
                 case CMD_SET_TOPIC:
-                    setTopic(pMsgItem);
+                    setTopic(&sMsgItem);
                     break;
                 case CMD_SAY:
-                    say(pMsgItem);
+                    say(&sMsgItem);
                     break;
                 case CMD_KICK:
-                    kickuser(pMsgItem);
+                    kickuser(&sMsgItem);
                     break;
                 case CMD_USERMODE:
-                    usermode(pMsgItem);
+                    usermode(&sMsgItem);
                     break;
                 case CMD_RMUSER:
-                    rmuser(pMsgItem);
+                    rmuser(&sMsgItem);
                     break;
                 case CMD_USERLIST:
-                    userlist(pMsgItem);
+                    userlist(&sMsgItem);
                     break;
                 case CMD_ALLSAY:
-                    allsay(pMsgItem);
+                    allsay(&sMsgItem);
                     break;
                 case CMD_CHANMODE:
-                    chanmode(pMsgItem);
+                    chanmode(&sMsgItem);
                     break;
                 case CMD_RESTART:
-                    restart(pMsgItem);
+                    restart(&sMsgItem);
                     break;
                 case CMD_BAN:
-                    banuser(pMsgItem);
+                    banuser(&sMsgItem);
                     break;
                 case CMD_DEBAN:
-                    debanuser(pMsgItem);
+                    debanuser(&sMsgItem);
                     break;
                 case CMD_INVITE:
-                    inviteuser(pMsgItem);
+                    inviteuser(&sMsgItem);
                     break;
                 case CMD_CTCPPING:
-        		    ctcpping(pMsgItem);
+        		    ctcpping(&sMsgItem);
         		    break;
            		case CMD_CTCPVERSION:
-                    ctcpversion(pMsgItem);
+                    ctcpversion(&sMsgItem);
                     break;
            		case CMD_CTCPTIME:
-                    ctcptime(pMsgItem);
+                    ctcptime(&sMsgItem);
                     break;
            		default:
                     /*syslog(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));*/
                     logger(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
 		    break;
                 }
-
-                // remove  destroy the last popped Command
-                free(pMsg->pMsgLine);
-                free(pMsg);
-                
-                free(pMsgItem);
-                free(pCommand);
-            
             } else {
-                notice(pNick,getMsgString(ERR_NOT_ACCESS));
+                notice(sMsgItem.pCallingNick,getMsgString(ERR_NOT_ACCESS));
             }
 
-            if (pNetmask) free(pNetmask);
-            if (pNick) free(pNick);
-            if (pChannel) {free(pChannel);}
+
+            free (sMsgItem.pAccessChannel);
+            free (sMsgItem.pCallingNick);
+            free (sMsgItem.pNetmask);
+            free (sMsgItem.pNetmask);
+            free (sMsgItem.pRawLine);
+            free(pMsg);
+            
+            free(pCommand);
         }
     }
     DEBUG("Execution thread is stopped\n");
