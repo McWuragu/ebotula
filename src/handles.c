@@ -116,7 +116,7 @@ void hResetModUser(char *pLine) {
 	char pMod[3];
 	char *pNick;
 
-	if (!strcmp(getNickname(pLine),sSetup.botname)) {
+	if (strcmp(getNickname(pLine),sSetup.botname)) {
 		DEBUG("Reset the Mod");
 		if ((pPos=strpbrk(pLine,"+-"))) {
 			pChannel=getAccessChannel(pLine);
