@@ -64,7 +64,8 @@ static MsgStruct_t Msg[] ={
 	{ ERR_WRONG_BOTNAME,	"Botname ist unzulässig" },
 	{ ERR_ALT_RANGE,	"Die Accountlebenserwartung ist ungültig" },
 	{ ERR_PINGTIMEOUT_RANGE,"Die Pingtimeoutzeit ist ungültig" },
-	{ ERR_SENDDELAY_RANGE,	"Die Sendeverzögerung ist ungültig" },
+	{ ERR_LOGLEVEL_RANGE,    "Das Loglevel ist ungültig"},
+    { ERR_SENDDELAY_RANGE,	"Die Sendeverzögerung ist ungültig" },
     { ERR_SENDLINE_RANGE,	"Das Limit für das Senden mit der 1. Verzögerung ist ungültig" },
 	{ ERR_INIT_DELAY,       "Die Verzögerung für das Einrichten der Channels ist ungültig"}
     { ERR_LOGOFF_RANGE,	"Die Auslogzeit ist ungültig" },
@@ -161,6 +162,7 @@ static MsgStruct_t Msg[] ={
 		"\t-b Name\t\tSetzt den Namen des Bots.\n",
 		"\t-c Sek\t\tSetzt das Timeoutlimit.\n",
 		"\t-d Pfad\t\tSetzt den Pfad zu Datenbank\n",
+        "\t-D Level\tSetzt das Log Level (0-7)\n",
         "\t-e ms\t\tSetzt die Verzögerung für das langsame Senden.\n",
 		"\t-f Datei\tSetzt Pfad zur Konfigurationsdatei\n",
 		"\t-g group\tSetzt die Group unter der gestartet werden soll (nur root).\n",
