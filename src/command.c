@@ -440,7 +440,7 @@ void partChannel(MsgItem_t *pMsg) {
    Bot comand: !die
    ######################################################################### */
 void die(MsgItem_t *pMsg) {
-    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_DIE));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The bot is going down."));
     stopParser(0);
 }
 /* #########################################################################
@@ -448,7 +448,7 @@ void die(MsgItem_t *pMsg) {
    ######################################################################### */
 void restart(MsgItem_t *pMsg) {
     extern boolean again;
-    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RESTART));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The bot is going to restart."));
     again=true;
     stopParser(0);
 }
@@ -830,7 +830,7 @@ void debanuser(MsgItem_t *pMsg) {
     // reset the ban
     if (pBanmask) {
         deban(pMsg->pAccessChannel,pBanmask);
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_DEBAN));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The ban is removed by the bot"));
     }
 }
 
@@ -880,7 +880,7 @@ void kickuser(MsgItem_t *pMsg) {
     /* check reason */
     if (!pReason) {
         /* empty reason */
-        pReason=getMsgString(INFO_DEFAULT_REASON);
+        pReason=gettext("You are kicked from the bot.");
     }
 
     /* read  the  login name of the  kicking user */
@@ -1089,7 +1089,7 @@ void usermode(MsgItem_t *pMsg){
 		}
 
         free(pLogin);
-	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_USERMODE));
+	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The user mode are changed."));
 	} 
 }
 /* #########################################################################
@@ -1247,7 +1247,7 @@ void rmuser(MsgItem_t *pMsg) {
                 free(rmnick);
             }
         }
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RMUSER));        
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The account is removed"));        
     	logger(LOG_DEBUG,gettext("Remove %s from the user list"),pLogin);
     } else {
     	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));

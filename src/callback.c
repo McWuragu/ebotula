@@ -132,7 +132,7 @@ void SetBanCb(char *pNetmask,void * data){
         /* try to ban */
         if (doBan) {
             ban(pChannel,pBanmask);
-            notice(pCmdNick,getMsgString(OK_BAN));
+            notice(pCmdNick,gettext("The user is banned by the bot."));
         } else {
             notice(pCmdNick,getMsgString(ERR_NOT_BAN));
         }

@@ -20,16 +20,6 @@
 
 // output of strerr
 typedef enum {
-
-    // command acknowledgment
-	 OK_BAN,		   
-     OK_DEBAN,		    
-     OK_USERMODE,	    
-	 OK_RMUSER,		    
-	 OK_MASTER,		   
-	 OK_DIE,		    
-	 OK_RESTART,	    
-	
 	// Informations for invalid input or using of the bot
 	 ERR_NOT_MASTER,    
 	 ERR_NOT_CHANNELOPT,
@@ -60,7 +50,6 @@ typedef enum {
 	 INFO_CHANNELLIST_END,	  
 	 INFO_CHANNELLIST_TOPIC,   
 	 INFO_CHANNELLIST_GREET,  
-	 INFO_DEFAULT_REASON,	  
 } eMsgID_t;
 
 typedef struct MsgStruct {

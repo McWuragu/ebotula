@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-22 12:19+0200\n"
-"PO-Revision-Date: 2004-07-22 12:21+0200\n"
+"POT-Creation-Date: 2004-07-24 18:43+0200\n"
+"PO-Revision-Date: 2004-07-24 18:46+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -92,6 +92,10 @@ msgstr "Zurücksetzen der Modien für den Benutzer %s"
 msgid "Callback routine for user banning"
 msgstr "Callbackroutine für das Bannen eines Benutzers"
 
+#: src/callback.c:135
+msgid "The user is banned by the bot."
+msgstr "Der Benutzer wurd vom Bot gebannt."
+
 #: src/callback.c:161
 msgid "Callback routine for user kicking"
 msgstr "Callbackroutine für das Herrauswerfen eines Benutzers"
@@ -103,7 +107,7 @@ msgstr "Der Benutzer wurd vom Bot gekickt."
 #: src/callbacklist.c:82 src/callbacklist.c:135 src/irc.c:47 src/irc.c:66
 #: src/irc.c:83 src/irc.c:96 src/irc.c:121 src/irc.c:134 src/irc.c:153
 #: src/irc.c:162 src/irc.c:176 src/irc.c:189 src/irc.c:202 src/irc.c:215
-#: src/irc.c:233 src/irc.c:246 src/irc.c:259 src/irc.c:277 src/irc.c:290
+#: src/irc.c:229 src/irc.c:242 src/irc.c:255 src/irc.c:273 src/irc.c:286
 #: src/queue.c:30 src/queue.c:82 src/queue.c:111
 msgid "Couldn't allocate memory!"
 msgstr "Könnte keinen Speicher anfordern."
@@ -232,6 +236,14 @@ msgstr "Channel %s beigetretten."
 msgid "Part the channel %s"
 msgstr "Channel %s verlassen."
 
+#: src/command.c:443
+msgid "The bot is going down."
+msgstr "Der Bot stopt."
+
+#: src/command.c:451
+msgid "The bot is going to restart."
+msgstr "Der Bot startet neu."
+
 #: src/command.c:474
 msgid "The bot tries to set the new nickname."
 msgstr "Der bot versucht den neuen Nickname zusetzen."
@@ -276,6 +288,14 @@ msgstr "Die neue Überschrift wurde gesetzt."
 msgid "Greeting for %s"
 msgstr "Begrüssung für den Channel %s"
 
+#: src/command.c:833
+msgid "The ban is removed by the bot"
+msgstr "Der Benutzer wurd vom Bot gebannt."
+
+#: src/command.c:883
+msgid "You are kicked from the bot."
+msgstr "Du wurd vom Bot gekickt."
+
 #: src/command.c:942
 msgid "Modify user mod"
 msgstr "Verändere Benutzermodien"
@@ -302,6 +322,10 @@ msgstr "Entferne alte Benutzermodien"
 msgid "Modify the current usermodes"
 msgstr "Verändere die aktuellen Benutzermodien"
 
+#: src/command.c:1092
+msgid "The user mode are changed."
+msgstr "Der Benutzermodien wurden geändert."
+
 #: src/command.c:1121
 #, c-format
 msgid "Found the new channel modes \"%s\" for the channel %s."
@@ -316,6 +340,10 @@ msgstr "Schreibe neue Channelmodien \"%s\" für den Channel %s."
 #, c-format
 msgid "Set the new channel modes for the channel %s"
 msgstr "Setzte die neuen Channelmodien für den Channel %s"
+
+#: src/command.c:1250
+msgid "The account is removed"
+msgstr "Der Account wurde gelöscht."
 
 #: src/command.c:1251
 #, c-format
@@ -363,6 +391,10 @@ msgstr "Unbekannte Datenbank ID %d"
 msgid "Change the netmask \"%s\" to \"%s\""
 msgstr "Änderung der Netzmaske \"%s\" zu \"%s\""
 
+#: src/handles.c:105 src/handles.c:221
+msgid "needs operator access rights."
+msgstr "benötige Operatorrechte."
+
 #: src/handles.c:142
 #, c-format
 msgid "Set the usermodes for the account %s with nickname %s"
@@ -394,6 +426,10 @@ msgstr "Zurücksetzen der Überschrift für den Channel %s"
 #, c-format
 msgid "Rejoin the channel %s"
 msgstr "Wiederbeitretten des Channels %s"
+
+#: src/handles.c:387
+msgid "has initialized this channnel."
+msgstr "hat den Channel initialisiert."
 
 #: src/handles.c:388
 #, c-format

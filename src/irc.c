@@ -224,10 +224,6 @@ void topic(char *pChannel, char* pMsgStr) {
 void kick(char *pChannel, char *pNick, char *pMsgStr) {
     char *buffer;
 
-    // check  optional parameters and  set  it of default values
-    if (pMsgStr==NULL) {
-        pMsgStr=getMsgString(INFO_DEFAULT_REASON);;
-    }
     if ((buffer=(char*)malloc((strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6)*sizeof(char)))==NULL)
 	{
 		logger(LOG_ERR,gettext("Couldn't allocate memory!"));
