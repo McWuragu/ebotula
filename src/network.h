@@ -31,6 +31,7 @@
 #define CMD_PART				9
 #define CMD_RMCHANNEL			10
 #define CMD_LOGOFF				11
+#define CMD_DIE					12
 
 /// connect to the server
 void connectServer(void);

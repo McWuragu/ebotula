@@ -140,6 +140,9 @@ struct MSGBUF_DS preParser(char *line) {
 		} else if (!strncmp(str,"logoff",strlen("logoff"))) {
 			msg.mtype=1;
 			msg.identify=CMD_LOGOFF;
+		} else if (!strncmp(str,"die",strlen("die"))) {
+			msg.mtype=1;
+			msg.identify=CMD_DIE;
 		}
 	}
 
@@ -197,6 +200,9 @@ void *action_thread(void *argv) {
 			break;
 		case CMD_PART:
 			part_channel(msg.msg_line);
+			break;
+		case CMD_DIE:
+			die(msg.msg_line);
 			break;
 		default:
             break;
