@@ -25,7 +25,7 @@ AM_SANITY_CHECK
 AM_GNU_GETTEXT
 
 AC_PROG_CC
-#CFLAGS=`echo $CFLAGS | sed 's/-O2//'`
+CFLAGS=`echo $CFLAGS | sed 's/-O2//'`
 CFLAGS=`echo $CFLAGS | sed 's/-g//'`
 
 AC_PROG_INSTALL
@@ -96,8 +96,12 @@ _sysconfdir="$_sysconfdir/ebotula"
 _databasedir=`eval echo $localstatedir`
 _databasedir="$_databasedir/ebotula"
 
+_localebasedir=`eval echo $datadir`
+_localebasedir="$_localebasedir/locale"
+
 AC_DEFINE_UNQUOTED(CONFDIR,"$_sysconfdir", Define the default path to the configuration file)
 AC_DEFINE_UNQUOTED(DATABASEDIR,"$_databasedir", Define the default path to the database files)
+AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$_localebasedir", Define the default path to the local files)
 
 dnl ===========================
 dnl optional Features
