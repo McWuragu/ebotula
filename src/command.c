@@ -1,4 +1,11 @@
-
+/*************************************************************
+*
+* This is a part of ebotula.
+* It is distributed under the GNU General Public License
+* See the file COPYING for details.
+*
+* (c)2003 Steffen Laube <realebula@gmx.de>
+*************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -73,31 +80,44 @@ char *getCommand(char *line) {
 // ############################################################################# 
 char *getArgument(char *line) {
 	char *str,*pos;
-	int i;
+	int i,line_len;
 	
 	// found  the begining  of Parameter 
 	if ((str=strstr(line," :!"))==NULL) {
 		return NULL;
 	} else {
+		
+		line_len=strlen(str);
+		
+
+		// check the length of the substring
+		if (line_len<3) {
+			return NULL;
+		}
+
+		// set the begin of comand string
 		str+=3;
-		for (i=0;i<strlen(str)+1;i++) {
-			if (str[i]=='\0') {
-				return NULL;
-			} else if (str[i]==' ') {
+        line_len-=3; 
+
+		// search for the first space or end of string
+		for (i=0;i<=line_len;i++) {
+				
+			if (str[i]==' ') {
 				pos=&str[i];
-				break;
+				
+				trim(pos);
+
+				// looking  for empty string
+				if (strlen(pos)>0) {
+					str=(char *)malloc((strlen(pos)+1)*sizeof(char));
+					strcpy(str,pos);
+					return str;
+				}
 			}
 		}
 	}
 	
-
-	
-	str=(char *)malloc((strlen(pos)+1)*sizeof(char));
-	strcpy(str,pos);
-
-	trim(str);
-
-	return str;
+	return NULL;
 }
 
 
@@ -116,7 +136,7 @@ void help(char *line) {
 		DEBUG("Default information");
 		
 		// Header of help message 
-		for(i=0;i<HELP_ITEM_SIZE;i++) {
+		for (i=0;i<HELP_ITEM_SIZE;i++) {
 			// look for the end  of msg 
 			if ((irchelp_msg[i][0]=='\0') || (i==HELP_ITEM_SIZE)) {
 				break;
@@ -155,7 +175,7 @@ void help(char *line) {
 				continue;
 			}
 
-			// calculat the size oif  buffer 
+			// calculat the length of buffer 
 			msgstr=(char *)calloc(13+strlen(irchelp_msg[i+1]),sizeof(char));
 						
 			// build string 
@@ -201,7 +221,7 @@ void help(char *line) {
 				notice(nick,tmp);
 
 				// help message	of the  command 
-				for(j=1;j<HELP_ITEM_SIZE;j++) {
+				for (j=1;j<HELP_ITEM_SIZE;j++) {
 					// look for  the end of the  msg 
 					if ((irchelp_msg[j+i][0]=='\0') || (j==HELP_ITEM_SIZE)) {
 						// tail
@@ -233,17 +253,19 @@ void hello(char *line) {
 
 	notice(nick,MSG_HELLO);
 	notice(nick,MSG_HELLO2);
+	notice(nick,MSG_IDENT_NO);
 
 }
 // ############################################################################# 
 void password(char *line) {
 	char *login,*passwd;
 	char *netmask=getNetmask(line);
+	char *nick=getNickname(line);
 	char *parameter;
 	
 	// get  the  login name 
 	if ((login=get_db(LOGIN_DB,netmask))==NULL) {
-		notice(getNickname(line),MSG_NOT_LOGON);
+		notice(nick,MSG_NOT_LOGON);
 		return;
 	}
     
@@ -251,7 +273,7 @@ void password(char *line) {
 	if ((parameter=getArgument(line))==NULL){
 		passwd=(char *)malloc(sizeof(char));
 		strcpy(passwd,"");
-		notice(getNickname(line),MSG_NO_PASS);
+		notice(nick,MSG_NO_PASS);
 	} else {
 		strtok(line," ");
 		passwd=(char *)malloc((strlen(parameter)+1)*sizeof(char));
@@ -261,16 +283,12 @@ void password(char *line) {
 
 	// set password 
 	replace_db(USER_DB,login,passwd);
-
-	notice(getNickname(line),MSG_PASSWD);
+	notice(nick,MSG_PASSWD);
 }
 // ############################################################################# 
 void logoff(char *line) {
-	char *netmask;
-	char *nick;
-
-	netmask=getNetmask(line);
-	nick=getNickname(line);
+	char *netmask=getNetmask(line);
+	char *nick=getNickname(line);
 
 	if (!exist_db(LOGIN_DB,netmask)) {
 		notice(nick,MSG_NOT_LOGON);
@@ -285,16 +303,17 @@ void logoff(char *line) {
 void ident(char *line) {
 	char *login,*passwd,*pos;
 	char *netmask=getNetmask(line);
+	char *nick=getNickname(line);
 	char *parameter;
 
 	if (exist_db(LOGIN_DB,netmask)) {
-		notice(getNickname(line),MSG_ALREADY_LOGON);
+		notice(nick,MSG_ALREADY_LOGON);
 		return;
 	}
 	
 	// no parameter found 
 	if ((parameter=getArgument(line))==NULL) {
-		notice(getNickname(line),MSG_IDENT_ERR);
+		notice(nick,MSG_IDENT_ERR);
 		return;
 	}
 	
@@ -302,7 +321,7 @@ void ident(char *line) {
 	if ((pos=strstr(parameter," "))==NULL) {
 		// no Passwd found 
 		// try empty pass
-		notice(getNickname(line),MSG_NO_PASS);
+		notice(nick,MSG_NO_PASS);
 		passwd=(char *)malloc(sizeof(char));
 		strcpy(passwd,"");
 	} else {
@@ -318,10 +337,10 @@ void ident(char *line) {
 
 	if(check_db(USER_DB,login,passwd)) {
 		log_on(netmask,login);
-		notice(getNickname(line),MSG_IDENT_OK);
+		notice(nick,MSG_IDENT_OK);
 		return;
 	}
-	notice(getNickname(line),MSG_IDENT_NO);
+	notice(nick,MSG_IDENT_NO);
 }
 // ############################################################################# 
 void channel_add(char *line) {
@@ -496,7 +515,9 @@ void log_on(char *netmask,char *login) {
 		DEBUG("Update timestamp %s for %s",str_timestamp,login);
 	} else {
 		add_db(TIMELOG_DB,login,str_timestamp);
+		add_db(TIMELOG_DB,netmask,str_timestamp);
 		DEBUG("Add timepstamp %s for %s",str_timestamp,login);
+		DEBUG("Add timepstamp %s for %s",str_timestamp,netmask);
 	}
 	
 
