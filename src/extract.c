@@ -287,14 +287,18 @@ char *getParameters(char *pLine){
 char ** splitString(char* pLine) {
     char **ppStrings;
     char *pPos,*pPos2;
+    char *pTmp;
     unsigned int iCount=0,i;
 
     // check of NULL pointer
     if (!pLine) {
         return NULL;
+    } else {
+        pTmp=(char*)malloc((strlen(pLine)+1)*sizeof(char));
+        strcpy(pTmp,pLine);
     }
 
-    pPos2=pLine;
+    pPos2=pTmp;
 
     // word count
     do {
@@ -306,12 +310,12 @@ char ** splitString(char* pLine) {
 
     // built the array
     for (i=iCount;i>0;i--) {
-        pPos=strrchr(pLine,' ');
+        pPos=strrchr(pTmp,' ');
         if (pPos) {
             pPos[0]='\0';
             pPos++;
         } else {
-            pPos=pLine;
+            pPos=pTmp;
         }
         
         ppStrings[i-1]=(char*)malloc((strlen(pPos)+1)*sizeof(char));
