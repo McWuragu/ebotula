@@ -12,16 +12,16 @@
 
 static char *pIrcHelp[][15] = {
     // header
-    
+
     {
         "Das ist  das Onlinehilfesystem für den Bot.",
         "Mit !help [Kommando] erhält man mehr Hilfe zu einem Kommando",
         "------------------------------------------------------------------------"
     },
     // commands
-    
+
     // others
-    // VIEWGREAT
+    // VIEWGREET
     {
         "gibt die Begrüssung eines Channels aus",
         "Mit diesem Kommando kann man sich nachträglich die Begrüssung",
@@ -40,7 +40,7 @@ static char *pIrcHelp[][15] = {
         "anezeigen lassen",
     },
     // HELLO
-    {     
+    {
         "legt neuen Account an",
         "Damit wird ein neuer Account beim Bot mit dem aktuellen",
         "Nicknamen als  Login erzeugt. Dieses ist für das Einloggen von",
@@ -67,7 +67,7 @@ static char *pIrcHelp[][15] = {
         "Das Kommando ermöglicht das setzen und ändern des Passwortes",
         "des aktuell identifizieren Accounts.",
     },
-    
+
     // owner commands
     // CHANMODE
     {
@@ -105,7 +105,7 @@ static char *pIrcHelp[][15] = {
         "Durch dies Kommando kann eine Topic für einen Channel gesetzt",
         "oder gelöscht werden",
     },
-    // SET_GREATING
+    // SET_GREETING
     {
         "setzt und löscht die Begrüssung für einen Channel",
         "Dieses Kommando bietet die Möglichkeit eine Begrüssung für einen",
@@ -125,7 +125,7 @@ static char *pIrcHelp[][15] = {
     {
         "hebt einen Ban wieder auf",
     },
-    
+
     // Master commands
     // RESTART
     {

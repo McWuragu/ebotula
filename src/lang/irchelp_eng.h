@@ -21,7 +21,7 @@ static char *pIrcHelp[][15] = {
     // commands
     
     // others
-    // VIEWGREAT
+    // VIEWGREET
     {
         "This shows the greeting line of a channel",
     },
@@ -34,7 +34,7 @@ static char *pIrcHelp[][15] = {
         "print the version information",
     },
     // HELLO
-    {     
+    {
         "create a new account.",
 	"Every user who wants to use the bot needs an account.",
 	"Using this command you get one. Your login is the nickname,",
@@ -54,7 +54,7 @@ static char *pIrcHelp[][15] = {
         "logoff from the bot",
 	"If you want to disconnect from the bot,",
 	"you should logoff first.",
-	
+
     },
     // PASS
     {
@@ -62,7 +62,7 @@ static char *pIrcHelp[][15] = {
 	"Selfexplaining. Change your account password (see also !help hello)",
 	"or set it if you don't have one yet.",
     },
-    
+
     // owner commands
     // CHANMODE
     {
@@ -100,7 +100,7 @@ static char *pIrcHelp[][15] = {
 	"EXAMPLE: #LUGse -== LUGse - Linux User Group Senftenberg ==-",
 	"Used to discripe a channel.",
     },
-    // SET_GREATING
+    // SET_GREETING
     {
         "Set or remove the greeting line for a channel",
 	"The greeting is a message the bot sends to the channel",
