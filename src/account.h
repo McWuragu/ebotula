@@ -24,7 +24,7 @@ void log_on(char *pNetmask,char *pLogin);
 * usertonick.dbf and nicktouser.dbf. After this is the user logged off.
 *
 * @author Steffen Laube
-* @param pLogin the login name of the user which want log off
+* @param pLogin the login name of the user which want logoff
 */
 void log_out(char *pLogin);
 
@@ -44,7 +44,7 @@ void rmAccount(char *pLogin);
 void rmAccessRights(char *pLogin);
 
 /**
-* This lock for  user which last loging on is later as the  checking time and log off this user.
+* This lock for  user which last loging on is later as the  checking time and logoff this user.
 *
 * @author Steffen Laube
 * @param lCheckTime the limit time
