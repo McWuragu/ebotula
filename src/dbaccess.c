@@ -1,3 +1,12 @@
+/*************************************************************
+*
+* This is a part of ebotula.
+* It is distributed under the GNU General Public License
+* See the file COPYING for details.
+*
+* (c)2003 Steffen Laube <realebula@gmx.de>
+*************************************************************/
+
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -139,12 +148,13 @@ int replace_db(int db,char *_key, char *_value){
 	key.dptr=_key;
 	key.dsize=strlen(key.dptr)+1;
 
-	
+	// distinction of user database 
 	if (db==USER_DB) {
 		value.dptr=crypt(_value,"SL");
 	} else {
 		value.dptr=_value;
 	}
+
     value.dsize=strlen(value.dptr)+1;
 
 	pthread_mutex_lock(&dbaccess_mutex);
@@ -287,9 +297,11 @@ char ** list_db(int db){
         // calculat the  size of  database
 		do {
 			count++;
+			
 			pthread_mutex_lock(&dbaccess_mutex);
 			nextkey=gdbm_nextkey(dbf,key);
 			pthread_mutex_unlock(&dbaccess_mutex);
+			
 			free(key.dptr);
 			key=nextkey;
 	
@@ -323,6 +335,5 @@ char ** list_db(int db){
 
 	return channellist;
 }
-
 
 
