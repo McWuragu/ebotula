@@ -1,5 +1,5 @@
 .\" 
-.TH "ebotula.conf" "5" "5 August 2003" "" ""
+.TH "ebotula.conf" "5" "5 August 2003"
 .SH "NAME"
 ebotula.conf \- Configuration file for IRC bot ebotula
 .SH "DESCRIPTION"
@@ -10,7 +10,40 @@ It is usally placed in /etc. If you want to use another configuration
 file, you can do so by giving ebotula the parameter -f <name_of_conf_file>
 when you start it. In ebotula.conf the default values of the parameters
 for ebotula are set. Any command line paramter will overwrite the value
-taken from this config file.
+taken from this config file. The Hash (#) is used as comment sign, i.e.
+everything from this sign to end of line is ignored.
+.SH ENTRIES IN EBOTULA.CONF
+.TP
+\fBbotname=ebotula\fP
+The name of the bot displayed in an IRC-channel is set here. One could
+say it is the nickname of the bot. The default value is ebotula.
+.TP
+\fBrealname="I'm an IRC bot"\fP
+Why give a bot a realname? Well, if someone is calling for detailed information
+about the bot using the IRC-command /whois, among others the realname is
+displayed. So there is a good place to insert a text that explains it is
+only a bot. Of course you can place here any text you like to.
+NOTE: If you use whitespaces in the text, you have to put the string in "
+.TP
+\fBthreadlimit=5\fP
+ebotula is using threads for internal communication. Here you can set the number
+of threads created at start time.
+.TP
+\fBservername=irc.fh-lausitz.de\fP
+Here you can specify the name of the IRC server the bot is supposed to connect to.
+.TP
+\fBport=6667\fP
+Sets the portnumber the bot is going to use.
+.TP
+\fBaccountlivetime=90\fP
+Sets the time in days after which unused accounts are being removed automatically.
+.TP
+\fBautologoff=3\fP
+Sets the time in days after which idle users are automatically log off from the bot.
+.TP
+\fBpingtimeout=120\fP
+Sets the time in seconds after which a ping timeout error is given in case the server
+doesn't respond any more.
 .SH FILES
 /etc/ebotula.conf
 .SH "SEE ALSO"
