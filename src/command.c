@@ -703,9 +703,6 @@ void usermode(char *pLine){
     char *oldmod;
 	char mod[3];
 
-	unsigned int i;
-
-
     pNick=getNickname(pLine);
 	pChannel=getAccessChannel(pLine);
 	accesslogin=get_db(NICKTOUSER_DB,getNetmask(pLine));
@@ -798,12 +795,13 @@ void usermode(char *pLine){
 	// set end mark	for the  mode line
 	DEBUG("Found mod %s",mod);
 
-    // check for old or new master
+	// check for old or new master
 	if (strchr(oldmod,'m') || (mod[1]=='m')) {
+		DEBUG("Modify a master account");
 
 		// remove old  access rights if make a user to bot master or
 		// remove  old  master access rights if a master put of a other access level
-		if (mod[i]=='m' && !strchr(oldmod,'m')) {
+		if (mod[1]=='m' && !strchr(oldmod,'m')) {
 			// remove old access right 
 			rmAccessRights(pLogin);
 			
@@ -812,18 +810,20 @@ void usermode(char *pLine){
 			pKey=(char *)malloc((strlen(pLogin)+1)*sizeof(char));
 			strcpy(pKey,pLogin);
 
-		} else if (mod[i]!='m' && strchr(oldmod,'m')) {
+		} else if (mod[1]!='m' && strchr(oldmod,'m')) {
 			// remove master account
 			del_db(ACCESS_DB,pLogin);
 		}
 	}
 	// add or remove the mod
 	if (mod[0]=='+') {
+		DEBUG("Set new mode");
 		
 		if (!(add_db(ACCESS_DB,pKey,mod))) {
 			replace_db(ACCESS_DB,pKey,mod);
 		}
 	} else {
+		DEBUG("Remove new mode");
 		// remove mod
 		del_db(ACCESS_DB,pKey);
 		
@@ -833,16 +833,27 @@ void usermode(char *pLine){
 	// identify the  login and set the rights
 	usernick=getNickname(get_db(USERTONICK_DB,pLogin));
 	if (strlen(usernick) && oldmod[1]!= mod[1]) {
-        mode(pChannel,"-o",usernick);
-		mode(pChannel,"-v",usernick);
-		
-		// remove  operator for exmaster
-		if (mod[1]=='m') {
-			mode(pChannel,"+o",usernick);
-		} else {
+		DEBUG("Modify the current mode");
+		if (mod[0]=='-') {
+			// remove mods
 			mode(pChannel,mod,usernick);
+		} else {
+			// remove old mods
+			if (strchr(oldmod,'v')) {
+				// remove -o
+				mode(pChannel,"-v",usernick);
+            } else if (strlen(oldmod)) {
+				// remove -v
+				mode(pChannel,"-o",usernick);
+            }
+
+			// set the new mods
+			if (mod[1]=='v') {
+				mode(pChannel,"+v",usernick);
+			} else {
+				mode(pChannel,"+o",usernick);
+			}
 		}
-		
 	}
 
 	notice(pNick,MSG_USERMODE_OK);
@@ -972,9 +983,9 @@ void userlist(char *pLine){
 
 							// set access rights
 							if (pMod[1]=='o') {
-								strcat(pMsgStr,"- Owner ");
+								strcat(pMsgStr,"->Owner ");
 							} else if (pMod[1]=='v'){
-								strcat(pMsgStr,"- Friend");
+								strcat(pMsgStr,"->Friend");
 							} else {
 								free(pMsgStr);
 								break;
