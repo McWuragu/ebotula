@@ -10,7 +10,6 @@ ToDo List
 - Code cleanup
 - Debuggen
 - Emphasize per bold the messages
-- Insert allow and  disallow filter for characters in all  strings
 - Set the bot channel op by the  server self 
 - Make multilingual messages.h and irchelp.h
 - Complete the  documentation
