@@ -67,7 +67,7 @@ static MsgStruct_t Msg[] ={
 	{ ERR_LOGLEVEL_RANGE,    "Das Loglevel ist ungültig"},
     { ERR_SENDDELAY_RANGE,	"Die Sendeverzögerung ist ungültig" },
     { ERR_SENDLINE_RANGE,	"Das Limit für das Senden mit der 1. Verzögerung ist ungültig" },
-	{ ERR_INIT_DELAY,       "Die Verzögerung für das Einrichten der Channels ist ungültig"}
+	{ ERR_INIT_DELAY,       "Die Verzögerung für das Einrichten der Channels ist ungültig"},
     { ERR_LOGOFF_RANGE,	"Die Auslogzeit ist ungültig" },
 	{ ERR_THREAD_RANGE,	"Das Threadlimit liegt ausserhalb des Bereiches" },
 	{ ERR_NICK,		"Kann Nicknamen nicht setzen" },
