@@ -35,7 +35,11 @@ typedef struct ConfStruct{
     /** the limit for login in days */
     unsigned int AutoLoggoff;
     /** the delay time for sending in  millisecond */
-    int sendDelay;
+    int iSendDelay;
+    /// the secondary delay for sending in millisecond
+    int iSendSafeDelay;
+    /// number of line whiche send with the normal delay
+    int iSendSafeLine;
     /// the connection timeout in second
     int iTimeout;
     /** a flag to signal that a new master want create */
