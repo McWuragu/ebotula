@@ -330,7 +330,7 @@ char ** splitString(char const * pString,int nRetArraySize) {
     return ppStrings;
 }
 // #############################################################################
-char * getBanmmask(char const *pLine){ 
+char * getBanmask(char const *pLine){ 
 	char *pBanmask,*pStr;
 	register char * pChar;
 	// getting netmask to get banmask
