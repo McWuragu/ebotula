@@ -199,14 +199,16 @@ Aufbau der Datenbank
 	- Werte durch Newline  getrennt
 
 - usertonick.dbf
-	- verknüpft Login mit aktuellen Nickname
+	- verknüpft Login mit aktuellen Netmask
 	- Eintrag nur enthalten, wenn User angemeldet ist
 	- wird bei jedem Start neuangelegt
+	- muss konzistent gehalten werden bei Nicknamenwechsel
 
 - nicktouser.dbf
-	- verknüpt Nickname mit Login
+	- verknüpt Netmask mit Login
 	- Eintrag nur enthalten, wenn User angemeldet ist
 	- wird bei jedem Start neuangelegt
+	- muss konzistent gehalten werden bei Nicknamenwechsel
 
 - access.dbf:
 	- Login,Channel, Rechte
