@@ -1,11 +1,12 @@
-/* -------------------------------------------------------------
-*
-* This is a part of ebotula.
-* It is distributed under the GNU General Public License
-* See the file COPYING for details.
-*
-* (c)2003 Steffen Laube <realebula@gmx.de>
- -------------------------------------------------------------*/
+/* #############################################################
+ *
+ * This is a part of ebotula.
+ * It is distributed under the GNU General Public License
+ * See the file COPYING for details.
+ *
+ * (c)2003 Steffen Laube <realebula@gmx.de>
+ * ############################################################# 
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -202,7 +203,7 @@ void password(char *pLine) {
 /* #########################################################################
    Bot comand: !logoff
    ######################################################################### */
-void logoff(char *pLine,int iRemoveMode) {
+void logoff(char *pLine,int nRemoveMode) {
     char *pLogin;
     char *pNick;
     char *pNetmask;
@@ -212,7 +213,7 @@ void logoff(char *pLine,int iRemoveMode) {
 	QueueData *pChannel;
     PQueue pChannelQueue;
 
-    int i, iLength;
+    int i, nLength;
 
     pNetmask=getNetmask(pLine);
     pNick=getNickname(pLine);
@@ -222,14 +223,14 @@ void logoff(char *pLine,int iRemoveMode) {
 	    log_out(pLogin);
    
 		/* only by manuel logoff then remove  the modes */
-		if (iRemoveMode) {	
+		if (nRemoveMode) {	
 			/* get channel list */
 			pChannelQueue=list_db(CHANNEL_DB);
-			iLength=strlen(pLogin);
+			nLength=strlen(pLogin);
 			/* remove the mod  for  this account */
 			while (isfullQueue(pChannelQueue)){
                 pChannel=popQueue(pChannelQueue);
-				pKey=(char *)malloc((pChannel->t_size+iLength)*sizeof(char));
+				pKey=(char *)malloc((pChannel->t_size+nLength)*sizeof(char));
 				sprintf(pKey,"%s%s",pLogin,(char *)pChannel->data);
 				
 				/* look for the  access rights and  remove this */
@@ -243,7 +244,7 @@ void logoff(char *pLine,int iRemoveMode) {
 			}
 
 			/* delete the queue */
-			delete(pChannelQueue);
+            deleteQueue(pChannelQueue);
 			notice(pNick,MSG_LOGOFF);
 		}
 	}
@@ -728,7 +729,7 @@ void banuser(char *pLine) {
     pLogin=get_db(NICKTOUSER_DB,pNetmask);
 
     if (!pToBanNick) {
-    notice(pNick,MSG_KICK_ERR);
+    notice(pNick,MSG_BAN_ERR);
     return;
     }
 
@@ -755,9 +756,30 @@ void banuser(char *pLine) {
 }
 
 /* #########################################################################
-   Bot comand: !deban <#channel> nick
+   Bot comand: !deban <#channel> banmask
    ######################################################################### */
 void debanuser(char *pLine) {
+    char *pNick;
+    char * pChannel;
+    char *pParameter;
+    char **pArgv;
+
+    pChannel = getAccessChannel(pLine);
+    pNick=getNickname(pLine);
+
+    /* extract parameters */
+    pParameter=getParameters(pLine);
+    pArgv=splitString(pParameter,2);
+    
+
+    // reset the ban
+    if (pArgv) {
+        deban(pChannel,pArgv[0]);
+        notice(pNick,MSG_DEBAN_OK);
+    }else {
+        notice(pNick,MSG_DEBAN_ERR);
+    }
+    return;
 }
 
 /* #########################################################################
@@ -799,7 +821,8 @@ void kickuser(char *pLine) {
     pReason=pArgv[1];
     if (!pReason) {
         /* empty reason */
-        pReason="";
+        pReason=(char *)malloc((strlen(MSG_DEFAULT_REASON)+1)*sizeof(char));
+        strcpy(pReason,MSG_DEFAULT_REASON);
     }
 
     /* read  the  login name of the  kicking user */
