@@ -1,22 +1,21 @@
 ToDo List
 ----------
-- Implement missing commands
+- implementation missing commands
 	- !timeban
 	- !banlist
 	- !allban
 	- !state
-- Implement the banlist (set and execute)
+- implementation of the banlist (set and execute)
 - global bot master message (is like global greeting)
-- Emphasize per bold the messages
-- Complete the  documentation
-- join in channel after a inviting by the owner or master
-- join in channel with keyword
-- support von for other CTCP functions like:
+- emphasize per bold the messages
+- complete the  documentation
+- joining of a channel with keyword
+- support for the other CTCP functions like:
 	- userinfo
 	- clientinfo
 	- finger
 	- xdcc list
 	- cdcc list
-- checking of all commands
-- ask for inviting in a channel with the mode +i
-- Plugin System
+- test of all commands
+- handling of a invitation in a channel with the mode +i
+- plugin system

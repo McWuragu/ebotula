@@ -4,6 +4,7 @@ ebotula-0.1.18
 - modified the error logging
 - renamed the command line parameter -D to -V
 - changed the domain of the command line parameter -V
+- reimplementation of the configuration file loader
 
 ebotula-0.1.17
 --------------------
