@@ -2,16 +2,14 @@
 VERSION=0.05-alpha
 DATABASEPATH=./
 CONFDIR=./
+
 SRC_DIR=./
-
 MAKEFLAGS+= -j2
-
 CC=gcc
 CFLAGS=	-Wall -g -D_DEBUG -DVERSION=\"$(VERSION)\" \
 	-DDATABASEPATH=\"$(DATABASEPATH)\" \
 	-DCONFDIR=\"$(CONFDIR)\" 
 LDFLAGS= -lpthread -lgdbm -lcrypt
-
 
 TARGET=ebotula
 
@@ -25,6 +23,7 @@ OBJS=   parameter.o \
 	irc.o \
 	command.o \
 	dbaccess.o \
+	utilities.o \
 	ircbot.o 
 
 DEPS= $(patsubst %.o,%.d,$(OBJS))
@@ -35,7 +34,8 @@ DEPS= $(patsubst %.o,%.d,$(OBJS))
 	$(CC) -c  -pipe $(CFLAGS) $< -o $@
 
 %.d: %.c
-	$(CC) -MM $(CFLAGS) $< > $@
+	@ echo dep $<
+	@$(CC) -MM $(CFLAGS) $< > $@
 
 
 $(TARGET) : $(DEPS) $(OBJS)
