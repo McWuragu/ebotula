@@ -1,10 +1,6 @@
 - The bot isn't complete protect for exess flooding
 - The bot can't join a keyword  protected channel
 - The bot don't join a channel after the  inviting from a other user
-<<<<<<< BUGS
-- !userlist command doesn't work corectly all user of the channel (without master(s)) should be shown.
-=======
-- !userlist command doesn't work corectly not all user should be shown if call
-  this command that master
 - The bot don't have ctcp support
->>>>>>> 1.39
+- crash by compilation with gcc 2.9x
+
