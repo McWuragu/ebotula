@@ -174,7 +174,7 @@ int main(int argc,char * const argv[]) {
     
     // check for parameter
     if (argc>1) {
-        ComandLineParser(argc,argv);
+        CommandLineParser(argc,argv);
         syslog(LOG_NOTICE,getSyslogString(SYSLOG_READ_CMD));
     }
 
@@ -195,7 +195,7 @@ int main(int argc,char * const argv[]) {
         // group
         if (sSetup.sExeGroup){
             if ((Group=getgrnam(sSetup.sExeGroup)))
-               setgid(Group->gr_gid);
+               setegid(Group->gr_gid);
             else 
                 syslog(LOG_ERR,getSyslogString(SYSLOG_GROUP_NOT_FOUND));
         }
@@ -203,7 +203,7 @@ int main(int argc,char * const argv[]) {
         // user
         if (sSetup.sExeUser) {
             if ((User=getpwnam(sSetup.sExeUser)))
-               setuid(User->pw_uid);
+               seteuid(User->pw_uid);
             else 
                 syslog(LOG_ERR,getSyslogString(SYSLOG_USER_NOT_FOUND));
         }
@@ -300,7 +300,7 @@ int main(int argc,char * const argv[]) {
 
     threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
     for (i=0;i<sSetup.thread_limit;i++) {
-        pthread_create(&threads[i],NULL,ComandExecutionThread,(void*)pCommandQueue);
+        pthread_create(&threads[i],NULL,CommandExecutionThread,(void*)pCommandQueue);
     }
     
 	// join the channels
