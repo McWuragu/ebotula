@@ -158,7 +158,7 @@ void mode(char *channel, char *mods, char *modsparam) {
 		*modsparam='\0';
 	}
 	buffer=(char*)calloc(strlen("MODE ")+strlen(channel)+strlen(mods)+strlen(modsparam)+5,sizeof(char));
-	sprintf(buffer,"TOPIC %s %s %s\r\n",channel,mods,modsparam);
+	sprintf(buffer,"MODE %s %s %s\r\n",channel,mods,modsparam);
 	send_line(buffer);
 }
 
