@@ -31,8 +31,8 @@ static char *pIrcHelp[][15] = {
     // HELP
     {
         "ruft die Onlinehilfe des Bots auf",
-        "Das Kommando gibt generelle Informationen zum Bot und Hinweis",
-        "zur Benutzung einzelner Kommandos",
+        "Das Kommando gibt generelle Informationen zum Bot und Hinweise",
+        "zur Benutzung einzelner Kommandos.",
     },
     // VERSION
     {
