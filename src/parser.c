@@ -222,6 +222,9 @@ void *ComandExecutionThread(void *argv) {
                 case CMD_DEBAN:
                     debanuser(pMsg->pMsgLine);
                     break;
+                case CMD_INVITE:
+                    inviteuser(pMsg->pMsgLine);
+                    break;
                 default:
                     syslog(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
                     break;
@@ -290,7 +293,33 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
         }
 
         notice(pNick,getMsgString(ERR_NOT_OWNER));
+    } else if (cmd_id >= CMD_FRIEND) {
+        // check the  login status
+        if (!exist_db(NICKTOUSER_DB,pNetmask)) {
+            notice(pNick,getMsgString(ERR_NOT_LOGON));
+        } else {
+            // check the existe of a channel parameter
+            if (pChannel=getAccessChannel(pLine)) {
+				if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 
+					pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char*));
+					sprintf(pKey,"%s%s",pLogin,pChannel);
+
+					if ((pMod=get_db(ACCESS_DB,pKey))) {
+						if (strchr(pMod,'v')) {	return true;}
+                        if (strchr(pMod,'o')) {	return true;}
+					} else if (exist_db(ACCESS_DB,pLogin)) {
+						notice(pNick,getMsgString(OK_MASTER));
+						return true;
+					}
+
+				}
+            } else {
+				notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+			}
+        }
+
+        notice(pNick,getMsgString(ERR_NOT_FRIEND)); 
     }  else if (cmd_id >= CMD_LOGGED) {
         // check  login status
         if (!exist_db(NICKTOUSER_DB,pNetmask)) {
