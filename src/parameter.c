@@ -316,7 +316,7 @@ void ConfigFileParser(void) {
     }else {
         logger(LOG_DEBUG,_("File is open"),sSetup.configfile);
     
-        while((fgets(buffer,MAX_READ_BUFFER_SIZE,fd)!=NULL) && (errno==0)){
+        while((fgets(buffer,MAX_READ_BUFFER_SIZE,fd)!=NULL)){
             /* remove newline and leading spaces */
             trim(buffer);
             clearspace(buffer);
