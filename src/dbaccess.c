@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #include <errno.h>
 #include <stdlib.h>
@@ -327,20 +327,20 @@ PQueue list_db(int db){
 
     // get the database handle
     if ((dbf=get_dbf(db))) {
-	pthread_mutex_lock(&dbaccess_mutex[db]);
+	    pthread_mutex_lock(&dbaccess_mutex[db]);
 		firstkey=gdbm_firstkey(dbf);
 		key=firstkey;
 
-		// iterate the date base
+		/* iterate the date base */
 		while (key.dptr) {
-			// buidl  queue element
+			/* built  queue element */
 			QueueItem.t_size=key.dsize;
-			QueueItem.data=(void*)key.dptr;
+            QueueItem.data=(void*)key.dptr;
 
-			// push in the  queue
+			/* push in the  queue */
 			pushQueue(pList,QueueItem);
 			
-			// read next key
+			/* read next key */
 			nextkey=gdbm_nextkey(dbf,key);
 			key=nextkey;
 		}

@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -204,6 +204,12 @@ void *ComandExecutionThread(void *argv) {
                     break;
                 case CMD_ONWHOIS:
                     hCallback(pMsg->pMsgLine);
+                    break;
+                case CMD_BAN:
+                    banuser(pMsg->pMsgLine);
+                    break;
+                case CMD_DEBAN:
+                    debanuser(pMsg->pMsgLine);
                     break;
                 default:
                     syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,pMsg->identify);

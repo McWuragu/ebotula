@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #include <stdio.h>
 #include <string.h>
@@ -236,18 +236,17 @@ int main(int argc,char * const argv[]) {
         // parse all substrings of the  receiving line
         tmp=buffer;
         while ((pos=strchr(tmp,'\r'))) {
-        //while ((pos=strchr(tmp,'\n'))) {
             *pos='\0';
 
-            // cut out a part of the  complete line
+            /* cut out a part of the  complete line */
             str=(char *)calloc(strlen(tmp)+1,sizeof(char));
             strcpy(str,tmp);
 
-            // parse the part line
+            /* parse the part line */
             DEBUG("Parse \"%s\"",str);
             pMsg=preParser(str);
 
-            // put the identified line  on the  queue
+            /* put the identified line  on the  queue */
             if (pMsg->identify!=CMD_NONE) {
 				Command.t_size=sizeof(MsgBuf_t)+strlen(pMsg->pMsgLine)+1;
 				Command.data=pMsg;
@@ -255,12 +254,14 @@ int main(int argc,char * const argv[]) {
             }
             free(str);
             
-            // checking the length of the next substring
-            // a irc answer line can't are ten charakter 
-            // it is to small for a complete line
+            /* 
+             * checking the length of the next substring
+             * a irc answer line can't are ten charakter 
+             * it is to small for a complete line
+             */
             if (strlen(++pos)>0) {
-                // set the begin of new substring of the old end
-                // and plus one for the NL
+                /* set the begin of new substring of the old end
+                 * and plus one for the NL */
                 tmp=pos+1;
             }
             

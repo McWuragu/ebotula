@@ -1,20 +1,20 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
-/** Defining Queue defaults **/
-/** This Ring list -> Fifo **/
+/* Defining Queue defaults */
+/* This Ring list -> Fifo */
 #ifndef __H_QUEUE
 #define __H_QUEUE
 
 #include<pthread.h>
 
-/** Internal Error defines **/
+/** internal error defines */
 typedef enum {
     QUEUE_SUCCESS=0,
     QUEUE_ERROR=1, 
@@ -23,101 +23,107 @@ typedef enum {
     QUEUE_NULL_POINTER_AS_IN_PARAMETER=4,
 } QueueExeStatus;
 
-/** types **/
-/** Setting QueueType **/
-/** Sentinel ist the beginning and the and of the queue **/
+/* ##################### types ######################### */
+/**
+ * Setting QueueType 
+ * Sentinel ist the beginning and the and of the queue 
+ */
 typedef enum {QUEUENONE=0,QUEUESENTINEL=1} QueueType;
 
-/** Setting up data elements size must be the first element **/
+/**
+ * Setting up data elements size must be the first element 
+ */
 typedef struct tag_QueueData
 {
 	long t_size;
 	void * data;
 }QueueData;
-/** Queue elements - this the base structure of all Queue elements **/
+
+/**
+ *Queue elements - this the base structure of all Queue elements
+ */
 typedef struct tag_Queue
 {
-	struct tag_Queue *next,*prev; /** Next and prev element **/
-	struct tag_Queue *sentinel; /** pointer to the sentinel; To jump from every elment to the sentinel **/
-	QueueType queuetypeT; /** Type of Queue **/
-	QueueData *queuedataData; /**Data Elements **/
-	
+    /** Next and prev element */
+	struct tag_Queue *next,*prev;
+    /** pointer to the sentinel; To jump from every elment to the sentinel */
+	struct tag_Queue *sentinel; 
+	/** Type of Queue */
+    QueueType queuetypeT;
+    /** Data Elements */
+    QueueData *queuedataData;
+    /** number of items */
 	unsigned long long longCount;
 	
-    /* Thread control */
-    pthread_mutex_t *queue_mutex;  /** global access mutex */
+    /** Thread control */
+    pthread_mutex_t *queue_mutex;  /* global access mutex */
 
-    /* thread condition */
-	unsigned long long ElementsInQueueForThreads;
-	pthread_cond_t *StopThreadCond;
+    /** thread condition */
+    pthread_cond_t *StopThreadCond;
     
 }Queue,*PQueue;
 
 
-/**							**
- ** Function: 		initQueue			**
- ** Parameters: 	void		  	   	**
- ** Return:		PQueue	Pointer to Queue	**
- ** Desctiption:		initing Queue,		**
- **				creating Sentinel	**
- **							**/
+/**
+ * initialization and creating a empty queue
+ * @author Uwe Strempel							
+ *		  	   	
+ * @return  pointer to queue	
+ */
 PQueue initQueue();
 
-/**							**
- ** Function: 		pushQueue			**
- ** Parameters: 	PQueue pqueueIn  	   	**
- **				Pointer to Queue	**
- **			QueueData queuedataElement	** 		
- ** Return:		int STATUS			**
- **				0 if Success		**
- ** Description:	pushing 1 element to Queue 	**
- **						 	**/
+/**							
+ * pushing 1 element to queue
+ * @author Uwe Strempel
+ *			
+ * @param pqueueIn pointer to queue	
+ * @param queuedataElement pointer to the datum	 		
+ * @return 0 if Success		
+ */
 QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement);
 
-/**							**
-** Function: 		popQueue			**
-** Parameters: 	PQueue pqueueIn  	   		**
-**				Pointer to Queue	**
-** Return:		QueueData *queuedataElement	** 		
-** Description:	poping 1 element from Queue 		**
-**			until Queue is empty		**
-**							**/
+/**
+ * popping one element from Queue until Queue is empty
+ * @author Uwe Strempel
+ *							
+ * @param pqueueIn pointer to queue	
+ * @Return pointer of the datum	 		
+ */
 QueueData * popQueue(PQueue pqueueIn);
-/**							**
-** Function: 		isemptyQueue			**
-** Parameters: 	PQueue pqueueIn	  	   	**
-**				Pointer to Queue	**
-** Return:		int BOOLEAN			**
-**				True if emtpy		**
-**							**/
+
+/**							
+ * checking the fill status of the queue
+ * @author Uwe Strempel
+ *			
+ * @Param pqueueIn pointer to queue	
+ * @Return true if emtpy
+ */
 int isemptyQueue(PQueue pqueueIn);
-/**							**
-** Function: 		isfullQueue			**
-** Parameters: 	PQueue pqueueIn	  	   	**
-**				Pointer to Queue	**
-** Return:		int BOOLEAN			**
-**				True if full		**
-**							**/
+
+/**							
+ * checking the fill status of the queue
+ * @author Uwe Strempel
+ *			
+ * @Param pqueueIn pointer to queue	
+ * @Return true if full
+ */
 int isfullQueue(PQueue pqueueIn);
-/**							**
- ** Function: 		deleteQueue			**
- ** Parameters: 	PQueue pqueueIn  	   	**
- **				Pointer to Queue	**
- ** Return:		int STATUS			**
- **				0 if Success		**
- ** Description:	deleting Queue 			**
- **			until Queue is empty		**
- **							**/
+
+/**
+ * popping until queue is empty and deleting queue
+ * @author Uwe Strempel
+ *							
+ * @param pqueueIn pointer to queue	
+ * @return 0 if success		
+ */
 QueueExeStatus deleteQueue(PQueue pqueueIn);
 
-/**							**
- ** Function: 		flushQueue			**
- ** Parameters: 	PQueue pqueueIn  	   	**
- **				Pointer to Queue	**
- ** Return:		int STATUS			**
- **				0 if Success		**
- ** Description:	flushing Queue 			**
- **			until Queue is empty		**
- **							**/
+/**
+ * flushing queue until queue is empty
+ * @author Steffen Laube		  
+ *   			
+ * @param pqueueIn pointer to queue	
+ * @return 0 if Success		
+ */
 QueueExeStatus flushQueue(PQueue pqueueIn);
 #endif

@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #include <string.h>
 #include <stdlib.h>
@@ -165,8 +165,8 @@ void hResetModes(char *pLine) {
     
     
 
-    //splitthe string
-    ppLinePart=splitString(pLine);
+    //splitt the string
+    ppLinePart=splitString(pLine,6);
     pChannel=(char*)ppLinePart[2];
     pMode=(char*)ppLinePart[3];
 
@@ -195,6 +195,7 @@ void hResetModes(char *pLine) {
                 sprintf(pData,"%s %s",pChannel,pMode);
                 
                 // build  the  element
+                StrToLower(pNick);
                 Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
                 Callback->nickname=pNick;
                 Callback->CallbackFkt=ModeResetCb;
@@ -307,8 +308,14 @@ void hCallback(char *pLine) {
     CallbackDListItem *pCallbackItemReturn;
     char *pNetmask;
     char **ppLinePart;
+    char *pNick;
 
-    ppLinePart=splitString(pLine);
+    ppLinePart=splitString(pLine,7);
+
+    /* identify nick name only small charakter */
+    pNick=(char*)malloc((strlen(ppLinePart[3])+1)*sizeof(char*));
+    strcpy(pNick,ppLinePart[3]);
+    StrToLower(pNick);
 
     /*
      * this  loop stop if no item more found  in the  queue
@@ -316,7 +323,7 @@ void hCallback(char *pLine) {
      */
     do {
         /** lock for the Callback item for the nick **/
-        if ((pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]))) {
+        if ((pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,pNick))) {
             /* 
              * remove  entrie and read the  callback datum
              * if  this item not more in the  queue then look for  the next

@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #include <stdlib.h>
 #include <string.h>
@@ -19,7 +19,7 @@
 #include "utilities.h"
 #include "extract.h"
 // ############################################################################# 
-char *getNickname(char *pLine){
+char *getNickname(char const *pLine){
 	char *pNick,*pStr;
 	
 	pStr=getNetmask(pLine);
@@ -34,7 +34,7 @@ char *getNickname(char *pLine){
 	return "";
 }
 // ############################################################################# 
-char *getNetmask(char *pLine){ 
+char *getNetmask(char const *pLine){ 
 	char *pNetmask,*pStr;
 
 		
@@ -57,7 +57,7 @@ char *getNetmask(char *pLine){
 
 }
 // ############################################################################# 
-char *getCommand(char *pLine) {
+char *getCommand(char const *pLine) {
 	char *pStr,*pTmp;
 
 	// mirror  of the orginal string 
@@ -79,7 +79,7 @@ char *getCommand(char *pLine) {
 	return "";
 }
 // ############################################################################# 
-char *getArgument(char *pLine) {
+char *getArgument(char const *pLine) {
 	char *pStr,*pPos,*pArg;
 	int i,iLineLen;
 
@@ -114,7 +114,7 @@ char *getArgument(char *pLine) {
 	return "";
 }
 // ######################################################################### 
-char *getChannel(char *pLine){
+char *getChannel(char const *pLine){
 	char *pPreamble;
 	char *pPos;
 	char *pChannel;
@@ -140,7 +140,7 @@ char *getChannel(char *pLine){
 	return pChannel;
 }
 // #########################################################################
-char *getAccessChannel(char *pLine) {
+char *getAccessChannel(char const *pLine) {
 	char *pParameter;
 	char *pChannel;
 	char *pPos;
@@ -185,7 +185,7 @@ char *getAccessChannel(char *pLine) {
 	return pChannel;
 }
 // #########################################################################
-char  *getTopic(char *pChannelSet) {
+char  *getTopic(char const *pChannelSet) {
 	char *pTopic;
 	char *pPos,*pPos2;
 	char *pStr;
@@ -218,7 +218,7 @@ char  *getTopic(char *pChannelSet) {
 	return pTopic;
 }
 // ######################################################################### 
-char  *getGreeting(char *pChannelSet) {
+char  *getGreeting(char const * pChannelSet) {
 	char *pGreeting;
 	char *pPos;
 	
@@ -242,7 +242,7 @@ char  *getGreeting(char *pChannelSet) {
 	return pGreeting;
 }
 // ######################################################################### 
-char *getChannelMode(char *pChannelSet){
+char *getChannelMode(char const * pChannelSet){
 	char *pMod;
 	char *pStr;
 	char *pPos;
@@ -262,7 +262,7 @@ char *getChannelMode(char *pChannelSet){
 	return pMod;
 }
 // ############################################################################# 
-char *getParameters(char *pLine){
+char *getParameters(char const *pLine){
 	char *pParameter;
 	char *pArg;
 	char *pPos; 
@@ -284,42 +284,48 @@ char *getParameters(char *pLine){
 	}
 }
 // #############################################################################
-char ** splitString(char* pLine) {
-    char **ppStrings;
-    char *pPos,*pPos2;
+char ** splitString(char const * pString,int nRetArraySize) {
+    char **ppStrings=NULL;
+    char *pPos,*pSpacePos;
     char *pTmp;
     unsigned int iCount=0,i;
 
     // check of NULL pointer
-    if (!pLine) {
-        return NULL;
-    } else {
-        pTmp=(char*)malloc((strlen(pLine)+1)*sizeof(char));
-        strcpy(pTmp,pLine);
-    }
+    if (pString) {
+        pTmp=(char*)malloc((strlen(pString)+1)*sizeof(char));
+        strcpy(pTmp,pString);
+   
+        pPos=pTmp;
+    
+        ppStrings=(char**)malloc(nRetArraySize*sizeof(char*));
+    
+        // fill the array
+        for (i=0;i<nRetArraySize-1;i++) {
+            pSpacePos=strchr(pPos,' ');
 
-    pPos2=pTmp;
+            if (pSpacePos) {
+                pSpacePos[0]='\0';
+                
+                // put the string in the array
+                ppStrings[i]=(char*)malloc((strlen(pPos)+1)*sizeof(char));
+                strcpy(ppStrings[i],pPos);
 
-    // word count
-    do {
-        pPos=++pPos2;
-        iCount++;
-    } while ( pPos2=strchr(pPos,' ' ));
+                pPos=++pSpacePos;
 
-    ppStrings=(char**)malloc(iCount*sizeof(char*));
-
-    // built the array
-    for (i=iCount;i>0;i--) {
-        pPos=strrchr(pTmp,' ');
-        if (pPos) {
-            pPos[0]='\0';
-            pPos++;
-        } else {
-            pPos=pTmp;
+            } else {
+                break;
+            }
+            
         }
         
-        ppStrings[i-1]=(char*)malloc((strlen(pPos)+1)*sizeof(char));
-        strcpy(ppStrings[i-1],pPos);
+        // put the rest in the array
+        if (strlen(pPos)) {
+            ppStrings[i]=(char*)malloc((strlen(pPos)+1)*sizeof(char));
+            strcpy(ppStrings[i],pPos);
+        } else {
+            ppStrings[i+1]=NULL;
+        }
+
     }
     return ppStrings;
 }
