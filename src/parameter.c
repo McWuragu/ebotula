@@ -160,7 +160,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                     perror(ERR_SENDDELAY_RANGE);
                     exit(errno);
                 }
-                sSetup.sendDelay=tmp;
+                sSetup.iSendDelay=tmp;
                 break;
             case 'k':
                 DEBUG("Found account live time option");
@@ -316,13 +316,31 @@ void ConfigFileParser(void) {
                 sSetup.AutoLoggoff=tmp;
             } else if (!strcmp(key,KEY_SENDDELAY)) {
                 tmp=atoi(value);
-                if (tmp<=0) {
+                if (tmp<0) {
                     errno=EDOM;
                     perror(ERR_SENDDELAY_RANGE);
                     exit(errno);
                 }   
+                // set first delay time
+                sSetup.iSendDelay=tmp;
+            } else if (!strcmp(key,KEY_SENDSAFEDELAY)) {
+                tmp=atoi(value);
+                if (tmp<0) {
+                    errno=EDOM;
+                    perror(ERR_SENDDELAY_RANGE);
+                    exit(errno);
+                }   
+                // set second delay time
+                sSetup.iSendSafeDelay=tmp;
+            } else if (!strcmp(key,KEY_SENDSAFELINE)) {
+                tmp=atoi(value);
+                if (tmp<0) {
+                    errno=EDOM;
+                    perror(ERR_SENDLINE_RANGE);
+                    exit(errno);
+                }   
                 // set auto logoff time
-                sSetup.sendDelay=tmp;
+                sSetup.iSendSafeLine=tmp;
             } else if (!strcmp(key,KEY_ALT)) {
                 tmp=atoi(value);
                 if (tmp<0) {
