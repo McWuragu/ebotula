@@ -367,7 +367,7 @@ void dialogMaster(void){
 
 	trim(name);
 	trim(passwd);
-
+	StrToLower(name);
 
 	// create account
 	if (!add_db(USER_DB,name,passwd)) {
