@@ -18,6 +18,7 @@
 #define DEFAULT_THREAD_LIMIT	3
 #define DEFAULT_REALNAME		"I'm a stupid bot"
 #define DEFAULT_BOTNAME			"Ebotula"
+#define DEFAULT_PING_TIMEOUT	90
 
 #define MIN_LOGOFF				1
 #define MIN_ALT					1
