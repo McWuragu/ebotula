@@ -281,23 +281,38 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
     boolean ret=false;  
 
     // check Accesslevel
-    if (cmd_id >= CMD_MASTER && Level==MasterLevel) {
-        ret=true;
-    }  else if (cmd_id >= CMD_OWNER && Level>= OwnerLevel) {
-        ret=true;
-    } else if (cmd_id >= CMD_FRIEND && Level>= FriendLevel) {
-        ret=true;
-    }  else if (cmd_id >= CMD_LOGGED && Level>= LoggedLevel) {
-        ret=true;
-    }  else if (cmd_id >= CMD_OTHERS) {
-        ret=true;
-    }  else if (cmd_id >= CMD_EVENT) {
-       if (((cmd_id == CMD_ONNICKCHG) || (cmd_id==CMD_ONQUIT)) && Level>=LoggedLevel) {
-          ret=true;;
-       } else if ((cmd_id != CMD_ONNICKCHG) && (cmd_id!=CMD_ONQUIT)) {
-           ret=true;
-       }
+    if (cmd_id >= CMD_EVENT) {
+        if (((cmd_id == CMD_ONNICKCHG) || (cmd_id==CMD_ONQUIT)) && Level>=LoggedLevel) {
+            ret=true;;
+        }else if ((cmd_id != CMD_ONNICKCHG) && (cmd_id!=CMD_ONQUIT)) {
+            ret=true;
+        }
+        if (cmd_id >= CMD_OTHERS) {
+            ret=true;
+            if (cmd_id >= CMD_LOGGED) {
+                if (Level>= LoggedLevel) {
+                    ret=true;
+                    if (cmd_id >= CMD_FRIEND) {
+                        if (Level>= FriendLevel) {
+                            ret=true;
+                                if (cmd_id >= CMD_OWNER) {
+                                    if (Level>= OwnerLevel) {
+                                        ret=true;
+                                        if (cmd_id >= CMD_MASTER) {
+                                            if (Level==MasterLevel) {
+                                                ret=true;
+                                            }else{ret=false;}
+                                        }
+                                    }else{ret=false;}
+                                }
+                        } else{ret=false;}
+                    }
+                }else{ret=false;}
+            }
+        } 
     }
+
+    DEBUG("Userlevel %i AccessStatus %i of the command id %i\n",Level,ret,cmd_id);
     return ret;
 }
 // #############################################################################
