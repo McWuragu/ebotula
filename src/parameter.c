@@ -3,9 +3,9 @@
 #include "dbaccess.h"
 #include "ircbot.h"
 
-#define	BIG_MSG
+#define	CMD_MSG
 #include "messages.h"
-#undef BIG_MSG
+#undef CMD_MSG
 
 #include "parameter.h"
 				  
