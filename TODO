@@ -7,8 +7,9 @@ ToDo Liste
 	- !banlist
 	- !allban
 	- !restart
-- Set topic and mode from channel if the bot join, become op or other user have changed
 - implement the banlist (set and execute)
+- Set topic from channel if the bot join and become op
+- Set mode from channel if the bot join, become op or other user have changed
 - complete the  help system
 - Code cleanup
 - Debuggen
