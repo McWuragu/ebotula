@@ -1,20 +1,42 @@
-.TH EBOTULA 1 "07 March 03"
+.TH EBOTULA 1 "10 March 03"
 .SH NAME
 ebotula \-  IRC bot
 .SH SYNOPSIS
 \fBebotula\fP [ options ]
 .SH DESCRIBTION
-\fIebotula\fP is a irc bot for general task in one or more channels.
+\fIEbotula\fP is a irc bot for general task in one or more channels. This
+tasks are the  user and channel administration. He can secure the channel
+topic and modes. The modes from the user were set and secure by the bot.
 .SS Options
+All command line options  override  the values from the confiugration file.
+All other values are taken form the file.
+.TP
+\fB-a\fP days
+set the limit for the automatic logoff in days
+.TP
+\fB-b\fP name
+set the nickname
+.TP
+\fB-c\fP sec
+set the limit  for ping timeout
+.TP
+\fB-d\fP path
+set the  path to the  directory for the databases
+.TP
+\fB-f\fp file
+set a custom configuration file
 .TP
 \fB-h, -?\fP
 show the help text and exit
 .TP
-\fB-v\fP
-show the version and exit
+\fB-k\fP days
+set the  live time of an account in days
 .TP
 \fB-m\fP
 enable the dialog for creating a new master
+.TP
+\fB-v\fP
+show the version and exit
 .SH FILES
 ebotula, ebotula.conf
 .SH "SEE ALSO"
@@ -22,6 +44,6 @@ RFC1459, RFC2810, RFC2811, RFC2812
 .SH AUTHOR
 Steffen Laube <realebula@gmx.de>
 .SH VERSION
-v0.1.1b-dev
+v0.1.2b-dev
 .SH BUGS
-
+He close not right all time and is little unstable.
