@@ -283,16 +283,16 @@ void *ComandExecutionThread(void *argv) {
                 case CMD_INVITE:
                     inviteuser(pMsgItem);
                     break;
-		case CMD_CTCPPING:
-		    ctcpping(pMsgItem);
-		    break;
-       		case CMD_CTCPVERSION:
-		    ctcpversion(pMsgItem);
-		    break;
-       		case CMD_CTCPTIME:
-		    ctcptime(pMsgItem);
-		    break;
-       		default:
+                case CMD_CTCPPING:
+        		    ctcpping(pMsgItem);
+        		    break;
+           		case CMD_CTCPVERSION:
+                    ctcpversion(pMsgItem);
+                    break;
+           		case CMD_CTCPTIME:
+                    ctcptime(pMsgItem);
+                    break;
+           		default:
                     syslog(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
                     break;
                 }
@@ -300,6 +300,7 @@ void *ComandExecutionThread(void *argv) {
                 // remove  destroy the last popped Command
                 free(pMsg->pMsgLine);
                 free(pMsg);
+                
                 free(pMsgItem);
                 free(pCommand);
             
@@ -307,9 +308,9 @@ void *ComandExecutionThread(void *argv) {
                 notice(pNick,getMsgString(ERR_NOT_ACCESS));
             }
 
+            if (pNetmask) free(pNetmask);
+            if (pNick) free(pNick);
             if (pChannel) {free(pChannel);}
-            if (strlen(pNetmask)) {free(pNetmask);}
-            if (strlen(pNick)) {free(pNick);}
         }
     }
     DEBUG("Execution thread is stopped\n");

@@ -646,21 +646,23 @@ void greeting(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
     char *pChannelSet;
     char *greeting;
-
-    /* only greeting  send  to other user */
-    if (strcmp(pMsg->pCallingNick,sSetup.botname)) {
-        
-        if (!pMsg->pAccessChannel){
-            return;
+    
+    if (pMsg->pCallingNick) {
+        /* only greeting  send  to other user */
+        if (strcmp(pMsg->pCallingNick,sSetup.botname)) {
+            
+            if (!pMsg->pAccessChannel){
+                return;
+            }
+    
+            DEBUG("Greeting for %s\n",pMsg->pAccessChannel);
+    
+            if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
+        	    if ((greeting=getGreeting(pChannelSet))) {
+                	sendMsg(NoticeMode,pMsg->pCallingNick,greeting);
+            	}
+    		}
         }
-
-        DEBUG("Greeting for %s\n",pMsg->pAccessChannel);
-
-        if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
-    	    if ((greeting=getGreeting(pChannelSet))) {
-            	sendMsg(NoticeMode,pMsg->pCallingNick,greeting);
-        	}
-		}
     }
 }
 /* #########################################################################
@@ -1020,27 +1022,30 @@ void usermode(MsgItem_t *pMsg){
     	    	DEBUG("Modify the current mode\n");
 				usernick=getNickname(pNetmask);
 
-		        if (mod[0]=='-') {
-    	        	/* remove mods */
-        		    mode(pMsg->pAccessChannel,mod,usernick);
-	    	    } else {
-					if (oldmod) {
-			        	/* remove old mods */
-    	    			if (strchr(oldmod,'v')) {
-    		    			/* remove -o */
-		    	        	mode(pMsg->pAccessChannel,"-v",usernick);
-    	        		} else if (strlen(oldmod)) {
-        		    	   /* remove -v */
-	    	    	       mode(pMsg->pAccessChannel,"-o",usernick);
-		            	}
-					}
-	           	
-					/* set the new mods */
-    	   	    	if (mod[1]=='v') {
-    	            	mode(pMsg->pAccessChannel,"+v",usernick);
-		       	    } else {
-           		    mode(pMsg->pAccessChannel,"+o",usernick);
-	       	    }
+                if (usernick) {
+    		        if (mod[0]=='-') {
+        	        	/* remove mods */
+            		    mode(pMsg->pAccessChannel,mod,usernick);
+    	    	    } else {
+    					if (oldmod) {
+    			        	/* remove old mods */
+        	    			if (strchr(oldmod,'v')) {
+        		    			/* remove -o */
+    		    	        	mode(pMsg->pAccessChannel,"-v",usernick);
+        	        		} else if (strlen(oldmod)) {
+            		    	   /* remove -v */
+    	    	    	       mode(pMsg->pAccessChannel,"-o",usernick);
+    		            	}
+    					}
+    	           	
+    					/* set the new mods */
+        	   	    	if (mod[1]=='v') {
+        	            	mode(pMsg->pAccessChannel,"+v",usernick);
+    		       	    } else {
+               		    mode(pMsg->pAccessChannel,"+o",usernick);
+    	       	    }
+                    free(usernick);
+                }
     	    }
 		}
 	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_USERMODE));
@@ -1169,14 +1174,17 @@ void rmuser(MsgItem_t *pMsg) {
         if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
 			rmnick=getNickname(pNetmask);
         	
-			pChannelQueue=list_db(CHANNEL_DB);
-            while (isfullQueue(pChannelQueue)) {
-                pChannel=popQueue(pChannelQueue);
-                mode((char*)pChannel->data,"-o",rmnick);
-                mode((char*)pChannel->data,"-v",rmnick);
-				free(pChannel);
+            if (rmnick) {
+    			pChannelQueue=list_db(CHANNEL_DB);
+                while (isfullQueue(pChannelQueue)) {
+                    pChannel=popQueue(pChannelQueue);
+                    mode((char*)pChannel->data,"-o",rmnick);
+                    mode((char*)pChannel->data,"-v",rmnick);
+    				free(pChannel);
+                }
+    			deleteQueue(pChannelQueue);
+                free(rmnick);
             }
-			deleteQueue(pChannelQueue);
         }
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RMUSER));        
     	DEBUG("Remove %s from the user list\n",pLogin);

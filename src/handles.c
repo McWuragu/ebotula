@@ -42,37 +42,39 @@ void hNickChange(char *pLine) {
 
     pNetmask=getNetmask(pLine);
 
-	    
-    if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-		// get the new nickname
-		pNewNick=strrchr(pLine,' ');
-		
-		if (strlen(pNewNick)>2) {
-			pNewNick+=2;
-
-			pNetmaskCopy=(char*)malloc((strlen(pNetmask)+1)*sizeof(char));
-			strcpy(pNetmaskCopy,pNetmask);
-			
-			// cut out the secondary part of the netmask
-			pTmp=strchr(pNetmaskCopy,'!');
-			strtok(pTmp," ");
-
-			// build new netmask	
-			pNewNetmask=(char*)malloc((strlen(pNewNick)+strlen(pTmp)+1)*sizeof(char));
-			sprintf(pNewNetmask,"%s%s",pNewNick,pTmp);
-
-			// reset Login Status
-			log_out(pLogin);
-			log_on(pNewNetmask,pLogin);
-
-    		DEBUG("Change the netmask \"%s\" to \"%s\"\n",pNetmask,pNewNetmask);
-	    	
-			free(pNetmaskCopy);
-	    	free(pNewNetmask);
-			free(pLogin);
-		}
-
-	}
+	if (pNetmask) {
+        if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
+    		// get the new nickname
+    		pNewNick=strrchr(pLine,' ');
+    		
+    		if (strlen(pNewNick)>2) {
+    			pNewNick+=2;
+    
+    			pNetmaskCopy=(char*)malloc((strlen(pNetmask)+1)*sizeof(char));
+    			strcpy(pNetmaskCopy,pNetmask);
+    			
+    			// cut out the secondary part of the netmask
+    			pTmp=strchr(pNetmaskCopy,'!');
+    			strtok(pTmp," ");
+    
+    			// build new netmask	
+    			pNewNetmask=(char*)malloc((strlen(pNewNick)+strlen(pTmp)+1)*sizeof(char));
+    			sprintf(pNewNetmask,"%s%s",pNewNick,pTmp);
+    
+    			// reset Login Status
+    			log_out(pLogin);
+    			log_on(pNewNetmask,pLogin);
+    
+        		DEBUG("Change the netmask \"%s\" to \"%s\"\n",pNetmask,pNewNetmask);
+    	    	
+    			free(pNetmaskCopy);
+    	    	free(pNewNetmask);
+    			free(pLogin);
+    		}
+    
+    	}
+        free(pNetmask);
+    }
 
 }
 // #########################################################################
@@ -118,37 +120,44 @@ void hSetModUser(char *pLine) {
     char *pNick;
     char *pKey;
     char *pChannel;
+    char *pNetmask;
     char *pMod;
 
     
     pNick=getNickname(pLine);
 
-    if (strcmp(pNick,sSetup.botname)) {
-        if ((pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
-    	    DEBUG("Set the mod for Account %s with nickname %s\n",pLogin,pNick);
-
-            if (!(pChannel=getAccessChannel(pLine)))
-                return;
-
-        	// build key for access.dbf
-            pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
-	        sprintf(pKey,"%s%s",pLogin,pChannel);
-   	        
-			// read  the  mod
-       	    if ((pMod=get_db(ACCESS_DB,pKey))) {
-        	    // set the mod  for this nick
-       	       	mode(pChannel,pMod,pNick);
-                free(pMod);
-	        } else if (exist_db(ACCESS_DB,pLogin)) {
-   		        mode(pChannel,"+o",pNick);
-       		}
-
-           	free(pChannel);
-            free(pKey);
-
+    if (pNick) {
+        if (strcmp(pNick,sSetup.botname)) {
+            pNetmask=getNetmask(pLine);
+            if (pNetmask) {
+                if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
+            	    DEBUG("Set the mod for Account %s with nickname %s\n",pLogin,pNick);
+        
+                    if (!(pChannel=getAccessChannel(pLine)))
+                        return;
+        
+                	// build key for access.dbf
+                    pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
+        	        sprintf(pKey,"%s%s",pLogin,pChannel);
+           	        
+        			// read  the  mod
+               	    if ((pMod=get_db(ACCESS_DB,pKey))) {
+                	    // set the mod  for this nick
+               	       	mode(pChannel,pMod,pNick);
+                        free(pMod);
+        	        } else if (exist_db(ACCESS_DB,pLogin)) {
+           		        mode(pChannel,"+o",pNick);
+               		}
+        
+                   	free(pChannel);
+                    free(pKey);
+        
+                }
+                free(pNetmask);
+            }
         }
+        free(pNick);
     }
-    free(pNick);
 }
 // #########################################################################
 // Event handler: MODE
@@ -161,6 +170,7 @@ void hResetModes(char *pLine) {
     char *pChannel;
     char *pData;
     char *pNick;
+    char *pAccessNick;
     char *pMode;
     char **ppLinePart;
     extern CallbackDList CallbackList;
@@ -175,59 +185,63 @@ void hResetModes(char *pLine) {
 
     // extract  the nick
     pNick=(char*)ppLinePart[4];
+    pAccessNick=getNickname(ppLinePart[0]);
     
-    if (strcmp(getNickname(ppLinePart[0]),sSetup.botname)!=0) {
-        if (pMode[1]=='o' || pMode[1]=='v') {
-          
-            // check of bot new mods or  other user
-            if (!strcmp(pNick,sSetup.botname)) {
-                DEBUG("Bot get new mods\n");
-            // mode set for the bot from other user of operator
-                // then initiallize this  channel
-                if (strcmp(pMode,"+o")==0) {
-                channelInit(pChannel);
+    if (pAccessNick) {
+        if (strcmp(pAccessNick,sSetup.botname)!=0) {
+            if (pMode[1]=='o' || pMode[1]=='v') {
+              
+                // check of bot new mods or  other user
+                if (!strcmp(pNick,sSetup.botname)) {
+                    DEBUG("Bot get new mods\n");
+                // mode set for the bot from other user of operator
+                    // then initiallize this  channel
+                    if (strcmp(pMode,"+o")==0) {
+                    channelInit(pChannel);
+                    } else {
+                    privmsg(pChannel,getMsgString(INFO_NEED_OP));
+                    }
                 } else {
-                privmsg(pChannel,getMsgString(INFO_NEED_OP));
+                    // add callback for reset the modes for a user    
+                    DEBUG("Added Callback for Mode Reset\n");
+                    
+                    // built the data for callback
+                    pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
+                    sprintf(pData,"%s %s",pChannel,pMode);
+                    
+                    // build  the  element
+                    StrToLower(pNick);
+                    Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
+                    Callback->nickname=pNick;
+                    Callback->CallbackFkt=ModeResetCb;
+                    Callback->data=pData;
+                    
+                    // put  the  element  in the  callback list  before tail
+                    insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
+        
+                    // send the who
+                    whois(pNick);
                 }
+            } else if (pMode[1]=='b') {
+                DEBUG("Ban reset not implemented jet\n");
             } else {
-                // add callback for reset the modes for a user    
-                DEBUG("Added Callback for Mode Reset\n");
-                
-                // built the data for callback
-                pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
-                sprintf(pData,"%s %s",pChannel,pMode);
-                
-                // build  the  element
-                StrToLower(pNick);
-                Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
-                Callback->nickname=pNick;
-                Callback->CallbackFkt=ModeResetCb;
-                Callback->data=pData;
-                
-                // put  the  element  in the  callback list  before tail
-                insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
-    
-                // send the who
-                whois(pNick);
+                // reset other mods
+                pPos=strstr(pLine,pMode);
+                pPos[0]=(pPos[0]=='-')?'+':'-';
+                mode(pChannel,pPos,NULL);
+                DEBUG("Reset the modes from the channel %s",pChannel);
             }
-        } else if (pMode[1]=='b') {
-            DEBUG("Ban reset not implemented jet\n");
-        } else {
-            // reset other mods
-            pPos=strstr(pLine,pMode);
-            pPos[0]=(pPos[0]=='-')?'+':'-';
-            mode(pChannel,pPos,NULL);
-            DEBUG("Reset the modes from the channel %s",pChannel);
+        } else if (strcmp(pAccessNick,sSetup.botname)!=0) {
+            DEBUG("Bot get new mods\n");
+            // mode set for the bot from other user of operator
+            // then initiallize this  channel
+            if (strcmp(pMode,"+o")==0) {
+                channelInit(pChannel);
+            } else {
+                privmsg(pChannel,getMsgString(INFO_NEED_OP));
+            }
         }
-    } else if (strcmp(getNickname(ppLinePart[0]),sSetup.botname)!=0) {
-        DEBUG("Bot get new mods\n");
-        // mode set for the bot from other user of operator
-        // then initiallize this  channel
-        if (strcmp(pMode,"+o")==0) {
-            channelInit(pChannel);
-        } else {
-            privmsg(pChannel,getMsgString(INFO_NEED_OP));
-        }
+        free(pAccessNick);
     }
 }
 // #########################################################################
@@ -239,27 +253,33 @@ void hResetTopic(char *pLine){
     char *pChannel;
     char *pChannelSet;
     char *pTopic;
+    char *pNick;
 
-    if (strcmp(getNickname(pLine),sSetup.botname)) {
+    pNick=getNickname(pLine);
 
-        // get the  right topic for this channel
-        if (!(pChannel=getAccessChannel(pLine)))
-            return;
-
-
-        if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
-        	if ((pTopic=getTopic(pChannelSet))) {
-            	// reset the topic
-	            topic(pChannel,pTopic);
-    	        free(pTopic);
-        	} else {
-	            topic(pChannel,"");
-    	    }
-
-            DEBUG("Reset the topic in the channel %s\n",pChannel);
-        	free(pChannelSet);
-		}	
-        free(pChannel);
+    if (pNick) {
+        if (strcmp(pNick,sSetup.botname)) {
+    
+            // get the  right topic for this channel
+            if (!(pChannel=getAccessChannel(pLine)))
+                return;
+    
+    
+            if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
+            	if ((pTopic=getTopic(pChannelSet))) {
+                	// reset the topic
+    	            topic(pChannel,pTopic);
+        	        free(pTopic);
+            	} else {
+    	            topic(pChannel,"");
+        	    }
+    
+                DEBUG("Reset the topic in the channel %s\n",pChannel);
+            	free(pChannelSet);
+    		}	
+            free(pChannel);
+        }
+        free(pNick);
     }
 }
 // #########################################################################

@@ -21,40 +21,47 @@
 #include "extract.h"
 // ############################################################################# 
 char *getNickname(char const *pLine){
-	char *pNick,*pStr;
+	char *pNick=NULL,*pStr;
 	
-	pStr=getNetmask(pLine);
-
-	if (strtok(pStr,"!") && pLine!=NULL) {
-		if (NickStringCheck(pStr)) {
-			pNick=(char *)malloc((strlen(pStr)+1)*sizeof(char));
-			strcpy(pNick,pStr);
-			return pNick;
-		}
-	}
-	return "";
+    if (!pLine) {
+    	pStr=getNetmask(pLine);
+    
+        if (pStr) {
+        	if (strtok(pStr,"!")) {
+        		if (NickStringCheck(pStr)) {
+        			if (pNick=(char *)malloc((strlen(pStr)+1)*sizeof(char))) {
+                        strcpy(pNick,pStr);
+                    }
+        		}
+        	}
+            free(pStr);
+        }
+    }
+	return pNick;
 }
 // ############################################################################# 
 char *getNetmask(char const *pLine){ 
-	char *pNetmask,*pStr;
+	char *pNetmask=NULL,*pStr;
 
-    if (!pLine) {return "";}
+    if (!pLine) {return NULL;}
 		
 	pStr=(char *)malloc((strlen(pLine)+1)*sizeof(char));
-	strcpy(pStr,pLine);
-    strtok(&pStr[1]," ");
-
-	if (!strchr(pStr,'!') || !strchr(pStr,'@') && pLine==NULL) {
-		return "";
-	} else if (pStr[0]==':'){
-		pNetmask=(char *)malloc((strlen(pStr)+1)*sizeof(char));
-		strcpy(pNetmask,&pStr[1]);
-	} else {
-		pNetmask=(char *)malloc((strlen(pStr)+1)*sizeof(char));
-		strcpy(pNetmask,pStr);
-	}
+	
+    if (pStr) {
+        strcpy(pStr,pLine);
+        strtok(&pStr[1]," ");
     
-    free(pStr);
+    	if (strchr(pStr,'!') || strchr(pStr,'@')) {
+        	if (pStr[0]==':'){
+        		pNetmask=(char *)malloc((strlen(pStr)+1)*sizeof(char));
+        		strcpy(pNetmask,&pStr[1]);
+        	} else {
+        		pNetmask=(char *)malloc((strlen(pStr)+1)*sizeof(char));
+        		strcpy(pNetmask,pStr);
+        	}
+        }
+        free(pStr);
+    }
     return pNetmask;
 
 }
@@ -350,37 +357,38 @@ char ** splitString(char const * pString,int nRetArraySize) {
 }
 // #############################################################################
 char * getBanmask(char const *pLine){ 
-	char *pBanmask,*pStr;
+	char *pBanmask=NULL;
+    char *pStr;
 	char * pChar;
+
 	// getting netmask to get banmask
 	pStr=getNetmask(pLine);
-	if (pStr[0]!='\0')
-	{
+	
+    if (pStr) {
 		// get the position of '!'
 		pChar=(char *)strchr(pStr,'!');
 		// jump over '!'
 		pChar;
 		// copy from '!' to pStr
-		if ((pBanmask=(char*) malloc(strlen(pChar)+3))==NULL)
-		{
-			DEBUG("getBanmask: Error: Not enoug Memory!\n");
-			return NULL;
-		}
-		strcpy(pBanmask,"*");
-		strcat(pBanmask,pChar);
-		strcpy(pStr,pBanmask);
-		// setting after @ a NULL-Byte
-		pChar=(char *)strchr(pBanmask,'@');
-		pChar[1]='*';
-		pChar[2]='\0';
-		pChar=(char *)strchr(pStr,'.');
-		// add rest of the netmask
-		strcat(pBanmask,pChar);
+        pBanmask=(char*) malloc(strlen(pChar)+3);
+
+		if (pBanmask){
+    		strcpy(pBanmask,"*");
+    		strcat(pBanmask,pChar);
+    		strcpy(pStr,pBanmask);
+    		// setting after @ a NULL-Byte
+    		pChar=(char *)strchr(pBanmask,'@');
+    		pChar[1]='*';
+    		pChar[2]='\0';
+    		pChar=(char *)strchr(pStr,'.');
+    		// add rest of the netmask
+    		strcat(pBanmask,pChar);
+        }
 		
-		return pBanmask;
+        free(pStr);
 	}
 	
-	return NULL; 
+	return pBanmask; 
 }
 // #############################################################################
 AnswerMode_t getAnswerMode(char const * pLine){
