@@ -34,8 +34,8 @@
 void trim(char *line);
 
 void stopParser(int sig);
+void print_msg(const char *msg[]);
 
-void dialog_master(void);
 /**
 * clearspace() remove all spaces in a string until from double quote include spaces.
 * This space in double quote untouched.
