@@ -507,7 +507,8 @@ msgstr "Der Bot hat den Benutzer %s in den Channel %s eingeladen."
 #: src/command.c:1497
 #, c-format
 msgid "The bot need a channel parameter for inviting of the user %s"
-msgstr "Der Bot benötigt einen Channel als Parameter zum einladen des Benutzers %s."
+msgstr ""
+"Der Bot benötigt einen Channel als Parameter zum einladen des Benutzers %s."
 
 #: src/dbaccess.c:57
 msgid "Initialization of the database"
@@ -770,7 +771,8 @@ msgstr "\t-b Name\t\tSetzt den Namen des Boots im.\n"
 
 #: src/messages.c:18
 msgid "\t-c sec\t\tSet the ping timeout of the network connection.\n"
-msgstr "\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
+msgstr ""
+"\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
 
 #: src/messages.c:19
 msgid "\t-d path\t\tSet the path of the database direcotry\n"
@@ -808,10 +810,12 @@ msgstr ""
 
 #: src/messages.c:26
 msgid "\t-k days\t\tSet the account live time in days.\n"
-msgstr "\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Konto inaktiv sein kann.\n"
+msgstr ""
+"\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Konto inaktiv sein kann.\n"
 
 #: src/messages.c:27
-msgid "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
+msgid ""
+"\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
 msgstr ""
 "\t-l Char/min\tSetzt das Limit in Zeichen je Minute für das beschleunigte "
 "Senden.\n"
@@ -844,7 +848,8 @@ msgstr "\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n"
 
 #: src/messages.c:34
 msgid "\t-u user\t\tSet the user under which the bot run (root only).\n"
-msgstr "\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
+msgstr ""
+"\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
 
 #: src/messages.c:35
 msgid "\t-v\t\tPrint version.\n"
@@ -1099,4 +1104,3 @@ msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
 
 #~ msgid "Empty list!"
 #~ msgstr "Liste ist leer."
-

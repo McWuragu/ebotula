@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{prefix}/var/ebotula/
 
 %changelog
+* Mon Sep 13 2004 Steffen Laube <Laube.Steffen@gmx.de>
+- rebuilt
+
 * Sun May 16 2004 Steffen Laube <Laube.Steffen@gmx.de>
 - rebuilt
 
