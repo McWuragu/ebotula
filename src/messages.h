@@ -65,6 +65,7 @@
 #define MSG_HELP_END			"End of help."
 #define MSG_HELP_FOR			"Help for"
 #define MSG_CHANNELS			"Channel list:"
+#define MSG_NEED_OP				"I need operator access right."
 
 
 // command  format erros
