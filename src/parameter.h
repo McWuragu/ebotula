@@ -14,9 +14,8 @@
 #define PASSWD_LENGTH	8
 #define LOGIN_LENGTH	8
 
-void ComandLineParser(int argc,const char *argv[]);
+void ComandLineParser(int argc,char *const argv[]);
 void ConfigFileParser(void);
 boolean dialogMaster(void);
-char *getPasswd(void);
 
 #endif
