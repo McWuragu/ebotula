@@ -56,7 +56,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                
-                sSetup.server=(char *)malloc(strlen((argv[i])+1)*sizeof(char));
+                sSetup.server=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
                 strcpy(sSetup.server,argv[i]);
                 
                 break;
@@ -224,7 +224,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                     perror(getMsgString(ERR_SENDLINE_RANGE));
                     exit(errno);
                 }
-                sSetup.iSendSafeLine=tmp;
+                sSetup.nFastSendingCharLimit=tmp;
                 break;
             case 'k':
                 DEBUG("Found account live time option\n");
@@ -383,7 +383,7 @@ void ConfigFileParser(void) {
                     }   
                     // set auto logoff time
                     sSetup.AutoLoggoff=tmp;
-                } else if (!strcmp(key,KEY_SENDDELAY)) {
+                } else if (!strcmp(key,KEY_FASTSENDDELAY)) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
@@ -392,7 +392,7 @@ void ConfigFileParser(void) {
                     }   
                     // set first delay time
                     sSetup.iSendDelay=tmp;
-                } else if (!strcmp(key,KEY_SENDSAFEDELAY)) {
+                } else if (!strcmp(key,KEY_SLOWSENDDELAY)) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
@@ -401,7 +401,7 @@ void ConfigFileParser(void) {
                     }   
                     // set second delay time
                     sSetup.iSendSafeDelay=tmp;
-                } else if (!strcmp(key,KEY_SENDSAFELINE)) {
+                } else if (!strcmp(key,KEY_FASTSENDLIMIT)) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
@@ -409,7 +409,7 @@ void ConfigFileParser(void) {
                         exit(errno);
                     }   
                     // set auto logoff time
-                    sSetup.iSendSafeLine=tmp;
+                    sSetup.nFastSendingCharLimit=tmp;
                 } else if (!strcmp(key,KEY_ALT)) {
                     tmp=atoi(value);
                     if (tmp<0) {
