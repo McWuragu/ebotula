@@ -40,13 +40,14 @@
 
 // excute error
 // output of strerr
-#define ERR_MSSING_PARA			"Missing value"
+#define ERR_MISSING_PARAM			"Missing value"
 #define ERR_PORT_PARAMETER		"The portvalue is out of range."
 #define ERR_WRONG_SERVERNAME	"The servername is irregular."
 #define ERR_WRONG_BOTNAME		"The botname is irregular."
 #define ERR_ALT_RANGE			"The account live time is invalid."
+#define ERR_PINGTIMEOUT_RANGE	"The ping time is invalid."
 #define ERR_SENDDELAY_RANGE     "The send delay time is invalid."
-#define ERR_LOGOFF_RANGE		"The auto log off time is invalid."
+#define ERR_LOGOFF_RANGE		"The auto logoff time is invalid."
 #define ERR_THREAD_RANGE		"The threadlimit is out of range."
 #define ERR_NICK				"Can't set the nickname."
 #define ERR_MUTEX				"Can't synchronize the threads."
@@ -115,8 +116,8 @@
 
 // Messages for the master dialog
 #define MSG_MASTER_TITLE		"Create a master account\n\n"
-#define MSG_MASTER_LOGIN		"Type the login (max 16): "
-#define MSG_MASTER_PASS			"\nEnter the password(max. 8): "
+#define MSG_MASTER_LOGIN		"Type the login (max %d): "
+#define MSG_MASTER_PASS			"\nEnter the password(max. %d): "
 #define MSG_MASTER_REPASS		"Reenter the password: "
 
 
@@ -137,7 +138,8 @@ static const char *help_msg[]=
 	PROGNAME," [Options]\n",
 	"\n\tOptions:\n",
 	"\t-a days\t\tSet the time in days for the automatic logoff.\n",
-	"\t-b name\t\tSet  the name  of the bot.\n",
+	"\t-b name\t\tSet the name of the bot.\n",
+	"\t-c sec\t\tSet the ping timeout of the connection.\n",
 	"\t-d path\t\tUse this path for the database\n",
 	"\t-f file\t\tUse this config file.\n",
 	"\t-h\t\tPrint this help information.\n",
