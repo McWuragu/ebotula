@@ -1,12 +1,16 @@
 src/account.c
 src/baseconfig.c
+src/callback.c
+src/callbacklist.c
 src/command.c
 src/config.h
 src/dbaccess.c
+src/handles.c
 src/ircbot.c
 src/irc.c
 src/messages.c
 src/network.c
 src/parameter.c
 src/parser.c
+src/queue.c
 src/timing.c

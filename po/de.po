@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-18 12:13+0200\n"
-"PO-Revision-Date: 2004-07-18 12:27+0200\n"
+"POT-Creation-Date: 2004-07-18 13:59+0200\n"
+"PO-Revision-Date: 2004-07-18 14:05+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,15 +19,103 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.0.2\n"
 
+#: src/account.c:92
+#, c-format
+msgid "The account %s was automatically logged off"
+msgstr "Der Account %s wurde automatisch abgemeldet."
+
+#: src/account.c:129
+#, c-format
+msgid "Account %s logged in"
+msgstr "Account %s ist angmeldet."
+
+#: src/account.c:138
+#, c-format
+msgid "Update the timestamp %s for the account %s"
+msgstr "Aktualisierung des Zeitstempels %s für den Account %s"
+
+#: src/account.c:141
+#, c-format
+msgid "Add the timepstamp %s for the account %s"
+msgstr "Zeitstempel %s für den Account %s hinzugefügt."
+
+#: src/account.c:163
+#, c-format
+msgid "Account %s logged off"
+msgstr "Der Account %s wurde abgemeldet."
+
+#: src/account.c:171
+#, c-format
+msgid "Remove the account %s"
+msgstr "Entferne den Accounts %s"
+
+#: src/account.c:194
+#, c-format
+msgid "Remove the access rights for the account %s"
+msgstr "Zugriffsrechte des Accounts %s entfernt"
+
 #: src/account.c:236
 #, c-format
 msgid "The account %s is removed"
 msgstr "Der Account %s wurde gelöscht."
 
+#: src/baseconfig.c:114
+#, c-format
+msgid "Creating Configfile %s"
+msgstr "Erzeuge die Konfigurationsdatei %s"
+
 #: src/baseconfig.c:120 src/baseconfig.c:124
 #, c-format
 msgid "Couldn't open the configuration file %s."
 msgstr "Könnte die Datenbank %s nicht öffnen."
+
+#: src/callback.c:39
+msgid "Callback routine for the reset of the modes"
+msgstr "Caallbackroutine für das Zurücksetzen der Modien"
+
+#: src/callback.c:54
+#, c-format
+msgid "Reset the usermodes for the identified account %s"
+msgstr "Benutzermodien des Accounts %s zurückgesetzt."
+
+#: src/callback.c:77
+#, c-format
+msgid "Reset the usermodes of the master %s"
+msgstr "Zurckücksetzen der Benutzerrechte des Masters %s"
+
+#: src/callback.c:89
+#, c-format
+msgid "Reset the usermode for user %s"
+msgstr "Zurücksetzen der Modien für den Benutzer %s"
+
+#: src/callback.c:116
+msgid "Callback routine for user banning"
+msgstr "Callbackroutine für das Bannen eines Benutzers"
+
+#: src/callback.c:161
+msgid "Callback routine for user kicking"
+msgstr "Callbackroutine für das Herrauswerfen eines Benutzers"
+
+#: src/callbacklist.c:82 src/callbacklist.c:135 src/irc.c:47 src/irc.c:66
+#: src/irc.c:83 src/irc.c:96 src/irc.c:121 src/irc.c:134 src/irc.c:153
+#: src/irc.c:162 src/irc.c:176 src/irc.c:189 src/irc.c:202 src/irc.c:215
+#: src/irc.c:233 src/irc.c:246 src/irc.c:259 src/irc.c:277 src/irc.c:290
+#: src/queue.c:30 src/queue.c:82 src/queue.c:111
+msgid "Couldn't allocate memory!"
+msgstr "Könnte keinen Speicher anfordern."
+
+#: src/callbacklist.c:180
+msgid "List is empty!"
+msgstr "Liste ist leer."
+
+#: src/callbacklist.c:236
+msgid "Callback list empty list."
+msgstr "Callbackliste ist leer."
+
+#: src/callbacklist.c:286
+#, c-format
+msgid "User \"%s\" not found in the callback list!"
+msgstr "Benutzer %s wurde in der Callbackliste nicht gefunden."
 
 #: src/command.c:53
 msgid "Commands list"
@@ -101,10 +189,26 @@ msgstr "Herstellung der Zugriffsrechte für alle Channels."
 msgid "Join and add the channnel %s"
 msgstr "Channel %s hinzugefügt und beigetretten"
 
+#: src/command.c:363
+msgid "The channel is added to the channel list"
+msgstr "Der Channel wurde zu Liste hinzugefügt."
+
+#: src/command.c:367 src/command.c:422
+msgid "The bot is joined the channel."
+msgstr "Der Bot ist dem Channel beigetretten."
+
 #: src/command.c:382
 #, c-format
 msgid "Part and  try to remove the channnel %s"
 msgstr "Channel %s verlassen und wird versucht zu entfernen."
+
+#: src/command.c:389
+msgid "The channel is removed from the channel list."
+msgstr "Der Channel wurde von der Liste entfernt."
+
+#: src/command.c:396 src/command.c:436
+msgid "The bot has left the channel."
+msgstr "Der Bot hat den Channel verlassen."
 
 #: src/command.c:418
 #, c-format
@@ -115,6 +219,10 @@ msgstr "Channel %s beigetretten."
 #, c-format
 msgid "Part the channel %s"
 msgstr "Channel %s verlassen."
+
+#: src/command.c:474
+msgid "The bot tries to set the new nickname."
+msgstr "Der bot versucht den neuen Nickname zusetzen."
 
 #: src/command.c:499
 msgid "Build channel list."
@@ -213,10 +321,66 @@ msgstr "Lege das Verzeichnis %s für die Datenbank an."
 msgid "Couldn't open the databases %s."
 msgstr "Könnte die Datenbank %s nicht öffnen."
 
+#: src/dbaccess.c:113
+msgid "Database is closed"
+msgstr "Datenbank ist geschlossen."
+
 #: src/dbaccess.c:120
 #, c-format
 msgid "Unkown database id %d"
 msgstr "Unbekannte Datenbank ID %d"
+
+#: src/handles.c:68
+#, c-format
+msgid "Change the netmask \"%s\" to \"%s\""
+msgstr "Änderung der Netzmaske \"%s\" zu \"%s\""
+
+#: src/handles.c:142
+#, c-format
+msgid "Set the usermodes for the account %s with nickname %s"
+msgstr "Setze die Modien für den Account %s des Benutzers %s"
+
+#: src/handles.c:215
+msgid "Bot get a new usermode"
+msgstr "Bot hat neuen Modus erhalten."
+
+#: src/handles.c:225
+msgid "Added callback routine for the reset of the usermodes"
+msgstr "Callbackroutine für das Zurücksetzen der Benutzermodien eingefügt."
+
+#: src/handles.c:246
+msgid "Ban reset not implemented jet"
+msgstr "Zurücksetzen von Banns ist im moment nocht nicht implementiert"
+
+#: src/handles.c:252
+#, c-format
+msgid "Reset the channelmodes of the channel %s"
+msgstr "Zurücksetzen der Modien des Channels %s"
+
+#: src/handles.c:299
+#, c-format
+msgid "Reset the topic in the channel %s"
+msgstr "Zurücksetzen der Überschrift für den Channel %s"
+
+#: src/handles.c:336
+#, c-format
+msgid "Rejoin the channel %s"
+msgstr "Wiederbeitretten des Channels %s"
+
+#: src/handles.c:388
+#, c-format
+msgid "Initialize the channel %s"
+msgstr "Initialisiere den Channel %s."
+
+#: src/handles.c:461
+#, c-format
+msgid "Look for a callback zombie routine of the user %s"
+msgstr "Suche nach Zombies in der Callbackroutine für den Benutzer %s"
+
+#: src/handles.c:472
+#, c-format
+msgid "The callback zombie routine of the user %s is removed"
+msgstr "Zombie in der Callbackroutine des Benutzers %s entfernt."
 
 #: src/ircbot.c:170
 msgid "Found debug level option."
@@ -247,6 +411,94 @@ msgstr "Die Gruppe %s kann nicht gefunden werden."
 msgid "The user %s couldn't found"
 msgstr "Der Benutzer %s konnte nicht gefunden werden."
 
+#: src/ircbot.c:260
+msgid "--------------- current setup -------------------"
+msgstr "--------------- aktuelles Setup -------------------"
+
+#: src/ircbot.c:261
+#, c-format
+msgid "Hostname %s"
+msgstr "Hostname %s"
+
+#: src/ircbot.c:262
+#, c-format
+msgid "Portnumber %s"
+msgstr "Portnummer %s"
+
+#: src/ircbot.c:263
+#, c-format
+msgid "Nickname %s"
+msgstr "Nickname %s"
+
+#: src/ircbot.c:264
+#, c-format
+msgid "Realname %s"
+msgstr "Realname %s"
+
+#: src/ircbot.c:265
+#, c-format
+msgid "Execute as %s.%s"
+msgstr "Ausführen als %s.%s"
+
+#: src/ircbot.c:266
+#, c-format
+msgid "Threads %d"
+msgstr "Threads %d"
+
+#: src/ircbot.c:267
+#, c-format
+msgid "Configuration file %s"
+msgstr "Konfigurationsdatei %s"
+
+#: src/ircbot.c:268
+#, c-format
+msgid "Database path %s"
+msgstr "Datenbankpfad %s"
+
+#: src/ircbot.c:269
+#, c-format
+msgid "Ping timeout %ds"
+msgstr "Zeitüberschreitung "
+
+#: src/ircbot.c:270
+#, c-format
+msgid "Fast sending delay %dms"
+msgstr "Verzögerung für das schnelle Senden %dms"
+
+#: src/ircbot.c:271
+#, c-format
+msgid "Slow sending delay %dms"
+msgstr "Verzögerung für das langsame Senden %dms"
+
+#: src/ircbot.c:272
+#, c-format
+msgid "Fast sending limit %d"
+msgstr "Limit für das schnelle Senden %dZeichen/min"
+
+#: src/ircbot.c:273
+#, c-format
+msgid "Startup initialization delay %ds"
+msgstr "Verzögerung für die Anfangsinitialisierung %ds"
+
+#: src/ircbot.c:274
+#, c-format
+msgid "Account live time %dd"
+msgstr "Lebenszeit eines Account %dd"
+
+#: src/ircbot.c:275
+#, c-format
+msgid "Autolog of after %dd"
+msgstr "Automatisches Abmelden nach %dd"
+
+#: src/ircbot.c:276
+#, c-format
+msgid "Log level: %i"
+msgstr "Ausgabelevel %i"
+
+#: src/ircbot.c:277
+msgid "----------------- setup end ---------------------"
+msgstr "----------------- Setup Ende ---------------------"
+
 #: src/ircbot.c:279
 msgid "Start..."
 msgstr "Starten..."
@@ -275,13 +527,6 @@ msgstr "Neustart fehlgeschlagen"
 #: src/ircbot.c:463
 msgid "Stopped..."
 msgstr "Gestoppt..."
-
-#: src/irc.c:47 src/irc.c:66 src/irc.c:83 src/irc.c:96 src/irc.c:121
-#: src/irc.c:134 src/irc.c:153 src/irc.c:162 src/irc.c:176 src/irc.c:189
-#: src/irc.c:202 src/irc.c:215 src/irc.c:233 src/irc.c:246 src/irc.c:259
-#: src/irc.c:277 src/irc.c:290
-msgid "Couldn't allocate memory!"
-msgstr "Könnte keinen Speicher anfordern."
 
 #: src/messages.c:24
 #, c-format
@@ -367,8 +612,8 @@ msgstr ""
 "Senden\n"
 
 #: src/messages.c:40
-msgid "\t-p port\t\tSet the port of the irc server.\n"
-msgstr "\t-p Port\t\tSetzt den Port des Servers des IRC-Servers.\n"
+msgid "\t-p port\t\tSet the portnumber of the irc server.\n"
+msgstr "\t-p Port\t\tSetzt die Portnummer des IRC-Servers.\n"
 
 #: src/messages.c:41
 msgid "\t-r string\tSet the output for a request of the real name.\n"
@@ -463,8 +708,8 @@ msgstr "Der Botname ist ungültig.\n"
 
 #: src/parameter.c:127 src/parameter.c:354
 #, c-format
-msgid "The port %i value is out of range.\n"
-msgstr "Der Port %i ist ausserhalb des Bereichs.\n"
+msgid "The portnumber %i value is out of range.\n"
+msgstr "Die Portnummer %i ist ausserhalb des Bereichs.\n"
 
 #: src/parameter.c:148 src/parameter.c:380
 msgid "The thread limit is out of range.\n"
@@ -565,10 +810,38 @@ msgstr "Ein Account %s existiert schon."
 msgid "Couldn't set this account to master."
 msgstr "konnte den Account nicht auf Master setzen."
 
+#: src/parser.c:101
+#, c-format
+msgid "Found command %s"
+msgstr "Kommando %s gefunden."
+
+#: src/parser.c:113 src/parser.c:116 src/parser.c:119
+#, c-format
+msgid "Found ctcp command %s"
+msgstr "CTCP Kommando %s gefunden"
+
+#: src/parser.c:147
+#, c-format
+msgid "Execution thread is running (pid%d)"
+msgstr "Ausführungs Thread läuft (PID%d)"
+
 #: src/parser.c:296
 #, c-format
 msgid "Unkown command id %d"
 msgstr "Unbekannte Datenbank ID %d"
+
+#: src/parser.c:313
+msgid "Execution thread is stopped"
+msgstr "Ausführungsthread wurde gestoppt."
+
+#: src/parser.c:352
+#, c-format
+msgid "Access status for the userlevel %i and the command id %i is %i"
+msgstr "Zugriffsstatus für das Benutzerlevel %i und der Kommando ID %i ist %i"
+
+#: src/queue.c:165 src/queue.c:255
+msgid "Queue is empty"
+msgstr "Schlange ist leer."
 
 #: src/timing.c:43
 #, c-format
@@ -586,4 +859,7 @@ msgstr "Entfernt die toten Accounts"
 #: src/timing.c:71
 msgid "The timing thread is stopped"
 msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
+
+#~ msgid "Empty list!"
+#~ msgstr "Liste ist leer."
 

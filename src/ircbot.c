@@ -257,24 +257,24 @@ int main(int argc,char * const argv[]) {
     }
    
 
-    logger(LOG_INFO,"--------------- current setup -------------------");
-    logger(LOG_INFO,"Server %s",sSetup.sHostname);
-    logger(LOG_INFO,"Port %s",sSetup.sPort);
-    logger(LOG_INFO,"Nickname %s", sSetup.pBotname);
-    logger(LOG_INFO,"Realname %s", sSetup.realname);
-    logger(LOG_INFO,"Execute as %s.%s",sSetup.sExeUser,sSetup.sExeGroup);
-    logger(LOG_INFO,"Threads %d",sSetup.thread_limit);
-    logger(LOG_INFO,"Config file %s",sSetup.configfile);
-    logger(LOG_INFO,"Database path %s",sSetup.pDatabasePath);
-    logger(LOG_INFO,"Ping timeout %ds",sSetup.iTimeout);
-    logger(LOG_INFO,"Fast sending delay %dms",sSetup.iSendDelay);
-    logger(LOG_INFO,"Slow sending delay %dms",sSetup.nSlowSendDelay);
-    logger(LOG_INFO,"Fast sending limit %d",sSetup.nFastSendingCharLimit);
-    logger(LOG_INFO,"Startup initialization delay %ds",sSetup.nSettling);
-    logger(LOG_INFO,"Account live time %dd",sSetup.AccountLiveTime);
-    logger(LOG_INFO,"Autolog of after %dd",sSetup.AutoLoggoff);
-    logger(LOG_INFO,"Log level: %i",sSetup.nLogLevel);
-    logger(LOG_INFO,"-------------------------------------------------");
+    logger(LOG_INFO,gettext("--------------- current setup -------------------"));
+    logger(LOG_INFO,gettext("Hostname %s"),sSetup.sHostname);
+    logger(LOG_INFO,gettext("Portnumber %s"),sSetup.sPort);
+    logger(LOG_INFO,gettext("Nickname %s"), sSetup.pBotname);
+    logger(LOG_INFO,gettext("Realname %s"), sSetup.realname);
+    logger(LOG_INFO,gettext("Execute as %s.%s"),sSetup.sExeUser,sSetup.sExeGroup);
+    logger(LOG_INFO,gettext("Threads %d"),sSetup.thread_limit);
+    logger(LOG_INFO,gettext("Configuration file %s"),sSetup.configfile);
+    logger(LOG_INFO,gettext("Database path %s"),sSetup.pDatabasePath);
+    logger(LOG_INFO,gettext("Ping timeout %ds"),sSetup.iTimeout);
+    logger(LOG_INFO,gettext("Fast sending delay %dms"),sSetup.iSendDelay);
+    logger(LOG_INFO,gettext("Slow sending delay %dms"),sSetup.nSlowSendDelay);
+    logger(LOG_INFO,gettext("Fast sending limit %d"),sSetup.nFastSendingCharLimit);
+    logger(LOG_INFO,gettext("Startup initialization delay %ds"),sSetup.nSettling);
+    logger(LOG_INFO,gettext("Account live time %dd"),sSetup.AccountLiveTime);
+    logger(LOG_INFO,gettext("Autolog of after %dd"),sSetup.AutoLoggoff);
+    logger(LOG_INFO,gettext("Log level: %i"),sSetup.nLogLevel);
+    logger(LOG_INFO,gettext("----------------- setup end ---------------------"));
 
     logger(LOG_NOTICE,gettext("Start..."));
 

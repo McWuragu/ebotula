@@ -110,7 +110,7 @@ void closeDatabase(void) {
         // close the databases
         gdbm_close(dbf[i]);
 	}
-    logger(LOG_INFO,"Close databases");
+    logger(LOG_INFO,gettext("Database is closed"));
 }
 
 //######################### database access ##############################

@@ -385,7 +385,7 @@ static void channelInit(char *pChannel) {
         free (sChannelData.sModes.pLimit);
 	
         action(pChannel,getMsgString(INFO_INIT_CHANNEL));
-        logger(LOG_INFO,"Initialize the channel %s", pChannel);
+        logger(LOG_INFO,gettext("Initialize the channel %s"), pChannel);
     }
 }
 

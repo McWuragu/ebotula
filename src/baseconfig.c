@@ -111,7 +111,7 @@ void write_baseconfig()
 		
         FILE * fd;
 
-       logger(LOG_NOTICE,"Creating Configfile: %s",sSetup.configfile);
+       logger(LOG_NOTICE,gettext("Creating Configfile %s"),sSetup.configfile);
 
       /* Create & Openfile*/
       if ((fd=fopen(sSetup.configfile,"wb"))==NULL)

@@ -126,7 +126,7 @@ void log_on(char *pNetmask,char *pLogin) {
     }
     pthread_mutex_unlock(&mutexAccount);
 
-    logger(LOG_INFO,"User log in %s",pLogin);
+    logger(LOG_INFO,gettext("Account %s logged in"),pLogin);
 
     /* build the timestamp */
     time(&timestamp);
@@ -160,7 +160,7 @@ void __log_out(char *pLogin) {
         /* Log off */
 	    del_db(NICKTOUSER_DB,pNetmask);
     	del_db(USERTONICK_DB,pLogin);
-    	logger(LOG_INFO,"%s logged off",pLogin);
+    	logger(LOG_INFO,gettext("Account %s logged off"),pLogin);
         free(pNetmask);
 	}
 }
@@ -168,7 +168,7 @@ void __log_out(char *pLogin) {
 void rmAccount(char *pLogin) {
     extern pthread_mutex_t mutexAccount;
     
-	logger(LOG_INFO,"Remove the account %s",pLogin);
+	logger(LOG_INFO,gettext("Remove the account %s"),pLogin);
 
     pthread_mutex_lock(&mutexAccount);
 	/* logoff the user */
