@@ -170,13 +170,15 @@ void hResetModes(char *pLine) {
     pChannel=(char*)ppLinePart[2];
     pMode=(char*)ppLinePart[3];
 
-    if (!strstr(ppLinePart[0],sSetup.botname)) {
+    // extract  the nick
+    pNick=(char*)ppLinePart[4];
+    
+    if (pNick,sSetup.botname)) {
         if (pMode[1]=='o' || pMode[1]=='v') {
             // add callback for reset the modes for a user    
             DEBUG("Added Callback for Mode Reset");
            
-            // extract  the nick
-            pNick=(char*)ppLinePart[4];
+            
             
             // built the data for callback
             pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
