@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -699,17 +699,65 @@ void allsay(char *pline) {
     }
 	deleteQueue(pChannelQueue);
 }
+
+/* #########################################################################
+   Bot comand: !ban <#channel> nick
+   ######################################################################### */
+void banuser(char *pLine) {
+    extern CallbackDList CallbackList;
+    CallbackItem_t *Callback;
+    char *Data;
+
+    char **pArgv;
+    char *pNetmask;
+    char *pChannel;
+    char *pToBanNick;
+    char *pLogin;
+
+    
+    // pars line
+    pChannel=getAccessChannel(pLine);
+    pNetmask=getNetmask(pLine);
+    pArgv=splitString(getParameters(pLine),2);
+    pToBanNick=pArgv[0];
+
+    // read the login from the database
+    pLogin=get_db(NICKTOUSER_DB,pNetmask);
+
+    Data=(char*)malloc((strlen(pLogin)+strlen(pChannel)+2)*sizeof(char));
+    sprintf(Data,"%s %s",pLogin,pChannel);
+
+    Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
+
+    StrToLower(pToBanNick);
+
+    // fill callback item
+    Callback->nickname=pToBanNick;
+    Callback->CallbackFkt=SetBanCb;
+    Callback->data=Data;
+
+    insert_next_CallbackDList(&CallbackList,CallbackList.tail,Callback);
+    whois(pToBanNick);
+}
+
+/* #########################################################################
+   Bot comand: !deban <#channel> nick
+   ######################################################################### */
+void debanuser(char *pLine) {
+}
+
 /* #########################################################################
    Bot comand: !kick <#channel> nick reason
    ######################################################################### */
 void kickuser(char *pLine) {
+    extern ConfigSetup_t sSetup;
     extern CallbackDList CallbackList;
     CallbackItem_t *Callback;
     char *pNick;
     char *pKicknick;
     char *pChannel;
     char *pReason;
-    char *pParameter;
+    char **pArgv;
     char *pPos;
     char *pLogin;
     char *pData;
@@ -718,32 +766,29 @@ void kickuser(char *pLine) {
     pChannel=getAccessChannel(pLine);
 
     /* get parameters */
-    pParameter=getParameters(pLine);
-    if (!strlen(pParameter)) {
+    pArgv=splitString(getParameters(pLine),2);
+    
+    /* parse nick */
+    pKicknick=pArgv[0];
+    if (!pArgv[0]) {
         notice(pNick,MSG_KICK_ERR);
         return;
     }
-
-    /* parse reason */
-    if (!(pPos=strchr(pParameter,' '))) {
-        /* empty reason */
-        pReason="";
-    } else {
-        /* set null byte  for  nick */
-        *pPos='\0';
-        /* over jump the  space */
-        pPos++;
-        pReason=(char*)malloc((strlen(pPos)+1)*sizeof(char));
-        strcpy(pReason,pPos);
-
+    
+    if (strcmp(pKicknick,sSetup.botname)==0) {
+        notice(pNick,MSG_NOTSELF_KICK_ERR);
+        return;
     }
 
-    /* parse nick */
-    pKicknick=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
-    strcpy(pKicknick,pParameter);
 
+    /* parse reason */
+    pReason=pArgv[1];
+    if (!pReason) {
+        /* empty reason */
+        pReason="";
+    }
 
-    /* read  the  login name of the  kicking user*/
+    /* read  the  login name of the  kicking user */
     if (!(pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
         notice(pNick,MSG_NOT_KICK);
         return;
@@ -751,10 +796,11 @@ void kickuser(char *pLine) {
 
     /* built data for the callback */
     pData=(char*)malloc((strlen(pLogin)+strlen(pChannel)+strlen(pReason)+5)*sizeof(char));
-    sprintf(pData,"%s %s :%s",pLogin,pChannel,pReason);
+    sprintf(pData,"%s %s %s",pLogin,pChannel,pReason);
     
     
     /* built  and add to callback list */
+    StrToLower(pKicknick);
     Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
     Callback->CallbackFkt=KickCb;
     Callback->nickname=pKicknick;
@@ -763,11 +809,6 @@ void kickuser(char *pLine) {
     insert_next_CallbackDList(&CallbackList,CallbackList.tail,Callback);
 
     whois(pKicknick);
-
-    /*
-    kick(pChannel,kicknick,reason);
-    notice(pNick,MSG_KICK_OK);
-    */
 }
 /* #########################################################################
    Bot comand: !usermode [#channel] <login> <mod>

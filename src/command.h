@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 #ifndef COMMAND_H
 #define COMMAND_H
@@ -59,6 +59,8 @@ typedef enum CmdEnum {
     CMD_SET_TOPIC,
     CMD_SET_GREATING,
     CMD_CHANNELS,
+    CMD_BAN,
+    CMD_DEBAN,
 
     /* Master commands */
     CMD_RESTART,
@@ -85,10 +87,15 @@ typedef enum CmdEnum {
 
 static char * const CmdList[]= {
     "none",
+    /* Events */
     "PING","QUIT","NICK","MODE","JOIN","353","TOPIC","311",
+    /* any commands */
     "viewgreet","help","version","hello","ident",
+    /* logged user commands */
     "logoff","pass",
-    "chanmode","userlist","usermode","say","kick","topic","greeting","chanlist",
+    /* channel owner commands */
+    "chanmode","userlist","usermode","say","kick","topic","greeting","chanlist","ban","deban",
+    /* master commands */
     "restart","allsay","rmuser","nick","die","rmchannel","addchannel","join","part"
 };
 
@@ -119,6 +126,8 @@ void setTopic(char *pLine);
 void greeting(char *pLine);
 void say(char *pLine);
 void allsay(char *pline);
+void banuser(char *pLine);
+void debanuser(char *pLine);
 void kickuser(char *pLine);
 void usermode(char *pLine);
 void chanmode(char *pLine);
