@@ -90,7 +90,8 @@
 	#define MSG_NOT_CHANNEL			"This channel isn't in the channel list."
 	#define MSG_NOT_ACCESS			"Access denied"
 	#define MSG_NOT_SELF			"You can't modify yourself"
-	
+    #define MSG_NOT_KICK            "Can't kick this user"
+    
 	// Errors
 	#define MSG_ADDCHANNEL_ALREADY	"This channel is already in the channel list."
 	#define MSG_NICK_INVALID		"Nickname is invalid."
