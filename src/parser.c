@@ -29,6 +29,7 @@
 #include "messages.h"
 #include "parser.h"
 
+extern boolean stop;
 
 void preParser(char *pLine,MsgBuf_t *pMsg) {
     char *pStr=NULL,*pPreamble=NULL,*pPos=NULL;
@@ -135,7 +136,6 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
 }
 
 void *CommandExecutionThread(void *argv) {
-	extern boolean stop;
     QueueData *pCommand;
 	MsgBuf_t *pMsg;
     MsgItem_t sMsgItem;
@@ -355,7 +355,6 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
 }
 /* ############################################################################# */
 RETSIGTYPE stopParser(int sig) {
-    extern int stop;
     if (!stop) {
         quit();
     }
