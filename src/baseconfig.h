@@ -4,7 +4,7 @@
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
-* (c)2004 Steffen Laube <Laube.Steffen@gmx.de>
+* (c)2003-2004 Steffen Laube <Laube.Steffen@gmx.de>
 * ############################################################# 
 */
 #ifndef __H_BASECONFIG
