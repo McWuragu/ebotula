@@ -11,7 +11,7 @@
 #define UTILITIES_H
 
 
-
+#define msleep(m)   usleep((m)*1000)
 
 #ifdef _DEBUG
 	#include <syslog.h>
@@ -26,24 +26,20 @@
 /**
 * This function trim a string. It remove leading, folling and 
 * multi spaces and  CR LF at the end.
-* @param line is a pointer of a string to modify
+* @param pStr is a pointer of a string to modify
 */	  
-void trim(char *line);
-void StrToLower(char *str);							 
-void print_msg(const char *msg[]);
+void trim(char *pStr);
+
+void StrToLower(char *pStr);							 
+
+void printMsg(const char **pMsg);
 
 /**
 * This function remove all spaces in a string until from double quote include spaces.
 * This space in double quote untouched.
-* @param line is a pointer  of a string to modify
+* @param pStr is a pointer  of a string to modify
 */ 
-void clearspace(char *line);
-
-/** 
-* This is  a sleep call. The time for sleeping is giving in millesecond
-* @param ms the sleeping time in millisecond
-*/
-void msleep(unsigned long ms);
+void clearspace(char *pStr);
 
 #endif
 

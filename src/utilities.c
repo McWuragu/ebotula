@@ -18,8 +18,10 @@
 #include "messages.h"
 #include "utilities.h"
 
+
+
 // ############################################################################# 
-void trim(char* line) {
+void trim(char* pStr) {
 	int alpha,i,j;
 	int line_len;
 
@@ -29,65 +31,61 @@ void trim(char* line) {
 	// remove carge return
 	// remove tabs
 	alpha=j=0;
-	line_len=strlen(line);
+	line_len=strlen(pStr);
 	for (i=0;i<=line_len;i++) {
-		if ((line[i]==' ') && (alpha==1)) {
-			line[j]=line[i];
+		if ((pStr[i]==' ') && (alpha==1)) {
+			pStr[j]=pStr[i];
 			alpha=0;
 			j++;
-		} else if ((line[i]!='\n') && (line[i]!='\r') && (line[i]!=' ') && (line[i]!='\t')) {
-			line[j]=line[i];
+		} else if ((pStr[i]!='\n') && (pStr[i]!='\r') && (pStr[i]!=' ') && (pStr[i]!='\t')) {
+			pStr[j]=pStr[i];
 			alpha=1;
 			j++;
 		}
 	}
 
 	// remove the folling space
-	if (line[--j]==' ') {
-		line[j]='\0';
+	if (pStr[--j]==' ') {
+		pStr[j]='\0';
 	}
 }
 // ############################################################################# 
-void clearspace(char *line) {
+void clearspace(char *pStr) {
 	int i,j,noclr;
 	int line_len;
 
-	line_len=strlen(line);
+	line_len=strlen(pStr);
 	j=noclr=0;
 	for (i=0;i<=line_len;i++) {
-		if ((line[i]!=' ') || (noclr==1)) {
-			if ((line[i]=='\"') && (noclr==0)) {
+		if ((pStr[i]!=' ') || (noclr==1)) {
+			if ((pStr[i]=='\"') && (noclr==0)) {
 				noclr=1;
-			} else if ((line[i]=='\"') && (noclr==1)) {
+			} else if ((pStr[i]=='\"') && (noclr==1)) {
 				noclr=0;
 			} else {
-				line[j]=line[i];
+				pStr[j]=pStr[i];
 				j++;
 			}
 		}
 	}
 }
 // ############################################################################# 
-void msleep(unsigned long ms){
-	usleep(ms*1000);
-}
-// ############################################################################# 
-void print_msg(const char *msg[]) {
+void printMsg(const char **pMsg) {
     int i;
-	for (i=0;msg[i][0]!=EOM;i++) {
-		printf("%s",msg[i]);
+	for (i=0;pMsg[i][0]!=EOM;i++) {
+		printf("%s",pMsg[i]);
 	}
 	exit(true);
 }
 // ############################################################################# 
-void StrToLower(char *str) {
+void StrToLower(char *pStr) {
 	 unsigned int str_length,i;
 
-	 str_length=strlen(str);
+	 str_length=strlen(pStr);
 
 	 for (i=0;i<str_length;i++) {
-		 if (isalpha(str[i])) {
-   			str[i]=tolower(str[i]);
+		 if (isalpha(pStr[i])) {
+   			pStr[i]=tolower(pStr[i]);
 		 }
 	
 	 }
