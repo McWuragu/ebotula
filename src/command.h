@@ -10,19 +10,29 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#define CHECK_LOGIN(_netmask,_nick)	if (!exist_db(LOGIN_DB,_netmask)) { \
-									notice(_nick,MSG_NOT_LOGON);	\
-									return;							\
-								} 
-								
-#define CHECK_MASTER(_nick,_login ) if (!exist_db(ACCESS_DB,_login)) { \
-										notice(_nick,MSG_NOT_MASTER);  \
-										return;						   \
-									}
+typedef enum CmdEnum {
+	CMD_NONE,
+	CMD_PING, 
+	CMD_HELP,
+    CMD_VERSION,
+    CMD_HELLO,
+	CMD_PASS,
+    CMD_IDENT,
+	CMD_ADDCHANNEL,
+	CMD_JOIN,
+	CMD_PART,
+	CMD_RMCHANNEL,
+	CMD_LOGOFF,
+	CMD_DIE,
+	CMD_NICK,
+	CMD_CHANNELS,
+	CMD_NAMES,
+	CMD_JOIN_GREATING,
+	CMD_GREATING 
+}CmdType;
 
 
-
-
+				  
 // ######################### Bot commands ################################
 
 void help(char *line);
