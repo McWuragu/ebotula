@@ -137,21 +137,30 @@ void hResetModes(char *pLine) {
 
 	pChannel=getAccessChannel(pLine);
 
+	// set pPos of the position of changed mode
+	pPos=strstr(pLine,"MODE");
+	pPos=strchr(pPos,' ');
+	pPos++;
+	pPos=strchr(pPos,' ');
+	pPos++;
+
 	if (!strstr(pLine,sSetup.botname)) {
 		DEBUG("Reset the Modes");
 		
-		// set pPos of the position of changed mode
-		pPos=strstr(pLine,"MODE");
-        pPos=strchr(pPos,' ');
-		pPos++;
-		pPos=strchr(pPos,' ');
-		pPos++;
 
 		pPos[0]=(pPos[0]=='+')?'-':'+';
 
 		// reset
 		mode(pChannel,pPos,NULL);
 		free(pChannel);
+	} else if (strcmp(getNickname(pLine),sSetup.botname)) {
+		// mode set for the bot from other user of operator
+		// then initiallize this  channel
+		if (pPos[1]=='o') {
+			privmsg(pChannel,MSG_INIT_CHANNEL);
+			channelInit(pChannel);
+
+		}
 	}
 }
 // ######################################################################### 

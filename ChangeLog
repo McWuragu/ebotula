@@ -1,12 +1,10 @@
-ebotula v0.2.0b
-------------------
-- added initialization of the channel after  join in emptty channel
-- added initialization of the channel after become  operator
-- added the restart function
+2003-03-12  Steffen Laube  <realebula@gmx.de>
 
-ebotula v0.1.2-dev
--------------------
-- added the  support  for !chanmode
-- renamed the command !channels to !chanlist
-- modify the output form !chanlist
-- added  the locking  of topic
+	* added initialization of the channel after  join in emptty channel
+	* added initialization of the channel after become  operator
+	* added the restart function
+	* added the  support  for !chanmode
+	* renamed the command !channels to !chanlist
+	* modify the output form !chanlist
+	* added  the locking  of topic
+he locking  of topic
