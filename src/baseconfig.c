@@ -27,52 +27,74 @@
 #include "baseconfig.h"
 extern ConfigSetup_t sSetup;
 ValueStruct_t vsConfig[VAL_COUNT]={
-	{ {"# The name of the bot",
+	{ {"#",
+       "# The name of the bot",
+       "#",
 	    NULL},
 	    KEY_BOTNAME,PARAM_STRING,MOD_NONE,(void*)&sSetup.pBotname},
-	{ {"# String for the realname",
+	{ {"#",
+       "# String for the realname",
+       "#",
            NULL},
 	   KEY_REALNAME,PARAM_STRING,MOD_QUOTED,(void*)&sSetup.realname},
-	{ {"# Execute the bot as this user ",
+	{ {"#",
+       "# Execute the bot as this user and this group",
+       "#",
 	    NULL},
     	KEY_EXEUSER,PARAM_STRING,MOD_NONE,(void*)&sSetup.sExeUser},
-	{ {"# and this group",
-        NULL},
+	{ {NULL},
         KEY_EXEGROUP,PARAM_STRING,MOD_NONE,(void*)&sSetup.sExeGroup},
-	{ {"# Number of the created threads",
+	{ {"#",
+       "# Number of the created threads",
+       "#",
         NULL},
         KEY_THREADLIMIT,PARAM_INT,MOD_NONE,(void*)&sSetup.thread_limit},
-	{ {"# The server the bot connects to",
+	{ {"#",
+       "# The host and the port of the irc server for the connecting of the bot",
+       "#",
         NULL},
         KEY_SERVER,PARAM_STRING,MOD_NONE,(void*)&sSetup.server},
-	{ {"# The port the bot connects to",
-        NULL},
+	{ {NULL},
         KEY_PORT,PARAM_STRING,MOD_NONE,(void*)&sSetup.port},
-	{ {"# The location of the database for the bot",
+	{ {"#",
+       "# The location of the database for the bot",
+       "#",
         NULL},
         KEY_DATABASEPATH,PARAM_STRING,MOD_NONE,(void*)&sSetup.pDatabasePath},
-	{ {"# The delay time in millisecond for seding",
+	{ {"#",
+       "# The delay time in millisecond for seding",
        "# It is used for prevention of excess flooding",
+       "#",
         NULL},		
         KEY_FASTSENDDELAY,PARAM_INT,MOD_NONE,(void*)&sSetup.iSendDelay},
 	{ { NULL},
         KEY_SLOWSENDDELAY,PARAM_INT,MOD_NONE,(void*)&sSetup.nSlowSendDelay},
 	{ { NULL},
         KEY_FASTSENDLIMIT,PARAM_INT,MOD_NONE,(void*)&sSetup.nFastSendingCharLimit},
-	{ {"# The delay of the start from the startup initialization",
+	{ {"#",
+       "# The delay of the start from the startup initialization",
+       "#", 
         NULL},
         KEY_INITDELAY,PARAM_INT,MOD_NONE,(void*)&sSetup.nSettling},
-	{ {"# The time in days an account exists.",
+	{ {"#",
+       "# The time in days an account exists.",
 	   "# Unused accounts will be removed after this time.",
-	   NULL},
+	   "#",
+        NULL},
 	   KEY_ALT,PARAM_INT,MOD_NONE,(void*)&sSetup.AccountLiveTime},
-	{ {"# The time limit in days for maximum login time",
+	{ {"#",
+       "# The time limit in days for maximum login time",
+       "#", 
         NULL},
         KEY_AUTOLOGOFF,PARAM_INT,MOD_NONE,(void*)&sSetup.AutoLoggoff},
-	{ {"# The time limit in seconds for ping timeout.",
+	{ {"#",
+       "# The time limit in seconds for ping timeout.",
+       "#", 
         NULL},
         KEY_PINGTIMEOUT,PARAM_INT,MOD_NONE,(void*)&sSetup.iTimeout},
-	{ {"# The level of the output (0-7)",
+	{ {"#",
+       "# The level of the output (0-7)",
+       "#", 
         NULL},
         KEY_LOGLEVEL,PARAM_INT,MOD_NONE,(void*)&sSetup.nLogLevel}
 };
@@ -103,17 +125,12 @@ void write_baseconfig()
 	for(i=0;i<VAL_COUNT;i++)
 	{
 		/* print Description */
-		for(t=0;t<MAX_COMMENT_LINES ;t++)
+		for(t=0;vsConfig[i].sDescription[t] ;t++)
 		{
-			if (vsConfig[i].sDescription[t])
-			{
-				if (strlen(vsConfig[i].sDescription[t]))
-					fprintf(fd,"%s\n",vsConfig[i].sDescription[t]);
-			}else
-			{
-				break;
-			}
+            if (strlen(vsConfig[i].sDescription[t]))
+                fprintf(fd,"%s\n",vsConfig[i].sDescription[t]);
 		}
+
 		/* print Name */
 		fprintf(fd,"%s=",vsConfig[i].sParamName);
 		switch(vsConfig[i].iParamType)
