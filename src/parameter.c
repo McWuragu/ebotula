@@ -330,7 +330,7 @@ int ConfigFileParser(void) {
             clearspace(buffer);
             
             /* ignore space lines and comments */
-            if ((buffer[0]!=COMMENT_CHAR) && (buffer[0]!='\0')) {
+            if ((buffer[0]!=COMMENT_CHAR) && (buffer[0]!='\0') && (buffer[0]!='\n')) {
                 logger(LOG_DEBUG,_("Found config line %s"),buffer);
                 
     
