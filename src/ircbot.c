@@ -25,10 +25,7 @@
 	#include "config.h"
 #endif
 
-#define	CMD_MSG
 #include "messages.h"
-#undef CMD_MSG
-
 #include "utilities.h"
 #include "parameter.h"
 #include "network.h"
