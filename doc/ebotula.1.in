@@ -15,75 +15,75 @@ the paramter \-f). Parameters given in the command line are prior to
 those in the configuration file.
 .TP 
 \fB\-a\fP days
-sets the limit for the automatic logoff in days
+Sets the limit for the automatic logoff in days
 .TP 
 \fB\-b\fP name
-sets the nickname of the bot
+Sets the nickname of the bot
 .TP 
 \fB\-c\fP sec
-sets the limit for ping timeout
+Sets the limit for ping timeout
 .TP 
 \fB\-d\fP path
-sets the path to the directory for the databases
+Sets the path to the directory for the databases
 .TP
 \fB\-D\fP level
-sets the outputlevel (0-7)
+Sets the outputlevel (0-7)
 .TP 
-\fB\-e\fP milliseconds
-sets the delay time for the slow sending
+\fB\-e\fP ms
+Sets the delay time for the slow sending
 .TP
 \fB\-f\fP file
-sets a custom configuration file
+Sets a custom configuration file
 .TP 
 \fB\-g\fP group
-sets the group under wich the bot run (only root).
+Sets the group under wich the bot run (only root).
 (See also -u)
 .TP 
 \fB\-h\fP
-shows the help text and exit
+Shows the helptext and exit
 .TP
 \fB\-?\fP
-same as -h
+Same as -h
 .TP
-\fB\-i\fP
+\fB\-i\fP sec
 The delay puts for establishing the channels within seconds
 .TP 
 \fB\-k\fP days
-sets the living time of an account in days
+Sets the living time of an account in days.
 To avoid "dead" accounts, unused accounts are removed after the time
 given by this parameter.
 .TP 
-\fB\-l\fP characters/min
-sets the limit of characters per minute which can be send before the 
+\fB\-l\fP char/min
+Sets the limit of characters per minute which can be send before the 
 first sending delay level is used. This option is needed to avoid 
 flooding errors.
 .TP
 \fB\-m\fP
-enables the dialog for creating a new master
+Enables the dialog for creating a new master.
 A bot master is a kind of an administrator for the IRC server the bot is
 running on.
 .TP 
 \fB\-n\fP ms
-sets the sending delay time in millisecond
+Sets the sending delay time in millisecond
 .TP 
 \fB\-p\fP port
-sets the portnumber for connecting
+Sets the portnumber for connecting
 .TP 
 \fB\-r\fP string
-sets a string for the realname field of the bot
+Sets a string for the realname field of the bot
 .TP 
 \fB\-s\fP hostname
-sets the irc hostname the bot connects to
+Sets the irc hostname the bot connects to
 .TP 
 \fB\-t\fP number
-sets the ammount of parallel working command threads
+Sets the ammount of parallel working command threads
+.TP
+\fB\-u\fb user
+Sets the user under which the bot run (root only).
+(See also -g)
 .TP 
 \fB\-v\fP
-show the version and exit
-.TP 
-\fB\-u\fP user
-sets the user under which the bot run (root only).
-(See also -g)
+Show the version and exit
 .SS Access levels
 The bot has four access levels. This levels represent the privilege of the
 access to the bot.
@@ -257,6 +257,7 @@ RFC1459, RFC2810, RFC2811, RFC2812, @PACKAGE@.conf(5)
 Steffen Laube <Laube.Steffen@gmx.de>,
 Thomas Stein <linux@tstein.net>,
 Uwe Strempel <u.strempel@gmx.de>
+Martin Neumann <mn250@freenet.de>
 .SH "VERSION"
 v@VERSION@
 .SH "BUGS"
