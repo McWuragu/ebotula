@@ -133,8 +133,8 @@ void help(MsgItem_t *pMsg) {
                 return;
             }
         }
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("No help found for the command %s."),pParameter);
         free (pParameter);
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("No help found for this command."));
     }
 }
 /* #########################################################################
@@ -154,11 +154,11 @@ void hello(MsgItem_t *pMsg) {
         log_on(pMsg->pNetmask,pMsg->pCallingNick);
 
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Nice to meet you."));
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You have got a new account now."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Your account is %s."),pMsg->pCallingNick);
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You're now identified."));
         
     } else {
-	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("A account with this nickname already exists."));
+	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The account %s is already exists."),pMsg->pCallingNick);
 	} 
 
 }
@@ -354,7 +354,7 @@ void addChannel(MsgItem_t *pMsg) {
 
 	/* checking of channel exist */
 	if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This channel is already on the channel list."));
+		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s is already on the channel list."),pMsg->pAccessChannel);
 	} else {
     	logger(LOG_DEBUG,_("Join and add the channnel %s",pMsg->pAccessChannel));
 		/* add channel */
@@ -363,11 +363,11 @@ void addChannel(MsgItem_t *pMsg) {
 		add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
         free(channelmod);
 
-		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel is added to the channel list"));
+		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s is added to the channel list"),pMsg->pAccessChannel);
 
 		/* join the channel */
 		join(pMsg->pAccessChannel);
-		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot is joined the channel."));
+		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot is joined the channel %s."),pMsg->pAccessChannel);
 	}
 }
 
@@ -387,16 +387,16 @@ void rmChannel(MsgItem_t *pMsg){
 
     /* checking of channel exists */
     if (!del_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This channel isn't in the channel list."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s isn't in the channel list."),pMsg->pAccessChannel);
     } else {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel is removed from the channel list."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s is removed from the channel list."),pMsg->pAccessChannel);
     }
 
     // TODO: remove old access  rights for this channel
 
     /* part the channel */
     part(pMsg->pAccessChannel);
-    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has left the channel."));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has left the channel %s."),pMsg->pAccessChannel);
 
 }
 /* #########################################################################
@@ -422,7 +422,7 @@ void joinChannel(MsgItem_t *pMsg) {
 	
 	/* join the channel */
 	join(pMsg->pAccessChannel);
-	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot is joined the channel."));
+	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot is joined the channel %s."),pMsg->pAccessChannel);
 }
 /* #########################################################################
    Bot comand: !part <#channel>
@@ -436,7 +436,7 @@ void partChannel(MsgItem_t *pMsg) {
 
         /* part the channel */
         part(pMsg->pAccessChannel);
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has left the channel."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has left the channel %s."),pMsg->pAccessChannel);
     }
 }
 /* #########################################################################
@@ -470,11 +470,11 @@ void setNick(MsgItem_t *pMsg){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't found regulare parameters."));
     } else {
         if (!NickStringCheck(pParameter)) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The Nickname is invalid."));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The Nickname %s is invalid."),pParameter);
         } else {
             /* set the nickname for the bot on the irc */
             nick(pParameter);
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot tries to set the new nickname."));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot tries to change the nickname to %s."),pParameter);
 
             /* set  the new  nickname in the configuration struct*/
             free(sSetup.pBotname);
@@ -520,25 +520,14 @@ void chanlist(MsgItem_t *pMsg){
 
             //pMsgPart=getMsgString(INFO_CHANNELLIST_MODE);
     	    
-            pMsgStr=(char*)malloc((pChannel->t_size+strlen(pMode)+2)*sizeof(char));
-        	sprintf(pMsgStr,"%s %s",pChannel->data,pMode);
-	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
-    	    free(pMsgStr);
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,"%s %s",pChannel->data,pMode);
 
         	if (sChannelData.pTopic) {
-                pMsgPart=_("Topic:");
-            	pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(sChannelData.pTopic)+2)*sizeof(char));
-	            sprintf(pMsgStr,"%s %s",pMsgPart,sChannelData.pTopic);
-    	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
-        	    free(pMsgStr);
+    	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Topic: %s"),sChannelData.pTopic);
 	        }
 
     	    if (sChannelData.pGreeting) {
-                pMsgPart=_("Greeting:");
-        	    pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(sChannelData.pGreeting)+2)*sizeof(char));
-            	sprintf(pMsgStr,"%s %s",pMsgPart,sChannelData.pGreeting);
-	            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
-    	        free(pMsgStr);
+	            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Greeting: %s"),sChannelData.pGreeting);
         	}
 
 
@@ -598,9 +587,9 @@ void setGreeting(MsgItem_t *pMsg) {
         
             /* message */
             if (!sChannelData.pGreeting) {
-               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The greeting is removed"));
+               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The greeting of the channel %s is removed"),pMsg->pAccessChannel);
             } else {
-               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The new greeting is set"));
+               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The new greeting of the channel %s is set"),pMsg->pAccessChannel);
             }
             
             free(sChannelData.sModes.pKeyword);
@@ -608,7 +597,7 @@ void setGreeting(MsgItem_t *pMsg) {
             free(sChannelData.pGreeting);
             free(sChannelData.pTopic);
         } else {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This channel isn't in the channel list."));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s isn't in the channel list."),pMsg->pAccessChannel);
         }
     }
 }
@@ -651,9 +640,9 @@ void setTopic(MsgItem_t *pMsg) {
 
 	    /* message */
     	if (!sChannelData.pTopic) {
-	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The topic is removed"));
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The topic of the channel %s is removed"),pMsg->pAccessChannel);
     	} else {
-        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The new topic is set"));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The new topic of the channel %s is set"),pMsg->pAccessChannel);
     	}
 
         free(pChannelSet);
@@ -833,7 +822,7 @@ void debanuser(MsgItem_t *pMsg) {
     // reset the ban
     if (pBanmask) {
         deban(pMsg->pAccessChannel,pBanmask);
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The ban is removed by the bot"));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The ban %s is removed by the bot from the channel %s"),pBanmask,pMsg->pAccessChannel);
     }
 }
 
@@ -858,7 +847,7 @@ void kickuser(MsgItem_t *pMsg) {
     }
 
     /* get parameters*/
-    if (!(pParameter=getParameters(pMsg->pRawLine))){
+    if (!(pParameter=getParameters(pMsg->pRawLine))){                              
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't found regulare parameters."));
         return;
     }
@@ -888,7 +877,7 @@ void kickuser(MsgItem_t *pMsg) {
 
     /* read  the  login name of the  kicking user */
     if (!(pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't kick this user"));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't found you account."));
     } else {
         /* built data for the callback */
         pData=(char*)malloc((strlen(pLogin)+strlen(pMsg->pAccessChannel)+strlen(pReason)+5)*sizeof(char));
@@ -962,7 +951,7 @@ void accountmode(MsgItem_t *pMsg){
 
     	/* check login in the user db */
 	    if (!(exist_db(USER_DB,pLogin))) {
-	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Account wasn't found."));
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Coudn't found the account %s."),pLogin);
         	return;
     	} else if (!strcmp(pLogin,accesslogin)) {
         	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You can't modify yourself"));
@@ -1011,7 +1000,7 @@ void accountmode(MsgItem_t *pMsg){
         	}
     	    break;
 	    default:
-        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This mod is invalid."));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The mode %c is invalid."),pPos[1]);
     	    return;
 	    }
 
@@ -1091,8 +1080,8 @@ void accountmode(MsgItem_t *pMsg){
     	    }
 		}
 
+	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The user mode of the account %s is changed."),pLogin);
         free(pLogin);
-	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The user mode are changed."));
 	} 
 }
 /* #########################################################################
@@ -1204,7 +1193,7 @@ void chanmode(MsgItem_t *pMsg) {
             free(sChannelData.sModes.pKeyword);
             free(sChannelData.sModes.pLimit);
         } else {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This channel isn't in the channel list."));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s isn't in the channel list."),pMsg->pAccessChannel);
         }
         free(pParameters);
     }
@@ -1253,7 +1242,7 @@ void rmuser(MsgItem_t *pMsg) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The account is removed"));        
     	logger(LOG_DEBUG,_("Remove %s from the user list"),pLogin);
     } else {
-    	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Account wasn't found."));
+    	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't fount the account %s."),pLogin);
     }
 }
 /* #########################################################################
@@ -1506,7 +1495,7 @@ void inviteuser(MsgItem_t *pMsg){
         } else {
             // invite
             invite(pMsg->pAccessChannel,pInviteNick);
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user to the channel."));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user %s to the channel %s.",pInviteNick,pMsg->pAccessChannel));
         }
         free(pTmp);
     }

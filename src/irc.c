@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
@@ -102,12 +103,20 @@ void notice(char * pNick,char *pMsgStr) {
     free (buffer);
 }
 // #############################################################################
-void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr){
+void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr,...){
+    va_list arg;
+    char pMsg[1<<10];
+
+    va_start(arg,pMsgStr);
+    vsprintf(pMsg,pMsgStr,arg);
+    
+
     if (AnswerMode==NoticeMode) {
-        notice(pNick,pMsgStr);
+        notice(pNick,pMsg);
     } else if (AnswerMode==PrvMsgMode){
-        privmsg(pNick,pMsgStr);
+        privmsg(pNick,pMsg);
     }
+    va_end(arg);
 }
 // #############################################################################
 //void quit(void) {

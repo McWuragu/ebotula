@@ -33,5 +33,5 @@ void deban(char *pChannel,char *pMask);
 void mode(char *pChannel, char *pMod, char *pModParameter);
 void whois(char *pNickname);
 
-void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr);
+void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr,...);
 #endif
