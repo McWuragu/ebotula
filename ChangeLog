@@ -1,12 +1,14 @@
 ebotula-devel-0.1.11
 --------------------
 - Bugfix: fixed SIGSEGV from the commands !addchannel and !join
-- Bugfix: fixed mode event handle 
+- Bugfix: fixed mode event handle
 - Bugfix: fixed online help message
 - added the parameter user and group
 - added the option -u and -g
 - added the creating of the  direction ~/.ebotula for the user mode
 - added the changing of the uid and gid for the root mode
+- added the configuration file generator for the users and  root
+- completed the default values
 
 ebotula-devel-0.1.10
 --------------------
