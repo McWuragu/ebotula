@@ -1,3 +1,6 @@
+- mode change not found
+- not all times right close
+- no detection of connection lost
 - little bit unstabile
 - charakter sensitive channel names (fixed)
 - !usermode SIGSEGV (fixed)
