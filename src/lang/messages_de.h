@@ -165,7 +165,8 @@ static MsgStruct_t Msg[] ={
 		"\t-p Port\t\tSetzt den Prot des IRC-Servers.\n"
 		"\t-r String\tSetzt den String für Realnamefeld.\n",
 		"\t-s Server\tSetzt den IRC Server.\n",
-		"\t-t Anzahl\tSetzt die Anzaahl der zu erzeugenden Threads.\n"
+		"\t-t Anzahl\tSetzt die Anzaahl der zu erzeugenden Threads.\n",
+        "\t-u user\t\tSetzt den User unter dem gestartet werden soll (nur root)\n",
 		"\t-v\t\tGibt die Version aus.\n",
 		"."
 	};
