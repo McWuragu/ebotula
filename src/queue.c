@@ -51,6 +51,11 @@ PQueue initQueue()
 	/** create and init the  mutex */
 	pqueueInit->queue_mutex=(pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(pqueueInit->queue_mutex,NULL);	
+	/** create and init Threadcontrolmutex */
+	pqueueInit->ElementsInQueueForThreads=0;
+	pqueueInit->StopThreadCond=(pthread_cond_t *)malloc(sizeof(pthread_cond_t));
+	pthread_cond_init(pqueueInit->StopThreadCond,NULL);
+
 	return	pqueueInit;
 }
 
@@ -72,6 +77,8 @@ int pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	
 	
 	pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
+	while(pqueueIn->sentinel->ElementsInQueueForThreads>= MAX_ELEMENTS_IN_QUEUE_FOR_THREADS )
+		pthread_cond_wait(pqueueIn->sentinel->queue_mutex,pqueueIn->sentinel->StopThreadCond);
 	/** cheçk if Queue not initialized **/
 	if (!pqueueIn)
 	{
@@ -96,6 +103,7 @@ int pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	pqueueNew->sentinel=pqueueIn->sentinel;
 	pqueueNew->next=pqueueIn->sentinel->next;
 	pqueueNew->queue_mutex=NULL;
+	pqueueNew->StopThreadCond=NULL;
 
 	if (pqueueIn->sentinel->longCount==0)
 	{
@@ -125,9 +133,8 @@ int pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	/** allocate the memmory and copy data */
 	pqueueNew->queuedataData->t_size=queuedataElement.t_size;
 	pqueueNew->queuedataData->data=malloc(sizeof(QueueData));	
-	
+	(pqueueIn->sentinel->ElementsInQueueForThreads)++;
 	memcpy(pqueueNew->queuedataData->data,queuedataElement.data,sizeof(QueueData));
-	
 	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return QUEUE_SUCCESS;
 }
@@ -148,7 +155,9 @@ QueueData * popQueue(PQueue pqueueIn)
 	pqueueWork=pqueueIn;
 	
 	pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
-	
+	while(pqueueIn->sentinel->ElementsInQueueForThreads<=0 )
+		pthread_cond_wait(pqueueIn->sentinel->queue_mutex,pqueueIn->sentinel->StopThreadCond);
+
 	/** check for valid Queue **/
 	if (pqueueWork)
 	{
@@ -162,14 +171,16 @@ QueueData * popQueue(PQueue pqueueIn)
 			pqueueWork->prev->next=(PQueue )pqueueWork->sentinel;
 			pqueueWork->sentinel->longCount--;
 			free(pqueueOld);
-			
+
+			(pqueueIn->sentinel->ElementsInQueueForThreads)--;
+			pthread_cond_signal(pqueueIn->sentinel->StopThreadCond);
 			pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 			return (QueueData *)queuedataElement;
 		}	
 	} else {
 		DEBUG("ERROR: popQueue() - empty Queue!");
 	}
-	
+
 	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return (QueueData *)NULL;
 }
