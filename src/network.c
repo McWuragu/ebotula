@@ -298,7 +298,7 @@ boolean ConnectToIrc(void){
             return false;
         }
     } while (i==1);
-    return;true;
+    return true;
 }
 /* ############################################################################# */
 void * JoinAllChannelsThread(void * args) {
