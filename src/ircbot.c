@@ -17,8 +17,6 @@
 #include <syslog.h>
 
 
-#include <sys/ipc.h>
-#include <sys/msg.h>
 #include <sys/types.h>
 
 #ifdef HAVE_CONFIG_H
@@ -32,12 +30,12 @@
 #include "parser.h"
 #include "timing.h"
 #include "dbaccess.h"
+#include "queue.h"
 #include "ircbot.h"
   
      
 
 ConfigSetup_t sSetup;    // global config structure
-int key;            // key of the message  queue
 boolean stop;       // singal for stop the endless loop
 boolean again;
 
@@ -50,7 +48,10 @@ int main(int argc,char * const argv[]) {
     char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;
     pthread_t *threads;
     pthread_t timeThread;
-    MsgBuf_t sMsg;
+    MsgBuf_t *pMsg;
+	QueueData Command;	
+	PQueue pCommandQueue;
+	
     
     // init config
     sSetup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
@@ -70,8 +71,6 @@ int main(int argc,char * const argv[]) {
 
     
 
-    // container for a message for the queue
-    bzero(&sMsg,sizeof(MsgBuf_t));
     
     // versions ausgabe
     printf(VERSIONSTR);
@@ -175,19 +174,12 @@ int main(int argc,char * const argv[]) {
 
     
 
-    // connect to the server and init the mutex  for sending
+    // connect to the server
     ConnectToIrc();
     printf(SYSLOG_BOT_RUN);
     printf("\n");
     syslog(LOG_NOTICE,SYSLOG_BOT_RUN);
 
-    // open msg queue
-    key=getpid();
-    if ((msgid=msgget(key,0600 | IPC_CREAT ))<0) {
-        perror(SYSLOG_MSG_QUEUE);
-        syslog(LOG_CRIT,SYSLOG_MSG_QUEUE);
-        exit(errno);
-    }
 
     // redefine the signal handler for to stop the bot
     signal(SIGINT,stopParser);
@@ -203,22 +195,27 @@ int main(int argc,char * const argv[]) {
     // make a daemon 
     daemon(true,true);
     #endif
-    
-    // create the threads
+   
+	pthread_mutex_init(&account_mutex,NULL);
+	 
+	// init the command queue
+	pCommandQueue=initQueue();
+	// create the threads
     pthread_create(&timeThread,NULL,TimingThread,NULL);
     threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
     for (i=0;i<sSetup.thread_limit;i++) {
-        pthread_create(&threads[i],NULL,ComandExecutionThread,NULL);
+        pthread_create(&threads[i],NULL,ComandExecutionThread,(void*)pCommandQueue);
         DEBUG(SYSLOG_THREAD_RUN,i);
     }
-
-    // join the channels
+    
+	// join the channels
     join_all_channels();
 
 
     // Main execution loop
     stop=false;
     again=false;
+
     while (!stop) {
 
         // read line from tcp stack
@@ -236,13 +233,14 @@ int main(int argc,char * const argv[]) {
 
             // parse the part line
             DEBUG("Parse \"%s\"",str);
-            sMsg=preParser(str);
+            pMsg=preParser(str);
 
             // put the identified line  on the  queue
-            if (sMsg.identify!=CMD_NONE) {
-                msgsnd(msgid,&sMsg,sizeof(MsgBuf_t)-sizeof(sMsg.mtype),0);
+            if (pMsg->identify!=CMD_NONE) {
+				Command.t_size=sizeof(MsgBuf_t)+strlen(pMsg->pMsgLine)+1;
+				Command.data=pMsg;
+				pushQueue(pCommandQueue,Command);
             }
-
             free(str);
             
             // checking the length of the next substring
@@ -277,8 +275,8 @@ int main(int argc,char * const argv[]) {
     pthread_mutex_destroy(&account_mutex);
 
     // clear the wait queue
-    msgctl(msgid,IPC_RMID,NULL);
-    
+	deleteQueue(pCommandQueue);   	
+ 
     // disconnect from server
     disconnectServer();
     closeDatabase();

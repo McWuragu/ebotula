@@ -20,7 +20,7 @@
 * @return a struct withe the command id, the type of 
 * message and a string as  argument for the  command
 */
-MsgBuf_t preParser(char *pLine);
+MsgBuf_t *preParser(char *pLine);
 
 /**
 * the function for  the  thread

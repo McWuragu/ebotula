@@ -9,8 +9,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <sys/msg.h>
-#include <sys/ipc.h>
 #include <string.h>
 #include <errno.h>
 #include <pthread.h>
@@ -24,51 +22,45 @@
 #include "irc.h"
 #include "dbaccess.h"
 #include "command.h"
+#include "queue.h"
 #include "handles.h"
 #include "utilities.h"
 #include "messages.h"
 #include "parser.h"
 
 
-MsgBuf_t preParser(char *pLine) {
-    MsgBuf_t sMsg;
+MsgBuf_t* preParser(char *pLine) {
+    MsgBuf_t *pMsg;
     char *pStr,*pPreamble,*pPos;
     int i;
 
     // init the buffer with zero
-    bzero(&sMsg,sizeof(MsgBuf_t));
+    pMsg=(MsgBuf_t*)calloc(sizeof(MsgBuf_t),1);
 
     // get the first part of the  answer from server
     pPreamble=getCommand(pLine);
 
     if (!(pPos=strchr(pPreamble,' '))){
-        return sMsg;
+        return pMsg;
     }
 
     // preparse the line
     // identify events and commands
 
     if (!strncmp(pPreamble,CmdList[CMD_ONPING],strlen(CmdList[CMD_ONPING]))) {
-        sMsg.mtype=2;
-        sMsg.identify=CMD_ONPING;
+        pMsg->identify=CMD_ONPING;
     } else if (strstr(pPos,CmdList[CMD_ONQUIT])) {
-        sMsg.mtype=2;
-        sMsg.identify=CMD_ONQUIT;
+        pMsg->identify=CMD_ONQUIT;
     } else if (strstr(pPos,CmdList[CMD_ONJOIN])) {
-        sMsg.mtype=2;
-        sMsg.identify=CMD_ONJOIN;
+        pMsg->identify=CMD_ONJOIN;
     } else if (strstr(pPos,CmdList[CMD_ONNICKCHG])) {
-        sMsg.mtype=2;
-        sMsg.identify= CMD_ONNICKCHG;
+        pMsg->identify= CMD_ONNICKCHG;
     } else if (strstr(pPos,CmdList[CMD_ONMODE])) {
-        sMsg.mtype=2;
-        sMsg.identify= CMD_ONMODE;
+        pMsg->identify= CMD_ONMODE;
     } else if (strstr(pPos,CmdList[CMD_ONTOPIC])) {
-        sMsg.mtype=2;
-        sMsg.identify= CMD_ONTOPIC;
+        pMsg->identify= CMD_ONTOPIC;
     } else if (strstr(pPos,CmdList[CMD_ONNAMES])) {
-        sMsg.mtype=2;
-        sMsg.identify=CMD_ONNAMES;
+        pMsg->identify=CMD_ONNAMES;
     } else if ((pStr=strstr(pLine," :!"))!=NULL) {
 
         if (strlen(pStr)>=3) {
@@ -79,136 +71,151 @@ MsgBuf_t preParser(char *pLine) {
                 DEBUG("Look for %s",CmdList[i]);
 
                 if (!strncmp(pStr,CmdList[i],strlen(CmdList[i]))){
-                    sMsg.mtype=1;
-                    sMsg.identify=i;
-
+                    pMsg->identify=i;
                     i=CMDCOUNT;
                 }
             }
         }
     }
-
-    strcpy(sMsg.pMsgLine,pLine);
-    return sMsg;
+	
+	pMsg->pMsgLine=(char*)malloc((strlen(pLine)+1)*sizeof(char));
+    strcpy(pMsg->pMsgLine,pLine);
+    return pMsg;
 }
 
 void *ComandExecutionThread(void *argv) {
     int msgid;
-    extern int key;
-    MsgBuf_t sMsg;
+	extern pthread_mutex_t queue_mutex;
+	QueueData *pCommand;
+	MsgBuf_t *pMsg;
+	
+	PQueue pCommandQueue=(PQueue)argv;	
 
     // set the thread cancelable
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
 
     // open the message queue
-    msgid=msgget(key,0600 | IPC_EXCL );
 
     // execute loop
     while(1) {
-        msgrcv(msgid,&sMsg,sizeof(MsgBuf_t)-sizeof(sMsg.mtype),0,0);
 
-        if (AccessRight(sMsg.pMsgLine,sMsg.identify)) {
+		// check the fill status of the Command Queue
+		if (!(isemptyQueue(pCommandQueue))) {
+			// try to pop out a command
+			pCommand=popQueue(pCommandQueue);
+			
+			if (pCommand) {
+				pMsg=(MsgBuf_t*)pCommand->data;
 
-            switch (sMsg.identify) {
-            case CMD_ONPING:
-                pong();
-                break;
-            case CMD_ONQUIT:
-            case CMD_LOGOFF:
-                logoff(sMsg.pMsgLine);
-                break;
-            case CMD_HELP:
-                help(sMsg.pMsgLine);
-                break;
-            case CMD_VERSION:
-                version(sMsg.pMsgLine);
-                break;
-            case CMD_HELLO:
-                hello(sMsg.pMsgLine);
-                break;
-            case CMD_PASS:
-                password(sMsg.pMsgLine);
-                break;
-            case CMD_IDENT:
-                ident(sMsg.pMsgLine);
-                break;
-            case CMD_ADDCHANNEL:
-                addChannel(sMsg.pMsgLine);
-                break;
-            case CMD_RMCHANNEL:
-                rmChannel(sMsg.pMsgLine);
-                break;
-            case CMD_JOIN:
-                joinChannel(sMsg.pMsgLine);
-                break;
-            case CMD_PART:
-                partChannel(sMsg.pMsgLine);
-                break;
-            case CMD_DIE:
-                die(sMsg.pMsgLine);
-                break;
-            case CMD_NICK:
-                setNick(sMsg.pMsgLine);
-                break;
-            case CMD_CHANNELS:
-                chanlist(sMsg.pMsgLine);
-                break;
-            case CMD_ONNAMES:
-                hBotNeedOp(sMsg.pMsgLine);
-                break;
-            case CMD_ONJOIN:
-                hSetModUser(sMsg.pMsgLine);
-            case CMD_VIEWGREAT:
-                greeting(sMsg.pMsgLine);
-                break;
-            case CMD_SET_GREATING:
-                setGreeting(sMsg.pMsgLine);
-                break;
-            case CMD_SET_TOPIC:
-                setTopic(sMsg.pMsgLine);
-                break;
-            case CMD_SAY:
-                say(sMsg.pMsgLine);
-                break;
-            case CMD_KICK:
-                kickuser(sMsg.pMsgLine);
-                break;
-            case CMD_USERMODE:
-                usermode(sMsg.pMsgLine);
-                break;
-            case CMD_ONNICKCHG:
-                hNickChange(sMsg.pMsgLine);
-                break;
-            case CMD_RMUSER:
-                rmuser(sMsg.pMsgLine);
-                break;
-            case CMD_USERLIST:
-                userlist(sMsg.pMsgLine);
-                break;
-            case CMD_ONMODE:
-                hResetModes(sMsg.pMsgLine);
-                break;
-            case CMD_ALLSAY:
-                allsay(sMsg.pMsgLine);
-                break;
-            case CMD_ONTOPIC:
-                hResetTopic(sMsg.pMsgLine);
-                break;
-            case CMD_CHANMODE:
-                chanmode(sMsg.pMsgLine);
-                break;
-            case CMD_RESTART:
-                restart(sMsg.pMsgLine);
-                break;
-            default:
-                syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,sMsg.identify);
-                break;
-            }
-        }
+				// check the access level
+				if (AccessRight(pMsg->pMsgLine,pMsg->identify)) {
+					
+					// command router 
+					switch (pMsg->identify) {
+					case CMD_ONPING:
+						pong();
+						break;
+					case CMD_ONQUIT:
+					case CMD_LOGOFF:
+						logoff(pMsg->pMsgLine);
+						break;
+					case CMD_HELP:
+						help(pMsg->pMsgLine);
+						break;
+					case CMD_VERSION:
+						version(pMsg->pMsgLine);
+						break;
+					case CMD_HELLO:
+						hello(pMsg->pMsgLine);
+						break;
+					case CMD_PASS:
+						password(pMsg->pMsgLine);
+						break;
+					case CMD_IDENT:
+						ident(pMsg->pMsgLine);
+						break;
+					case CMD_ADDCHANNEL:
+						addChannel(pMsg->pMsgLine);
+						break;
+					case CMD_RMCHANNEL:
+						rmChannel(pMsg->pMsgLine);
+						break;
+					case CMD_JOIN:
+						joinChannel(pMsg->pMsgLine);
+						break;
+					case CMD_PART:
+						partChannel(pMsg->pMsgLine);
+						break;
+					case CMD_DIE:
+						die(pMsg->pMsgLine);
+						break;
+					case CMD_NICK:
+						setNick(pMsg->pMsgLine);
+						break;
+					case CMD_CHANNELS:
+						chanlist(pMsg->pMsgLine);
+						break;
+					case CMD_ONNAMES:
+						hBotNeedOp(pMsg->pMsgLine);
+						break;
+					case CMD_ONJOIN:
+						hSetModUser(pMsg->pMsgLine);
+					case CMD_VIEWGREAT:
+						greeting(pMsg->pMsgLine);
+						break;
+					case CMD_SET_GREATING:
+						setGreeting(pMsg->pMsgLine);
+						break;
+					case CMD_SET_TOPIC:
+						setTopic(pMsg->pMsgLine);
+						break;
+					case CMD_SAY:
+						say(pMsg->pMsgLine);
+						break;
+					case CMD_KICK:
+						kickuser(pMsg->pMsgLine);
+						break;
+					case CMD_USERMODE:
+						usermode(pMsg->pMsgLine);
+						break;
+					case CMD_ONNICKCHG:
+						hNickChange(pMsg->pMsgLine);
+						break;
+					case CMD_RMUSER:
+						rmuser(pMsg->pMsgLine);
+						break;
+					case CMD_USERLIST:
+						userlist(pMsg->pMsgLine);
+						break;
+					case CMD_ONMODE:
+						hResetModes(pMsg->pMsgLine);
+						break;
+					case CMD_ALLSAY:
+						allsay(pMsg->pMsgLine);
+						break;
+					case CMD_ONTOPIC:
+						hResetTopic(pMsg->pMsgLine);
+						break;
+					case CMD_CHANMODE:
+						chanmode(pMsg->pMsgLine);
+						break;
+					case CMD_RESTART:
+						restart(pMsg->pMsgLine);
+						break;
+					default:
+						syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,pMsg->identify);
+						break;
+					}
 
-        // clear buffer
-        bzero(&sMsg,sizeof(MsgBuf_t));
+					// remove  destroy the last popped Command
+					free(pMsg->pMsgLine);
+					free(pMsg);
+					free(pCommand);
+				
+				}
+			}
+		}
     }
 
     return NULL;
