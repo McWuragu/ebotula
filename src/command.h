@@ -13,29 +13,31 @@
 #define USER_MODS		"ovm"
 #define CHANNEL_MODS	"tnmaiqpsrkl"
 
+#define USERLIST_TAB	20
+#define HELP_TAB		12
 				  
 // ######################### Bot commands ################################
 
-void help(char *line);
-void password(char *line);
-void ident(char *line);
-void logoff(char *line);
-void version(char *line);
-void hello(char *line);
-void channel_add(char *line);
-void channel_rm(char *line);
-void join_channel(char *line);
-void part_channel(char *line);
-void die(char *line);
-void set_nick(char *line);
-void channel_list(char *line);
-void setGreating(char *line);
-void setTopic(char *line);
-void greating(char *line);
-void say(char *line);
-void kickuser(char *line);
-void usermode(char *line);
-void chanmode(char *line);
-void rmuser(char *line);
-
+void help(char *pLine);
+void password(char *pLine);
+void ident(char *pLine);
+void logoff(char *pLine);
+void version(char *pLine);
+void hello(char *pLine);
+void channel_add(char *pLine);
+void channel_rm(char *pLine);
+void join_channel(char *pLine);
+void part_channel(char *pLine);
+void die(char *pLine);
+void set_nick(char *pLine);
+void channel_list(char *pLine);
+void setGreating(char *pLine);
+void setTopic(char *pLine);
+void greating(char *pLine);
+void say(char *pLine);
+void kickuser(char *pLine);
+void usermode(char *pLine);
+void chanmode(char *pLine);
+void rmuser(char *pLine);
+void userlist(char *pLine);
 #endif
