@@ -24,7 +24,7 @@
 #include "parameter.h"
 // ############################################################################# 				  
 void cmd_line(int argc,const char *argv[]) {
-	extern CONFIG_TYPE setup;
+	extern ConfType setup;
 	int i;
 	int thread_limit;
 
@@ -165,7 +165,7 @@ void cmd_line(int argc,const char *argv[]) {
 // ############################################################################# 
 void read_config_file(void) {
 	FILE *fd;
-	extern CONFIG_TYPE setup;
+	extern ConfType setup;
 	char buffer[MAX_READ_BUFFER_SIZE], *c,*value,*key;
 	errno=0;
 

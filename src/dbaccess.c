@@ -29,7 +29,7 @@ GDBM_FILE dbf_timelog;
 
 // ############################################################################# 
 void init_database(void) {
-	extern CONFIG_TYPE	setup;
+	extern ConfType	setup;
 
 	char *user,*channel,*login,*access,*banlist,*timelog;
 			
