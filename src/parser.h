@@ -20,7 +20,7 @@
 * @return a struct withe the command id, the type of 
 * message and a string as  argument for the  command
 */
-MsgBufType preParser(char *pLine);
+MsgBuf_t preParser(char *pLine);
 
 /**
 * the function for  the  thread
@@ -29,7 +29,7 @@ MsgBufType preParser(char *pLine);
 */
 void *ComandExecutionThread(void *argv);
 
-static int AccessRight(char *pLine,CmdType cmd_id);
+static int AccessRight(char *pLine,Cmd_t cmd_id);
 void stopParser(int sig);
 
 #endif

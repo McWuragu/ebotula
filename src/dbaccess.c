@@ -18,7 +18,7 @@
 #include <sys/types.h>
 
 #ifdef HAVE_CONFIG_H
-	#include "config.h"
+    #include "config.h"
 #endif
 
 #include "utilities.h"
@@ -35,336 +35,331 @@ static GDBM_FILE dbf_timelog;
 
 // ############################################################################# 
 void initDatabases(void) {
-	extern ConfType	sSetup;
-	DIR *pDir;
+    extern ConfigSetup_t sSetup;
+    DIR *pDir;
 
-	char *user,*channel,*access,*nicktouser,*usertonick,*banlist,*timelog;
-			
-	// generate the filenames
-	user=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/user.dbf")+1)*sizeof(char));
-	channel=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/channel.dbf")+1)*sizeof(char));
-	usertonick=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/usertonick.dbf")+1)*sizeof(char));
-	nicktouser=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/nicktouser.dbf")+1)*sizeof(char));
-	access=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/access.dbf")+1)*sizeof(char));
-	banlist=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/banlist.dbf")+1)*sizeof(char));
-	timelog=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/timelog.dbf")+1)*sizeof(char));
+    char *user,*channel,*access,*nicktouser,*usertonick,*banlist,*timelog;
+            
+    // generate the filenames
+    user=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/user.dbf")+1)*sizeof(char));
+    channel=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/channel.dbf")+1)*sizeof(char));
+    usertonick=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/usertonick.dbf")+1)*sizeof(char));
+    nicktouser=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/nicktouser.dbf")+1)*sizeof(char));
+    access=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/access.dbf")+1)*sizeof(char));
+    banlist=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/banlist.dbf")+1)*sizeof(char));
+    timelog=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/timelog.dbf")+1)*sizeof(char));
 
-	// create filenames
-	sprintf(user,"%s/user.dbf",sSetup.pDatabasePath);
-	sprintf(channel,"%s/channel.dbf",sSetup.pDatabasePath);
-	sprintf(usertonick,"%s/usertonick.dbf",sSetup.pDatabasePath);
-	sprintf(nicktouser,"%s/nicktouser.dbf",sSetup.pDatabasePath);
-	sprintf(access,"%s/access.dbf",sSetup.pDatabasePath);
-	sprintf(banlist,"%s/banlist.dbf",sSetup.pDatabasePath);
-	sprintf(timelog,"%s/timelog.dbf",sSetup.pDatabasePath);
+    // create filenames
+    sprintf(user,"%s/user.dbf",sSetup.pDatabasePath);
+    sprintf(channel,"%s/channel.dbf",sSetup.pDatabasePath);
+    sprintf(usertonick,"%s/usertonick.dbf",sSetup.pDatabasePath);
+    sprintf(nicktouser,"%s/nicktouser.dbf",sSetup.pDatabasePath);
+    sprintf(access,"%s/access.dbf",sSetup.pDatabasePath);
+    sprintf(banlist,"%s/banlist.dbf",sSetup.pDatabasePath);
+    sprintf(timelog,"%s/timelog.dbf",sSetup.pDatabasePath);
 
-	// check directory
-	// if  this not existe then try to create
-	if (!(pDir=opendir(sSetup.pDatabasePath))) {
-		errno=0;
-		if (mkdir(sSetup.pDatabasePath,0700)) {
+    // check directory
+    // if  this not existe then try to create
+    if (!(pDir=opendir(sSetup.pDatabasePath))) {
+        errno=0;
+        if (mkdir(sSetup.pDatabasePath,0700)) {
             syslog(LOG_ERR,SYSLOG_CREAT_DIR_ERR);
-			perror(SYSLOG_CREAT_DIR_ERR);
-			exit(errno);
-		} else {
-			syslog(LOG_INFO,SYSLOG_CREATE_DIR);
-		}
-	}
+            perror(SYSLOG_CREAT_DIR_ERR);
+            exit(errno);
+        } else {
+            syslog(LOG_INFO,SYSLOG_CREATE_DIR);
+        }
+    }
     closedir(pDir);
-											
-	// open the databases
-	dbf_user=gdbm_open(user,512,GDBM_WRCREAT,0600,NULL);
-	dbf_channel=gdbm_open(channel,512,GDBM_WRCREAT,0600,NULL);
-	dbf_usertonick=gdbm_open(usertonick,512,GDBM_NEWDB,0600,NULL);
-	dbf_nicktouser=gdbm_open(nicktouser,512,GDBM_NEWDB,0600,NULL);
-	dbf_access=gdbm_open(access,512,GDBM_WRCREAT,0600,NULL);
-	dbf_banlist=gdbm_open(banlist,512,GDBM_WRCREAT,0600,NULL);
-	dbf_timelog=gdbm_open(timelog,512,GDBM_WRCREAT,0600,NULL);
-	
-	if (!dbf_user || !dbf_channel || !dbf_usertonick || !dbf_nicktouser || !dbf_access || !dbf_banlist || !dbf_timelog) {
-		//errno=EBUSY;
-		syslog(LOG_ERR,SYSLOG_DATABASE_ERR);
-		perror(SYSLOG_DATABASE_ERR);
-		exit(errno);
-		
-	}
+                                            
+    // open the databases
+    dbf_user=gdbm_open(user,512,GDBM_WRCREAT,0600,NULL);
+    dbf_channel=gdbm_open(channel,512,GDBM_WRCREAT,0600,NULL);
+    dbf_usertonick=gdbm_open(usertonick,512,GDBM_NEWDB,0600,NULL);
+    dbf_nicktouser=gdbm_open(nicktouser,512,GDBM_NEWDB,0600,NULL);
+    dbf_access=gdbm_open(access,512,GDBM_WRCREAT,0600,NULL);
+    dbf_banlist=gdbm_open(banlist,512,GDBM_WRCREAT,0600,NULL);
+    dbf_timelog=gdbm_open(timelog,512,GDBM_WRCREAT,0600,NULL);
+    
+    if (!dbf_user || !dbf_channel || !dbf_usertonick || !dbf_nicktouser || !dbf_access || !dbf_banlist || !dbf_timelog) {
+        //errno=EBUSY;
+        syslog(LOG_ERR,SYSLOG_DATABASE_ERR);
+        perror(SYSLOG_DATABASE_ERR);
+        exit(errno);
+        
+    }
 
-	syslog(LOG_INFO,SYSLOG_INIT_DB);
+    syslog(LOG_INFO,SYSLOG_INIT_DB);
 }
 // ############################################################################# 
 void closeDatabase(void) {
-	// close the databases
-	gdbm_close(dbf_user);
-	gdbm_close(dbf_channel);
-	gdbm_close(dbf_usertonick);
-	gdbm_close(dbf_nicktouser);
-	gdbm_close(dbf_access);
-	gdbm_close(dbf_banlist);
-	gdbm_close(dbf_timelog);
-	DEBUG("Close databases");
+    // close the databases
+    gdbm_close(dbf_user);
+    gdbm_close(dbf_channel);
+    gdbm_close(dbf_usertonick);
+    gdbm_close(dbf_nicktouser);
+    gdbm_close(dbf_access);
+    gdbm_close(dbf_banlist);
+    gdbm_close(dbf_timelog);
+    DEBUG("Close databases");
 }
 
 //######################### database access ##############################
 static GDBM_FILE get_dbf(int db) {
 
-	switch (db) {
-	case USER_DB:
-		return dbf_user;
-		break;
-	case CHANNEL_DB:
-		return dbf_channel;
-		break;
-	case ACCESS_DB:
-		return dbf_access;
-		break;
-	case BANLIST_DB:
-		return dbf_banlist;
-		break;
-	case USERTONICK_DB:
-		return dbf_usertonick;
-		break;
-	case NICKTOUSER_DB:
-		return dbf_nicktouser;
-		break;
-	case TIMELOG_DB:
-		return dbf_timelog;
-		break;
-	default:
-		DEBUG("Unkown database");
-		return 0;
+    switch (db) {
+    case USER_DB:
+        return dbf_user;
+        break;
+    case CHANNEL_DB:
+        return dbf_channel;
+        break;
+    case ACCESS_DB:
+        return dbf_access;
+        break;
+    case BANLIST_DB:
+        return dbf_banlist;
+        break;
+    case USERTONICK_DB:
+        return dbf_usertonick;
+        break;
+    case NICKTOUSER_DB:
+        return dbf_nicktouser;
+        break;
+    case TIMELOG_DB:
+        return dbf_timelog;
+        break;
+    default:
+        DEBUG("Unkown database");
+        return 0;
 
-	}
+    }
 }
 // ############################################################################# 
 boolean add_db(int db,char *_key, char *_value) {
-	datum key,value;
-	GDBM_FILE dbf;
-	extern pthread_mutex_t dbaccess_mutex;
+    datum key,value;
+    GDBM_FILE dbf;
+    extern pthread_mutex_t dbaccess_mutex;
+    int iErr;
 
-	// check of exist  of this key in the database
+    // check of exist  of this key in the database
     CHECK_EXIST(db,_key);
 
-	// get the datebase handle
-	if (!(dbf=get_dbf(db))) {
-		return false;
-	}
-	
-	key.dptr=_key;
-	key.dsize=strlen(key.dptr)+1;
-
-	// if try to use  the  user database then make  a crypt value
-	if (db==USER_DB) {
-		value.dptr=crypt(_value,"SL");
-	} else {
-		value.dptr=_value;
-	}
-	
-    value.dsize=strlen(value.dptr)+1;
-	pthread_mutex_lock(&dbaccess_mutex);
-	gdbm_store(dbf,key,value,GDBM_INSERT);
-	pthread_mutex_unlock(&dbaccess_mutex);
-	
-	return true;
+    // get the datebase handle
+    if ((dbf=get_dbf(db))) {
+        key.dptr=_key;
+        key.dsize=strlen(key.dptr)+1;
+    
+        // if try to use  the  user database then make  a crypt value
+        if (db==USER_DB) {
+            value.dptr=crypt(_value,"SL");
+        } else {
+            value.dptr=_value;
+        }
+        value.dsize=strlen(value.dptr)+1;
+        
+        
+        pthread_mutex_lock(&dbaccess_mutex);
+        iErr=gdbm_store(dbf,key,value,GDBM_INSERT);
+        pthread_mutex_unlock(&dbaccess_mutex);
+        
+        if (!iErr) {
+            return true;
+        }
+    }
+    return false;
 }
 // ############################################################################# 
 boolean replace_db(int db,char *_key, char *_value){
-	datum key,value;
-	GDBM_FILE dbf;
-	extern pthread_mutex_t dbaccess_mutex;
-	
-	CHECK_NO_EXIST(db,_key);
+    datum key,value;
+    GDBM_FILE dbf;
+    extern pthread_mutex_t dbaccess_mutex;
     
-	// get the datebase handle
-	if (!(dbf=get_dbf(db))) {
-		return false;
-	}
+    CHECK_NO_EXIST(db,_key);
+    
+    // get the datebase handle
+    if (!(dbf=get_dbf(db))) {
+        return false;
+    }
 
-	// build key
-	key.dptr=_key;
-	key.dsize=strlen(key.dptr)+1;
+    // build key
+    key.dptr=_key;
+    key.dsize=strlen(key.dptr)+1;
 
-	// distinction of user database 
-	if (db==USER_DB) {
-		value.dptr=crypt(_value,"SL");
-	} else {
-		value.dptr=_value;
-	}
+    // distinction of user database 
+    if (db==USER_DB) {
+        value.dptr=crypt(_value,"SL");
+    } else {
+        value.dptr=_value;
+    }
 
     value.dsize=strlen(value.dptr)+1;
 
-	pthread_mutex_lock(&dbaccess_mutex);
-	gdbm_store(dbf,key,value,GDBM_REPLACE);
-	pthread_mutex_unlock(&dbaccess_mutex);
-	
+    pthread_mutex_lock(&dbaccess_mutex);
+    gdbm_store(dbf,key,value,GDBM_REPLACE);
+    pthread_mutex_unlock(&dbaccess_mutex);
+    
 
-	return true;
+    return true;
 
 }
 // ############################################################################# 
 boolean del_db(int db,char *_key){
-	datum key;
-	GDBM_FILE dbf;
-	extern pthread_mutex_t dbaccess_mutex;
+    datum key;
+    GDBM_FILE dbf;
+    extern pthread_mutex_t dbaccess_mutex;
+    int iErr;
 
-	CHECK_NO_EXIST(db,_key);
+    CHECK_NO_EXIST(db,_key);
 
-	if (!(dbf=get_dbf(db))) {
-		return false;
-	}
-
-	// build the  key
-	key.dptr=_key;
-	key.dsize=strlen(key.dptr)+1;
+    if ((dbf=get_dbf(db))) {
+        // build the  key
+        key.dptr=_key;
+        key.dsize=strlen(key.dptr)+1;
+        
+        
+        pthread_mutex_lock(&dbaccess_mutex);
+        iErr=gdbm_delete(dbf,key);
+        pthread_mutex_unlock(&dbaccess_mutex);
     
-	
-	pthread_mutex_lock(&dbaccess_mutex);
-	gdbm_delete(dbf,key);
-	pthread_mutex_unlock(&dbaccess_mutex);
-
-	return true;
+        if (!iErr) {
+            return true;
+        }
+    }
+    return false;
 }
 // ############################################################################# 
 boolean check_db(int db,char *_key,char* _value){
-	datum key;
-	datum value;
-	char *__value;
-	GDBM_FILE dbf;
-	extern pthread_mutex_t dbaccess_mutex;
+    datum key;
+    datum value;
+    char *__value;
+    GDBM_FILE dbf;
+    extern pthread_mutex_t dbaccess_mutex;
 
-	key.dptr=_key;
-	key.dsize=strlen(_key)+1;
-	
-	CHECK_NO_EXIST(db,_key);
-	
-	if (!(dbf=get_dbf(db))) {
-		return false;
-	}
-
-	// fetch the entry
-	pthread_mutex_lock(&dbaccess_mutex);
-	value=gdbm_fetch(dbf,key);
-	pthread_mutex_unlock(&dbaccess_mutex);
-
-	if (db==USER_DB) {
-		__value=crypt(_value,"SL");	
-	} else {
-		__value=_value;
+    key.dptr=_key;
+    key.dsize=strlen(_key)+1;
+    
+    CHECK_NO_EXIST(db,_key);
+    
+    if ((dbf=get_dbf(db))) {
+        // fetch the entry
+        pthread_mutex_lock(&dbaccess_mutex);
+        value=gdbm_fetch(dbf,key);
+        pthread_mutex_unlock(&dbaccess_mutex);
+    
+        if (db==USER_DB) {
+            __value=crypt(_value,"SL"); 
+        } else {
+            __value=_value;
+        }
+    
+        // checke  the values
+        if (!strcmp(value.dptr,__value)) {
+            return true;
+        }
     }
-
-
-	if (strcmp(value.dptr,__value)) {
-		return false;
-	}
-	return true;
+    return false;
 }
 // ############################################################################# 
 boolean exist_db(int db,char *_key){
-	datum key;
-	GDBM_FILE dbf;
-	extern pthread_mutex_t dbaccess_mutex;
+    datum key;
+    GDBM_FILE dbf;
+    extern pthread_mutex_t dbaccess_mutex;
+    int iRet;
 
-	if (!(dbf=get_dbf(db))) {
-		return false;
-	}
-
-	key.dptr=_key;
-	key.dsize=strlen(key.dptr)+1;
-
-	pthread_mutex_lock(&dbaccess_mutex);
-	if (!gdbm_exists(dbf,key)){
-		pthread_mutex_unlock(&dbaccess_mutex);
-		
-		return false;
-	}
-	pthread_mutex_unlock(&dbaccess_mutex);
-	
-	return true;
+    if ((dbf=get_dbf(db))) {
+        key.dptr=_key;
+        key.dsize=strlen(key.dptr)+1;
+    
+        pthread_mutex_lock(&dbaccess_mutex);
+        iRet=gdbm_exists(dbf,key);
+        pthread_mutex_unlock(&dbaccess_mutex);
+    
+        return iRet;
+    }
+    return false;
 }
 // ############################################################################# 
 char * get_db(int db,char *_key){
-	datum key,value;
-	GDBM_FILE dbf;
-	char *str;
-	extern pthread_mutex_t dbaccess_mutex;
+    datum key,value;
+    GDBM_FILE dbf;
+    char *str;
+    extern pthread_mutex_t dbaccess_mutex;
 
-	//CHECK_NO_EXIST(db,_key);
+    //CHECK_NO_EXIST(db,_key);
 
-	if (!exist_db(db,_key)){return "";}
+    if (!exist_db(db,_key)){return "";}
 
-	if (!(dbf=get_dbf(db))) {
-		return "";
-	}
+    if (!(dbf=get_dbf(db))) {
+        return "";
+    }
 
-	key.dptr=_key;
-	key.dsize=strlen(key.dptr)+1;
-	
-	pthread_mutex_lock(&dbaccess_mutex);
-	value=gdbm_fetch(dbf,key);
-	pthread_mutex_unlock(&dbaccess_mutex);
+    key.dptr=_key;
+    key.dsize=strlen(key.dptr)+1;
+    
+    pthread_mutex_lock(&dbaccess_mutex);
+    value=gdbm_fetch(dbf,key);
+    pthread_mutex_unlock(&dbaccess_mutex);
 
-	str=(char *)malloc(value.dsize*sizeof(char));
-	strcpy(str,value.dptr);
-	
-	free(value.dptr);
-	
-	return str;
+    str=(char *)malloc(value.dsize*sizeof(char));
+    strcpy(str,value.dptr);
+    
+    free(value.dptr);
+    
+    return str;
 }
 // ############################################################################# 
 char ** list_db(int db){
-	char **ppList;
-	GDBM_FILE dbf;
-	datum key,nextkey;
-	unsigned int count=0,i;
-	extern pthread_mutex_t dbaccess_mutex;
+    char **ppList;
+    GDBM_FILE dbf;
+    datum key,nextkey,firstkey;
+    unsigned int count=0,i;
+    extern pthread_mutex_t dbaccess_mutex;
 
-	// get the database handle
-	if (!(dbf=get_dbf(db))) {
-		ppList=(char **)malloc(sizeof(char *));
-		ppList[0]=NULL;
-		return ppList;
-	}
-	
-	pthread_mutex_lock(&dbaccess_mutex);
-	key=gdbm_firstkey(dbf);
-	pthread_mutex_unlock(&dbaccess_mutex);
-	
-	if (key.dptr) {
+    // get the database handle
+    if (!(dbf=get_dbf(db))) {
+        ppList=(char **)malloc(sizeof(char *));
+        ppList[0]=NULL;
+        return ppList;
+    }
+    
+    pthread_mutex_lock(&dbaccess_mutex);
+    firstkey=gdbm_firstkey(dbf);
+    
+    key=firstkey;
+    if (key.dptr) {
         // calculat the  size of  database
-		do {
-			count++;
-			
-			pthread_mutex_lock(&dbaccess_mutex);
-			nextkey=gdbm_nextkey(dbf,key);
-			pthread_mutex_unlock(&dbaccess_mutex);
-			
-			free(key.dptr);
-			key=nextkey;
-	
-		} while ( key.dptr );
-	}
+        do {
+            count++;
+            
+            nextkey=gdbm_nextkey(dbf,key);
+            
+            free(key.dptr);
+            key=nextkey;
+    
+        } while ( key.dptr );
+    }
 
 
 
-	// allocat the memory and set  end mark
-	ppList=(char **)malloc((count+1)*sizeof(char *));
-	ppList[count]=NULL;
+    // allocat the memory and set  end mark
+    ppList=(char **)malloc((count+1)*sizeof(char *));
+    ppList[count]=NULL;
 
-	pthread_mutex_lock(&dbaccess_mutex);
-	key=gdbm_firstkey(dbf);
-	pthread_mutex_unlock(&dbaccess_mutex);
+    key=firstkey;
 
-	for (i=0;i<count;i++) {
-		ppList[i]=(char *)malloc(key.dsize*sizeof(char));
-		strcpy(ppList[i],key.dptr);
-		
-		pthread_mutex_lock(&dbaccess_mutex);
-		nextkey=gdbm_nextkey(dbf,key);
-		pthread_mutex_unlock(&dbaccess_mutex);
+    for (i=0;i<count;i++) {
+        ppList[i]=(char *)malloc(key.dsize*sizeof(char));
+        strcpy(ppList[i],key.dptr);
+        
+        nextkey=gdbm_nextkey(dbf,key);
 
-		free(key.dptr);
-		key=nextkey;
+        free(key.dptr);
+        key=nextkey;
 
-	}
-	return ppList;
+    }
+
+    pthread_mutex_unlock(&dbaccess_mutex);
+    return ppList;
 }
 

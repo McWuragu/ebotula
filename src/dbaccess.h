@@ -12,17 +12,17 @@
 
 #include <gdbm.h>
 #include "type.h"
-					
-#define USER_DB			1
-#define CHANNEL_DB		2
-#define ACCESS_DB		3
-#define BANLIST_DB		4
-#define USERTONICK_DB	5
-#define TIMELOG_DB		6
-#define NICKTOUSER_DB	7
 
-#define CHECK_EXIST(_db,__key)			if (exist_db(_db,__key)){return false;}
-#define CHECK_NO_EXIST(_db,__key)		if (!exist_db(_db,__key)){return false;}
+#define USER_DB         1
+#define CHANNEL_DB      2
+#define ACCESS_DB       3
+#define BANLIST_DB      4
+#define USERTONICK_DB   5
+#define TIMELOG_DB      6
+#define NICKTOUSER_DB   7
+
+#define CHECK_EXIST(_db,__key)          if (exist_db(_db,__key)){return false;}
+#define CHECK_NO_EXIST(_db,__key)       if (!exist_db(_db,__key)){return false;}
 
 void initDatabases(void);
 void closeDatabase(void);

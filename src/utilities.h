@@ -14,28 +14,28 @@
 
 #define msleep(m)   usleep((m)*1000)
 
-#define COMMON_NOT_ALLOW_CHAR		"\t\r\n, \a\0"
-#define USER_ALLOW_CHAR				"-[]\\^{}|_`"
+#define COMMON_NOT_ALLOW_CHAR       "\t\r\n, \a\0"
+#define USER_ALLOW_CHAR             "-[]\\^{}|_`"
 
 #define CommonStringCheck(m) ((strpbrk((m),COMMON_NOT_ALLOW_CHAR))?false:true)
 
 
 
 #ifdef _DEBUG
-	#include <syslog.h>
-	/** Macro for debugging messages */
+    #include <syslog.h>
+    /** Macro for debugging messages */
     #define DEBUG(str...) syslog(LOG_DEBUG,str);
 #else
-	/** Macro for debugging messages */
-    #define DEBUG(str...)  
+    /** Macro for debugging messages */
+    #define DEBUG(str...)
 #endif
 
-	  
+
 /**
-* This function trim a string. It remove leading, folling and 
+* This function trim a string. It remove leading, folling and
 * multi spaces and  CR LF at the end.
 * @param pStr is a pointer of a string to modify
-*/	  
+*/
 void trim(char *pStr);
 
 /**
@@ -43,7 +43,7 @@ void trim(char *pStr);
 *
 * @param pStr is the string  for modification
 */
-void StrToLower(char *pStr);							 
+void StrToLower(char *pStr);
 
 /**
 * This convert the structure for the mode to a string
@@ -51,7 +51,7 @@ void StrToLower(char *pStr);
 * @param pMode a pointer of a struct for convert
 * @return the accuring string
 */
-char *ChannelModeToStr(ChannelModeType *pMode);
+char *ChannelModeToStr(ChannelMode_t *pMode);
 
 /**
 * This convert a string to a structure for the channel mode
@@ -59,7 +59,7 @@ char *ChannelModeToStr(ChannelModeType *pMode);
 * @param pModeStr input string
 * @return pointer of the accuring structure
 */
-ChannelModeType * StrToChannelMode(char *pModeStr);
+ChannelMode_t * StrToChannelMode(char *pModeStr);
 
 /**
 * This convert a string to a structure for the channel data
@@ -67,7 +67,7 @@ ChannelModeType * StrToChannelMode(char *pModeStr);
 * @param pModeStr input string
 * @return pointer of the accuring structure
 */
-ChannelDataType *StrToChannelData(char *pChannelSet);
+ChannelData_t *StrToChannelData(char *pChannelSet);
 
 /**
 * This convert the struct for a channel to a string
@@ -75,7 +75,7 @@ ChannelDataType *StrToChannelData(char *pChannelSet);
 * @param pChannelData a pointer of a struct for convert
 * @return the accuring string
 */
-char *ChannelDataToStr(ChannelDataType *pChannelData);
+char *ChannelDataToStr(ChannelData_t *pChannelData);
 
 void printMsg(char *const pMsg[]);
 
@@ -83,7 +83,7 @@ void printMsg(char *const pMsg[]);
 * This function remove all spaces in a string until from double quote include spaces.
 * This space in double quote untouched.
 * @param pStr is a pointer  of a string to modify
-*/ 
+*/
 void clearspace(char *pStr);
 
 boolean ChannelStringCheck(char *const pStr);

@@ -10,6 +10,10 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
+/** the size of  the receive buffer */
+#define RECV_BUFFER_SIZE        0x1000
+/** the size of the buffer for the  hostname */
+#define HOSTNAME_BUFFER_SIZE    0xFF
 
 void ConnectToIrc(void);
 void join_all_channels(void);

@@ -11,11 +11,15 @@
 #define PARAMETER_H
 
 #include "type.h"
-#define PASSWD_LENGTH	8
-#define LOGIN_LENGTH	8
 
-#define SERVER_NOT_ALLOW_CHAR 			" :;<>*#/\"\'\\{}[]()=?§$"	  
-	  
+/** the  maximum length which read form the configuration file */
+#define MAX_READ_BUFFER_SIZE    256
+
+#define PASSWD_LENGTH   8
+#define LOGIN_LENGTH    8
+
+#define SERVER_NOT_ALLOW_CHAR           " :;<>*#/\"\'\\{}[]()=?§$"
+
 void ComandLineParser(int argc,char *const argv[]);
 void ConfigFileParser(void);
 boolean dialogMaster(void);
