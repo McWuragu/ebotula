@@ -632,6 +632,14 @@ void say(char *pLine) {
 	privmsg(pChannel,pParameter);
 }
 // ######################################################################### 
+// Bot comand: !allsay text
+// ######################################################################### 
+void allsay(char *pline) {
+	char *pMsgStr;
+	pMsgStr=getParameters(pline);
+	privmsg("#*",pMsgStr);
+}
+// ######################################################################### 
 // Bot comand: !kick <#channel> nick reason
 // ######################################################################### 
 void kickuser(char *pLine) {

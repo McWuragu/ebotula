@@ -10,9 +10,6 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#define USER_MODS		"ovm"
-#define CHANNEL_MODS	"tnmaiqpsrkl"
-
 #define USERLIST_TAB	20
 #define HELP_TAB		12
 				  
@@ -35,6 +32,7 @@ void setGreating(char *pLine);
 void setTopic(char *pLine);
 void greating(char *pLine);
 void say(char *pLine);
+void allsay(char *pline);
 void kickuser(char *pLine);
 void usermode(char *pLine);
 void chanmode(char *pLine);
