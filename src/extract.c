@@ -311,12 +311,11 @@ char *getFirstPart(char const *pLine,char **pRest) {
     char *pTmp;
     char *pPos;
 
-
     if (!pLine) {
-        if  (pRest) {*pRest=pLine;};
+        if  (pRest){*pRest=pLine;};
         return NULL;
     }
-
+    
     // copy the orginal
     pTmp=(char*)malloc((strlen(pLine)+1)*sizeof(char));
     strcpy(pTmp,pLine);
@@ -328,8 +327,9 @@ char *getFirstPart(char const *pLine,char **pRest) {
         pPos++;
         
         // copy the rest
-        if  (pRest) {
-            free(*pRest);
+        if (pRest) {
+            // check the state and  clean old memory
+            if (*(pRest)) {free(*(pRest));}
             
             if (strlen(pPos)) {
                 *pRest=(char*)malloc((strlen(pPos)+1)*sizeof(char));

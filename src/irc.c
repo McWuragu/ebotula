@@ -184,7 +184,7 @@ void ping(char *pTarget) {
 // #############################################################################
 void invite(char *pChannel,char *pNick) {
     char *buffer;
-    if ((buffer=(char*)malloc((strlen("INVITE")+strlen(pNick)+strlen(pChannel)+4)*sizeof(char)))==NULL)
+    if ((buffer=(char*)malloc((strlen("INVITE")+strlen(pNick)+strlen(pChannel)+5)*sizeof(char)))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;

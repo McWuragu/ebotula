@@ -1462,7 +1462,8 @@ void inviteuser(MsgItem_t *pMsg){
     char *pParameter;
     char *pRest;
     char *pInviteNick;
-
+    char *pTmp;
+    extern ConfigSetup_t sSetup;
     
     // extract and select the nick name  for inviting
     if (!(pParameter=getArgument(pMsg->pRawLine))) {
@@ -1473,17 +1474,43 @@ void inviteuser(MsgItem_t *pMsg){
     // extract the parameters
     rmFirstPart(pParameter,&pRest);
     pInviteNick=getFirstPart(pRest,NULL);
-    
     free(pParameter);
     free(pRest);
 
     // select the nickname
-    if (pInviteNick== NULL) {
-        pInviteNick=pMsg->pCallingNick;
+    if (!pInviteNick) {
+        pInviteNick=(char*)malloc((strlen(pMsg->pCallingNick)+1)*sizeof(char));
+        if (!pInviteNick) {
+            logger(LOG_ERR,_("Couldn't allocate memory!"));
+            return;
+        }else {
+            strcpy(pInviteNick,pMsg->pCallingNick);
+        }
     }
-
-    // invite
-    invite(pMsg->pAccessChannel,pInviteNick);
+    
+    pTmp=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
+    if (!pTmp) {
+        logger(LOG_ERR,_("Couldn't allocate memory!"));
+    }else {
+        strcpy(pTmp,sSetup.pBotname);
+    
+        // norming the strings
+        StrToLower(pTmp);
+        StrToLower(pInviteNick);
+        
+    
+        // check the identity
+        // bot can't invite himself
+        if (!strcmp(pInviteNick,pTmp)) {
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Can't invite myself."));
+        } else {
+            // invite
+            invite(pMsg->pAccessChannel,pInviteNick);
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user to the channel."));
+        }
+        free(pTmp);
+    }
+    
     free(pInviteNick);
 }
 /* #########################################################################

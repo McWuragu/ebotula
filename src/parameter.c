@@ -329,7 +329,7 @@ void ConfigFileParser(void) {
                 c=strchr(buffer,'=');
                 
                 // parse the value from the line
-                value=(char *)malloc(strlen(c)*sizeof(char));
+                value=(char *)malloc((strlen(c)+1)*sizeof(char));
                 strcpy(value,c+1);
                 
                 // parse the key from the line
@@ -452,14 +452,15 @@ void ConfigFileParser(void) {
                     sSetup.iTimeout=tmp;
                 } else if (!strcmp(key,KEY_LOGLEVEL)) {
                     // cmd line has change  the log level
-                    if (sSetup.bLogLevelWasSet) {continue;}
-                    tmp=atoi(value);
-                    if (tmp<=0 || tmp > MAX_LOGLEVEL) {
-                        errno=EDOM;
-                        fprintf(stderr,_("The log level %i is invalid.\n"),tmp);
-                        exit(errno);
+                    if (!sSetup.bLogLevelWasSet) {
+                        tmp=atoi(value);
+                        if (tmp<=0 || tmp > MAX_LOGLEVEL) {
+                            errno=EDOM;
+                            fprintf(stderr,_("The log level %i is invalid.\n"),tmp);
+                            exit(errno);
+                        }
+                        sSetup.nLogLevel=tmp;
                     }
-                    sSetup.nLogLevel=tmp;
                 }else if (!strcmp(key,KEY_EXEUSER)) {
                     // set execution rights
                     if (sSetup.sExeUser)free(sSetup.sExeUser);
