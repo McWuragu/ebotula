@@ -15,6 +15,7 @@
 #include <pwd.h>
 
 #include "utilities.h"
+
 #include "messages.h"
 #include "config.h"
 #include "network.h"
@@ -87,24 +88,27 @@ void user(void) {
 	send_line(buffer);
 }
 // ############################################################################# 
-void notice(char *nick,char *text) {
+void action(char *target, char *text){
 	char *buffer;
-	buffer=(char *)calloc(strlen("NOTICE ")+strlen(nick)+strlen(text)+3,sizeof(char));
-	
-	sprintf(buffer,"NOTICE %s :%s\r\n",nick,text);
-
-	// send commando
+	buffer=(char *)malloc((strlen("ACTION ")+strlen(text)+1)*sizeof(char));
+	sprintf(buffer,"ACTION %s",text);
+	privmsg(target,buffer);
+}
+// ############################################################################# 
+void privmsg(char *target, char *text){
+	char *buffer;
+	buffer=(char *)calloc(strlen("PRIVMSG ")+strlen(target)+strlen(text)+5,sizeof(char));
+	sprintf(buffer,"PRIVMSG %s :%s\r\n",target,text);
 	send_line(buffer);
 }
 // ############################################################################# 
-void version(char *line) {
-    char *str;
-	str=(char *)calloc(strlen(PROGNAME)+strlen("Version ")+strlen(VERSION)+4,sizeof(char));
-			
-	// creat Versions String
-	sprintf(str,"%s Version %s\r\n",PROGNAME,VERSION);
-	notice(getNickname(line),str);
+void notice(char *nick,char *text) {
+	char *buffer;
+	buffer=(char *)calloc(strlen("NOTICE ")+strlen(nick)+strlen(text)+5,sizeof(char));
+	sprintf(buffer,"NOTICE %s :%s\r\n",nick,text);
+	send_line(buffer);
 }
+
 // ############################################################################# 
 void quit(void) {
 	send_line("QUIT\r\n");

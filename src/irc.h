@@ -21,6 +21,6 @@ void nick(char *nick);
 void part(char *channel);
 void join(char *channel);
 void notice(char *nick,char *text);
-
-
+void privmsg(char *target, char *text);
+void action(char *target, char *text);
 #endif
