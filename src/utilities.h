@@ -37,7 +37,7 @@
          struct tm *td; \
          clock_gettime(CLOCK_REALTIME,&stamp); \
          td=localtime(&stamp.tv_sec);\
-         fprintf(stderr,"%d:%d:%d.^%d ",td->tm_hour,td->tm_min,td->tm_sec,(stamp.tv_nsec/1000000)); \
+         fprintf(stderr,"%2d:%2d:%2d.%3d ",td->tm_hour,td->tm_min,td->tm_sec,(stamp.tv_nsec/1000000)); \
          fprintf(stderr,str); \
          }
 #else
