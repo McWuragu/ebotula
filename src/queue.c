@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 /** Queue functions		 **/
 /** This Ring list -> Fifo 	**/
@@ -17,15 +17,7 @@
 #include "type.h"
 #include "queue.h"
 
-/**							**
- ** Function: 		initQueue			**
- ** Parameters: 	PQueue *pqueueInit  	   	**
- **				Pointer to Queue	**
- ** Return:		int STATUS			**
- **				0 if Success		**
- ** Desctiption:		initing Queue,		**
- **				creating Sentinel	**
- **							**/
+// #############################################################################
 PQueue initQueue()
 {
 	PQueue pqueueInit;
@@ -59,15 +51,7 @@ PQueue initQueue()
 	return	pqueueInit;
 }
 
-/**							**
- ** Function: 		pushQueue			**
- ** Parameters: 	PQueue *pqueueIn  	   	**
- **				Pointer to Queue	**
- **			QueueData queuedataElement	** 		
- ** Return:		int STATUS			**
- **				0 if Success		**
- ** Description:	pushing 1 element to Queue 	**
- **							**/
+// #############################################################################
 QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 {
 	/** lokal auto vars **/
@@ -130,9 +114,9 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 
 	/** allocate the memmory and copy data */
 	pqueueNew->queuedataData->t_size=queuedataElement.t_size;
-	pqueueNew->queuedataData->data=malloc(sizeof(QueueData));	
+	pqueueNew->queuedataData->data=malloc(queuedataElement.t_size);	
 	
-    memcpy(pqueueNew->queuedataData->data,queuedataElement.data,sizeof(QueueData));
+    memcpy(pqueueNew->queuedataData->data,queuedataElement.data,queuedataElement.t_size);
     
     // increament  the counter for the reading  threads
     pthread_cond_signal(pqueueIn->sentinel->StopThreadCond);
@@ -140,15 +124,7 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
     pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return QUEUE_SUCCESS;
 }
-/**							**
- ** Function: 		popQueue			**
- ** Parameters: 	PQueue *pqueueIn  	   	**
- **				Pointer to Queue	**
- ** Return:		QueueData *queuedataElement	** 		
- **				0 if Success		**
- ** Description:	poping 1 element from Queue 	**
- **			until Queue is empty		**
- **							**/
+// #############################################################################
 QueueData * popQueue(PQueue pqueueIn)
 {
 	PQueue pqueueWork;
@@ -190,13 +166,7 @@ QueueData * popQueue(PQueue pqueueIn)
 	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return (QueueData *)NULL;
 }
-/**							**
- ** Function:		isemptyQueue			**
- ** Parameters:		PQueue *pqueueIn		**
- **				Pointer to Queue	**
- ** Return:		int BOOLEAN			**
- **				true if empty		**
- **							**/
+// #############################################################################
 int isemptyQueue(PQueue pqueueIn)
 {
     boolean ret=true;
@@ -208,26 +178,12 @@ int isemptyQueue(PQueue pqueueIn)
     pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return ret;
 }
-/**							**
- ** Function:		isfullQueue			**
- ** Parameters:		PQueue *pqueueIn		**
- **				Pointer to Queue	**
- ** Return:		int BOOLEAN			**
- **				true if full 		**
- **							**/
+// #############################################################################
 int isfullQueue(PQueue pqueueIn)
 {
 	return !isemptyQueue(pqueueIn);
 }
-/**							**
- ** Function: 		deleteQueue			**
- ** Parameters: 	PQueue *pqueueIn  	   	**
- **				Pointer to Queue	**
- ** Return:		int STATUS			**
- **				0 if Success		**
- ** Description:	deleting Queue 			**
- **			until Queue is empty		**
- **							**/
+// #############################################################################
 QueueExeStatus deleteQueue(PQueue pqueueIn)
 {
     QueueExeStatus err;
@@ -247,7 +203,7 @@ QueueExeStatus deleteQueue(PQueue pqueueIn)
 	free(pqueueIn);
 	return QUEUE_SUCCESS;
 }
-
+// #############################################################################
 QueueExeStatus flushQueue(PQueue pqueueIn) {
 	QueueData *pTmp;
     QueueExeStatus err;
