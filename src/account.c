@@ -127,7 +127,7 @@ void rmAccessRights(char *pLogin){
 	for (i=0;ppChannels[i]!=NULL;i++) {
 		
 		// build  the key for access.dbf
-		pKey=malloc((strlen(ppChannels[i])+iLoginLen+1)*sizeof(char));
+		pKey=(char *)malloc((strlen(ppChannels[i])+iLoginLen+1)*sizeof(char));
 		sprintf(pKey,"%s%s",pLogin,ppChannels[i]);
 		
 		del_db(ACCESS_DB,pKey);
