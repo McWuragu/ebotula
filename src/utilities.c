@@ -255,7 +255,7 @@ char *ChannelDataToStr(ChannelDataType *pChannelData) {
 boolean ChannelStringCheck(char *const pStr) {
 	if (pStr) {
 		if (CommonStringCheck(pStr)) {
-			if (pStr[0]!='#' && pStr[0]!='&') {
+			if (pStr[0]=='#' || pStr[0]=='&') {
 				return true;
 			}
 		}

@@ -138,7 +138,7 @@ char *getChannel(char *pLine){
 	StrToLower(pChannel);
 	return pChannel;
 }
-// ######################################################################### 
+// #########################################################################
 char *getAccessChannel(char *pLine) {
 	char *pParameter;
 	char *pChannel;
@@ -148,7 +148,7 @@ char *getAccessChannel(char *pLine) {
 
 	// look channel name  in preamble
 	if (pParameter[0]!='#') {
-	
+
 		// look for channelname  as preamble
 		pChannel=getChannel(pLine);
 		if (!strlen(pChannel)) {
@@ -157,22 +157,23 @@ char *getAccessChannel(char *pLine) {
 				pPos+=2;
 				// marked the end of str and  copy out
 				strtok(pPos," ");
-				
+
 				pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
 				strcpy(pChannel,pPos);
 			} else {
 				return "";
 			}
 		}
-        
+
 	} else {
 		// parse Channel name
 		strtok(pParameter," ");
+
 		// check the  chrakter in the  channel name
 		if (ChannelStringCheck(pParameter)) {
 			pChannel=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
 			strcpy(pChannel,pParameter);
-        } else {
+        	} else {
 			return "";
 		}
     }
@@ -180,7 +181,7 @@ char *getAccessChannel(char *pLine) {
 	StrToLower(pChannel);
 	return pChannel;
 }
-// ######################################################################### 
+// #########################################################################
 char  *getTopic(char *pChannelSet) {
 	char *pTopic;
 	char *pPos,*pPos2;
