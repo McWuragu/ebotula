@@ -1,5 +1,5 @@
 #########################################################################
-VERSION=0.05-alpha
+VERSION=0.06-alpha
 DATABASEPATH=./
 CONFDIR=./
 
@@ -25,7 +25,8 @@ OBJS=   parameter.o \
 	dbaccess.o \
 	utilities.o \
 	extract.o \
-	handles.o \
+	parser.o \
+	timing.o \
 	ircbot.o 
 
 DEPS= $(patsubst %.o,%.d,$(OBJS))
