@@ -87,4 +87,4 @@ dnl ===========================
 dnl end 
 dnl ===========================
 
-AC_OUTPUT(Makefile src/Makefile etc/Makefile doc/Makefile)
+AC_OUTPUT(Makefile src/Makefile src/lang/Makefile etc/Makefile doc/Makefile)

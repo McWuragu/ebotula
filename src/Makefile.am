@@ -1,31 +1,36 @@
+SUBDIRS=lang
 bin_PROGRAMS = ebotula
 ebotula_SOURCES= \
+	lang/messages_ger.h \
+	lang/messages_eng.h \
+	lang/irchelp_ger.h \
+	lang/irchelp_eng.h \
+	account.c \
+	command.c \
+	dbaccess.c \
+	extract.c \
+	handles.c \
+	ircbot.c \
+	irc.c \
+	network.c \
+	parameter.c \
+	parser.c \
+	timing.c \
+	utilities.c \
 	type.h \
 	irchelp.h \
 	messages.h \
-	account.c \
 	account.h \
-	command.c \
 	command.h \
-	dbaccess.c \
 	dbaccess.h \
-	extract.c \
 	extract.h \
-	handles.c \
 	handles.h \
-	ircbot.c \
 	ircbot.h \
-	irc.c \
 	irc.h \
-	network.c \
 	network.h \
-	parameter.c \
 	parameter.h \
-	parser.c \
 	parser.h \
-	timing.c \
 	timing.h \
-	utilities.c \
 	utilities.h
 
 ebotula_LDADD= $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB)
