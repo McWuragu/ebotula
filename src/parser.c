@@ -33,9 +33,7 @@ MsgBufType preParser(char *line) {
 	bzero(&msg,sizeof(MsgBufType));
 		
 	// get the first part of the  answer from server
-	if (!(first_part=getCommand(line))) {
-		return msg;
-	}
+	first_part=getCommand(line);
 
 	if (!(pos=strchr(first_part,' '))){
 		return msg;
@@ -213,14 +211,15 @@ void *action_thread(void *argv) {
 				nickchg(msg.msg_line);
 				break;
 			default:
+				syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,msg.identify);
 				break;
 			}
 		}
 		
 		// clear buffer	
 		bzero(&msg,sizeof(MsgBufType));
-	}
-
+	} 
+	
 	return NULL;
 }
 
@@ -229,10 +228,12 @@ int AccessRight(char *line,CmdType cmd_id) {
 	char *channel;
 	char *login;
 	char *nick;
+	char *netmask;
 	char *access;
 	char *mods;
 	char *channelstr;
 
+	netmask=getNetmask(line);
 	nick=getNickname(line);
 
 	switch (cmd_id) {
@@ -251,7 +252,7 @@ int AccessRight(char *line,CmdType cmd_id) {
 	case CMD_NICKCHG:
 	case CMD_LOGOFF:
 	case CMD_PASS:
-		if (!exist_db(NICKTOUSER_DB,nick)) {
+		if (!exist_db(NICKTOUSER_DB,netmask)) {
 			notice(nick,MSG_NOT_LOGON);	
 			return false;
 		} else {
@@ -263,14 +264,15 @@ int AccessRight(char *line,CmdType cmd_id) {
 	case CMD_SAY:
 	case CMD_KICK:
 	case CMD_USERMODE:
-		if (!exist_db(NICKTOUSER_DB,nick)) {
+		if (!exist_db(NICKTOUSER_DB,netmask)) {
 			notice(nick,MSG_NOT_LOGON);	
 			return false;
 		}
 
-		login=get_db(NICKTOUSER_DB,nick);
-		
-		if (!(channel=getAccessChannel(line))) {
+		login=get_db(NICKTOUSER_DB,netmask);
+		channel=getAccessChannel(line);
+
+		if (!strlen(channel)) {
 			notice(nick,MSG_NOT_CHANNELOPT);
 			return false;
 		}
@@ -278,29 +280,37 @@ int AccessRight(char *line,CmdType cmd_id) {
 		access=(char*)malloc((strlen(login)+strlen(channel)+1)*sizeof(char*));
 		sprintf(access,"%s%s",login,channel);
 
-		if((channelstr=get_db(ACCESS_DB,access))) {
-			mods=getMode(channelstr);
-			if (strchr(mods,'o')) {
+		channelstr=get_db(ACCESS_DB,access);
+		mods=getMode(channelstr);
+		if (strchr(mods,'o')) {
 				return true;
-			}
 		}
 
 		notice(nick,MSG_NOT_OWNER);
 		
-	// master
-	case CMD_DIE:
+	// master with necassary channel
 	case CMD_JOIN:
-	case CMD_NICK:
 	case CMD_PART:
 	case CMD_RMCHANNEL:
 	case CMD_ADDCHANNEL:
+		channel=getAccessChannel(line);
+
+		if (!strlen(channel)) {
+			notice(nick,MSG_NOT_CHANNELOPT);
+			return false;
+		}
+	// master without necassary channel
+	case CMD_NICK:
 	case CMD_CHANNELS:
-		if (!exist_db(NICKTOUSER_DB,nick)) {
+	case CMD_DIE:
+		if (!exist_db(NICKTOUSER_DB,netmask)) {
 			notice(nick,MSG_NOT_LOGON);	
 			return false;
 		}
 
-		login=get_db(NICKTOUSER_DB,nick);
+
+
+		login=get_db(NICKTOUSER_DB,netmask);
 
 		if (!exist_db(ACCESS_DB,login)) {
 			notice(nick,MSG_NOT_MASTER);  
@@ -309,7 +319,7 @@ int AccessRight(char *line,CmdType cmd_id) {
 			return true;
 		}
 	default:
-		DEBUG("Unknown command-id");
+		notice(nick,MSG_NOT_ACCESS);
 		return false;
 	}
 }

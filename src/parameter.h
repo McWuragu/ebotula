@@ -10,12 +10,13 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-
+#include "type.h"
+#define PASSWD_LENGTH	8
 
 
 void cmd_line(int argc,const char *argv[]);
 void read_config_file(void);
-void dialogMaster(void);
-
+boolean dialogMaster(void);
+char *getPasswd(void);
 
 #endif

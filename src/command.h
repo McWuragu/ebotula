@@ -10,9 +10,9 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#define USER_MODS		"Oovm"
+#define USER_MODS		"ovm"
 #define CHANNEL_MODS	"tnmaiqpsrkl"
-#define MAX_USERMODE_SIZE		5
+
 				  
 // ######################### Bot commands ################################
 
@@ -39,5 +39,5 @@ void usermode(char *line);
 void chanmode(char *line);
 void nickchg(char *line);
 
-boolean log_on(char *nick,char *login);
+
 #endif

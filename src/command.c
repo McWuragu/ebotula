@@ -12,8 +12,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
-#include <pthread.h>
-#include <time.h>
 
 #include "config.h"
 #include "extract.h"
@@ -23,6 +21,7 @@
 #include "irc.h"
 #include "irchelp.h"
 #include "parser.h"
+#include "account.h"
 #include "command.h"
 
 
@@ -30,18 +29,22 @@
 // Bot comand: !help <command>
 // ######################################################################### 
 void help(char *line) {
+	char *netmask;
 	char *nick;
 	char *parameter;
 	char *tmp;
 	char *msgstr;
 
+	netmask=getNetmask(line);
 	nick=getNickname(line);
+
+	parameter=getParameters(line);
 
 	unsigned int i,j;
 	boolean log_status=false,master_status=false;
 
 	// check for parameters
-	if (!(parameter=getParameters(line))) {
+	if (!strlen(parameter)) {
 		DEBUG("Default information");
 		
 		// Header of help message 
@@ -54,8 +57,8 @@ void help(char *line) {
 		}
 	
 		// checking  login and  master status 
-        if ((log_status=exist_db(NICKTOUSER_DB,nick))) {
-			master_status=exist_db(ACCESS_DB,get_db(NICKTOUSER_DB,nick));
+        if ((log_status=exist_db(NICKTOUSER_DB,netmask))) {
+			master_status=exist_db(ACCESS_DB,get_db(NICKTOUSER_DB,netmask));
 		}
 		
     
@@ -152,11 +155,14 @@ void help(char *line) {
 // Bot comand: !hello
 // ######################################################################### 
 void hello(char *line) {
+	char *netmask=NULL;
 	char *nick;
 	char *login;
 	
+	
 	nick=getNickname(line);
 	login=malloc((strlen(nick)+1)*sizeof(char));
+	
 	strcpy(login,nick);
 	
 	StrToLower(login);
@@ -166,12 +172,18 @@ void hello(char *line) {
 		return;
 	}
 
+	if (exist_db(NICKTOUSER_DB,netmask)) {
+		notice(nick,MSG_ALREADY_LOGON);
+		return;
+	}
+
 	// autoidentify after create an new account
-	log_on(nick,login);
+	netmask=getNetmask(line);
+	log_on(netmask,login);
 
 	notice(nick,MSG_HELLO);
 	notice(nick,MSG_HELLO2);
-	notice(nick,MSG_NOT_ACCOUNT);
+	notice(nick,MSG_IDENT_OK);
 
 }
 // ######################################################################### 
@@ -181,27 +193,24 @@ void password(char *line) {
 	char *login;
 	char *passwd;
 	char *nick;
-	char *parameter;
+	char *netmask;
 	
-	nick==getNickname(line);
+	netmask=getNetmask(line);
+	nick=getNickname(line);
+	login=get_db(NICKTOUSER_DB,netmask);
 
 	// get  the  login name 
-	if ((login=get_db(NICKTOUSER_DB,nick))==NULL) {
+	if (!strlen(login)) {
 		notice(nick,MSG_NOT_LOGON);
 		return;
 	}
     
-	// parse the  password  form  parameter list 
-	if (!(parameter=getParameters(line))){
-		passwd=(char *)malloc(sizeof(char));
-		*passwd='\0';
-		notice(nick,MSG_NOT_PASS);
-	} else {
-		strtok(line," ");
-		passwd=(char *)malloc((strlen(parameter)+1)*sizeof(char));
-		strcpy(passwd,parameter);
-	}
+	passwd=getParameters(line);
 
+	// parse the  password  form  parameter list 
+	if (!strlen(passwd)){
+		notice(nick,MSG_NOT_PASS);
+	}
 
 	// set password 
 	replace_db(USER_DB,login,passwd);
@@ -211,17 +220,15 @@ void password(char *line) {
 // Bot comand: !logoff
 // ######################################################################### 
 void logoff(char *line) {
-	extern pthread_mutex_t account_mutex;
 	char *login;
 	char *nick;
-	
+	char *netmask;
+
+	netmask=getNetmask(line);
 	nick=getNickname(line);
-    login=get_db(NICKTOUSER_DB,nick);
+    login=get_db(NICKTOUSER_DB,netmask);
 	
-	pthread_mutex_lock(&account_mutex);
-	del_db(NICKTOUSER_DB,nick);
-	del_db(USERTONICK_DB,login);
-	pthread_mutex_unlock(&account_mutex);
+	log_out(netmask,login);
 
 	notice(nick,MSG_LOGOFF);
 }
@@ -233,17 +240,21 @@ void ident(char *line) {
 	char *passwd;
 	char *pos;
 	char *nick;
+	char *netmask;
 	char *parameter;
 
+	netmask=getNetmask(line);
 	nick=getNickname(line);
 	
-	if (exist_db(NICKTOUSER_DB,nick)) {
+	if (exist_db(NICKTOUSER_DB,netmask)) {
 		notice(nick,MSG_ALREADY_LOGON);
 		return;
 	}
 	
+	parameter=getParameters(line);
+
 	// no parameter found 
-	if (!(parameter=getParameters(line))) {
+	if (!strlen(parameter)) {
 		notice(nick,MSG_IDENT_ERR);
 		return;
 	}
@@ -269,7 +280,7 @@ void ident(char *line) {
 
 	// check the account 
 	if(check_db(USER_DB,login,passwd)) {
-		log_on(nick,login);
+		log_on(netmask,login);
 		notice(nick,MSG_IDENT_OK);
 		return;
 	}
@@ -279,26 +290,19 @@ void ident(char *line) {
 // Bot comand: !addchannel #channel
 // ######################################################################### 
 void channel_add(char *line) {
-	char *login;
 	char *channel;
 	char *nick;
 	char *channelmod;
 
 	nick=getNickname(line);
-    login=get_db(NICKTOUSER_DB,nick);
 	
-	if (!(channel=getAccessChannel(line))) {
+	channel=getAccessChannel(line);
+
+	if (!strcmp(channel,getChannel(line))) {
 		notice(nick,MSG_NOT_CHANNELOPT);
 		notice(nick,MSG_ADDCHANNEL_ERR);
 		return;
 	}
-
-	if (!(strcmp(channel,getChannel(line)))) {
-		notice(nick,MSG_ADDCHANNEL_ERR);
-		notice(nick,MSG_NOT_CHANNELOPT);
-		return;
-	}
-
 
 	// checking of channel exist 
 	if (exist_db(CHANNEL_DB,channel)) {
@@ -322,17 +326,11 @@ void channel_add(char *line) {
 // Bot comand: !rmchannel <#channel>
 // ######################################################################### 
 void channel_rm(char *line){
-	char *login,*channel;
+	char *channel;
 	char *nick;
 
 	nick=getNickname(line);
-	login=get_db(NICKTOUSER_DB,nick);
-
-	if (!(channel=getAccessChannel(line))) {
-		notice(nick,MSG_NOT_CHANNELOPT);
-		notice(nick,MSG_RMCHANNEL_ERR);
-		return;
-	}
+	channel=getAccessChannel(line);
 	
 	// checking of channel exists 
 	if (!del_db(CHANNEL_DB,channel)) {
@@ -350,21 +348,11 @@ void channel_rm(char *line){
 // Bot comand: !join #channel
 // ######################################################################### 
 void join_channel(char *line) {
-	char *login;
 	char *channel;
 	char *nick;
 
-
 	nick=getNickname(line);
-	login=get_db(NICKTOUSER_DB,nick);
-
-
-	// get the channel name
-	if (!(channel=getAccessChannel(line))) {
-		notice(nick,MSG_NOT_CHANNELOPT);
-		notice(nick,MSG_JOIN_ERR);
-		return;
-	}
+	channel=getAccessChannel(line);
 
 	// compare the current channel and  the channel for joining
 	if (!(strcmp(channel,getChannel(line)))) {
@@ -383,18 +371,11 @@ void join_channel(char *line) {
 // ######################################################################### 
 void part_channel(char *line) {
 	char *nick;
-	char *login;
 	char *channel;
 
 	nick=getNickname(line);
-	login=get_db(NICKTOUSER_DB,nick);
+	channel=getAccessChannel(line);
 
-	if (!(channel=getAccessChannel(line))) {
-		notice(nick,MSG_NOT_CHANNELOPT);
-		notice(nick,MSG_RMCHANNEL_ERR);
-		return;
-	}
-	
 	// part the channel
 	part(channel);
 	notice(nick,MSG_PART_OK);
@@ -413,9 +394,10 @@ void set_nick(char *line){
 	char *_nick;
 
 	_nick=getNickname(line);
+	parameter=getParameters(line);
 
 	// read parameters
-	if (!(parameter=getParameters(line))) {
+	if (!strlen(parameter)) {
 		notice(_nick,MSG_NICK_ERR);
 		return;
 	} else if (strpbrk(parameter,USER_NOT_ALLOW_CHAR)) {
@@ -472,7 +454,6 @@ void version(char *line) {
 // Bot comand: !greating <#channel> <text>
 // ######################################################################### 
 void setGreating(char *line) {
-	char *parameter;
 	char *channel;
 	char *channelstr;
 	char *_channelstr;
@@ -482,43 +463,23 @@ void setGreating(char *line) {
 	char *greatLine;
 
 	nick=getNickname(line);
-
-	if (!(channel=getAccessChannel(line))){
-		notice(nick,MSG_NOT_CHANNELOPT);
-		notice(nick,MSG_GREATING_ERR);
-		return;
-	}
+	channel=getAccessChannel(line);
 
 	DEBUG("Greating seting for %s",channel);
 
-	// parse greating string
-	if (!(parameter=getParameters(line))) {				 
-		// empty greating line 
-		greatLine=(char *)malloc(sizeof(char));
-		greatLine[0]='\0';
-		DEBUG("Remove greating line");
-	} else {
-		// new gearing line
-		greatLine=(char*)malloc((strlen(parameter)+1)*sizeof(char));
-		strcpy(greatLine,parameter);
-		DEBUG("Set new greating line");
-	}
+	greatLine=getParameters(line);
 
-	// check of  existenz of the channel
-	if (!(channelstr=get_db(CHANNEL_DB,channel))) {
+    // check of  existenz of the channel
+	channelstr=get_db(CHANNEL_DB,channel);
+	
+	if (!strlen(channelstr)) {
 		notice(nick,MSG_NOT_CHANNEL);
 		return;
 	}
 
 	// insert or replace the greating  in the DB
-	if (!(mode=getMode(channelstr))) {
-		mode=(char*)malloc(sizeof(char));
-		mode[0]='\0';
-	}
-	if (!(topic=getTopic(channelstr))) {
-		topic=(char*)malloc(sizeof(char));
-		topic[0]='\0';
-	}
+	mode=getMode(channelstr);
+	topic=getTopic(channelstr);
 	
 	_channelstr=(char *)malloc((strlen(mode)+strlen(topic)+strlen(greatLine)+3)*sizeof(char));
 	sprintf(_channelstr,"%s\t%s\t%s",mode,topic,greatLine);
@@ -536,7 +497,6 @@ void setGreating(char *line) {
 // Bot comand: !topic <#channel> <topic>
 // ######################################################################### 
 void setTopic(char *line) {
-	char *parameter;
 	char *channel;
 	char *channelstr;
 	char *_channelstr;
@@ -546,44 +506,21 @@ void setTopic(char *line) {
 	char *greatLine;
 
 	nick=getNickname(line);
-
+	channel=getAccessChannel(line);
 	
-	if (!(channel=getAccessChannel(line))){
-		notice(nick,MSG_NOT_CHANNELOPT);
-		notice(nick,MSG_TOPIC_ERR);
-		return;
-	}
-
-	DEBUG("Greating seting for %s",channel);
-
-	// parse greating string
-	if (!(parameter=getParameters(line))) {				 
-		// empty topic		 
-		_topic=(char *)malloc(sizeof(char));
-		_topic[0]='\0';
-		DEBUG("Remove topic");
-	} else {
-		// new topic
-		_topic=(char*)malloc((strlen(parameter)+1)*sizeof(char));
-		strcpy(_topic,parameter);
-		DEBUG("Set new topic");
-	}
+	DEBUG("Topic seting for %s",channel);
+	_topic=getParameters(line);
+	channelstr=get_db(CHANNEL_DB,channel);
 
 	// check of  existenz of the channel
-	if (!(channelstr=get_db(CHANNEL_DB,channel))) {
+	if (!strlen(channelstr)) {
 		notice(nick,MSG_NOT_CHANNEL);
 		return;
 	}
 
 	// insert or replace the greating  in the DB
-	if (!(mode=getMode(channelstr))) {
-		mode=(char*)malloc(sizeof(char));
-		mode[0]='\0';
-	}
-	if (!(greatLine=getGreating(channelstr))) {
-		greatLine=(char*)malloc(sizeof(char));
-		greatLine[0]='\0';
-	}
+	mode=getMode(channelstr);
+	greatLine=getGreating(channelstr);
 	
 	_channelstr=(char *)malloc((strlen(mode)+strlen(_topic)+strlen(greatLine)+3)*sizeof(char));
 	sprintf(_channelstr,"%s\t%s\t%s",mode,_topic,greatLine);
@@ -609,27 +546,19 @@ void greating(char *line) {
 	char *nick;
 
     nick=getNickname(line);
-	
-
-	if (!(channel=getAccessChannel(line))) {
-		notice(nick,MSG_NOT_CHANNELOPT);
-		notice(nick,MSG_VIEWGREAT_ERR);
-		return;
-	}
+	channel=getAccessChannel(line);
 
 	DEBUG("Greating for %s",channel);
 
-	if (!(channelstr=get_db(CHANNEL_DB,channel))) {
-		return;
-	}
-						   
+	channelstr=get_db(CHANNEL_DB,channel);
+	greating=getGreating(channelstr);
 
-	if (!(greating=getGreating(channelstr))) {
+	if (!strlen(greating)) {
 		return;
 	}
 
 	DEBUG("Greating line %s",greating);
-	notice(getNickname(line),greating);
+	notice(nick,greating);
 
 }
 // ######################################################################### 
@@ -668,14 +597,10 @@ void say(char *line) {
 	char *nick;
 
     nick=getNickname(line);
+	channel=getAccessChannel(line);
 
-	if (!(channel=getAccessChannel(line))){
-		notice(nick,MSG_NOT_CHANNELOPT);
-		notice(nick,MSG_SAY_ERR);
-		return;
-	}
-
-	if(!(parameters=getParameters(line))) {
+	parameters=getParameters(line);
+	if(!strlen(parameters)) {
 		notice(nick,MSG_SAY_ERR);
 		return;
 	}
@@ -694,17 +619,11 @@ void kickuser(char *line) {
 	char *pos;
 
 	nick=getNickname(line);
-	
-
-	// get  the  channel
-	if (!(channel=getAccessChannel(line))) {
-		notice(nick,MSG_NOT_CHANNELOPT);
-		notice(nick,MSG_KICK_ERR);
-		return;
-	}
+	channel=getAccessChannel(line);
 
 	// get parameters
-	if (!(parameter=getParameters(line))) {
+	parameter=getParameters(line);
+	if (!strlen(parameter)) {
 		notice(nick,MSG_KICK_ERR);
 		return;
 	}
@@ -715,6 +634,8 @@ void kickuser(char *line) {
 		reason=(char*)malloc(sizeof(char));
 		*reason='\0';
     } else {
+		// set null byte  for  nick
+		*pos='\0';
 		// over jump the  space
 		pos++;
 		reason=(char*)malloc((strlen(pos)+1)*sizeof(char));
@@ -723,7 +644,6 @@ void kickuser(char *line) {
 	}
 
 	// parse nick
-	strtok(parameter," ");
 	kicknick=malloc((strlen(parameter)+1)*sizeof(char));
 	strcpy(kicknick,parameter);
 
@@ -743,19 +663,12 @@ void usermode(char *line){
 	char *key;
 	char *mods;
 	char *oldmods;
-	char newmods[MAX_USERMODE_SIZE];
+	char newmods[strlen(USER_MODS)+2];
 
 	int len,i,j;
 
     nick=getNickname(line);
-	
-
-	// get the channel for modify
-	if (!(channel=getAccessChannel(line))) {
-		notice(nick,MSG_NOT_CHANNELOPT);
-		notice(nick,MSG_USERMODE_ERR);
-		return;
-	}
+	channel=getAccessChannel(line);
 
 	// check the channel
 	if (!(exist_db(CHANNEL_DB,channel))) {
@@ -764,10 +677,7 @@ void usermode(char *line){
 	}
 
 	// get parameters
-	if (!(parameters=getParameters(line))) {
-		notice(nick,MSG_USERMODE_ERR);
-		return;
-	}
+	parameters=getParameters(line);
 
 	// user mods
 	DEBUG("Modify user mods");
@@ -833,14 +743,12 @@ void usermode(char *line){
 	key=(char*)malloc((strlen(login)+strlen(channel)+1)*sizeof(char));
 	sprintf(key,"%s%s",login,channel);
 
+	oldmods=get_db(ACCESS_DB,key);
+
 	// get the  old mods for  a  user from the  access db
-	if (!(oldmods=get_db(ACCESS_DB,key))) {
-        // get the old mods for a master
-		if (!(oldmods=get_db(ACCESS_DB,login))) {
-			// set empty mods
-			oldmods=(char *)malloc(sizeof(char));
-			*oldmods='\0';
-		}
+	if (!strlen(oldmods)) {
+        // get the old mods for user as master
+		oldmods=get_db(ACCESS_DB,login);
 	}
 
 	// add or remove the mods
@@ -883,9 +791,11 @@ void usermode(char *line){
 	}
 	
 	// identify the  login and set the rights
-	if ((usernick=get_db(USERTONICK_DB,login))) {
+	usernick=get_db(USERTONICK_DB,login);
+	if (strlen(usernick)) {
 		mode(channel,mods,usernick);
 	}
+
 	notice(nick,MSG_USERMODE_OK);
 }
 // ######################################################################### 
@@ -897,53 +807,24 @@ void chanmode(char *line) {
 // Event handler: NICK
 // ######################################################################### 
 void nickchg(char *line) {
-	char *nick;
+	char *netmask;
 	char *login;
-	char *newnick;
+	char *newnetmask;
 
-	nick=getNickname(line);
-	login=get_db(NICKTOUSER_DB,nick);
+	netmask=getNetmask(line);
+	login=get_db(NICKTOUSER_DB,netmask);
 
-	newnick=strstr(line," :");
-	newnick+=2;
-    strtok(newnick,"\r");
+	newnetmask=strstr(line," :");
+	newnetmask+=2;
+    strtok(newnetmask,"\r");
 
-	del_db(NICKTOUSER_DB,nick);
-	add_db(NICKTOUSER_DB,newnick,login);
-	replace_db(USERTONICK_DB,login,newnick);
-
-	DEBUG("Changethe nick \"%s\" to \"%s\"",nick,newnick);
-
-}
-// ############################################################################# 
-boolean log_on(char *nick,char *login) {
-	extern pthread_mutex_t account_mutex;
-	time_t timestamp;
-	char str_timestamp[32];
-
-	if (exist_db(NICKTOUSER_DB,nick)) {
-		return false;
+	// replace  the netmask
+	if (del_db(NICKTOUSER_DB,netmask)) {
+		add_db(NICKTOUSER_DB,newnetmask,login);
+		replace_db(USERTONICK_DB,login,newnetmask);
 	}
-    
-	pthread_mutex_lock(&account_mutex);
-	add_db(NICKTOUSER_DB,nick,login);
-	add_db(USERTONICK_DB,login,nick);
-	pthread_mutex_unlock(&account_mutex);
 
-	DEBUG("User log in");
-	
-	// build the timestamp
-    time(&timestamp);
-	sprintf(str_timestamp,"%ld",timestamp);
+	DEBUG("Changethe netmask \"%s\" to \"%s\"",netmask,newnetmask);
 
-	// set the last login timestamp
-	if (exist_db(TIMELOG_DB,login)) {
-		replace_db(TIMELOG_DB,login,str_timestamp);
-		DEBUG("Update timestamp %s for %s",str_timestamp,login);
-	} else {
-		add_db(TIMELOG_DB,login,str_timestamp);
-		DEBUG("Add timepstamp %s for %s",str_timestamp,login);
-	}
-	return true;
 }
 

@@ -51,7 +51,8 @@ void connectServer(void) {
 	// resolve hostname
 	hostaddr=gethostbyname(setup.server);
 	if (!hostaddr) {
-		perror(ERR_RESOLVE_HOSTNAME);
+		perror(SYSLOG_RESOLVE_HOSTNAME);
+		syslog(LOG_ERR,SYSLOG_RESOLVE_HOSTNAME);
 		exit(errno);
 	}
 	DEBUG("Connecting to %s",hostaddr->h_name);
@@ -61,21 +62,24 @@ void connectServer(void) {
 	// resolve protocol
 	protocol = getprotobyname("tcp");
 	if (!protocol) {
-		perror(ERR_RESOLVE_PROTOCOL);
+		perror(SYSLOG_RESOLVE_PROTOCOL);
+		syslog(LOG_CRIT,SYSLOG_RESOLVE_PROTOCOL);
 		exit(errno);
 	}
 
 	// create the socket
 	sockid=socket(PF_INET,SOCK_STREAM,protocol->p_proto);
 	if (sockid <= 0) {
-		perror(ERR_SOCKET);
+		perror(SYSLOG_SOCKET);
+		syslog(LOG_CRIT,SYSLOG_SOCKET);
 		exit(errno);
 	}
 
 
 	// connect to server
 	if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
-		perror(ERR_CONNECT);
+		perror(SYSLOG_CONNECT);
+		syslog(LOG_CRIT,SYSLOG_CONNECT);
 		exit(errno);
 	}
 }
@@ -96,7 +100,8 @@ void  send_line(char *line) {
 	msleep(setup.sendDelay);
 	
 	if (!send(sockid,line,strlen(line),0)){
-		perror(ERR_SEND);
+		perror(SYSLOG_SEND);
+		syslog(LOG_CRIT,SYSLOG_SEND);
 		exit(errno);
 	}
 
@@ -112,7 +117,8 @@ void  recv_line(char *line,unsigned int len) {
 	int str_len;
 	
 	if (!(str_len=recv(sockid,line,len,0))){
-		perror(ERR_RECV);
+		perror(SYSLOG_RECV);
+		syslog(LOG_CRIT,SYSLOG_RECV);
 		exit(errno);
 	}
 	line[str_len]='\0';

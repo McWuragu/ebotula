@@ -18,7 +18,6 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <sys/types.h>
-#include <sys/time.h>
 
 #include "utilities.h"
 #include "parameter.h"
@@ -59,11 +58,16 @@ int main(int argc,const char *argv[]) {
 	MsgBufType msg;
 	bzero(&msg,sizeof(MsgBufType));
     
+	// versions ausgabe
 	printf(VERSIONSTR);
+
+	openlog(PROGNAME,0,LOG_DAEMON);
+	syslog(LOG_NOTICE,SYSLOG_BOT_START);
 
 	// check for parameter
 	if (argc>1) {
 		cmd_line(argc,argv);
+		syslog(LOG_NOTICE,SYSLOG_READ_CMD);
 	}
 
 	//  checking  config  file path
@@ -77,7 +81,7 @@ int main(int argc,const char *argv[]) {
 
 	// read config file
 	read_config_file();
-
+    syslog(LOG_NOTICE,SYSLOG_READ_CONFFILE);
 	
 
 	// check config datums
@@ -118,18 +122,30 @@ int main(int argc,const char *argv[]) {
 
 
 	if (setup.newMaster) {
-		dialogMaster();
+		if (!dialogMaster()){
+			closeDatabase();
+			exit(-1);
+		}
 	}
 	
 	// create the network connection
 	if ((setup.server!=NULL) && (setup.port!=NULL)) {
-		printf("Try connect to %s:%s\n",setup.server,setup.port);
+		printf(SYSLOG_TRY_CONNECT,setup.server,setup.port);
+		printf("\n");
+		
+		syslog(LOG_INFO,SYSLOG_TRY_CONNECT,setup.server,setup.port);
+		
 		connectServer();
-		printf("Connected to the server\n");
+		
+		syslog(LOG_INFO,SYSLOG_IS_CONNECT);
+		
+		printf(SYSLOG_IS_CONNECT);
+		printf("\n");
 	} else {
 		closeDatabase();
 		errno=EINVAL;
-		perror(ERR_FAILED_NETPARA);
+		perror(SYSLOG_FAILED_NETPARA);
+		syslog(LOG_ERR,SYSLOG_FAILED_NETPARA);
 		exit(errno);
 	}
 
@@ -139,13 +155,15 @@ int main(int argc,const char *argv[]) {
 	pthread_mutex_init(&account_mutex, NULL);
 	
 	irc_connect();
-	printf("Log on the irc service\n");
-	printf("The bot is runing....\n");
+    printf(SYSLOG_BOT_RUN);
+	printf("\n");
+	syslog(LOG_NOTICE,SYSLOG_BOT_RUN);
 
 	// open msg queue
 	key=getpid();
 	if ((msgid=msgget(key,0600 | IPC_CREAT ))<0) {
-		perror(ERR_MSG);
+		perror(SYSLOG_MSG_QUEUE);
+		syslog(LOG_CRIT,SYSLOG_MSG_QUEUE);
 		exit(errno);
 	}
 
@@ -155,18 +173,17 @@ int main(int argc,const char *argv[]) {
 	signal(SIGABRT,stopParser);
 	signal(SIGQUIT,stopParser);
 
-
 	#ifndef _DEBUG
 	// make a daemon 
 	daemon(true,true);
 	#endif
-
+	
 	// create the threads
 	pthread_create(&timeThread,NULL,synchron,NULL);
 	threads=(pthread_t *)malloc(setup.thread_limit*sizeof(pthread_t));
 	for (i=0;i<setup.thread_limit;i++) {
 		pthread_create(&threads[i],NULL,action_thread,NULL);
-		DEBUG("Thread %d is running",i);
+		syslog(LOG_NOTICE,SYSLOG_THREAD_RUN,i);
 	}
 
 	// join the channels
@@ -216,7 +233,8 @@ int main(int argc,const char *argv[]) {
 
 	}
 
-	DEBUG("Stop the timing thread");
+	syslog(LOG_NOTICE,SYSLOG_BOT_STOP);
+    DEBUG("Stop the timing thread");
 	pthread_cancel(timeThread);
 	pthread_join(timeThread,NULL);
 
@@ -236,7 +254,7 @@ int main(int argc,const char *argv[]) {
 	msgctl(msgid,IPC_RMID,NULL);
 	disconnectServer();
     closeDatabase();
-
+	closelog();
 	return(0);
 
 }

@@ -9,8 +9,8 @@
 
 #include "utilities.h"
 #include "irc.h"
-#include "dbaccess.h"
 #include "type.h"
+#include "account.h"
 #include "timing.h"
 
 
@@ -33,15 +33,19 @@ void *synchron(void *argv){
 		ping(setup.server);
 
 		// remove dead logins
-		if ((newTime-lastRemoveDeadLogins)>=(setup.AutoLoggoff*86400)) {
+		if ((newTime-lastRemoveDeadLogins)>=7200) {
 			DEBUG("Remove dead logins");
+			rmDeadLogins(newTime-setup.AutoLoggoff*86400);
 			time(&lastRemoveDeadLogins);
 		}
 
 		// remove dead accounts
-		if ((newTime-lastRemoveDeadAccounts)>=(setup.AccountLiveTime*86400)) {
+		if ((newTime-lastRemoveDeadAccounts)>=3600) {
 			DEBUG("Remove dead accounts");
 			time(&lastRemoveDeadAccounts);
 		}
     }
 }
+
+//#######################################################################
+

@@ -6,7 +6,7 @@ CONFDIR=./
 SRC_DIR=./
 MAKEFLAGS+= -j2
 CC=gcc
-CFLAGS=	-Wall -g -D_DEBUG -DVERSION=\"$(VERSION)\" \
+CFLAGS=	-Wall -D_DEBUG -g -DVERSION=\"$(VERSION)\" \
 	-DDATABASEPATH=\"$(DATABASEPATH)\" \
 	-DCONFDIR=\"$(CONFDIR)\" 
 LDFLAGS= -lpthread -lgdbm -lcrypt
@@ -27,6 +27,7 @@ OBJS=   parameter.o \
 	extract.o \
 	parser.o \
 	timing.o \
+	account.o \
 	ircbot.o 
 
 DEPS= $(patsubst %.o,%.d,$(OBJS))

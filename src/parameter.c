@@ -226,7 +226,8 @@ void read_config_file(void) {
 	errno=0;
 
 	if ((fd=fopen(setup.configfile,"r"))==NULL) {
-		perror(ERR_CONFIG_FILE);
+		perror(SYSLOG_CONFIG_FILE);
+		syslog(LOG_ERR,SYSLOG_CONFIG_FILE);
         exit(errno);
 	}
 
@@ -334,50 +335,59 @@ void read_config_file(void) {
 }
 
 // ############################################################################# 
-void dialogMaster(void){
-	char  name[18],passwd[10],repasswd[10];
+boolean dialogMaster(void){
+	char  name[9],passwd[PASSWD_LENGTH+1],repasswd[PASSWD_LENGTH+1];
 
 	// insert the login name
 	printf(MSG_MASTER_TITLE);
 	printf(MSG_MASTER_LOGIN);
-	fgets(name,17,stdin);
+	fgets(name,8,stdin);
+
+	trim(name);
+	StrToLower(name);
 
 	// check loging
-	if (strpbrk(name,NOT_ALLOW_CHAR)) {
+	if (strpbrk(name,NOT_ALLOW_CHAR) || !strlen(name)) {
 		fprintf(stderr,ERR_NOT_ALLOW_CHAR);
-		exit(1);
+		fprintf(stderr,"\n");
+		return false;
 	}
 
 
 	// insert the password
 	printf(MSG_MASTER_PASS);
-	fgets(passwd,8,stdin);
+	fgets(passwd,PASSWD_LENGTH+1,stdin);
 	printf(MSG_MASTER_REPASS);
-	fgets(repasswd,8,stdin);
-
+    fgets(repasswd,PASSWD_LENGTH+1,stdin);
 
 	// check the password
 	if (strcmp(passwd,repasswd)) {
 		fprintf(stderr,MSG_MASTER_PASS_ERR);
-		exit(1);
-	} else if (strpbrk(passwd," ")) {
+		fprintf(stderr,"\n");
+        return false;
+	} else if (strpbrk(passwd," \t")) {
 		fprintf(stderr,ERR_NOT_ALLOW_CHAR);
-		exit(1);
+		fprintf(stderr,"\n");
+		return false;
 	}
 
-	trim(name);
 	trim(passwd);
-	StrToLower(name);
 
 	// create account
 	if (!add_db(USER_DB,name,passwd)) {
-		printf(MSG_MASTER_EXISTS);
-		exit(1);
+		fprintf(stderr,MSG_NICK_EXIST);
+		fprintf(stderr,"\n");
+		return false;
 	}
 
 
 	if (!add_db(ACCESS_DB,name,"+ov")) {
-		printf(MSG_MASTER_ERR);
-		exit(1);
+		del_db(USER_DB,name);
+		fprintf(stderr,MSG_MASTER_ERR);
+		fprintf(stderr,"\n");
+		return false;
 	}
+
+	return true;
 }
+

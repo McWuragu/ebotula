@@ -10,15 +10,13 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
-
+#include <syslog.h>
 
 
 // Macro for debugging msg
 #ifdef _DEBUG
 	#include <stdio.h>
-    #define DEBUG(str...)  fprintf(stderr,"Debug: "); \
-						fprintf(stderr,str); 	\
-						fprintf(stderr,"\n");	 
+    #define DEBUG(str...) syslog(LOG_DEBUG,str);
 #else
     #define DEBUG(str...)  
 #endif
@@ -30,7 +28,7 @@
 * @param line a pointer of a string for modify
 */	  
 void trim(char *line);
-void StrToLower(char *str);
+void StrToLower(char *str);							 
 void print_msg(const char *msg[]);
 
 /**

@@ -21,31 +21,34 @@ char *getNickname(char *line){
 	str=(char*)malloc((strlen(line)+1)*sizeof(char));
 	strcpy(str,line);
 
-	if (!strtok(str,"!")) {
-		return NULL;
+	if (!strtok(str,"!") || str[0]!=':') {
+		return "";
+	} else {
+		nick=(char *)malloc((strlen(str))*sizeof(char));
+		strcpy(nick,&str[1]);
+		return nick;
 	}
 
-	nick=(char *)malloc((strlen(str)+1)*sizeof(char));
-	strcpy(nick,&str[1]);
-	return nick;
+
 }
 // ############################################################################# 
 char *getNetmask(char *line){ 
-	char *netmask,*str, *pos;
+	char *netmask,*str;
+
 		
 	str=(char *)malloc((strlen(line)+1)*sizeof(char));
 	strcpy(str,line);
     
-	if (!(pos=strchr(str,'!'))) {
-		return  NULL;
+	if ((str[0]!=':') || !strchr(&str[1],':') || !strchr(str,'!') || !strchr(str,'@') || !strtok(str," ")) {
+		return "";
+	} else {
+		netmask=(char *)malloc(strlen(str)*sizeof(char));
+		strcpy(netmask,&str[1]);
+		return netmask;
 	}
-	
-	strtok(pos," ");
 
-	netmask=(char *)malloc(strlen(pos)*sizeof(char));
-	strcpy(netmask,&pos[1]);
 
-	return netmask;
+
 }
 // ############################################################################# 
 char *getCommand(char *line) {
@@ -57,8 +60,8 @@ char *getCommand(char *line) {
 
 	// find the  secondary double point
 	// and put after this a null byte
-	if (!(pos=strchr(&tmp[1],':'))) {
-		return NULL;
+	if (tmp[0]!=':' || !(pos=strchr(&tmp[1],':'))) {
+		return "";
 	}
 	pos[1]='\0';
 	
@@ -75,7 +78,7 @@ char *getArgument(char *line) {
 	
 	// found  the begining  of Parameter 
 	if ((str=strstr(line," :!"))==NULL) {
-		return NULL;
+		return "";
 	} else {
 		
 		
@@ -101,23 +104,20 @@ char *getArgument(char *line) {
 		}
 	}
 	
-	return NULL;
+	return "";
 }
 // ######################################################################### 
 char *getChannel(char *line){
-	char *pramble=getCommand(line);
+	char *pramble;
 	char *pos;
 	char *channel;
 
 	// extract  the substring
-	if (!(pramble=getCommand(line))) {
-		return NULL;
-	}
-	
+	pramble=getCommand(line);
 
 	// look for the channelname
 	if (!(pos=strchr(pramble,'#'))) {
-		return NULL;
+		return "";
 	}
 
 	// market the end  of channelname
@@ -139,12 +139,13 @@ char *getAccessChannel(char *line) {
 	parameter=getArgument(line);
 
 	// look channel name  in preamble
-	if ((parameter == NULL) || (parameter[0]!='#')) {
+	if (parameter[0]!='#') {
 	
 		// look for channelname  as preamble
-		if (!(channel=getChannel(line))) {
+		channel=getChannel(line);
+		if (!strlen(channel)) {
 			if (!(pos=strstr(line," :#"))) {
-			return NULL;
+			return "";
 			}
 			// move to '#'
 			pos+=2;
@@ -159,7 +160,7 @@ char *getAccessChannel(char *line) {
 		strtok(parameter," ");
 		// check the  chrakter in the  channel name
 		if (strpbrk(parameter,CHANNEL_NOT_ALLOW_CHAR)) {
-			return NULL;
+			return "";
 		}
 		channel=(char *)malloc((strlen(parameter)+1)*sizeof(char));
 		strcpy(channel,parameter);
@@ -179,20 +180,20 @@ char  *getTopic(char *channelstr) {
 
 	// look for topic;
 	if (!(pos=strchr(str,'\t'))) {
-		return NULL; 
+		return ""; 
 	}
 		
 	pos++;
 
 	// look for the end  of topic
 	if (!(pos2=strchr(pos,'\t'))) {
-		return NULL;
+		return "";
 	}
 	*pos2='\0';
 
 	// check length
 	if (!strlen(pos)) {
-		return NULL;
+		return "";
 	}
 	topic=(char *)malloc((strlen(pos)+1)*sizeof(char));
 	strcpy(topic,pos);
@@ -206,14 +207,14 @@ char  *getGreating(char *channelstr) {
 
     // look for the begin  of greating
 	if (!(pos=strrchr(channelstr,'\t'))) {
-		return NULL;		  
+		return "";		  
     }
 
 	pos++;
 
 	// check length
 	if (!strlen(pos)) {
-		return NULL;
+		return "";
 	}
 
 	greating=(char *)malloc((strlen(pos)+1)*sizeof(char));
@@ -231,7 +232,7 @@ char *getMode(char *channelstr){
 	strcpy(str,channelstr);
 
 	if (!(pos=strchr(str,'\t'))) {
-		return NULL;
+		return "";
 	} else {
 		*pos='\0';
 		mode=(char*)malloc((strlen(str)+1)*sizeof(char));
@@ -245,14 +246,12 @@ char *getParameters(char *line){
 	char *arg;
 	char *pos; 
 
-	if (!(arg=getArgument(line))) {
-		return NULL;
-	}
+	arg=getArgument(line);
 
 	if (arg[0]!='#') {
 		return arg;
 	} else if(!(pos=strchr(arg,' '))) {
-		return NULL;
+		return "";
 	} else {
 		// jump over the space
 		pos++;

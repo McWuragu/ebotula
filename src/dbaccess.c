@@ -14,7 +14,6 @@
 #include <crypt.h>
 #include <pthread.h>
 
-
 #include "utilities.h"
 #include "messages.h"
 #include "dbaccess.h"
@@ -59,7 +58,7 @@ void init_database(void) {
 	dbf_access=gdbm_open(access,512,GDBM_WRCREAT,0600,NULL);
 	dbf_banlist=gdbm_open(banlist,512,GDBM_WRCREAT,0600,NULL);
 	dbf_timelog=gdbm_open(timelog,512,GDBM_WRCREAT,0600,NULL);
-	DEBUG("Initizale the database");
+	syslog(LOG_INFO,SYSLOG_INIT_DB);
 }
 // ############################################################################# 
 void closeDatabase(void) {
@@ -134,8 +133,6 @@ boolean add_db(int db,char *_key, char *_value) {
 	gdbm_store(dbf,key,value,GDBM_INSERT);
 	pthread_mutex_unlock(&dbaccess_mutex);
 	
-	DEBUG("Add datum to database");
-
 	return true;
 }
 // ############################################################################# 
@@ -168,7 +165,6 @@ boolean replace_db(int db,char *_key, char *_value){
 	gdbm_store(dbf,key,value,GDBM_REPLACE);
 	pthread_mutex_unlock(&dbaccess_mutex);
 	
-	DEBUG("Replace datum to database");
 
 	return true;
 
@@ -194,7 +190,6 @@ boolean del_db(int db,char *_key){
 	gdbm_delete(dbf,key);
 	pthread_mutex_unlock(&dbaccess_mutex);
 
-	DEBUG("Datum removed");
 	return true;
 }
 // ############################################################################# 
@@ -227,10 +222,8 @@ boolean check_db(int db,char *_key,char* _value){
 
 
 	if (strcmp(value.dptr,__value)) {
-		DEBUG("Datum not equal");
 		return false;
 	}
-	DEBUG("Datum equal");
 	return true;
 }
 // ############################################################################# 
@@ -263,10 +256,12 @@ char * get_db(int db,char *_key){
 	char *str;
 	extern pthread_mutex_t dbaccess_mutex;
 
-	CHECK_NO_EXIST(db,_key);
+	//CHECK_NO_EXIST(db,_key);
+
+	if (!exist_db(db,_key)){return "";}
 
 	if (!(dbf=get_dbf(db))) {
-		return false;
+		return "";
 	}
 
 	key.dptr=_key;
@@ -316,7 +311,6 @@ char ** list_db(int db){
 	}
 
 
-	DEBUG("%d channels found",count);
 
 	// allocat the memory and set  end mark
 	channellist=(char **)malloc((count+1)*sizeof(char *));
@@ -337,10 +331,7 @@ char ** list_db(int db){
 		free(key.dptr);
 		key=nextkey;
 
-		DEBUG("Found channel %s",channellist[i]);
 	}
-
 	return channellist;
 }
-
 
