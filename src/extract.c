@@ -329,3 +329,37 @@ char ** splitString(char const * pString,int nRetArraySize) {
     }
     return ppStrings;
 }
+// #############################################################################
+char * getBanmmask(char const *pLine){ 
+	char *pBanmask,*pStr;
+	char * pChar,pChar2;
+	// getting netmask to get banmask
+	pStr=getNetmask(pLine);
+	if (pStr[0]!='\0')
+	{
+		// get the position of '!'
+		pChar=strchr(pStr,"!");
+		// jump over '!'
+		pChar++;
+		// copy from '!'+1 to pStr
+		if ((pBanmask=(char*) malloc(strlen(pChar)+1))==NULL)
+		{
+			DEBUG("getBanmask: Error: Not enoug Memory!");
+			return NULL;
+		}
+		strcpy(pBanmask,pChar);
+		strcpy(pStr,pBanmask);
+		// setting after @ a NULL-Byte
+		pChar=strchr(pBanmask,"@");
+		pChar[1]='*';
+		pChar[2]='\0';
+		pChar=strchr(pStr,".");
+		// add rest of the netmask
+		strcat(pBanmask,pChar);
+		
+		return pBanmask;
+	}
+	
+	return NULL; 
+}
+
