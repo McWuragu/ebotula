@@ -29,32 +29,32 @@
 char	* bstr[]={
     "# Config file for the ebotula", 	
     "# The name of the bot",		
-    "botname=",
+    KEY_BOTNAME,"=",
     "\n# String for the realname",
-    "realname=",
+    KEY_REALNAME,"=",
     "\n# execute the bot as this user and this group", 
-    "user=",
-    "group=",
+    KEY_EXEUSER,"=",
+    KEY_EXEGROUP,"=",
     "\n# Number of the created threads",
-	"threadlimit= ",
+	KEY_THREADLIMIT,"= ",
 	"\n# The server the bot connects to",
-    "servername=",
+    KEY_SERVER,"=",
 	"\n# The port the bot connects to",
-	"port=",
+	KEY_PORT,"=",
 	"\n# The location of the database for the bot",
-	"databasepath=",
+	KEY_DATABASEPATH,"=",
 	"\n# The delay time in millisecond for sending",
 	"# It is used for the prevention of excess flooding",
-	"firstsenddelay=",
-	"secsenddelay=",
-	"sendlinelimit=",
+	KEY_FASTSENDDELAY,"=",
+	KEY_SLOWSENDDELAY"=",
+	KEY_FASTSENDLIMIT"=",
 	"\n# The time in days an account exists.",
 	"# Unused accounts will be removed after this time.",
-	"accountlivetime=",
+	KEY_ALT,"=",
     "\n# The time limit in days for maximum login time",
-	"autologoff=",
+	KEY_AUTOLOGOFF,"=",
 	"\n# The time limit in seconds for ping timeout.",
-	"pingtimeout="
+	KEY_PINGTIMEOUT,"="
     };
 
 /**
@@ -113,7 +113,7 @@ void write_baseconfig()
 		fprintf(fd,"%s\n",bstr[i++]);
 		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iSendDelay);
 		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iSendSafeDelay);
-		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iSendSafeLine);
+		fprintf(fd,"%s%d\n",bstr[i++],sSetup.nFastSendingCharLimit);
 		/* Accountlivtime */
 		fprintf(fd,"%s\n",bstr[i++]);
 		fprintf(fd,"%s\n",bstr[i++]);
