@@ -26,6 +26,9 @@ sets the limit for ping timeout
 \fB\-d\fP path
 sets the path to the directory for the databases
 .TP 
+\fB\-e\fP milliseconds
+sets the delay time for the slow sending
+.TP
 \fB\-f\fP file
 sets a custom configuration file
 .TP 
@@ -44,7 +47,7 @@ sets the living time of an account in days
 To avoid "dead" accounts, unused accounts are removed after the time
 given by this parameter.
 .TP 
-\fB-l\fP characters
+\fB\-l\fP characters
 sets the limit of characters which can be send before the first sending
 delay level is used. This option is needed to avoid flooding errors.
 .TP
