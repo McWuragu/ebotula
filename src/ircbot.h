@@ -20,7 +20,6 @@
 #define DEFAULT_THREAD_LIMIT	3
 #define DEFAULT_REALNAME		"I'm a stupid bot"
 #define DEFAULT_BOTNAME			"Ebotula"
-#define DEFAULT_USER            "nobody"
 #define DEFAULT_PING_TIMEOUT	90
 
 #define DEFAULT_SEND_SAFE_DELAY 1750
@@ -32,9 +31,6 @@
 #define MIN_PINGTIME			60
 #define MAX_NICKS				3
 #define MAX_THREADS_LIMIT       25
-
-
-
 
 
 #define	PARAMETER_CHAR	'-'
@@ -52,6 +48,6 @@
 #define KEY_PINGTIMEOUT		"pingtimeout"
 #define KEY_SENDSAFEDELAY   "secsenddelay"
 #define KEY_SENDSAFELINE    "firstsendline"
-
-
+#define KEY_EXEUSER         "user"
+#define KEY_EXEGROUP        "group"
 #endif												

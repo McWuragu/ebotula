@@ -17,6 +17,7 @@
 #include <signal.h>
 #include <syslog.h>
 #include <pwd.h>
+#include <grp.h>
 #include <dirent.h>
 
 
@@ -60,12 +61,12 @@ int main(int argc,char * const argv[]) {
     PQueue pCommandQueue;
     uid_t uid;
     struct passwd *User;
+    struct group *Group;
 	char *sDirDummy;
     DIR *pDir;
 
     uid=geteuid();
-    User=getpwuid(uid);
-
+    
     // init config
     if (uid==0) {
         // database path
@@ -75,13 +76,9 @@ int main(int argc,char * const argv[]) {
         // config file path
         sSetup.configfile=(char *)malloc((strlen(CONFDIR)+strlen(CONFFILE)+1)*sizeof(char));
         sprintf(sSetup.configfile,"%s%s",CONFDIR,CONFFILE);
-    
-        // change the user
-        User=getpwnam(sSetup.sExeUser);
-        setreuid(User->pw_uid,User->pw_uid);
-        uid=User->pw_uid;
-
     } else {
+        User=getpwuid(uid);
+        
         // built the path for the  user dir
         sDirDummy=(char*)malloc((strlen(User->pw_dir)+strlen(DEFAULT_USER_CONFDIR)+1)*sizeof(char));
         sprintf(sDirDummy,"%s%s",User->pw_dir,DEFAULT_USER_CONFDIR);
@@ -114,10 +111,7 @@ int main(int argc,char * const argv[]) {
     sSetup.iSendSafeLine=DEFAULT_SEND_SAFE_LINE;
     sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
     sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
-    sSetup.sExeUser=DEFAULT_USER;
-
     
-
     
     // versions ausgabe
     printf(VERSIONSTR);
@@ -155,7 +149,7 @@ int main(int argc,char * const argv[]) {
     // check for parameter
     if (argc>1) {
         ComandLineParser(argc,argv);
-        syslog(LOG_NOTICE,SYSLOG_READ_CMD);
+        syslog(LOG_NOTICE,getSyslogString(SYSLOG_READ_CMD));
     }
 
     // check the automatic times
@@ -170,16 +164,32 @@ int main(int argc,char * const argv[]) {
 
     
     
-    // change the uid for root
+    // change the uid and the gid for root
     if (uid==0) {
-    
+        // group
+        if (sSetup.sExeGroup){
+            if ((Group=getgrnam(sSetup.sExeGroup)))
+               setgid(Group->gr_gid);
+            else 
+                syslog(LOG_ERR,getSyslogString(SYSLOG_GROUP_NOT_FOUND));
+        }
+
+        // user
+        if (sSetup.sExeUser) {
+            if ((User=getpwnam(sSetup.sExeUser)))
+               setuid(User->pw_uid);
+            else 
+                syslog(LOG_ERR,getSyslogString(SYSLOG_USER_NOT_FOUND));
+        }
     }
    
+
     DEBUG("----------------------------------------------\n");
     DEBUG("Server %s\n",sSetup.server);
     DEBUG("Port %s\n",sSetup.port);
     DEBUG("Nickname %s\n", sSetup.botname);
     DEBUG("Realname %s\n", sSetup.realname);
+    DEBUG("Execute as %s.%s\n",sSetup.sExeUser,sSetup.sExeGroup);
     DEBUG("Threads %d\n",sSetup.thread_limit);
     DEBUG("Config file %s\n",sSetup.configfile);
     DEBUG("Database path %s\n",sSetup.pDatabasePath);
@@ -192,6 +202,7 @@ int main(int argc,char * const argv[]) {
     DEBUG("-----------------------------------------------\n");
 
     syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));
+
 
     // init Database and the mutex for  access to the database
     initDatabases();
