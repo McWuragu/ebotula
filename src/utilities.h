@@ -44,9 +44,9 @@
 #endif
 
 #ifdef HAVE_GETTEXT
-	#define _(STRING)    gettext(STRING)
+    #define _(STRING)    gettext(STRING)
 #else
-	#define _(STRING)   (STRING)
+    #define _(STRING)   (STRING)
 #endif
 /**
 * This function trim a string. It remove leading, folling and
