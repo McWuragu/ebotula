@@ -5,6 +5,7 @@ ToDo List
 	- !banlist
 	- !allban
 - Implement the banlist (set and execute)
+- global bot master message
 - Complete the  help system
 - Code cleanup
 - Debuggen
@@ -17,5 +18,3 @@ ToDo List
 - join in channel with keyword
 - convert defines to constantes
 - make the answer type (msg/notice) dependent from the type of the request
-- modify the access rights in the rpm 
-- make a automatic creation of the default config file for user
