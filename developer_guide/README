@@ -155,52 +155,57 @@ Properties
 	- op
 	- master
 - zur Runtime ein Prozess der Inputstream filtert
-- relevante Einträge in msg-Queue leiten
-- Child-Threas lesen  zyklisch die msg-Queue
-- Child-Thread arbeiten Einträge up
-- Child-Thread für zyklische Aufgabe
+- relevante Einträge in Queue leiten
+- einige Threads lesen  zyklisch die Queue und fürht  Kommandos aus
+- ein Thread für zyklische Aufgabe
+- ein Thread überwacht Sendingqueu und sendt
 - Steuerung des Bots per Konfigurationsdatei und Kommandozeile
 
 Kommandozeilenoptionen
 ----------------------
-ircbot [Options]
+ebotula [Options]
 
         Options:
         -a days         Set the time in days for the automatic logoff.
         -b name         Set the name of the bot.
         -c sec          Set the ping timeout of the connection.
         -d path         Use this path for the database
-        -e ms           Set the second delay time in millisecond for sending.
+        -e ms           Set the delay time in millisecond for the slow sending.
         -f file         Use this config file.
-	-g group	Setzt die Group unter der gestartet werden soll (nur root).
+        -g group        Set the group under wich the bot run (only root).
         -h              Print this help information.
-        -l lines        Set the line limit for the first sending delay level.
         -k days         Set the  account live time in days.
+        -l char Set the line limit for the first sending delay level.
         -m              Create a bot master.
-        -n ms           Set the first delay time in millisecond for sending.
+        -n ms           Set the delay time in millisecond for the fast sending.
         -p port         Set the port of the irc server.
         -r string       Set the output  for a request of the real name.
         -s server       Set the irc server name.
         -t count        Set the number of creating  threads.
+        -u user         Set the user under which the bot run (root only).
         -v              Print version.
 
 Konfigurationsfileeinträge
 -------------------------
-# Config file for  the lugse irc bot
+# Config file for the ebotula
+# copyright 2003 by Steffen Laube
 # Kommentar
 
-botname = Tux
-realname="IRC Bot"
-threadlimit= 6
+botname=ebotula
+realname="I'm an IRC bot"
+user=nobody
+group=nobody
+threadlimit= 5
 servername=irc.fh-lausitz.de
 port = 6667
-databasepath=/var/ebotula
-firstsenddelay=750
-secsenddelay=1750
-sendlinelimit=20 
-autologoff=48
+databasepath=/usr/local/var/ebotula
+fastsenddelay=1500
+slowsenddelay=2500
+fastsendlimit=500
 accountlivetime=90
-pingtimeout=90
+autologoff=3
+pingtimeout=120
+
 
 Aufbau der Datenbank
 --------------------
