@@ -18,4 +18,3 @@ ToDo List
 - join in channel with keyword
 - invite in the channel by the  bot
 - convert defines to constantes
-- modify the parameter from the  other command handler (see inviteuser())
