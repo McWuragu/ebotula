@@ -1,5 +1,3 @@
 - The bot isn't complete protect for exess flooding
 - The bot can't join a keyword  protected channel
 - The bot don't join a channel after the  inviting from a other user
-- The bot/server can't ban operator on channel
-- The bot dies after !logoff of bot-master if ban set on server from bot-master/bot
