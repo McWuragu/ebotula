@@ -14,7 +14,7 @@
 #include <ctype.h>
 #include <syslog.h>
 
-#include "config.h"
+#include "ircbot.h"
 #include "irc.h"
 #include "utilities.h"
 #include "dbaccess.h"
@@ -208,8 +208,8 @@ void ComandLineParser(int argc,const char *argv[]) {
 					exit(errno);
 				}
 				// set database path
-				sSetup.database_path=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-				strcpy(sSetup.database_path,argv[i]);
+				sSetup.pDatabasePath=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+				strcpy(sSetup.pDatabasePath,argv[i]);
 				break;
 			case 'c':
 				DEBUG("Found ping timeout option");
@@ -313,10 +313,10 @@ void ConfigFileParser(void) {
 				}	
 				// set thread limit
 				sSetup.thread_limit=tmp;
-			} else  if ((!strcmp(key,KEY_DATABASEPATH))&& (sSetup.database_path==NULL)) {
+			} else  if ((!strcmp(key,KEY_DATABASEPATH))&& (sSetup.pDatabasePath==NULL)) {
 				// set database path
-				sSetup.database_path=(char *)malloc((strlen(value)+1)*sizeof(char));
-				strcpy(sSetup.database_path,value);
+				sSetup.pDatabasePath=(char *)malloc((strlen(value)+1)*sizeof(char));
+				strcpy(sSetup.pDatabasePath,value);
             } else if ((!strcmp(key,KEY_AUTOLOGOFF))&& (sSetup.AutoLoggoff<MIN_LOGOFF)) {
 				tmp=atoi(value);
 				if (tmp<=0) {
