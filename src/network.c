@@ -70,8 +70,9 @@ void connectServer(void) {
     hostaddr=gethostbyname(sSetup.server);
     if (!hostaddr) {
         perror(getSyslogString(SYSLOG_RESOLVE_HOSTNAME));
-        syslog(LOG_ERR,getSyslogString(SYSLOG_RESOLVE_HOSTNAME));
-        exit(errno);
+        /*syslog(LOG_ERR,getSyslogString(SYSLOG_RESOLVE_HOSTNAME));*/
+        logger(LOG_ERR,getSyslogString(SYSLOG_RESOLVE_HOSTNAME));
+	exit(errno);
     }
     DEBUG("Connecting to %s\n",hostaddr->h_name);
     
@@ -81,15 +82,17 @@ void connectServer(void) {
     protocol = getprotobyname("tcp");
     if (!protocol) {
         perror(getSyslogString(SYSLOG_RESOLVE_PROTOCOL));
-        syslog(LOG_CRIT,getSyslogString(SYSLOG_RESOLVE_PROTOCOL));
-        exit(errno);
+        /*syslog(LOG_CRIT,getSyslogString(SYSLOG_RESOLVE_PROTOCOL));*/
+        logger(LOG_CRIT,getSyslogString(SYSLOG_RESOLVE_PROTOCOL));
+exit(errno);
     }
 
     /* create the socket */
     sockid=socket(PF_INET,SOCK_STREAM,protocol->p_proto);
     if (sockid <= 0) {
         perror(getSyslogString(SYSLOG_SOCKET));
-        syslog(LOG_CRIT,getSyslogString(SYSLOG_SOCKET));
+        /*syslog(LOG_CRIT,getSyslogString(SYSLOG_SOCKET));*/
+	logger(LOG_CRIT,getSyslogString(SYSLOG_SOCKET));
         exit(errno);
     }
 
@@ -97,8 +100,9 @@ void connectServer(void) {
     /* connect to server */
     if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
         perror(getSyslogString(SYSLOG_CONNECT));
-        syslog(LOG_CRIT,getSyslogString(SYSLOG_CONNECT));
-        exit(errno);
+        /*syslog(LOG_CRIT,getSyslogString(SYSLOG_CONNECT));*/
+        logger(LOG_CRIT,getSyslogString(SYSLOG_CONNECT));
+exit(errno);
     }
 
 }
@@ -126,8 +130,9 @@ void SendLine(char* pMsg){
 
         /* send the line */
         if (!send(sockid,pMsg,nSendLength,0)){
-            syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));
-            stop=true;
+           /* syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));*/
+            logger(LOG_CRIT,getSyslogString(SYSLOG_SEND));
+	     stop=true;
         }
         DEBUG("send(%d/%d): %s",nCharPerMinute,sSetup.nFastSendingCharLimit,pMsg);
     
@@ -149,12 +154,14 @@ void  RecvLine(char *pLine,unsigned int len) {
     
     if (poll(&sPoll,1,sSetup.iTimeout*1000)) {
         if (!(str_len=recv(sockid,pLine,len,0))){
-            syslog(LOG_CRIT,getSyslogString(SYSLOG_RECV));
-            stop=true;
+           /* syslog(LOG_CRIT,getSyslogString(SYSLOG_RECV));*/
+            logger(LOG_CRIT,getSyslogString(SYSLOG_RECV));
+	    stop=true;
         }
     } else {
         stop=true;
-        syslog(LOG_NOTICE,getSyslogString(SYSLOG_TIMEOUT));
+       /* syslog(LOG_NOTICE,getSyslogString(SYSLOG_TIMEOUT));*/
+        logger(LOG_NOTICE,getSyslogString(SYSLOG_TIMEOUT));
     }
 
     pLine[str_len]='\0';

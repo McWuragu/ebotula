@@ -170,12 +170,14 @@ int main(int argc,char * const argv[]) {
 
     // read config file
     ConfigFileParser();
-    syslog(LOG_NOTICE,getSyslogString(SYSLOG_READ_CONFFILE));
+    logger(LOG_NOTICE,getSyslogString(SYSLOG_READ_CONFFILE));
+    /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_READ_CONFFILE));*/
     
     // check for parameter
     if (argc>1) {
         CommandLineParser(argc,argv);
-        syslog(LOG_NOTICE,getSyslogString(SYSLOG_READ_CMD));
+        /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_READ_CMD));*/
+	logger(LOG_NOTICE,getSyslogString(SYSLOG_READ_CMD));
     }
 
     // check the automatic times
@@ -196,16 +198,20 @@ int main(int argc,char * const argv[]) {
         if (sSetup.sExeGroup){
             if ((Group=getgrnam(sSetup.sExeGroup)))
                setegid(Group->gr_gid);
-            else 
-                syslog(LOG_ERR,getSyslogString(SYSLOG_GROUP_NOT_FOUND));
+            else {
+                /*syslog(LOG_ERR,getSyslogString(SYSLOG_GROUP_NOT_FOUND));*/
+	        logger(LOG_ERR,getSyslogString(SYSLOG_GROUP_NOT_FOUND));
+	    }
         }
 
         // user
         if (sSetup.sExeUser) {
             if ((User=getpwnam(sSetup.sExeUser)))
                seteuid(User->pw_uid);
-            else 
-                syslog(LOG_ERR,getSyslogString(SYSLOG_USER_NOT_FOUND));
+            else {
+                /*syslog(LOG_ERR,getSyslogString(SYSLOG_USER_NOT_FOUND));*/
+		logger(LOG_ERR,getSyslogString(SYSLOG_USER_NOT_FOUND));
+	    }
         }
     }
    
@@ -227,7 +233,8 @@ int main(int argc,char * const argv[]) {
     DEBUG("Autolog of after %dd\n",sSetup.AutoLoggoff);
     DEBUG("-----------------------------------------------\n");
 
-    syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));
+   /* syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));*/
+    logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_START));
 
 
     // init Database and the mutex for  access to the database
@@ -247,19 +254,23 @@ int main(int argc,char * const argv[]) {
     if ((sSetup.server!=NULL) && (sSetup.port!=NULL)) {
         printf("%s\n",getSyslogString(SYSLOG_TRY_CONNECT));
         
-        syslog(LOG_INFO,getSyslogString(SYSLOG_TRY_CONNECT));
+        /* syslog(LOG_INFO,getSyslogString(SYSLOG_TRY_CONNECT));*/
+	logger(LOG_INFO,getSyslogString(SYSLOG_TRY_CONNECT));
         
         connectServer();
         
-        syslog(LOG_INFO,getSyslogString(SYSLOG_IS_CONNECT));
-        
+       /* syslog(LOG_INFO,getSyslogString(SYSLOG_IS_CONNECT));*/
+	
+        logger(LOG_INFO,getSyslogString(SYSLOG_IS_CONNECT));
+ 
         printf("%s\n",getSyslogString(SYSLOG_IS_CONNECT));
     } else {
         closeDatabase();
         errno=EINVAL;
         perror(getSyslogString(SYSLOG_FAILED_NETPARA));
-        syslog(LOG_ERR,getSyslogString(SYSLOG_FAILED_NETPARA));
-        exit(errno);
+        /*syslog(LOG_ERR,getSyslogString(SYSLOG_FAILED_NETPARA));*/
+         logger(LOG_ERR,getSyslogString(SYSLOG_FAILED_NETPARA));
+	exit(errno);
     }
 
     
@@ -267,7 +278,8 @@ int main(int argc,char * const argv[]) {
     // connect to the server
     ConnectToIrc();
     printf("%s\n",getSyslogString(SYSLOG_BOT_RUN));
-    syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_RUN));
+    /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_RUN));*/
+    logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_RUN));
 
 
     // redefine the signal handler for to stop the bot
@@ -368,7 +380,8 @@ int main(int argc,char * const argv[]) {
 
     flushQueue(pCommandQueue);
 
-    syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));
+    /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));*/
+    logger(LOG_NOTICE,getSyslogString(SYSLOG_BOT_STOP));
     pthread_join(timeThread,NULL);
     
 
@@ -393,12 +406,14 @@ int main(int argc,char * const argv[]) {
     
     //  check for restart option
     if (again) {
-        syslog(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));
+        /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));*/
+	logger(LOG_NOTICE,getSyslogString(SYSLOG_RESTART));
         closelog();
         execvp(argv[0],argv);
         perror(getMsgString(ERR_RESTART));
     } else {
-        syslog(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));
+        /*syslog(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));*/
+	logger(LOG_NOTICE,getSyslogString(SYSLOG_STOPPED));
         closelog();
     }
     return(0);

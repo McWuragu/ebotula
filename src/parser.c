@@ -297,8 +297,9 @@ void *CommandExecutionThread(void *argv) {
                     ctcptime(pMsgItem);
                     break;
            		default:
-                    syslog(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
-                    break;
+                    /*syslog(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));*/
+                    logger(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
+		    break;
                 }
 
                 // remove  destroy the last popped Command
