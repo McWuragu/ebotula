@@ -486,7 +486,7 @@ boolean dialogMaster(void){
      struct termios stBuf, stBufsave;
     /* insert the login name */
     printf(_("Create a new master account\n\n"));
-    printf(_("Type the login: "));
+    printf(_("Type the login (max. 8): "));
     fgets(name,LOGIN_LENGTH,stdin);
 
     trim(name);
