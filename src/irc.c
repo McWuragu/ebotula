@@ -41,8 +41,12 @@ void user(void) {
 
     // calculat the command size
     buffer_size=strlen("USER")+strlen(pw->pw_name)+strlen(hostname)+strlen(sSetup.server)+strlen(sSetup.realname)+8;
-    buffer=(char *)malloc(sizeof(char)*buffer_size);
 
+	if ((buffer=(char *)malloc(sizeof(char)*buffer_size))==NULL)
+   	{
+	   DEBUG("user() - Can't allocate memory!\n");
+	   return;
+   	}	   
     // create the  commando string
     sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.server,sSetup.realname);
 
@@ -53,21 +57,37 @@ void user(void) {
 // #############################################################################
 void action(char *pTarget, char *pMsgStr){
     char *buffer;
-    buffer=(char *)malloc((strlen("ACTION ")+strlen(pMsgStr)+1)*sizeof(char));
+
+    if ((buffer=(char *)malloc((strlen("ACTION ")+strlen(pMsgStr)+1)*sizeof(char)))==NULL)
+	{
+	   DEBUG("action() - Can't allocate memory!\n");
+	   return;
+    }	   
+
     sprintf(buffer,"ACTION %s",pMsgStr);
     privmsg(pTarget,buffer);
 }
 // #############################################################################
 void privmsg(char *pTarget, char *pMsgStr){
     char *buffer;
-    buffer=(char *)malloc((strlen("PRIVMSG ")+strlen(pTarget)+strlen(pMsgStr)+5)*sizeof(char));
+    if ((buffer=(char *)malloc((strlen("PRIVMSG ")+strlen(pTarget)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
+	{
+	   DEBUG("privmsg() - Can't allocate memory!\n");
+	   return;
+    }	   
+
     sprintf(buffer,"PRIVMSG %s :%s\r\n",pTarget,pMsgStr);
     send_line(buffer);
 }
 // #############################################################################
 void notice(char * pNick,char *pMsgStr) {
     char *buffer;
-    buffer=(char *)malloc((strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5)*sizeof(char));
+    if ((buffer=(char *)malloc((strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
+	{
+	   DEBUG("notice() - Can't allocate memory!\n");
+	   return;
+    }	   
+
     sprintf(buffer,"NOTICE %s :%s\r\n",pNick,pMsgStr);
     send_line(buffer);
     free (buffer);
@@ -87,7 +107,12 @@ void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr){
 // #############################################################################
 void join(char *pChannel) {
     char *buffer;
-    buffer=(char *)malloc((strlen("JOIN ")+strlen(pChannel)+3)*sizeof(char));
+    if ((buffer=(char *)malloc((strlen("JOIN ")+strlen(pChannel)+3)*sizeof(char)))==NULL)
+	{
+	   DEBUG("join() - Can't allocate memory!\n");
+	   return;
+    }	   
+
     sprintf(buffer,"JOIN %s\r\n",pChannel);
     send_line(buffer);
     free (buffer);
@@ -95,7 +120,12 @@ void join(char *pChannel) {
 // #############################################################################
 void part(char *pChannel) {
     char *buffer;
-    buffer=(char *)malloc((strlen("PART ")+strlen(pChannel)+3)*sizeof(char));
+    if ((buffer=(char *)malloc((strlen("PART ")+strlen(pChannel)+3)*sizeof(char)))==NULL)
+	{
+	   DEBUG("part() - Can't allocate memory!\n");
+	   return;
+    }	   
+
     sprintf(buffer,"PART %s\r\n",pChannel);
     send_direct(buffer);
     free (buffer);
@@ -109,11 +139,21 @@ void pong(char *pPong) {
 	{
 		/* I have no parameter for pong */
 	    gethostname(hostname,HOSTNAME_BUFFER_SIZE);
-		buffer=(char *)malloc((strlen("PONG ")+strlen(hostname)+3)*sizeof(char));
+		if ((buffer=(char *)malloc((strlen("PONG ")+strlen(hostname)+3)*sizeof(char)))==NULL)
+		{
+		   	DEBUG("pong() - Can't allocate memory!\n");
+		 	return;
+    	}	   
+
 		sprintf(buffer,"PONG %s\r\n",hostname);
 	}else
 	{
-		buffer=(char *)malloc((strlen("PONG ")+strlen(pPong)+3)*sizeof(char));
+		if ((buffer=(char *)malloc((strlen("PONG ")+strlen(pPong)+3)*sizeof(char)))==NULL)
+		{
+	   		DEBUG("pong() - Can't allocate memory!\n");
+	   		return;
+    	}	   
+
 	    sprintf(buffer,"PONG %s\r\n",pPong);
 	}
     send_direct(buffer);
@@ -122,7 +162,12 @@ void pong(char *pPong) {
 // #############################################################################
 void ping(char *pTarget) {
     char *buffer;
-    buffer=(char *)malloc((strlen("PING ")+strlen(pTarget)+3)*sizeof(char));
+    if ((buffer=(char *)malloc((strlen("PING ")+strlen(pTarget)+3)*sizeof(char)))==NULL)
+	{
+		DEBUG("ping() - Can't allocate memory!\n");
+	   	return;
+    }	   
+
     sprintf(buffer,"PING %s\r\n",pTarget);
     send_direct(buffer);
     free (buffer);
@@ -130,7 +175,12 @@ void ping(char *pTarget) {
 // #############################################################################
 void invite(char *pChannel,char *pNick) {
     char *buffer;
-    buffer=(char*)malloc((strlen("INVITE")+strlen(pNick)+strlen(pChannel)+4)*sizeof(char));
+    if ((buffer=(char*)malloc((strlen("INVITE")+strlen(pNick)+strlen(pChannel)+4)*sizeof(char)))==NULL)
+	{
+		DEBUG("invite() - Can't allocate memory!\n");
+	   	return;
+    }	   
+
     sprintf(buffer,"INVITE %s %s\r\n",pNick,pChannel);
     send_line(buffer);
     free(buffer);
@@ -138,7 +188,12 @@ void invite(char *pChannel,char *pNick) {
 // #############################################################################
 void nick(char *pNick) {
     char *buffer;
-    buffer=(char *)malloc((strlen("NICK ")+strlen(pNick)+3)*sizeof(char));
+    if ((buffer=(char *)malloc((strlen("NICK ")+strlen(pNick)+3)*sizeof(char)))==NULL)
+	{
+		DEBUG("nick() - Can't allocate memory!\n");
+	   	return;
+    }	   
+
     sprintf(buffer,"NICK %s\r\n",pNick);
     send_direct(buffer);
     free (buffer);
@@ -146,7 +201,12 @@ void nick(char *pNick) {
 // #############################################################################
 void topic(char *pChannel, char* pMsgStr) {
     char *buffer;
-    buffer=(char*)malloc((strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5)*sizeof(char));
+    if ((buffer=(char*)malloc((strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
+	{
+		DEBUG("topic() - Can't allocate memory!\n");
+	   	return;
+    }	   
+
     sprintf(buffer,"TOPIC %s :%s\r\n",pChannel,pMsgStr);
     send_line(buffer);
     free (buffer);
@@ -159,7 +219,12 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
     if (pMsgStr==NULL) {
         pMsgStr=getMsgString(INFO_DEFAULT_REASON);;
     }
-    buffer=(char*)malloc((strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6)*sizeof(char));
+    if ((buffer=(char*)malloc((strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6)*sizeof(char)))==NULL)
+	{
+		DEBUG("kick() - Can't allocate memory!\n");
+	   	return;
+    }	   
+
     sprintf(buffer,"KICK %s %s :%s\r\n",pChannel,pNick,pMsgStr);
     send_direct(buffer);
     free (buffer);
@@ -167,7 +232,12 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
 // #############################################################################
 void ban(char *pChannel,char *pMask){
     char *buffer;
-    buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char));
+    if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
+	{
+		DEBUG("ban() - Can't allocate memory!\n");
+	   	return;
+    }	   
+
     sprintf(buffer,"MODE %s +b %s\r\n",pChannel,pMask);
     send_direct(buffer);
     free (buffer);
@@ -175,7 +245,12 @@ void ban(char *pChannel,char *pMask){
 // #############################################################################
 void deban(char *pChannel,char *pMask){
     char *buffer;
-    buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char));
+    if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
+	{
+		DEBUG("deban() - Can't allocate memory!\n");
+	   	return;
+    }	   
+
     sprintf(buffer,"MODE %s -b %s\r\n",pChannel,pMask);
     send_direct(buffer);
     free (buffer);
@@ -188,7 +263,12 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
     if (pModParameter==NULL) {
         pModParameter="";
     }
-    buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMod)+strlen(pModParameter)+5)*sizeof(char));
+    if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMod)+strlen(pModParameter)+5)*sizeof(char)))==NULL)
+	{
+		DEBUG("mode() - Can't allocate memory!\n");
+	   	return;
+    }	   
+
     sprintf(buffer,"MODE %s %s %s\r\n",pChannel,pMod,pModParameter);
     send_line(buffer);
     free (buffer);
@@ -196,7 +276,12 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
 // #############################################################################
 void whois(char *pNickname) {
     char *buffer;
-    buffer=(char*)malloc((strlen("WHOIS ")+strlen(pNickname)+3)*sizeof(char));
+    if ((buffer=(char*)malloc((strlen("WHOIS ")+strlen(pNickname)+3)*sizeof(char)))==NULL)
+	{
+		DEBUG("whois() - Can't allocate memory!\n");
+	   	return;
+    }	   
+
     sprintf(buffer,"WHOIS %s\r\n",pNickname);
     send_direct(buffer);
     free (buffer);
