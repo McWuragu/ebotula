@@ -142,16 +142,16 @@ int main(int argc,char * const argv[]) {
             switch (argv[i][1]) {
             case 'f':
                 if (argv[++i]!=NULL)
-		{
-			free(sSetup.configfile);
-			sSetup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-        	        strcpy(sSetup.configfile,argv[i]);
-		}
-		else
-		{	
-			fprintf(stderr,"  No Configfile was given!\n");
-			exit(1);
-		}
+        		{
+        			free(sSetup.configfile);
+        			sSetup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+                	        strcpy(sSetup.configfile,argv[i]);
+        		}
+        		else
+        		{	
+        			fprintf(stderr,"  No Configfile was given!\n");
+        			exit(1);
+        		}
                 break;
             case 'v':
                 exit(0);

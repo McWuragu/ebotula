@@ -46,6 +46,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{prefix}/var/ebotula/
 
 %changelog
+* Sun Feb 0088 2004 Steffen Laube <Laube.Steffen@gmx.de>
+- fixed the pong return string
+- cleanup the command and event  parser
+- fixed the line parser
+
 * Thu Jan 15 2004 Steffen Laube <Laube.Steffen@gmx.de>
 - Bugfix: fixed -f option
 - Bugfix: fixed -s  option
