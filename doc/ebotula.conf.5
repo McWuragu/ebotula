@@ -1,5 +1,5 @@
 .\" 
-.TH "ebotula.conf" "5" "5 August 2003"
+.TH "ebotula.conf" "5" "17 November 2003"
 .SH "NAME"
 ebotula.conf \- Configuration file for IRC bot ebotula
 .SH "DESCRIPTION"
@@ -9,9 +9,10 @@ is the configuration file for the IRC bot
 It is usally placed in /etc. If you want to use another configuration
 file, you can do so by giving ebotula the parameter -f <name_of_conf_file>
 when you start it. In ebotula.conf the default values of the parameters
-for ebotula are set. Any command line paramter will overwrite the value
+for ebotula are set. The command line parameters are prior to options
+set in the config file, so any command line parameter will overwrite the value
 taken from this config file. The Hash (#) is used as comment sign, i.e.
-everything from this sign to end of line is ignored.
+everything from this sign to the end of line is ignored.
 .SH ENTRIES IN EBOTULA.CONF
 .TP
 \fBbotname=ebotula\fP
@@ -25,6 +26,14 @@ displayed. So there is a good place to insert a text that explains it is
 only a bot. Of course you can place here any text you like to.
 NOTE: If you use whitespaces in the text, you have to put the string in "
 .TP
+\fBuser=nobody\fP
+.TP
+\fBgroup=nobody\fP
+The bot will run under the given UID and GID. These options are only
+available if you start the bot as root. They are used to prevent the bot
+being started with root privileges. If you start the bot as a normal
+user the bot is running under your UID and GID.
+.TP
 \fBthreadlimit=5\fP
 ebotula is using threads for internal communication. Here you can set the number
 of threads created at start time.
@@ -35,6 +44,19 @@ Here you can specify the name of the IRC server the bot is supposed to connect t
 \fBport=6667\fP
 Sets the portnumber the bot is going to use.
 .TP
+\fBdatabasepath=/usr/local/var/ebotula\fP
+The bot uses a database for storing the account information. You can
+specify the database file by this option.
+NOTE: You have to specify the whole path including the filename.
+.TP
+\fBfirstsenddelay=750\fP
+.TP
+\fBsecsenddelay=1750\fP
+.TP
+\fBsendlinelimit=20\fP
+To prevend problems with excess flodding you can specify delay times
+here. They are given in milliseconds.
+.TP
 \fBaccountlivetime=90\fP
 Sets the time in days after which unused accounts are being removed automatically.
 .TP
@@ -44,12 +66,6 @@ Sets the time in days after which idle users are automatically log off from the 
 \fBpingtimeout=120\fP
 Sets the time in seconds after which a ping timeout error is given in case the server
 doesn't respond any more.
-.TP
-\fBuser=nobody\fP
-Sets the user under wich the bot run (only root). Don't start the bot as root! 
-.TP
-\fBgroup=nobody\fP
-Sets the group under wich the bot run (only root). Don't start the bot as root! 
 .SH FILES
 /etc/ebotula.conf
 .SH "SEE ALSO"
@@ -59,4 +75,4 @@ Steffen Laube <realebula@gmx.de>,
 Thomas Stein <linux@tstein.net>,
 Uwe Strempel <u.strempel@gmx.de>
 .SH VERSION
-0.1
+0.2
