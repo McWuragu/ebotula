@@ -1,1 +1,4 @@
 - restart not correct work 
+- security bug  in the mode safe routine
+- no change  the netmask after nick changen and not mor loged on
+- slow performance
