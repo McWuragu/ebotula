@@ -12,10 +12,10 @@
 
 #include "type.h"
 #define PASSWD_LENGTH	8
+#define LOGIN_LENGTH	8
 
-
-void cmd_line(int argc,const char *argv[]);
-void read_config_file(void);
+void ComandLineParser(int argc,const char *argv[]);
+void ConfigFileParser(void);
 boolean dialogMaster(void);
 char *getPasswd(void);
 
