@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-24 18:43+0200\n"
-"PO-Revision-Date: 2004-07-24 18:46+0200\n"
+"POT-Creation-Date: 2004-07-24 20:28+0200\n"
+"PO-Revision-Date: 2004-07-24 20:45+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,42 +22,42 @@ msgstr ""
 #: src/account.c:92
 #, c-format
 msgid "The account %s was automatically logged off"
-msgstr "Der Account %s wurde automatisch abgemeldet."
+msgstr "Das Konto %s wurde automatisch abgemeldet."
 
 #: src/account.c:129
 #, c-format
 msgid "Account %s logged in"
-msgstr "Account %s ist angmeldet."
+msgstr "Das Konto %s ist angmeldet."
 
 #: src/account.c:138
 #, c-format
 msgid "Update the timestamp %s for the account %s"
-msgstr "Aktualisierung des Zeitstempels %s für den Account %s"
+msgstr "Aktualisierung des Zeitstempels %s für das Konto %s"
 
 #: src/account.c:141
 #, c-format
 msgid "Add the timepstamp %s for the account %s"
-msgstr "Zeitstempel %s für den Account %s hinzugefügt."
+msgstr "Zeitstempel %s für das Konto %s hinzugefügt."
 
 #: src/account.c:163
 #, c-format
 msgid "Account %s logged off"
-msgstr "Der Account %s wurde abgemeldet."
+msgstr "Das Konto %s wurde abgemeldet."
 
 #: src/account.c:171
 #, c-format
 msgid "Remove the account %s"
-msgstr "Entferne den Accounts %s"
+msgstr "Entferne das Konto %s"
 
 #: src/account.c:194
 #, c-format
 msgid "Remove the access rights for the account %s"
-msgstr "Zugriffsrechte des Accounts %s entfernt"
+msgstr "Zugriffsrechte des Kontos %s entfernt"
 
 #: src/account.c:236
 #, c-format
 msgid "The account %s is removed"
-msgstr "Der Account %s wurde gelöscht."
+msgstr "Das Konto %s wurde gelöscht."
 
 #: src/baseconfig.c:114
 #, c-format
@@ -67,26 +67,26 @@ msgstr "Erzeuge die Konfigurationsdatei %s"
 #: src/baseconfig.c:120 src/baseconfig.c:124
 #, c-format
 msgid "Couldn't open the configuration file %s."
-msgstr "Könnte die Datenbank %s nicht öffnen."
+msgstr "Konnte die Datenbank %s nicht öffnen."
 
 #: src/callback.c:39
 msgid "Callback routine for the reset of the modes"
-msgstr "Caallbackroutine für das Zurücksetzen der Modien"
+msgstr "Callbackroutine für das Zurücksetzen der Modi"
 
 #: src/callback.c:54
 #, c-format
-msgid "Reset the usermodes for the identified account %s"
-msgstr "Benutzermodien des Accounts %s zurückgesetzt."
+msgid "Reset the account modes for the identified account %s"
+msgstr "Modi des Kontos %s zurückgesetzt."
 
 #: src/callback.c:77
 #, c-format
-msgid "Reset the usermodes of the master %s"
-msgstr "Zurckücksetzen der Benutzerrechte des Masters %s"
+msgid "Reset the account modes of the master %s"
+msgstr "Zurckücksetzen des Modes des Masters-Kontos %s"
 
 #: src/callback.c:89
 #, c-format
-msgid "Reset the usermode for user %s"
-msgstr "Zurücksetzen der Modien für den Benutzer %s"
+msgid "Reset the account mode for user %s"
+msgstr "Zurücksetzen der Modi für das Konto %s"
 
 #: src/callback.c:116
 msgid "Callback routine for user banning"
@@ -129,6 +129,10 @@ msgstr "Benutzer %s wurde in der Callbackliste nicht gefunden."
 msgid "Commands list"
 msgstr "Kommandoliste"
 
+#: src/command.c:86 src/command.c:128
+msgid "Help end"
+msgstr "Ende der Hilfe"
+
 #: src/command.c:88
 msgid "Spezial help text for a command"
 msgstr "Spezialer Hilfetext für ein Kommando"
@@ -143,10 +147,18 @@ msgstr "Suche die Information über \"%s\""
 msgid "Command found %d"
 msgstr "Kommando gefunden %d"
 
+#: src/command.c:110
+msgid "Help for"
+msgstr "Hilfe für"
+
 #: src/command.c:141
 #, c-format
 msgid "Try to create an new account for %s"
-msgstr "Versucht einen neuen Account für %s anzulegen"
+msgstr "Versucht einen neues Konto für %s anzulegen"
+
+#: src/command.c:144 src/command.c:327
+msgid "You're already identified."
+msgstr "Du bist schon identifiziert."
 
 #: src/command.c:153
 msgid "Nice to meet you."
@@ -154,7 +166,7 @@ msgstr "Schön dich zu treffen."
 
 #: src/command.c:154
 msgid "You have got a new account now."
-msgstr "Du hast nun einen neuen Account."
+msgstr "Du hast nun einen neuen Konto."
 
 #: src/command.c:155 src/command.c:289
 msgid "You're now identified."
@@ -162,12 +174,12 @@ msgstr "Du bist identifiziert."
 
 #: src/command.c:158
 msgid "A account with this nickname already exists."
-msgstr "Ein Account mit diesem Namen existiert schon."
+msgstr "Ein Konto mit diesem Namen existiert schon."
 
 #: src/command.c:171
 #, c-format
 msgid "Check the  password for the account %s"
-msgstr "Überprüfe das PAsswort für den Account %s"
+msgstr "Überprüfe das Passwort für das Konto %s"
 
 #: src/command.c:179 src/command.c:269
 msgid "You've set a empty password."
@@ -189,7 +201,7 @@ msgstr "Versuche %s zu identifizieren."
 #: src/command.c:283
 #, c-format
 msgid "Look for the account %s"
-msgstr "Suche den Account %s"
+msgstr "Suche das Konto %s"
 
 #: src/command.c:287
 #, c-format
@@ -199,6 +211,14 @@ msgstr "Der Benutzer %s wurde gefunden."
 #: src/command.c:297
 msgid "Reconstruct the access rights for the channels"
 msgstr "Herstellung der Zugriffsrechte für alle Channels."
+
+#: src/command.c:318
+msgid "Invalid password"
+msgstr "Ungültiges Passwort"
+
+#: src/command.c:354
+msgid "This channel is already on the channel list."
+msgstr "Der Channel ist schon zur Liste hinzugefügt."
 
 #: src/command.c:356
 #, c-format
@@ -244,6 +264,10 @@ msgstr "Der Bot stopt."
 msgid "The bot is going to restart."
 msgstr "Der Bot startet neu."
 
+#: src/command.c:470
+msgid "The Nickname is invalid."
+msgstr "Der Nickname ist ungültig."
+
 #: src/command.c:474
 msgid "The bot tries to set the new nickname."
 msgstr "Der bot versucht den neuen Nickname zusetzen."
@@ -252,10 +276,26 @@ msgstr "Der bot versucht den neuen Nickname zusetzen."
 msgid "Build channel list."
 msgstr "Erzeuge Channelliste"
 
+#: src/command.c:502
+msgid "Channel list:"
+msgstr "Channelliste:"
+
 #: src/command.c:515
 #, c-format
 msgid "...for channel %s"
 msgstr "...für den Channel %s"
+
+#: src/command.c:526
+msgid "Topic:"
+msgstr "Thema:"
+
+#: src/command.c:534
+msgid "Greeting:"
+msgstr "Begrüssung:"
+
+#: src/command.c:553
+msgid "End of the channel list."
+msgstr "Ende der Channelliste"
 
 #: src/command.c:577
 #, c-format
@@ -273,24 +313,32 @@ msgstr "Die neue Begrüssung  wurde gesetzt."
 #: src/command.c:625
 #, c-format
 msgid "Topic seting for %s"
-msgstr "Überschrift gesetzt für den Channel %s"
+msgstr "Thema gesetzt für den Channel %s"
 
 #: src/command.c:651
 msgid "The topic is removed"
-msgstr "Die Überschrift wurde entfernt."
+msgstr "Das Thema wurde entfernt."
 
 #: src/command.c:653
 msgid "The new topic is set"
-msgstr "Die neue Überschrift wurde gesetzt."
+msgstr "Das neue Thema wurde gesetzt."
 
 #: src/command.c:684
 #, c-format
 msgid "Greeting for %s"
 msgstr "Begrüssung für den Channel %s"
 
+#: src/command.c:784
+msgid "Can't ban myself"
+msgstr "Kann mich nicht selbst bannen."
+
 #: src/command.c:833
 msgid "The ban is removed by the bot"
 msgstr "Der Benutzer wurd vom Bot gebannt."
+
+#: src/command.c:875
+msgid "Can't kick myself"
+msgstr "Kann mich nicht selbst herauswerfen."
 
 #: src/command.c:883
 msgid "You are kicked from the bot."
@@ -298,65 +346,77 @@ msgstr "Du wurd vom Bot gekickt."
 
 #: src/command.c:942
 msgid "Modify user mod"
-msgstr "Verändere Benutzermodien"
+msgstr "Verändere die Modi"
 
 #: src/command.c:988
 #, c-format
 msgid "Modify account %s in the channel %s"
-msgstr "Verändere den Account %s im Channel %s"
+msgstr "Verändere das Konto %s im Channel %s"
+
+#: src/command.c:1011
+msgid "This mod is invalid."
+msgstr "Diese Mode ist ungültig."
 
 #: src/command.c:1018
 #, c-format
-msgid "Found usermodes %s"
-msgstr "Benutzermodien \"%s\" gefunden"
+msgid "Found account modes %s"
+msgstr "Die Modi für das Konto %s gefunden."
 
 #: src/command.c:1046
-msgid "Set new usermodes"
-msgstr "Setze neue Benutzermodien"
+msgid "Set new account modes"
+msgstr "Setze neue Moden das Konto."
 
 #: src/command.c:1052
-msgid "Remove new usermodes"
-msgstr "Entferne alte Benutzermodien"
+msgid "Remove new account modes"
+msgstr "Entferne die Moden des Konto"
 
 #: src/command.c:1061
-msgid "Modify the current usermodes"
-msgstr "Verändere die aktuellen Benutzermodien"
+msgid "Modify the current account modes"
+msgstr "Verändere die Modi des aktuellen Kontos."
 
 #: src/command.c:1092
 msgid "The user mode are changed."
-msgstr "Der Benutzermodien wurden geändert."
+msgstr "Die Benutzermodi wurden geändert."
 
 #: src/command.c:1121
 #, c-format
 msgid "Found the new channel modes \"%s\" for the channel %s."
-msgstr "Neue Channelmodien \"%s\" für den Channel %s gefunden."
+msgstr "Neue Channelmodi \"%s\" für den Channel %s gefunden."
 
 #: src/command.c:1185
 #, c-format
 msgid "Write the new channel modes \"%s\" for the channel %s."
-msgstr "Schreibe neue Channelmodien \"%s\" für den Channel %s."
+msgstr "Schreibe neue Channelmodi \"%s\" für den Channel %s."
 
 #: src/command.c:1194
 #, c-format
 msgid "Set the new channel modes for the channel %s"
-msgstr "Setzte die neuen Channelmodien für den Channel %s"
+msgstr "Setzte die neuen Channelmodi für den Channel %s"
 
 #: src/command.c:1250
 msgid "The account is removed"
-msgstr "Der Account wurde gelöscht."
+msgstr "Das Konto wurde gelöscht."
 
 #: src/command.c:1251
 #, c-format
 msgid "Remove %s from the user list"
 msgstr "Entferne den Benutzer %s von der Liste"
 
+#: src/command.c:1282 src/command.c:1391
+msgid "Account list:"
+msgstr "Kontoliste:"
+
 #: src/command.c:1284
-msgid "Create the userlist for a master"
-msgstr "Erzeuge eine Benutzerliste für einen Master"
+msgid "Create the accountlist for a master"
+msgstr "Erzeuge eine Kontoliste für einen Master"
+
+#: src/command.c:1381 src/command.c:1449
+msgid "End of the account list."
+msgstr "Ende der Kontoliste."
 
 #: src/command.c:1384
-msgid "Create the userlist for a owner"
-msgstr "Erzeuge eine Benutzerliste für einen Owner"
+msgid "Create the accountlist for a owner"
+msgstr "Erzeuge eine Kontoliste für einen Owner"
 
 #: src/dbaccess.c:57
 msgid "Initialization of the database"
@@ -397,16 +457,16 @@ msgstr "benötige Operatorrechte."
 
 #: src/handles.c:142
 #, c-format
-msgid "Set the usermodes for the account %s with nickname %s"
-msgstr "Setze die Modien für den Account %s des Benutzers %s"
+msgid "Set the account modes for the account %s with nickname %s"
+msgstr "Setze die Modi für das Konto %s des Benutzers %s."
 
 #: src/handles.c:215
-msgid "Bot get a new usermode"
+msgid "Bot get a new account mode"
 msgstr "Bot hat neuen Modus erhalten."
 
 #: src/handles.c:225
-msgid "Added callback routine for the reset of the usermodes"
-msgstr "Callbackroutine für das Zurücksetzen der Benutzermodien eingefügt."
+msgid "Added callback routine for the reset of the account modes"
+msgstr "Callbackroutine für das Zurücksetzen der Modi eingefügt."
 
 #: src/handles.c:246
 msgid "Ban reset not implemented jet"
@@ -415,12 +475,12 @@ msgstr "Zurücksetzen von Banns ist im moment nocht nicht implementiert"
 #: src/handles.c:252
 #, c-format
 msgid "Reset the channelmodes of the channel %s"
-msgstr "Zurücksetzen der Modien des Channels %s"
+msgstr "Zurücksetzen der Modi des Channels %s"
 
 #: src/handles.c:299
 #, c-format
 msgid "Reset the topic in the channel %s"
-msgstr "Zurücksetzen der Überschrift für den Channel %s"
+msgstr "Zurücksetzen des Thema für den Channel %s"
 
 #: src/handles.c:336
 #, c-format
@@ -547,7 +607,7 @@ msgstr "Verzögerung für die Anfangsinitialisierung %ds"
 #: src/ircbot.c:274
 #, c-format
 msgid "Account live time %dd"
-msgstr "Lebenszeit eines Account %dd"
+msgstr "Lebenszeit eines Kontos %dd"
 
 #: src/ircbot.c:275
 #, c-format
@@ -657,7 +717,7 @@ msgstr ""
 
 #: src/messages.c:36
 msgid "\t-k days\t\tSet the account live time in days.\n"
-msgstr "\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Account inaktiv sein kann.\n"
+msgstr "\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Konto inaktiv sein kann.\n"
 
 #: src/messages.c:37
 msgid "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
@@ -798,7 +858,7 @@ msgstr "Die Verzögerung für die Startinitialisierung ist ungültig.\n"
 
 #: src/parameter.c:248 src/parameter.c:439
 msgid "The account living time is invalid.\n"
-msgstr "Die Lebenszeit eines Accounts ist ungültig.\n"
+msgstr "Die Lebenszeit eines Kontos ist ungültig.\n"
 
 #: src/parameter.c:277 src/parameter.c:448
 msgid "The ping timeout is invalid.\n"
@@ -838,7 +898,7 @@ msgid ""
 "Create a new master account\n"
 "\n"
 msgstr ""
-"Anlegen eines neuen Master Accounts \n"
+"Anlegen eines neuen Master-Kontos \n"
 "\n"
 
 #: src/parameter.c:488
@@ -868,11 +928,11 @@ msgstr "Schreibfehler...Passwörter ist nicht identisch.\n"
 #: src/parameter.c:539
 #, c-format
 msgid "A account %s already exists."
-msgstr "Ein Account %s existiert schon."
+msgstr "Ein Konto %s existiert schon."
 
 #: src/parameter.c:547
 msgid "Couldn't set this account to master."
-msgstr "konnte den Account nicht auf Master setzen."
+msgstr "Konnte das Konto nicht auf Master setzen."
 
 #: src/parser.c:101
 #, c-format
@@ -918,11 +978,14 @@ msgstr "Entfernt die tote Logins"
 
 #: src/timing.c:64
 msgid "Remove the dead accounts"
-msgstr "Entfernt die toten Accounts"
+msgstr "Entfernt die toten Konten."
 
 #: src/timing.c:71
 msgid "The timing thread is stopped"
 msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
+
+#~ msgid "Remove new usermodes"
+#~ msgstr "Entferne alte Benutzermodien"
 
 #~ msgid "Empty list!"
 #~ msgstr "Liste ist leer."
