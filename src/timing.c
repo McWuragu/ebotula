@@ -29,8 +29,10 @@
 
 void *TimingThread(void *argv){
     extern ConfigSetup_t sSetup;
+    extern int iLineCount;
     time_t newTime;
     time_t lastPing=0;
+    time_t lastLineCount=0;
     time_t lastRemoveDeadLogins=0;
     time_t lastRemoveDeadAccounts=0;
 
@@ -64,6 +66,15 @@ void *TimingThread(void *argv){
             rmDeadAccounts(newTime-sSetup.AccountLiveTime*86400);
             lastRemoveDeadAccounts=newTime;
         }
+        
+        // increment the line count
+        if ((newTime-lastLineCount)>=((sSetup.iSendSafeDelay*2)/1000)) {
+            if (iLineCount>=1) {
+                iLineCount--;
+            }
+            lastLineCount=newTime;
+        }
+
     }
 }
 
