@@ -1,9 +1,8 @@
 ToDo Liste
 ----------
-- Fehledne Kommandos
-	- !mode
-	- !topic
-	- !kick
+- Fehlende Botkommandos
+	- !usermode
+	- !chanmode
 	- !ban
 	- !timeban
 	- !userlist
@@ -11,17 +10,19 @@ ToDo Liste
 	- !allban
 	- !restart
 	- !rmuser
-
-- Automasitsches Löschen von Accounts nach einer Zeit  delta t 
-- Setzen von Op-Recht bei User nach Ident  und Join
-- Setzen von Voice-Recht bei User nach Ident  und Join
-- Setzt Topic beim Join und beim  Ändern
+	- !allsay
+- Automatisches Löschen von Accounts nach einer Zeit  delta t 
+- setzen von Masterrechten per !usermode
+- Setzen von Op-Recht bei User nach Ident und Join
+- Setzen von Voice-Recht bei User nach Ident und Join
+- Setzt Topic und Mode im Channel beim Join, Bekommen von OP und beim fremden Ändern
 - Ausführen von Ban von der Liste 
-- Automaisches Ausloggen eines user nach delta t 
+- Automaisches Ausloggen eines User nach delta t 
 - Hilfetexte vervollständigen
 - code cleanup
 - debuggen
-- Bei fehlenden OP channel cyle
+- Bei fehlenden OP channel cycle
 - Anforderung der Rechte als ACTION
 - Hervorhebung von Messages per bold
 - Status Logging mit syslog
+- Update Nickname von eingelogten User in usertonick.dbf und nicktouser.dbf
