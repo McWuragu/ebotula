@@ -22,12 +22,6 @@
 typedef enum {
 
     // command acknowledgment
-	 OK_LOGOFF,		 
-	 OK_SET_GREETING,   
-	 OK_RM_GREETING,    
-	 OK_SET_TOPIC,	    
-	 OK_RM_TOPIC,	   
-	 OK_KICK,		    
 	 OK_BAN,		   
      OK_DEBAN,		    
      OK_USERMODE,	    
@@ -67,9 +61,6 @@ typedef enum {
 	 INFO_CHANNELLIST_TOPIC,   
 	 INFO_CHANNELLIST_GREET,  
 	 INFO_DEFAULT_REASON,	  
-	 INFO_INIT_CHANNEL,		  
-	 INFO_NEED_OP,
-     INFO_NOT_PASS
 } eMsgID_t;
 
 typedef struct MsgStruct {

@@ -176,7 +176,7 @@ void password(MsgItem_t *pMsg) {
 
 	        /* parse the  password  form  parameter list */
 	        if (!pPasswd) {
-        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_NOT_PASS));
+        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You've set a empty password."));
 	        }
 
         	/* set password */
@@ -232,7 +232,7 @@ void logoff(MsgItem_t *pMsg,int nRemoveMode) {
 
 			/* delete the queue */
             deleteQueue(pChannelQueue);
-			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_LOGOFF));
+			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You're now logged off."));
 		}
         free(pLogin);
 	}
@@ -266,7 +266,7 @@ void ident(MsgItem_t *pMsg) {
             if ((pPos=strstr(pParameter," "))==NULL) {
                 /* no Passwd found */
                 /* try empty pass */
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_NOT_PASS));
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You've set a empty password."));
                 pPasswd=NULL;
             } else {
                 pPasswd=(char *)malloc(strlen(pPos)*sizeof(char));
@@ -595,9 +595,9 @@ void setGreeting(MsgItem_t *pMsg) {
         
             /* message */
             if (!sChannelData.pGreeting) {
-               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RM_GREETING));
+               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The greeting is removed"));
             } else {
-               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_GREETING));
+               sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The new greeting is set"));
             }
             
             free(sChannelData.sModes.pKeyword);
@@ -648,9 +648,9 @@ void setTopic(MsgItem_t *pMsg) {
 
 	    /* message */
     	if (!sChannelData.pTopic) {
-	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RM_TOPIC));
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The topic is removed"));
     	} else {
-        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_TOPIC));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The new topic is set"));
     	}
 
         free(pChannelSet);

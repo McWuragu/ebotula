@@ -179,7 +179,7 @@ void KickCb(char *pNetmask, void *data) {
             pNick=getNickname(pNetmask);
             if (pNick) {
                 kick(pChannel,pNick,pReason);
-                notice(pCmdNick,getMsgString(OK_KICK));
+                notice(pCmdNick,gettext("The user is kicked by the bot"));
                 free(pNick);
             }
         } else {
