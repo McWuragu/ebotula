@@ -12,7 +12,7 @@
 
 /**
 * This is  the function for the timing thread. She handle all task which need a timing
-* synchronization. This task are ping the server, remove dead accounts, automatic log off
+* synchronization. This task are ping the server, remove dead accounts, automatic logoff
 * and reset the ban mask after the time ban.
 * @param argv is a pointer for any parameters This is unused but necessary for  pthread_create()
 * @return a pointer of any return values. This is unused but necessary for  pthread_create()
