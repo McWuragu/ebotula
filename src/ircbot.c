@@ -428,7 +428,7 @@ int main(int argc,char * const argv[]) {
     free (sSetup.pDatabasePath);
     free (sSetup.realname);
     free (sSetup.server);
-    free (sSetup.port):
+    free (sSetup.port);
     free (sSetup.sExeGroup);
     free (sSetup.sExeUser);
 

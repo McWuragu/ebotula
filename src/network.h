@@ -12,7 +12,7 @@
 #define NETWORK_H
 
 /** the size of  the receive buffer */
-#define RECV_BUFFER_SIZE        0x1000
+#define RECV_BUFFER_SIZE        1<<10
 /** the size of the buffer for the  hostname */
 #define HOSTNAME_BUFFER_SIZE    0xFF
 
