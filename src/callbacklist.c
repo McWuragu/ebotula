@@ -64,7 +64,7 @@ void destroyCallbackDList(CallbackDList *list)
 	/** delete elements **/
 	while(getSizeCallbackDList(list)>0)
 	{
-		if (removeCallbackDList(list,getTailCallbackDList(list),(CallbackItem_t *)data) == 0 && list->destroy != NULL)
+		if (removeCallbackDList(list,getTailCallbackDList(list),&data) == 0 && list->destroy != NULL)
 		{
 			/** destroy element Data **/
 			list->destroy(data);	
