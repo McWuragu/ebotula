@@ -13,6 +13,7 @@
 #include"extract.h"
 #include"utilities.h"
 #include"messages.h"
+#include"type.h"
 #include"callback.h"
 
 /* destroxCallbackItem
