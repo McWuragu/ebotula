@@ -151,7 +151,6 @@ void *ComandExecutionThread(void *argv) {
             pMsg=(MsgBuf_t*)pCommand->data;
 
 
-
             // extract the needed values
             pNetmask=getNetmask(pMsg->pMsgLine);
             pChannel=getAccessChannel(pMsg->pMsgLine);
