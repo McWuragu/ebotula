@@ -131,18 +131,6 @@ typedef struct MsgItem_s {
 
 /* ######################### Bot commands ################################ */
 
-void help(MsgItem_t *pMsg);
-void password(MsgItem_t *pMsg);
-void ident(MsgItem_t *pMsg);
-void logoff(MsgItem_t *pMsg,int iRemoveMode);
-void version(char *pLine);
-void hello(char *pLine);
-void addChannel(char *pLine);
-void rmChannel(char *pLine);
-void joinChannel(char *pLine);
-void partChannel(char *pLine);
-void die(char *pLine);
-void setNick(char *pLine);
 void chanlist(char *pLine);
 void setGreeting(char *pLine);
 void setTopic(char *pLine);
@@ -158,5 +146,18 @@ void rmuser(char *pLine);
 void userlist(char *pLine);
 
 // new command format
+void help(MsgItem_t *pMsg);
+void password(MsgItem_t *pMsg);
+void ident(MsgItem_t *pMsg);
+void logoff(MsgItem_t *pMsg,int iRemoveMode);
+void version(MsgItem_t *pMsg);
+void hello(MsgItem_t *pMsg);
+void addChannel(MsgItem_t *pMsg);
+void rmChannel(MsgItem_t *pMsg);
+void joinChannel(MsgItem_t *pMsg);
+void partChannel(MsgItem_t *pMsg);
+void die(MsgItem_t *pMsg);
+void restart(MsgItem_t *pMsg);
+void setNick(MsgItem_t *pMsg);
 void inviteuser(MsgItem_t *pMsg);
 #endif

@@ -155,10 +155,10 @@ void *ComandExecutionThread(void *argv) {
                     help(pMsgItem);
                     break;
                 case CMD_VERSION:
-                    version(pMsg->pMsgLine);
+                    version(pMsgItem);
                     break;
                 case CMD_HELLO:
-                    hello(pMsg->pMsgLine);
+                    hello(pMsgItem);
                     break;
                 case CMD_PASS:
                     password(pMsgItem);
@@ -167,22 +167,22 @@ void *ComandExecutionThread(void *argv) {
                     ident(pMsgItem);
                     break;
                 case CMD_ADDCHANNEL:
-                    addChannel(pMsg->pMsgLine);
+                    addChannel(pMsgItem);
                     break;
                 case CMD_RMCHANNEL:
-                    rmChannel(pMsg->pMsgLine);
+                    rmChannel(pMsgItem);
                     break;
                 case CMD_JOIN:
-                    joinChannel(pMsg->pMsgLine);
+                    joinChannel(pMsgItem);
                     break;
                 case CMD_PART:
-                    partChannel(pMsg->pMsgLine);
+                    partChannel(pMsgItem);
                     break;
                 case CMD_DIE:
-                    die(pMsg->pMsgLine);
+                    die(pMsgItem);
                     break;
                 case CMD_NICK:
-                    setNick(pMsg->pMsgLine);
+                    setNick(pMsgItem);
                     break;
                 case CMD_CHANNELS:
                     chanlist(pMsg->pMsgLine);
@@ -235,7 +235,7 @@ void *ComandExecutionThread(void *argv) {
                     chanmode(pMsg->pMsgLine);
                     break;
                 case CMD_RESTART:
-                    restart(pMsg->pMsgLine);
+                    restart(pMsgItem);
                     break;
                 case CMD_ONWHOIS:
                     hCallback(pMsg->pMsgLine);

@@ -129,34 +129,22 @@ void help(MsgItem_t *pMsg) {
 /* #########################################################################
    Bot comand: !hello
    ######################################################################### */
-void hello(char *pLine) {
-    char *pNetmask;
-    char *pNick;
-    char *pLogin;
+void hello(MsgItem_t *pMsg) {
+    DEBUG("Try to create an new account for %s\n",pMsg->pCallingNick);
 
+    StrToLower(pMsg->pCallingNick);
 
-    pNetmask=getNetmask(pLine);
-    pNick=getNickname(pLine);
-    pLogin=(char*)malloc((strlen(pNick)+1)*sizeof(char));
-
-    DEBUG("Try to create an new account for %s\n",pNick);
-
-    strcpy(pLogin,pNick);
-
-    StrToLower(pLogin);
-
-    if (add_db(USER_DB,pLogin,"")) {
+    if (add_db(USER_DB,pMsg->pCallingNick,"")) {
         
         /* autoidentify after create an new account */
-        pNetmask=getNetmask(pLine);
-        log_on(pNetmask,pLogin);
+        log_on(pMsg->pNetmask,pMsg->pCallingNick);
 
-        notice(pNick,getMsgString(OK_HELLO));
-        notice(pNick,getMsgString(OK_HELLO2));
-        notice(pNick,getMsgString(OK_IDENT));
+        notice(pMsg->pCallingNick,getMsgString(OK_HELLO));
+        notice(pMsg->pCallingNick,getMsgString(OK_HELLO2));
+        notice(pMsg->pCallingNick,getMsgString(OK_IDENT));
         
     } else {
-	    notice(pNick,getMsgString(ERR_NICK_EXIST));
+	    notice(pMsg->pCallingNick,getMsgString(ERR_NICK_EXIST));
 	} 
 
 }
@@ -321,159 +309,141 @@ void ident(MsgItem_t *pMsg) {
 /* #########################################################################
    Bot comand: !addchannel #channel
    ######################################################################### */
-void addChannel(char *pLine) {
-    char *pChannel;
+void addChannel(MsgItem_t *pMsg) {
     char *pCmdChannel;
-    char *pNick;
     char *channelmod;
 
-    pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
-    pCmdChannel=getChannel(pLine);
+    pCmdChannel=getChannel(pMsg->pRawLine);
 
-    if (!(pChannel) || !(pCmdChannel)){
-        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+    if (!pMsg->pAccessChannel){
+        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
-    if (!strcmp(pChannel,pCmdChannel)) {
-        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+    if (!strcmp(pMsg->pAccessChannel,pCmdChannel)) {
+        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
-    DEBUG("Join and  try to add the channnel %s\n",pChannel);
+    DEBUG("Join and  try to add the channnel %s\n",pMsg->pAccessChannel);
 
     /* checking of channel exist */
-    if (exist_db(CHANNEL_DB,pChannel)) {
-        notice(pNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
+    if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
+        notice(pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
     } else {
         /* add channel */
         channelmod=(char *)malloc(3*sizeof(char));
         strcpy(channelmod,"\t\t");
-        add_db(CHANNEL_DB,pChannel,channelmod);
-        notice(pNick,getMsgString(OK_ADDCHANNEL));
+        add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
+        notice(pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
     }
 
     /* join the channel */
-    join(pChannel);
-    notice(pNick,getMsgString(OK_JOIN));
+    join(pMsg->pAccessChannel);
+    notice(pMsg->pCallingNick,getMsgString(OK_JOIN));
 
 }
 /* #########################################################################
    Bot comand: !rmchannel <#channel>
    ######################################################################### */
-void rmChannel(char *pLine){
-    char *pChannel;
-    char *pNick;
-
-    pNick=getNickname(pLine);
+void rmChannel(MsgItem_t *pMsg){
     
-    if (!(pChannel=getAccessChannel(pLine))){
-        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+    /* check channel parameter */
+    if (!pMsg->pAccessChannel) {
+        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
-
-    DEBUG("Part and  try to remove the channnel %s\n",pChannel);
+    
+    DEBUG("Part and  try to remove the channnel %s\n",pMsg->pAccessChannel);
 
 
     /* checking of channel exists */
-    if (!del_db(CHANNEL_DB,pChannel)) {
-        notice(pNick,getMsgString(ERR_NOT_CHANNEL));
+    if (!del_db(CHANNEL_DB,pMsg->pAccessChannel)) {
+        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
     } else {
-        notice(pNick,getMsgString(OK_RMCHANNEL));
+        notice(pMsg->pCallingNick,getMsgString(OK_RMCHANNEL));
     }
 
+    // TODO: remove old access  rights for this channel
 
     /* part the channel */
-    part(pChannel);
-    notice(pNick,getMsgString(OK_PART));
+    part(pMsg->pAccessChannel);
+    notice(pMsg->pCallingNick,getMsgString(OK_PART));
 
 }
 /* #########################################################################
    Bot comand: !join #channel
    ######################################################################### */
-void joinChannel(char *pLine) {
+void joinChannel(MsgItem_t *pMsg) {
     char *pCmdChannel;
-    char *pChannel;
-    char *pNick;
 
-    pNick=getNickname(pLine);
-    pCmdChannel=getChannel(pLine);
-    pChannel=getAccessChannel(pLine);
+    pCmdChannel=getChannel(pMsg->pRawLine);
 
-    if (!(pChannel) || !(pCmdChannel)){
-        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+    if (!pMsg->pAccessChannel){
+        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
     /* compare the current channel and  the channel for joining */
-    if (!(strcmp(pChannel,pCmdChannel))) {
-        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+    if (!(strcmp(pMsg->pAccessChannel,pCmdChannel))) {
+        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
-    DEBUG("Join the channel %s\n",pChannel);
+    DEBUG("Join the channel %s\n",pMsg->pAccessChannel);
     /* join the channel */
-    join(pChannel);
-    notice(pNick,getMsgString(OK_JOIN));
+    join(pMsg->pAccessChannel);
+    notice(pMsg->pCallingNick,getMsgString(OK_JOIN));
 
 }
 /* #########################################################################
    Bot comand: !part <#channel>
    ######################################################################### */
-void partChannel(char *pLine) {
-    char *pNick;
-    char *pChannel;
+void partChannel(MsgItem_t *pMsg) {
 
-    pNick=getNickname(pLine);
-
-    if (!(pChannel=getAccessChannel(pLine))){
-        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+    if (!pMsg->pAccessChannel){
+        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
     } else {
-        DEBUG("Part the channel %s\n",pChannel);
+        DEBUG("Part the channel %s\n",pMsg->pAccessChannel);
 
         /* part the channel */
-        part(pChannel);
-        notice(pNick,getMsgString(OK_PART));
+        part(pMsg->pAccessChannel);
+        notice(pMsg->pCallingNick,getMsgString(OK_PART));
     }
 }
 /* #########################################################################
    Bot comand: !die
    ######################################################################### */
-void die(char *pLine) {
-    notice(getNickname(pLine),getMsgString(OK_DIE));
+void die(MsgItem_t *pMsg) {
+    notice(pMsg->pCallingNick,getMsgString(OK_DIE));
     stopParser(0);
 }
 /* #########################################################################
    Bot comand: !restart
    ######################################################################### */
-void restart(char *pLine) {
+void restart(MsgItem_t *pMsg) {
     extern boolean again;
-    notice(getNickname(pLine),getMsgString(OK_RESTART));
+    notice(pMsg->pCallingNick,getMsgString(OK_RESTART));
     again=true;
     stopParser(0);
 }
 /* #########################################################################
    Bot comand: !nick nickname
    ######################################################################### */
-void setNick(char *pLine){
+void setNick(MsgItem_t *pMsg){
     char *pParameter;
-    char *pNick;
 
-    pNick=getNickname(pLine);
-    pParameter=getParameters(pLine);
+    pParameter=getParameters(pMsg->pRawLine);
 
     /* read parameters */
     if (!pParameter) {
-        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
-        return;
+        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
     } else if (!NickStringCheck(pParameter)) {
-        notice(pNick,getMsgString(ERR_NICK_INVALID));
-        return;
+        notice(pMsg->pCallingNick,getMsgString(ERR_NICK_INVALID));
+    } else {
+        nick(pParameter);
+        notice(pMsg->pCallingNick,getMsgString(OK_NICK_SET));
     }
-
-    notice(pNick,getMsgString(OK_NICK_SET));
-    nick(pParameter);
 
 }
 /* #########################################################################
@@ -545,12 +515,12 @@ void chanlist(char *pLine){
 /* #########################################################################
    Bot comand: !version
    ######################################################################### */
-void version(char *pLine) {
+void version(MsgItem_t *pMsg) {
     char pMsgStr[256];
     // creat Versions String
     sprintf(pMsgStr,VERSIONSTR);
     strcat(pMsgStr,"\r\n");
-    notice(getNickname(pLine),pMsgStr);
+    notice(pMsg->pCallingNick,pMsgStr);
 }
 /* #########################################################################
    Bot comand: !greeting <#channel> <text>
