@@ -17,6 +17,9 @@
 /** the  maximum length which read form the configuration file */
 #define MAX_READ_BUFFER_SIZE 	256
 
+/// the number of channel mode options 
+#define MAX_MODES				11
+#define _MAX_MODES				MAX_MODES+2
 
 
 /** This is definetion of boolean datatype */
@@ -35,7 +38,7 @@ typedef struct ConfStruct{
 	/** the path to a not default configuration file */
 	char *configfile;
 	/** the path to the database */
-	char *database_path;
+	char *pDatabasePath;
 	/** number of threads which at the begin was create */
 	unsigned int thread_limit;
 	/** the limit for the existenz of a account in days */
@@ -88,7 +91,23 @@ typedef enum CmdEnum {
 	CMD_ALLSAY
 }CmdType;
 
-/// This is the structur for the entries in the message queue
+/// This  enum is  used as index for value pModeStr from the struct ChannelModeStruct
+enum ChanModeEnum {
+	MOD_TYPE,
+	MOD_KEYWORD,
+	MOD_LIMIT,
+	MOD_TOPIC,
+	MOD_MESSAGE,
+	MOD_MODERAT,
+	MOD_PRIVAT,
+	MOD_SECRET,
+	MOD_ANONYM,
+	MOD_QUIET,
+	MOD_REOP,
+	MOD_INVITE
+};
+
+/// This is the structure for the entries in the message queue
 typedef struct MsgBufStruct {
 	long	mtype;
 	CmdType	identify;
@@ -96,4 +115,19 @@ typedef struct MsgBufStruct {
 	char	pMsgLine[RECV_BUFFER_SIZE];
 } MsgBufType;
 
+
+
+/// a structure as container for the channel modes
+typedef struct ChannelModeStruct {
+	char pModeStr[_MAX_MODES];
+	char *pKeyword;
+	char *pLimit;
+} ChannelModeType;
+
+/// This container is used for  the values from a channel
+typedef struct ChannelDataStruct {
+	ChannelModeType* pModes;
+	char *pTopic;
+	char *pGreating;
+} ChannelDataType;
 #endif
