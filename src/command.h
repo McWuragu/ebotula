@@ -131,19 +131,8 @@ typedef struct MsgItem_s {
 
 /* ######################### Bot commands ################################ */
 
-void chanlist(char *pLine);
-void setGreeting(char *pLine);
-void setTopic(char *pLine);
-void greeting(char *pLine);
-void say(char *pLine);
-void allsay(char *pline);
-void banuser(char *pLine);
-void debanuser(char *pLine);
-void kickuser(char *pLine);
-void usermode(char *pLine);
-void chanmode(char *pLine);
-void rmuser(char *pLine);
-void userlist(char *pLine);
+
+
 
 // new command format
 void help(MsgItem_t *pMsg);
@@ -159,5 +148,19 @@ void partChannel(MsgItem_t *pMsg);
 void die(MsgItem_t *pMsg);
 void restart(MsgItem_t *pMsg);
 void setNick(MsgItem_t *pMsg);
+void chanlist(MsgItem_t *pMsg);
+void setGreeting(MsgItem_t *pMsg);
+void setTopic(MsgItem_t *pMsg);
+void greeting(MsgItem_t *pMsg);
+void say(MsgItem_t *pMsg);
+void allsay(MsgItem_t *pMsg);
+void banuser(MsgItem_t *pMsg);
+void debanuser(MsgItem_t *pMsg);
+void kickuser(MsgItem_t *pMsg);
+void usermode(MsgItem_t *pMsg);
+void chanmode(MsgItem_t *pMsg);
+void rmuser(MsgItem_t *pMsg);
+void userlist(MsgItem_t *pMsg);
 void inviteuser(MsgItem_t *pMsg);
+
 #endif

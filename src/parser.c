@@ -143,8 +143,34 @@ void *ComandExecutionThread(void *argv) {
 
                 // command router 
                 switch (pMsg->identify) {
+                // Event handler
                 case CMD_ONPING:
                     pong();
+                    break;
+                case CMD_ONNICKCHG:
+                    hNickChange(pMsg->pMsgLine);
+                    break;
+                case CMD_ONMODE:
+                    hResetModes(pMsg->pMsgLine);
+                    break;
+                case CMD_ONKICK:
+                    hRejoinAfterKick(pMsg->pMsgLine);
+                    break;
+                case CMD_ONTOPIC:
+                    hResetTopic(pMsg->pMsgLine);
+                    break;
+                case CMD_ONWHOIS:
+                    hCallback(pMsg->pMsgLine);
+                    break;
+                case CMD_ONNAMES:
+                    hBotNeedOp(pMsg->pMsgLine);
+                    break;
+                case CMD_ONJOIN:
+                    hSetModUser(pMsg->pMsgLine);
+                
+                // Command handler
+                case CMD_VIEWGREAT:
+                    greeting(pMsgItem);
                     break;
                 case CMD_ONQUIT:
                     logoff(pMsgItem,false);
@@ -185,66 +211,43 @@ void *ComandExecutionThread(void *argv) {
                     setNick(pMsgItem);
                     break;
                 case CMD_CHANNELS:
-                    chanlist(pMsg->pMsgLine);
-                    break;
-                case CMD_ONNAMES:
-                    hBotNeedOp(pMsg->pMsgLine);
-                    break;
-                case CMD_ONJOIN:
-                    hSetModUser(pMsg->pMsgLine);
-                case CMD_VIEWGREAT:
-                    greeting(pMsg->pMsgLine);
+                    chanlist(pMsgItem);
                     break;
                 case CMD_SET_GREATING:
-                    setGreeting(pMsg->pMsgLine);
+                    setGreeting(pMsgItem);
                     break;
                 case CMD_SET_TOPIC:
-                    setTopic(pMsg->pMsgLine);
+                    setTopic(pMsgItem);
                     break;
                 case CMD_SAY:
-                    say(pMsg->pMsgLine);
+                    say(pMsgItem);
                     break;
                 case CMD_KICK:
-                    kickuser(pMsg->pMsgLine);
+                    kickuser(pMsgItem);
                     break;
                 case CMD_USERMODE:
-                    usermode(pMsg->pMsgLine);
-                    break;
-                case CMD_ONNICKCHG:
-                    hNickChange(pMsg->pMsgLine);
+                    usermode(pMsgItem);
                     break;
                 case CMD_RMUSER:
-                    rmuser(pMsg->pMsgLine);
+                    rmuser(pMsgItem);
                     break;
                 case CMD_USERLIST:
-                    userlist(pMsg->pMsgLine);
-                    break;
-                case CMD_ONMODE:
-                    hResetModes(pMsg->pMsgLine);
-                    break;
-                case CMD_ONKICK:
-                    hRejoinAfterKick(pMsg->pMsgLine);
+                    userlist(pMsgItem);
                     break;
                 case CMD_ALLSAY:
-                    allsay(pMsg->pMsgLine);
-                    break;
-                case CMD_ONTOPIC:
-                    hResetTopic(pMsg->pMsgLine);
+                    allsay(pMsgItem);
                     break;
                 case CMD_CHANMODE:
-                    chanmode(pMsg->pMsgLine);
+                    chanmode(pMsgItem);
                     break;
                 case CMD_RESTART:
                     restart(pMsgItem);
                     break;
-                case CMD_ONWHOIS:
-                    hCallback(pMsg->pMsgLine);
-                    break;
                 case CMD_BAN:
-                    banuser(pMsg->pMsgLine);
+                    banuser(pMsgItem);
                     break;
                 case CMD_DEBAN:
-                    debanuser(pMsg->pMsgLine);
+                    debanuser(pMsgItem);
                     break;
                 case CMD_INVITE:
                     inviteuser(pMsgItem);
