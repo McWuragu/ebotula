@@ -326,7 +326,9 @@ void hRejoinAfterKick(char *pLine){
     /* make  a bot name with small letters */
     pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
     strcpy(pTmpBotName,sSetup.pBotname);
+    
     StrToLower(pTmpBotName);
+    StrToLower(pNick);
 
     if (!strcmp(pTmpBotName,pNick)) {
         join(pChannel);
