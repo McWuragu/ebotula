@@ -113,7 +113,9 @@ void log_out(char *pLogin) {
 
 /* ############################################################################# */
 void rmAccount(char *pLogin) {
-
+    extern pthread_mutex_t account_mutex;
+    
+    pthread_mutex_lock(&account_mutex);
 	DEBUG("Remove the account %s",pLogin);
     
 	/* logoff the user */
@@ -127,6 +129,7 @@ void rmAccount(char *pLogin) {
 
     /* remove the time log */
     del_db(TIMELOG_DB,pLogin);
+    pthread_mutex_unlock(&account_mutex);
 }
 /* ############################################################################# */
 void rmAccessRights(char *pLogin){
@@ -160,13 +163,10 @@ void rmAccessRights(char *pLogin){
 }
 /* ############################################################################# */
 void rmDeadAccounts(long lCheckTime) {
-    extern pthread_mutex_t account_mutex;
     PQueue pLoginQueue;
 	QueueData *pLogin;
 	char *pTime;
 
-    pthread_mutex_lock(&account_mutex);
-    
 	/* get the list of all Logins */
 	pLoginQueue=list_db(TIMELOG_DB);
     
@@ -185,7 +185,6 @@ void rmDeadAccounts(long lCheckTime) {
 		}
 		free(pLogin);
     }
-    pthread_mutex_unlock(&account_mutex);
 	deleteQueue(pLoginQueue);
 }
 // #############################################################################
