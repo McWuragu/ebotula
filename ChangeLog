@@ -1,6 +1,7 @@
-ebotula v0.1.3-dev
+ebotula v0.2.0b
 ------------------
 - added initialization of the channel after  join in emptty channel
+- added initialization of the channel after become  operator
 - added the restart function
 
 ebotula v0.1.2-dev
