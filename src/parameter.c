@@ -187,19 +187,6 @@ void ComandLineParser(int argc,const char *argv[]) {
 				}
 				sSetup.AccountLiveTime=tmp;
 				break;
-			case 'f':
-				DEBUG("Found config file option");
-				if (++i>=argc) {
-					errno=EINVAL;
-					perror(ERR_MISSING_PARAM);
-					exit(errno);
-					break;
-				}
-				
-				// set  path to config file
-				sSetup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-				strcpy(sSetup.configfile,argv[i]);
-				break;
 			case 'm':
 				DEBUG("Found bot master option");
 				sSetup.newMaster=true;
@@ -277,7 +264,7 @@ void ConfigFileParser(void) {
 			strcpy(key,buffer);
             
 			// set  the  reading values
-			if ((!strcmp(key,KEY_SERVER)) && (sSetup.server==NULL)) {
+			if (!strcmp(key,KEY_SERVER)) {
 				if (strpbrk(value,NOT_ALLOW_CHAR)) {
 					errno=EINVAL;
 					perror(ERR_WRONG_SERVERNAME);
@@ -286,7 +273,7 @@ void ConfigFileParser(void) {
 				// set servername
 				sSetup.server=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(sSetup.server,value);
-			} else if ((!strcmp(key,KEY_PORT)) && (sSetup.port==NULL)) {
+			} else if (!strcmp(key,KEY_PORT)) {
 				if ((atoi(value)<1) || (atoi(value)>65535)) {
 					errno=EINVAL;
 					perror(ERR_PORT_PARAMETER);
@@ -295,20 +282,22 @@ void ConfigFileParser(void) {
 				// set port
 				sSetup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(sSetup.port,value);
-			} else if ((!strcmp(key,KEY_BOTNAME)) && (sSetup.botname==NULL )) {
+			} else if (!strcmp(key,KEY_BOTNAME)) {
 				if (strpbrk(value,USER_NOT_ALLOW_CHAR)) {
 					errno=EINVAL;
 					perror(ERR_WRONG_BOTNAME);
 					exit(errno);
 				}
 				// set botname
+				free(sSetup.botname);
 				sSetup.botname=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(sSetup.botname,value);
-			} else if ((!strcmp(key,KEY_REALNAME)) && (sSetup.realname==NULL)) {
+			} else if (!strcmp(key,KEY_REALNAME)) {
 				// ser realname
+				free(sSetup.realname);
 				sSetup.realname=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(sSetup.realname,value);
-			} else if ((!strcmp(key,KEY_THREADLIMIT))&& (sSetup.thread_limit<=0)) {
+			} else if (!strcmp(key,KEY_THREADLIMIT)) {
 				tmp=atoi(value);
 				if ((tmp<=0) || (tmp>MAX_THREADS_LIMIT)) {
 					errno=EDOM;
@@ -317,11 +306,12 @@ void ConfigFileParser(void) {
 				}	
 				// set thread limit
 				sSetup.thread_limit=tmp;
-			} else  if ((!strcmp(key,KEY_DATABASEPATH))&& (sSetup.pDatabasePath==NULL)) {
+			} else  if (!strcmp(key,KEY_DATABASEPATH)) {
 				// set database path
+				free(sSetup.pDatabasePath);
 				sSetup.pDatabasePath=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(sSetup.pDatabasePath,value);
-            } else if ((!strcmp(key,KEY_AUTOLOGOFF))&& (sSetup.AutoLoggoff<MIN_LOGOFF)) {
+            } else if (!strcmp(key,KEY_AUTOLOGOFF)) {
 				tmp=atoi(value);
 				if (tmp<=0) {
 					errno=EDOM;
@@ -330,7 +320,7 @@ void ConfigFileParser(void) {
 				}	
 				// set auto logoff time
 				sSetup.AutoLoggoff=tmp;
-			} else if ((!strcmp(key,KEY_SENDDELAY))&& (sSetup.sendDelay<MIN_ALT)) {
+			} else if (!strcmp(key,KEY_SENDDELAY)) {
 				tmp=atoi(value);
 				if (tmp<=0) {
 					errno=EDOM;
@@ -339,7 +329,7 @@ void ConfigFileParser(void) {
 				}	
 				// set auto logoff time
 				sSetup.sendDelay=tmp;
-			} else if ((!strcmp(key,KEY_ALT))&& (sSetup.AccountLiveTime==0)) {
+			} else if (!strcmp(key,KEY_ALT)) {
 				tmp=atoi(value);
 				if (tmp<0) {
 					errno=EDOM;
@@ -348,7 +338,7 @@ void ConfigFileParser(void) {
 				}	
 				// set account live time
 				sSetup.AccountLiveTime=tmp;
-			} else if ((!strcmp(key,KEY_PINGTIMEOUT))&& (sSetup.iTimeout==0)) {
+			} else if (!strcmp(key,KEY_PINGTIMEOUT)) {
 				tmp=atoi(value);
 				if (tmp<=0) {
 					errno=EDOM;

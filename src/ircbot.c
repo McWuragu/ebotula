@@ -54,12 +54,20 @@ int main(int argc,const char *argv[]) {
 	pthread_t timeThread;
 	
 	// init config
+	sSetup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
+	strcpy(sSetup.botname,DEFAULT_BOTNAME);
+	sSetup.pDatabasePath=(char *)malloc((strlen(DATABASEDIR)+9)*sizeof(char));
+	sprintf(sSetup.pDatabasePath,"%s/ebotula",DATABASEDIR);
+	sSetup.realname=(char *)malloc((strlen(DEFAULT_REALNAME)+1)*sizeof(char));
+	strcpy(sSetup.realname,DEFAULT_REALNAME);
+	sSetup.configfile=(char *)malloc((strlen(CONFDIR)+strlen(CONFFILE)+1)*sizeof(char));
+	sprintf(sSetup.configfile,"%s%s",CONFDIR,CONFFILE);
 	sSetup.newMaster=false;
-	sSetup.AccountLiveTime=0;
-	sSetup.AutoLoggoff=0;
-	sSetup.sendDelay=-1;
-	sSetup.iTimeout=0;
-	sSetup.thread_limit=0;
+	sSetup.AccountLiveTime=MIN_ALT;
+	sSetup.AutoLoggoff=MIN_LOGOFF;
+	sSetup.sendDelay=0;
+	sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
+	sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
 
 	
 
@@ -76,65 +84,32 @@ int main(int argc,const char *argv[]) {
 	openlog(PACKAGE,LOG_PERROR,LOG_DAEMON);
 	#endif
 	
+    
+    // Look for the config file  parameter
+	for (i=1;i<argc;i++) {
+		if (argv[i][0]=='-') {
+			if (argv[i][1]=='f') {
+				free(sSetup.configfile);
+				sSetup.configfile=(char *)malloc((strlen(argv[++i])+1)*sizeof(char));
+				strcpy(sSetup.configfile,argv[i]);
+			}
+		}
 
-	// check for parameter
-	if (argc>1) {
-		ComandLineParser(argc,argv);
-		syslog(LOG_NOTICE,SYSLOG_READ_CMD);
 	}
-
-	//  checking  config  file path
-	if (sSetup.configfile==NULL) {
-		sSetup.configfile=(char *)malloc((strlen(CONFDIR)+strlen(CONFFILE)+1)*sizeof(char));
-		sprintf(sSetup.configfile,"%s%s",CONFDIR,CONFFILE);
-
-	}
-
 	DEBUG("File %s",sSetup.configfile);
 
 	// read config file
 	ConfigFileParser();
     syslog(LOG_NOTICE,SYSLOG_READ_CONFFILE);
 	
-
-	// check config datums and set this of default
-	if (!sSetup.thread_limit) {
-		sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
+	// check for parameter
+	if (argc>1) {
+		ComandLineParser(argc,argv);
+		syslog(LOG_NOTICE,SYSLOG_READ_CMD);
 	}
 
-	if (!sSetup.botname) {
-		sSetup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
-		strcpy(sSetup.botname,DEFAULT_BOTNAME);
-	}
-	
-	if (!sSetup.pDatabasePath) {
-		sSetup.pDatabasePath=(char *)malloc((strlen(DATABASEDIR)+9)*sizeof(char));
-		sprintf(sSetup.pDatabasePath,"%s/ebotula",DATABASEDIR);
-	}
-
-	if (!sSetup.realname) {
-		sSetup.realname=(char *)malloc((strlen(DEFAULT_REALNAME)+1)*sizeof(char));
-		strcpy(sSetup.realname,DEFAULT_REALNAME);
-	}
-
-	if (sSetup.sendDelay<0) {
-		sSetup.sendDelay=0;
-	}
-
-	if (sSetup.iTimeout<0) {
-		sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
-		DEBUG("Default ping timeout");
-	}
-
-	if (sSetup.AccountLiveTime<MIN_ALT) {
-		sSetup.AccountLiveTime=MIN_ALT;
-		DEBUG("Default accountl live time");
-	}
-
-	if (sSetup.AutoLoggoff<MIN_LOGOFF) {
-		sSetup.AutoLoggoff=MIN_LOGOFF;
-		DEBUG("Default accountl live time");
-	} else if (sSetup.AccountLiveTime<sSetup.AutoLoggoff) {
+	// check the automatic times
+	if (sSetup.AccountLiveTime<sSetup.AutoLoggoff) {
 		sSetup.AutoLoggoff=sSetup.AccountLiveTime;
 	}
 
