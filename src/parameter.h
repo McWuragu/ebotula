@@ -25,6 +25,7 @@
 
 void cmd_line(int argc,const char *argv[]);
 void read_config_file(void);
-void print_msg(const char *msg[]);
+void dialogMaster(void);
+
 
 #endif

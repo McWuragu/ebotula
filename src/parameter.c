@@ -142,7 +142,7 @@ void cmd_line(int argc,const char *argv[]) {
 				break;
 			case 'm':
 				DEBUG("Found bot master option");
-				setup.createMaster=true;
+				setup.newMaster=true;
 				break;
 			case 'd':
 				DEBUG("Found  database path option");
@@ -249,11 +249,52 @@ void read_config_file(void) {
 	}
 	fclose(fd);
 }
+
 // ############################################################################# 
-void print_msg(const char *msg[]) {
-    int i;
-	for (i=0;msg[i][0]!=EOM;i++) {
-		printf("%s",msg[i]);
+void dialogMaster(void){
+	char  name[18],passwd[10],repasswd[10];
+
+	// insert the login name
+	printf(MSG_MASTER_TITLE);
+	printf(MSG_MASTER_LOGIN);
+	fgets(name,17,stdin);
+
+	// check loging
+	if (strpbrk(name,NOT_ALLOW_CHAR)) {
+		fprintf(stderr,ERR_NOT_ALLOW_CHAR);
+		exit(1);
 	}
-	exit(true);
+
+
+	// insert the password
+	printf(MSG_MASTER_PASS);
+	fgets(passwd,8,stdin);
+	printf(MSG_MASTER_REPASS);
+	fgets(repasswd,8,stdin);
+
+
+	// check the password
+	if (strcmp(passwd,repasswd)) {
+		fprintf(stderr,MSG_MASTER_PASS_ERR);
+		exit(1);
+	} else if (strpbrk(passwd," ")) {
+		fprintf(stderr,ERR_NOT_ALLOW_CHAR);
+		exit(1);
+	}
+
+	trim(name);
+	trim(passwd);
+
+
+	// create account
+	if (!add_db(USER_DB,name,passwd)) {
+		printf(MSG_MASTER_EXISTS);
+		exit(1);
+	}
+
+
+	if (!add_db(ACCESS_DB,name,"+ov")) {
+		printf(MSG_MASTER_ERR);
+		exit(1);
+	}
 }
