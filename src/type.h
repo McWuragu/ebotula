@@ -45,6 +45,8 @@ typedef struct ConfStruct{
     int iTimeout;
     /** a flag to signal that a new master want create */
     boolean newMaster;
+    /** the name of the user for execution in the root mode */
+    char * sExeUser;
 } ConfigSetup_t;
 
 
