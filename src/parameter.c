@@ -276,7 +276,12 @@ void ComandLineParser(int argc,char *const argv[]) {
                 }
                 sSetup.iTimeout=tmp;
                 break;
+	    case 'f':
+		/* Dummy, Configfile allready parsed */
+		i++;
+		break;
             default:
+		printf("%s\n",argv[i]);
                 printMsg(getCmdLineError());
                 exit(-1);
                 break;
