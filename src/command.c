@@ -85,7 +85,7 @@ void help(char *pLine) {
 					   && strcmp(irchelp_msg[i],"!part")
 					   && strcmp(irchelp_msg[i],"!addchannel")
 					   && strcmp(irchelp_msg[i],"!rmchannel")
-					   && strcmp(irchelp_msg[i],"!channels")
+					   && strcmp(irchelp_msg[i],"!chanlist")
 					   && strcmp(irchelp_msg[i],"!rmuser")
 					   && strcmp(irchelp_msg[i],"!allsay")
 					   && strcmp(irchelp_msg[i],"!nick"))) {
@@ -437,6 +437,7 @@ void partChannel(char *pLine) {
 // Bot comand: !die
 // ######################################################################### 
 void die(char *pLine) {
+	notice(getNickname(pLine),MSG_DIE_OK);
 	stopParser(0);
 }
 // ######################################################################### 
@@ -463,35 +464,54 @@ void setNick(char *pLine){
 	
 }
 // ######################################################################### 
-// Bot comand: !channels
+// Bot comand: !chanlist
 // ######################################################################### 
-void listChannels(char *pLine){
+void chanlist(char *pLine){
 	char *pNick,*buffer;
 	char **ppChannels;
+	char *pMode;
+	char *pMsgStr;
 	int i=0,buffer_size=0;
+	ChannelDataType *pChannelData;
+
+	DEBUG("Build channel list...");
 
 	pNick=getNickname(pLine);
+	
+	notice(pNick,MSG_CHANNELLIST_BEGIN);
 
 	// get  the channel list form the DB
 	ppChannels=list_db(CHANNEL_DB);
 	
-	while (ppChannels[i]!=NULL) {
-		buffer_size+=strlen(ppChannels[i])+1;
-		i++;
+
+	for (i=0;ppChannels[i]!=NULL;i++) {
+		pChannelData=StrToChannelData(get_db(CHANNEL_DB,ppChannels[i]));
+		pMode=ChannelModeToStr(pChannelData->pModes);
+
+		DEBUG("...for channel %s",ppChannels[i]);
+		notice(pNick,ppChannels[i]);
+
+		pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_MODE)+strlen(pMode)+2)*sizeof(char));
+		sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_MODE,pMode);
+		notice(pNick,pMsgStr);
+		free(pMsgStr);
+
+		pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_TOPIC)+strlen(pChannelData->pTopic)+2)*sizeof(char));
+		sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_TOPIC,pChannelData->pTopic);
+		notice(pNick,pMsgStr);
+		free(pMsgStr);
+
+		pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_GREAT)+strlen(pChannelData->pGreating)+2)*sizeof(char));
+		sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_GREAT,pChannelData->pGreating);
+		notice(pNick,pMsgStr);
+		free(pMsgStr);
+
+
+		free(pMode);
+		free(pChannelData);
+		
 	}
-	
-	// create the buffer
-	buffer=(char *)malloc((strlen(MSG_CHANNELS)+buffer_size+1 )*sizeof(char));
-	sprintf(buffer,MSG_CHANNELS);
-	
-	i=0;
-    while (ppChannels[i]!=NULL) {
-        strcat(buffer," ");
-		strcat(buffer,ppChannels[i]);
-		i++;
-	}
-	DEBUG("%s",buffer);
-	notice(pNick,buffer); 
+	notice(pNick,MSG_CHANNELLIST_END);
 }
 // ######################################################################### 
 // Bot comand: !version
@@ -887,7 +907,8 @@ void chanmode(char *pLine) {
 	
 	// read the new channel parameters
 	pNewMode=StrToChannelMode(getParameters(pLine));
-    
+    DEBUG("Found the new channel modes \"%s\"",ChannelModeToStr(pNewMode));
+
 	DEBUG("Build the new modes for the channel %s",pChannel);
 	// build the new channel parameters
 	for (i=1;i<MAX_MODES;i++) {
@@ -908,6 +929,7 @@ void chanmode(char *pLine) {
 					strcpy(pChannelData->pModes->pLimit,pNewMode->pLimit);
 				}
 			}
+			
 		} else if (pNewMode->pModeStr[MOD_TYPE]=='-'){
 			// remove  flags from the pChanneldata
 			if (pNewMode->pModeStr[i]!=' ') {
@@ -922,14 +944,23 @@ void chanmode(char *pLine) {
 					pChannelData->pModes->pLimit[0]='\0';
 				}
 			}
+
 		}
 	}
 	
-	DEBUG("Write the new channel setting")
+
+	// check the exit  of channell modes
+	// set or remove the leading plus
+	if (strpbrk(pChannelData->pModes->pModeStr,CHANNEL_MODES)) {
+		pChannelData->pModes->pModeStr[0]='+';
+	} else {
+		pChannelData->pModes->pModeStr[0]=' ';
+	}
+
+	DEBUG("Write the new modes channel \"%s\"",ChannelModeToStr(pChannelData->pModes))
 	// set the new mode in database
 	free(pChannelSet);
-	pChannelData->pModes->pModeStr[0]='+';
-	pChannelSet=ChannelDataToStr(pChannelData);
+    pChannelSet=ChannelDataToStr(pChannelData);
 	replace_db(CHANNEL_DB,pChannel,pChannelSet);
 	
 	DEBUG("Set the new channel modes")
