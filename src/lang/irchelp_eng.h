@@ -125,11 +125,6 @@ static char *pIrcHelp[][15] = {
 	"The greeting is a message the bot sends to the channel",
 	"when a user joins the channel.",
     },
-    // CHANNELS
-    {
-        "Prints out a list of all channels from the bot",
-	"Only channels the bot is within are listed.",
-    },
     // BAN
     {
         "bans a user from the channnel",
@@ -169,6 +164,11 @@ static char *pIrcHelp[][15] = {
         "Shutdown the bot.",
 	"The bot is stoped but unlike RESTART, DIE doesn't start",
 	"the bot again."
+    },
+    // CHANNELS
+    {
+        "Prints out a list of all channels from the bot",
+	"Only channels the bot is within are listed.",
     },
     // RMCHANNEL
     {

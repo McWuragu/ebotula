@@ -120,12 +120,6 @@ static char *pIrcHelp[][15] = {
         "Dieses Kommando bietet die Möglichkeit eine Begrüssung für einen",
         "Channel zu setzen oder diese auch zulöschen",
     },
-    // CHANNELS
-    {
-        "gibt eine Liste von Channels",
-        "Damit kann man sich einer Liste der Channels mit den gesetzten",
-        "Rechten, Topics und Begrüssungen ausgeben lassen",
-    },
     // BAN
     {
         "bannt einen User aus dem  Channel",
@@ -166,6 +160,12 @@ static char *pIrcHelp[][15] = {
     {
         "stopt den bot",
         "Damit läst sich der Bot beenden und sauber remote herunterfahren.",
+    },
+    // CHANNELS
+    {
+        "gibt eine Liste von Channels",
+        "Damit kann man sich einer Liste der Channels mit den gesetzten",
+        "Rechten, Topics und Begrüssungen ausgeben lassen",
     },
     // RMCHANNEL
     {
