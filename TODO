@@ -13,7 +13,7 @@ ToDo List
 - Complete the  documentation
 - Translate the all documents
 - make better performance
-- reconnect after connection lost
+- channel mesages as ACTIONs
 - join in channel after a inviting
 - join in channel with keyword
 - invite in the channel by the  bot
