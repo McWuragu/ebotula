@@ -60,6 +60,7 @@ AC_CHECK_LIB(pthread,pthread_create,
 )
 AC_SUBST(PTHREAD_LIB)
 
+
 dnl ===========================
 dnl Path section
 dnl ===========================
@@ -89,6 +90,12 @@ if test "$enable_debug" = no; then
     AC_DEFINE(NDEBUG,,Undefine if you want create a debugging version)
 else
     DFLAGS=-g
+    AC_CHECK_LIB(rt,clock_gettime,
+      [RT_LIB="-lrt"],
+      AC_MSG_ERROR("rt library not fount.")
+    )
+    AC_SUBST(RT_LIB)
+
 fi
 AC_SUBST(DFLAGS)
 
