@@ -24,14 +24,11 @@
 #include "parameter.h"
 #include "messages.h"
 #include "network.h"
-#include "irc.h"
-#include "command.h"
+#include "parser.h"
+#include "timing.h"
 #include "dbaccess.h"
-#include "handles.h"
 #include "config.h"
-
-
-	 
+  
 	 
 
 ConfType setup;	// global config structur
@@ -41,21 +38,29 @@ int stop;			// singal for stop the endless loop
 
 
 pthread_mutex_t	send_mutex;			// mutex for synchronize of send command
-pthread_mutex_t	dbaccess_mutex;		// mu8tex for synchronize of  database access
-
+pthread_mutex_t	dbaccess_mutex;		// mutex for synchronize of database access
+pthread_mutex_t account_mutex;		// mutex for synchronize of accessing to the login db 
 
 int main(int argc,const char *argv[]) {
 	int i;
 	int msgid;
 	char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;
 	pthread_t *thread;
+	pthread_t *timing;
 	
+	// init config
 	setup.newMaster=false;
+	setup.AccountLiveTime=MIN_ALT;
+	setup.AutoLoggoff=MIN_ALT;
+	setup.sendDelay=-1;
+	setup.thread_limit=0;
 
 	// container for a message for the queue
 	MsgBufType msg;
 	bzero(&msg,sizeof(MsgBufType));
     
+	printf(VERSIONSTR);
+
 	// check for parameter
 	if (argc>1) {
 		cmd_line(argc,argv);
@@ -90,6 +95,10 @@ int main(int argc,const char *argv[]) {
 		strcpy(setup.realname,DEFAULT_REALNAME);
 	}
 
+	if (setup.sendDelay<0) {
+		setup.sendDelay=0;
+	}
+
 	DEBUG("-----------------------------------------------");
 	DEBUG("Server %s",setup.server);
 	DEBUG("Port %s",setup.port);
@@ -98,12 +107,15 @@ int main(int argc,const char *argv[]) {
 	DEBUG("Threads %d",setup.thread_limit);
 	DEBUG("Config file %s",setup.configfile);
 	DEBUG("Database path %s",setup.database_path);
+	DEBUG("Sending delay %dms",setup.sendDelay);
+	DEBUG("Account live time %dd",setup.AccountLiveTime);
+	DEBUG("Autolog of after %dd",setup.AutoLoggoff);
 	DEBUG("-----------------------------------------------");
 
 
 	// init Database and the mutex for  access to the database
 	init_database();
-	pthread_mutex_init(&dbaccess_mutex,NULL);
+
 
 	if (setup.newMaster) {
 		dialogMaster();
@@ -113,7 +125,7 @@ int main(int argc,const char *argv[]) {
 	if ((setup.server!=NULL) && (setup.port!=NULL)) {
 		printf("Try connect to %s:%s\n",setup.server,setup.port);
 		connectServer();
-		printf("Bot is connected.\n");
+		printf("Connected to the server\n");
 	} else {
 		closeDatabase();
 		errno=EINVAL;
@@ -123,8 +135,11 @@ int main(int argc,const char *argv[]) {
 
 	// connect to the server and init the mutex  for sending
 	pthread_mutex_init(&send_mutex,NULL);
-    irc_connect();
-	printf("The irc service is connected.\n");
+    pthread_mutex_init(&dbaccess_mutex,NULL);
+	pthread_mutex_init(&account_mutex, NULL);
+	
+	irc_connect();
+	printf("Log on the irc service\n");
 	printf("The bot is runing....\n");
 
 	// open msg queue
@@ -145,6 +160,7 @@ int main(int argc,const char *argv[]) {
 	#endif
 
 	// create the threads
+	//pthread_create(timing,NULL,synchron,NULL);
 	thread=(pthread_t *)malloc(setup.thread_limit*sizeof(pthread_t));
 	for (i=0;i<setup.thread_limit;i++) {
 		pthread_create(&thread[i],NULL,action_thread,NULL);
