@@ -13,6 +13,7 @@
 
 #define  quit()  send_direct("QUIT\r\n");
 
+#include "type.h"
 
 void user(void);
 void pong(void);
@@ -32,4 +33,5 @@ void deban(char *pChannel,char *pMask);
 void mode(char *pChannel, char *pMod, char *pModParameter);
 void whois(char *pNickname);
 
+void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr);
 #endif

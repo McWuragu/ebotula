@@ -52,6 +52,12 @@ typedef struct ConfStruct{
 } ConfigSetup_t;
 
 
+typedef enum {
+    NoticeMode,
+    PrvMsgMode
+} AnswerMode_t;
+
+
 /** the number of channel mode options */
 #define MAX_MODES               11
 #define _MAX_MODES              MAX_MODES+2

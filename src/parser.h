@@ -15,6 +15,7 @@
 
 #include "command.h"
 
+
 /**
 * This parse a line whiche was receive by the  client
 * @param pLine  a pointer of a string
@@ -31,6 +32,8 @@ MsgBuf_t *preParser(char *pLine);
 void *ComandExecutionThread(void *argv);
 
 static int AccessRight(UserLevel_t Level,Cmd_t cmd_id);
+
+
 void stopParser(int sig);
 
 #endif

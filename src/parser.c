@@ -121,7 +121,8 @@ void *ComandExecutionThread(void *argv) {
     char *pChannel;
     char *pNick;
     UserLevel_t Level;
-	
+	AnswerMode_t AnswerMode;
+
 	PQueue pCommandQueue=(PQueue)argv;	
 
     // set the thread cancelable
@@ -143,7 +144,7 @@ void *ComandExecutionThread(void *argv) {
             pNetmask=getNetmask(pMsg->pMsgLine);
             pChannel=getAccessChannel(pMsg->pMsgLine);
             pNick=getNickname(pMsg->pMsgLine);
-
+            AnswerMode=getAnswerMode(pMsg->pMsgLine);
             Level=getUserLevel(pChannel,pNetmask);
 
             // check the access level
@@ -156,6 +157,7 @@ void *ComandExecutionThread(void *argv) {
                 pMsgItem->pNetmask=pNetmask;
                 pMsgItem->UserLevel=Level;
                 pMsgItem->pRawLine=pMsg->pMsgLine;
+                pMsgItem->AnswerMode=AnswerMode;
                 
 
                 // command router 

@@ -28,7 +28,7 @@ char *getParameters(char const *pLine);
 char *getCommand(char const *pLine);
 char *getChannel(char const *pLine);
 char *getAccessChannel(char const *pLine);
-
+AnswerMode_t getAnswerMode(char const *pLine);
 
 char *getTopic(char const *pLine);
 char *getGreeting(char const *pLine);

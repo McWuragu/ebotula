@@ -126,10 +126,15 @@ typedef struct MsgBufStruct {
     char   *pMsgLine;
 } MsgBuf_t;
 
+
+
+
 /** This is a container for the parameter of the command handler */
 typedef struct MsgItem_s {
     /** user access level of the  calling user */
     UserLevel_t UserLevel;
+    /** the  type of the return channel */
+    AnswerMode_t AnswerMode;
     /** channel of the  command target */
     char *pAccessChannel;
     /** nick name of the comamnd  caller */

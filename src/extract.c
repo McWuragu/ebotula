@@ -146,7 +146,7 @@ char *getAccessChannel(char const *pLine) {
 	char *pParameter;
 	char *pChannel;
 	char *pPos;
-    boolean isInPreamble;
+    boolean  bFoundInPreamble;
 
 	if (!pLine) return NULL;
 
@@ -154,15 +154,15 @@ char *getAccessChannel(char const *pLine) {
 
 	// look for  the  channel name  in preamble
     if (!pParameter) {
-        isInPreamble=true;
+        bFoundInPreamble=true;
     }else if (pParameter[0]!='#') {
-        isInPreamble=true;
+        bFoundInPreamble=true;
     }else {
-        isInPreamble=false;
+        bFoundInPreamble=false;
     }
 
     /* try to extract the channel name */
-    if (isInPreamble) {
+    if (bFoundInPreamble) {
 		// take the channelname  from preamble
 		pChannel=getChannel(pLine);
 		if (!pChannel) {
@@ -376,4 +376,20 @@ char * getBanmask(char const *pLine){
 	
 	return NULL; 
 }
+// #############################################################################
+AnswerMode_t getAnswerMode(char const * pLine){
+    AnswerMode_t _AnserMode;
+    
+    if (pLine) {
+        char *pChannel;
+        pChannel=getChannel(pLine);
 
+        // look for  the  channel name  in preamble
+        if (!pChannel) {
+            _AnserMode=PrvMsgMode;
+        }else {
+            _AnserMode=NoticeMode;
+        }
+    }
+    return _AnserMode;
+}

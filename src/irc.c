@@ -65,14 +65,21 @@ void privmsg(char *pTarget, char *pMsgStr){
     send_line(buffer);
 }
 // #############################################################################
-void notice(char *pNick,char *pMsgStr) {
+void notice(char * pNick,char *pMsgStr) {
     char *buffer;
     buffer=(char *)malloc((strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5)*sizeof(char));
     sprintf(buffer,"NOTICE %s :%s\r\n",pNick,pMsgStr);
     send_line(buffer);
     free (buffer);
 }
-
+// #############################################################################
+void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr){
+    if (AnswerMode==NoticeMode) {
+        notice(pNick,pMsgStr);
+    } else if (AnswerMode==PrvMsgMode){
+        privmsg(pNick,pMsgStr);
+    }
+}
 // #############################################################################
 //void quit(void) {
 //    send_direct("QUIT\r\n");

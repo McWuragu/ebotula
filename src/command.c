@@ -55,7 +55,7 @@ void help(MsgItem_t *pMsg) {
         /* Header of help message */
         for (i=0;pIrcHelp[0][i][0]!=EOM;i++) {
             /* look for the end  of msg */
-            privmsg(pMsg->pCallingNick,pIrcHelp[0][i]);
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pIrcHelp[0][i]);
         }
 
         for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
@@ -78,10 +78,10 @@ void help(MsgItem_t *pMsg) {
             }
             strcat(pMsgStr,(char*)pIrcHelp[CmdIdToHelpId(i)][0]);
             /* send notice */
-            privmsg(pMsg->pCallingNick,pMsgStr);
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
         }
         /* the tail */
-        privmsg(pMsg->pCallingNick,getMsgString(INFO_HELP_END));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_HELP_END));
     } else {
         DEBUG("Spezial help text for a command\n");
 
@@ -108,24 +108,24 @@ void help(MsgItem_t *pMsg) {
                 pMsgPart=getMsgString(INFO_HELP_FOR);
                 pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdList[i])+3)*sizeof(char));
                 sprintf(pTmp,"%s %s:",pMsgPart,pParameter);
-                privmsg(pMsg->pCallingNick,pTmp);
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pTmp);
 
                 /* print  the  help text */
                 for (j=1;pIrcHelp[nCmdHelpID][j][0]!=EOM;j++) {
-                    privmsg(pMsg->pCallingNick,(char*)
+                    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)
                            pIrcHelp[nCmdHelpID][j]);
                 }
 
                 /* syntax from the command */
-                privmsg(pMsg->pCallingNick,pIrcSyntax[0][0]);
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pIrcSyntax[0][0]);
                 for (j=0;pIrcSyntax[nCmdHelpID][j][0]!=EOM;j++) {
-                    privmsg(pMsg->pCallingNick,(char*)pIrcSyntax[nCmdHelpID][j]);
+                    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pIrcSyntax[nCmdHelpID][j]);
                 }
-                privmsg(pMsg->pCallingNick,getMsgString(INFO_HELP_END));
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_HELP_END));
                 return;
             }
         }
-        privmsg(pMsg->pCallingNick,getMsgString(ERR_NOT_COMMAND));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_COMMAND));
     }
 }
 /* #########################################################################
@@ -135,7 +135,7 @@ void hello(MsgItem_t *pMsg) {
     DEBUG("Try to create an new account for %s\n",pMsg->pCallingNick);
 
     if (pMsg->UserLevel>LoggedLevel) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
         return;
     }
 
@@ -147,12 +147,12 @@ void hello(MsgItem_t *pMsg) {
         /* autoidentify after create an new account */
         log_on(pMsg->pNetmask,pMsg->pCallingNick);
 
-        notice(pMsg->pCallingNick,getMsgString(OK_HELLO));
-        notice(pMsg->pCallingNick,getMsgString(OK_HELLO2));
-        notice(pMsg->pCallingNick,getMsgString(OK_IDENT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_HELLO));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_HELLO2));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_IDENT));
         
     } else {
-	    notice(pMsg->pCallingNick,getMsgString(ERR_NICK_EXIST));
+	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NICK_EXIST));
 	} 
 
 }
@@ -174,12 +174,12 @@ void password(MsgItem_t *pMsg) {
 
 	        /* parse the  password  form  parameter list */
 	        if (!pPasswd) {
-        	    notice(pMsg->pCallingNick,getMsgString(INFO_NOT_PASS));
+        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_NOT_PASS));
 	        }
 
         	/* set password */
 	        replace_db(USER_DB,pLogin,pPasswd);
-        	notice(pMsg->pCallingNick,getMsgString(OK_PASSWD));        
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_PASSWD));        
 	    }
     }
 }
@@ -225,7 +225,7 @@ void logoff(MsgItem_t *pMsg,int nRemoveMode) {
 
 			/* delete the queue */
             deleteQueue(pChannelQueue);
-			notice(pMsg->pCallingNick,getMsgString(OK_LOGOFF));
+			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_LOGOFF));
 		}
 	}
 }
@@ -258,7 +258,7 @@ void ident(MsgItem_t *pMsg) {
             if ((pPos=strstr(pParameter," "))==NULL) {
                 /* no Passwd found */
                 /* try empty pass */
-                notice(pMsg->pCallingNick,getMsgString(INFO_NOT_PASS));
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_NOT_PASS));
                 pPasswd="";
             } else {
                 pPasswd=(char *)malloc(strlen(pPos)*sizeof(char));
@@ -278,7 +278,7 @@ void ident(MsgItem_t *pMsg) {
             if (check_db(USER_DB,pLogin,pPasswd)) {
                 DEBUG("User %s found\n",pLogin);
                 log_on(pMsg->pNetmask,pLogin);
-                notice(pMsg->pCallingNick,getMsgString(OK_IDENT));
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_IDENT));
         
                 isMaster=exist_db(ACCESS_DB,pLogin);
         
@@ -305,13 +305,13 @@ void ident(MsgItem_t *pMsg) {
                 }
 				deleteQueue(pChannelQueue);
             } else {
-                notice(pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
             }    
         } else {
-            notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         }
     } else {
-        notice(pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
     }
 }
 /* #########################################################################
@@ -324,13 +324,13 @@ void addChannel(MsgItem_t *pMsg) {
    
 
     if (!pMsg->pAccessChannel){
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
          if (!strcmp(pMsg->pAccessChannel,pCmdChannel)) {
-            notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
             return;
         }
     }
@@ -339,18 +339,18 @@ void addChannel(MsgItem_t *pMsg) {
 
     /* checking of channel exist */
     if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
     } else {
         /* add channel */
         channelmod=(char *)malloc(3*sizeof(char));
         strcpy(channelmod,"\t\t");
         add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
-        notice(pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
     }
 
     /* join the channel */
     join(pMsg->pAccessChannel);
-    notice(pMsg->pCallingNick,getMsgString(OK_JOIN));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
 
 }
 /* #########################################################################
@@ -360,7 +360,7 @@ void rmChannel(MsgItem_t *pMsg){
     
     /* check channel parameter */
     if (!pMsg->pAccessChannel) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
     
@@ -369,16 +369,16 @@ void rmChannel(MsgItem_t *pMsg){
 
     /* checking of channel exists */
     if (!del_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
     } else {
-        notice(pMsg->pCallingNick,getMsgString(OK_RMCHANNEL));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RMCHANNEL));
     }
 
     // TODO: remove old access  rights for this channel
 
     /* part the channel */
     part(pMsg->pAccessChannel);
-    notice(pMsg->pCallingNick,getMsgString(OK_PART));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_PART));
 
 }
 /* #########################################################################
@@ -390,14 +390,14 @@ void joinChannel(MsgItem_t *pMsg) {
     
 
     if (!pMsg->pAccessChannel){
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
         /* compare the current channel and  the channel for joining */
         if (!(strcmp(pMsg->pAccessChannel,pCmdChannel))) {
-            notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
             return;
         }
     }
@@ -405,7 +405,7 @@ void joinChannel(MsgItem_t *pMsg) {
     DEBUG("Join the channel %s\n",pMsg->pAccessChannel);
     /* join the channel */
     join(pMsg->pAccessChannel);
-    notice(pMsg->pCallingNick,getMsgString(OK_JOIN));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
 
 }
 /* #########################################################################
@@ -414,20 +414,20 @@ void joinChannel(MsgItem_t *pMsg) {
 void partChannel(MsgItem_t *pMsg) {
 
     if (!pMsg->pAccessChannel){
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
     } else {
         DEBUG("Part the channel %s\n",pMsg->pAccessChannel);
 
         /* part the channel */
         part(pMsg->pAccessChannel);
-        notice(pMsg->pCallingNick,getMsgString(OK_PART));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_PART));
     }
 }
 /* #########################################################################
    Bot comand: !die
    ######################################################################### */
 void die(MsgItem_t *pMsg) {
-    notice(pMsg->pCallingNick,getMsgString(OK_DIE));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_DIE));
     stopParser(0);
 }
 /* #########################################################################
@@ -435,7 +435,7 @@ void die(MsgItem_t *pMsg) {
    ######################################################################### */
 void restart(MsgItem_t *pMsg) {
     extern boolean again;
-    notice(pMsg->pCallingNick,getMsgString(OK_RESTART));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RESTART));
     again=true;
     stopParser(0);
 }
@@ -449,12 +449,12 @@ void setNick(MsgItem_t *pMsg){
 
     /* read parameters */
     if (!pParameter) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
     } else if (!NickStringCheck(pParameter)) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NICK_INVALID));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NICK_INVALID));
     } else {
         nick(pParameter);
-        notice(pMsg->pCallingNick,getMsgString(OK_NICK_SET));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_NICK_SET));
     }
 
 }
@@ -531,7 +531,7 @@ void version(MsgItem_t *pMsg) {
     // creat Versions String
     sprintf(pMsgStr,VERSIONSTR);
     strcat(pMsgStr,"\r\n");
-    notice(pMsg->pCallingNick,pMsgStr);
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
 }
 /* #########################################################################
    Bot comand: !greeting <#channel> <text>
@@ -543,7 +543,7 @@ void setGreeting(MsgItem_t *pMsg) {
     ChannelData_t *pChannelData;
 
     if (!pMsg->pAccessChannel){
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
@@ -568,12 +568,12 @@ void setGreeting(MsgItem_t *pMsg) {
 
     	/* message */
 	    if (!pChannelData->pGreeting) {
-     	   notice(pMsg->pCallingNick,getMsgString(OK_RM_GREETING));
+     	   sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RM_GREETING));
 	    } else {
-    	    notice(pMsg->pCallingNick,getMsgString(OK_SET_GREETING));
+    	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_GREETING));
 	    }
 	} else {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
 	}
 }
 /* #########################################################################
@@ -587,7 +587,7 @@ void setTopic(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
@@ -611,14 +611,14 @@ void setTopic(MsgItem_t *pMsg) {
 
 	    /* message */
     	if (!pChannelData->pTopic) {
-	        notice(pMsg->pCallingNick,getMsgString(OK_RM_TOPIC));
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RM_TOPIC));
     	} else {
-        	notice(pMsg->pCallingNick,getMsgString(OK_SET_TOPIC));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_SET_TOPIC));
     	}
 
 	    topic(pMsg->pAccessChannel,pChannelData->pTopic);
 	} else {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
 	}
 }
 /* #########################################################################
@@ -640,7 +640,7 @@ void greeting(MsgItem_t *pMsg) {
 
         if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
     	    if ((greeting=getGreeting(pChannelSet))) {
-            	notice(pMsg->pCallingNick,greeting);
+            	sendMsg(NoticeMode,pMsg->pCallingNick,greeting);
         	}
 		}
     }
@@ -653,13 +653,13 @@ void say(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
     pParameter=getParameters(pMsg->pRawLine);
     if (!pParameter) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
@@ -675,7 +675,7 @@ void allsay(MsgItem_t *pMsg) {
     
 
     if (!(pMsgStr=getParameters(pMsg->pRawLine))) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
@@ -707,12 +707,12 @@ void banuser(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel){
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
     if (!(pParameter=getParameters(pMsg->pRawLine))) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
@@ -720,13 +720,13 @@ void banuser(MsgItem_t *pMsg) {
     pToBanNick=pArgv[0];
 
     if (!pToBanNick) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
 
     if (strcmp(pToBanNick,sSetup.botname)==0) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOTSELF_BAN));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOTSELF_BAN));
         return;
     }
 
@@ -758,13 +758,13 @@ void debanuser(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel){
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
     /* extract parameters */
     if (!(pParameter=getParameters(pMsg->pRawLine))){
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
@@ -774,7 +774,7 @@ void debanuser(MsgItem_t *pMsg) {
     // reset the ban
     if (pArgv) {
         deban(pMsg->pAccessChannel,pArgv[0]);
-        notice(pMsg->pCallingNick,getMsgString(OK_DEBAN));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_DEBAN));
     }
     return;
 }
@@ -795,13 +795,13 @@ void kickuser(MsgItem_t *pMsg) {
     char *pData;
 
     if (!pMsg->pAccessChannel) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
     /* get parameters*/
     if (!(pParameter=getParameters(pMsg->pRawLine))){
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
@@ -812,7 +812,7 @@ void kickuser(MsgItem_t *pMsg) {
     if (!pKicknick) {return;}
     
     if (strcmp(pKicknick,sSetup.botname)==0) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOTSELF_KICK));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOTSELF_KICK));
         return;
     }
 
@@ -826,7 +826,7 @@ void kickuser(MsgItem_t *pMsg) {
 
     /* read  the  login name of the  kicking user */
     if (!(pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_KICK));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_KICK));
         return;
     }
 
@@ -861,7 +861,7 @@ void usermode(MsgItem_t *pMsg){
     char mod[3];
 
     if(!pMsg->pAccessChannel){
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
     
@@ -869,13 +869,13 @@ void usermode(MsgItem_t *pMsg){
 
 	    /* check the channel */
     	if (!(exist_db(CHANNEL_DB,pMsg->pAccessChannel))) {
-        	notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
     	    return;
 	    }
                    
     	/* get parameters */
 	    if (!(pParameter=getParameters(pMsg->pRawLine))) {
-            notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
             return;
         }
 
@@ -884,7 +884,7 @@ void usermode(MsgItem_t *pMsg){
 
     	/* look for the space and separat the login for the user which want modify */
 	    if (!(pPos=strchr(pParameter,' '))) {
-            notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         	return;
     	}
 
@@ -900,10 +900,10 @@ void usermode(MsgItem_t *pMsg){
 
     	/* check login in the user db */
 	    if (!(exist_db(USER_DB,pLogin))) {
-	        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
         	return;
     	} else if (!strcmp(pLogin,accesslogin)) {
-        	notice(pMsg->pCallingNick,getMsgString(ERR_NOT_SELF));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_SELF));
     	    return;
 	    }
 
@@ -918,7 +918,7 @@ void usermode(MsgItem_t *pMsg){
 	        if ((oldmod=get_db(ACCESS_DB,pLogin))) {
 		   	    /* only a master  can modify  a other master */
     		    if (strchr(oldmod,'m') && pMsg->UserLevel != MasterLevel) {
-            		notice(pMsg->pCallingNick,getMsgString(ERR_NOT_MASTER));
+            		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_MASTER));
 	        	    return;
     		    }
 		
@@ -943,13 +943,13 @@ void usermode(MsgItem_t *pMsg){
         	break;
     	case 'm':
 	        if (pMsg->UserLevel != MasterLevel) {
-        	    notice(pMsg->pCallingNick,getMsgString(ERR_NOT_MASTER));
+        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_MASTER));
     	    } else {
 	            mod[1]=pPos[1];
         	}
     	    break;
 	    default:
-        	notice(pMsg->pCallingNick,getMsgString(ERR_UNKNOWN_MODS));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_UNKNOWN_MODS));
     	    return;
 	    }
 
@@ -1025,7 +1025,7 @@ void usermode(MsgItem_t *pMsg){
 	       	    }
     	    }
 		}
-	    notice(pMsg->pCallingNick,getMsgString(OK_USERMODE));
+	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_USERMODE));
 	} 
 }
 /* #########################################################################
@@ -1042,12 +1042,12 @@ void chanmode(MsgItem_t *pMsg) {
 
 
     if (!pMsg->pAccessChannel) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
     
     if(!(pParameters=getParameters(pMsg->pRawLine))) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
@@ -1120,7 +1120,7 @@ void chanmode(MsgItem_t *pMsg) {
     	/* set the mods */
 	    mode(pMsg->pAccessChannel,ChannelModeToStr(pNewMode),NULL);
     } else {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
     }
 }
 /* #########################################################################
@@ -1134,7 +1134,7 @@ void rmuser(MsgItem_t *pMsg) {
 	QueueData *pChannel;
 	
     if (!(pLogin=getParameters(pMsg->pRawLine))) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
@@ -1160,10 +1160,10 @@ void rmuser(MsgItem_t *pMsg) {
             }
 			deleteQueue(pChannelQueue);
         }
-        notice(pMsg->pCallingNick,getMsgString(OK_RMUSER));        
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RMUSER));        
     	DEBUG("Remove %s from the user list\n",pLogin);
     } else {
-    	notice(pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
+    	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
     }
 }
 /* #########################################################################
@@ -1284,7 +1284,7 @@ void userlist(MsgItem_t *pMsg){
         DEBUG("Genrate the Userlist for a owner\n");
 
         if (!pMsg->pAccessChannel) {
-            notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
             return;
         }
         
@@ -1352,7 +1352,7 @@ void inviteuser(MsgItem_t *pMsg){
     
     // extract and select the nick name  for inviting
     if (!(pParameter=getArgument(pMsg->pRawLine))) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
     
