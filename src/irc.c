@@ -36,7 +36,7 @@ void user(void) {
     int buffer_size;
 
     // get the username  and hostname
-    pw = getpwuid(getuid());
+    pw = getpwuid(geteuid());
     gethostname(hostname,HOSTNAME_BUFFER_SIZE);
 
     // calculat the command size
