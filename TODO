@@ -3,7 +3,6 @@ ToDo Liste
 - Fehledne Kommandos
 	- !mode
 	- !topic
-	- !greating
 	- !kick
 	- !ban
 	- !timeban
@@ -14,7 +13,6 @@ ToDo Liste
 	- !rmuser
 
 - Automasitsches Löschen von Accounts nach einer Zeit  delta t 
-- Ausgabe der Begrüssung anch dem eine User den Channel gejoint ist
 - Setzen von Op-Recht bei User nach Ident  und Join
 - Setzen von Voice-Recht bei User nach Ident  und Join
 - Setzt Topic beim Join und beim  Ändern
