@@ -15,28 +15,11 @@
 
 	// Here insert all message in german
 
-// syslog
-static MsgStruct_t Syslog[]= {
-	{ SYSLOG_READ_CMD,		"Kommandozeilenparameter gefunden und eingelesen"},
-	{ SYSLOG_READ_CONFFILE,		"Konfigurationsdatei gefunden und eingelesen"},
-	{ SYSLOG_UNKNOWN_CMDID,		"Unbekannte Kommando ID"},
-	{ SYSLOG_ACCOUNT_RM,		"Ein Account wurde von der Liste entfernt"},
-	{ SYSLOG_MSG_QUEUE,		"Kann keine Messagequeue anlegen"},
-	{ SYSLOG_CONFIG_FILE,		"Kann Konfigurationsdatei nicht	öffnen"},
-};
 
 // excute error
 static MsgStruct_t Msg[] ={
-   	// Messages for the master dialog
-	{ INFO_MASTER_TITLE,	"Masteraccount anlegen\n\n" },
-	{ INFO_MASTER_LOGIN,	"Loginname : " },
-	{ INFO_MASTER_PASS,	"\nPasswort  : " },
-	{ INFO_MASTER_REPASS,	"Passwort wiederholen: " },
-	{ ERR_MASTER_PASS,	"Passwörter nicht identisch" },
-	{ ERR_MASTER,		"Kann den Account nicht als Master anlegen"  },
 
     // output of strerr
-    { ERR_RESTART,		"Kann nicht neustarten" },
 	{ ERR_MISSING_PARAM,	"Parameter fehlt" },
 	{ ERR_PORT_PARAMETER,	"Portnummer liegt ausserhalb des Bereiches" },
 	{ ERR_WRONG_SERVERNAME,	"Servername ist unzulässig" },
@@ -50,7 +33,6 @@ static MsgStruct_t Msg[] ={
     { ERR_LOGOFF_RANGE,	"Die Auslogzeit ist ungültig" },
 	{ ERR_THREAD_RANGE,	"Das Threadlimit liegt ausserhalb des Bereiches" },
 	{ ERR_MUTEX,		"Synchronisation der Threads nicht möglich" },
-	{ ERR_NOT_ALLOW_CHAR,	"Nicht erlaubte Zeichen wurden verwendet" },
 
 
     // command acknowledgment
@@ -95,7 +77,6 @@ static MsgStruct_t Msg[] ={
 	// Errors
 	{ ERR_ADDCHANNEL_ALREADY,	"Dieser Channel ist schon auf der Channelliste" },
 	{ ERR_NICK_INVALID,	"Der Nickname ist ungültig" },
-	{ ERR_NICK_EXIST,	"Es gibt schon ein Account mit diesem Nicknamen" },
 	{ ERR_ALREADY_LOGON,	"Du bist schon identifiziert" },
 	{ ERR_UNKNOWN_MODS,	"Dieser Modus ist ungültig"  },
 	{ ERR_USERLIST_EMPTY,	"Die Benutzerliste ist leer"  },
@@ -122,40 +103,4 @@ static MsgStruct_t Msg[] ={
 
 
 
-	static char * unknow_parameter[]=
-	{
-		"Unbekannte Option\n",
-		"Gib \"",PACKAGE," -h\" für mehr Informationen ein.\n",
-		"."
-	};
-
-
-
-	static char  * help_msg[]=
-	{
-		"\n",
-		PACKAGE," [Optionen]\n",
-		"\n\tOptionen:\n",
-		"\t-a Tage\t\tSetzt die maximale Loginzeit.\n",
-		"\t-b Name\t\tSetzt den Namen des Bots.\n",
-		"\t-c Sek\t\tSetzt das Timeoutlimit.\n",
-		"\t-d Pfad\t\tSetzt den Pfad zu Datenbank\n",
-        "\t-D Level\tSetzt das Log Level (0-7)\n",
-        "\t-e ms\t\tSetzt die Verzögerung für das langsame Senden.\n",
-		"\t-f Datei\tSetzt Pfad zur Konfigurationsdatei\n",
-		"\t-g group\tSetzt die Group unter der gestartet werden soll (nur root).\n",
-        "\t-h\t\tGibt diese Hilfe aus.\n",
-		"\t-i Sek\t\tSetzt die Verzögerung für die Initialisierung.\n",
-        "\t-k Tage\t\tSetzt die maximal Lebenszeit eines Account.\n",
-		"\t-l Zeichen/min\tLimit für das schnelle Senden.\n"
-		"\t-m\t\tLegt neuen Master an.\n",
-		"\t-n ms\t\tSetzt die Verzögerung für das schnelle Senden.\n",
-		"\t-p Port\t\tSetzt den Port des IRC-Servers.\n"
-		"\t-r String\tSetzt den String für Realnamefeld.\n",
-		"\t-s Server\tSetzt den IRC Server.\n",
-		"\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n",
-        	"\t-u user\t\tSetzt den User unter dem gestartet werden soll (nur root).\n",
-		"\t-v\t\tGibt die Version aus.\n",
-		"."
-	};
 #endif

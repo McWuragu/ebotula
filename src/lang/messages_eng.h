@@ -13,27 +13,11 @@
 
 #include "../messages.h"
 
-static MsgStruct_t  Syslog[] = {
-	// syslog
-	{ SYSLOG_READ_CMD,		    "Command line parameters found and read" },
-	{ SYSLOG_READ_CONFFILE,		"Configuration file found and read" },
-	{ SYSLOG_UNKNOWN_CMDID,		"Unknown command id" },
-	{ SYSLOG_ACCOUNT_RM,		"An account is removed from the list" },
-	{ SYSLOG_MSG_QUEUE,		    "Can't create the message queue." },
-	{ SYSLOG_CONFIG_FILE,		"Can't open the config file." },
-};
 
 static MsgStruct_t Msg[] = {
 	// Messages for the master dialog
-	{ INFO_MASTER_TITLE,		"Create a master account"},
-	{ INFO_MASTER_LOGIN,		"Type the login: " },
-	{ INFO_MASTER_PASS,		"Enter the password: "},
-	{ INFO_MASTER_REPASS,		"Reenter the password: "},
-	{ ERR_MASTER_PASS,		"Typing error... passwords not equal" },
-	{ ERR_MASTER,			"Can't set this account as master." },
-
+    
     // output of strerr
-	{ ERR_RESTART,			"Can't restart"},
 	{ ERR_MISSING_PARAM,		"Missing value"},
 	{ ERR_PORT_PARAMETER,		"The portvalue is out of range."},
 	{ ERR_WRONG_SERVERNAME,		"The servername is irregular."},
@@ -47,7 +31,6 @@ static MsgStruct_t Msg[] = {
     { ERR_LOGOFF_RANGE,			"The auto logoff time is invalid."},
 	{ ERR_THREAD_RANGE,		"The threadlimit is out of range." },
     { ERR_MUTEX,			"Can't synchronize the threads." },
-	{ ERR_NOT_ALLOW_CHAR,		"Forbidden characters used." },
 
 
 	// command acknowledgment
@@ -92,7 +75,6 @@ static MsgStruct_t Msg[] = {
     // Errors
 	{ ERR_ADDCHANNEL_ALREADY,	"This channel is already in the channel list." },
 	{ ERR_NICK_INVALID,		"Nickname is invalid."},
-	{ ERR_NICK_EXIST,		"A account with this nickname already exists." },
 	{ ERR_ALREADY_LOGON,		"You're already identified." },
 	{ ERR_UNKNOWN_MODS,		"This mod is invalid."},
 	{ ERR_USERLIST_EMPTY,		"The userlist is empty"},
@@ -119,40 +101,5 @@ static MsgStruct_t Msg[] = {
 
 };
 
-	static  char * unknow_parameter[]=
-	{
-		"Unknow option\n",
-		"Type \"",PACKAGE," -h\" for help.\n",
-		"."
-	};
 
-
-
-	static  char * help_msg[]=
-	{
-		"\n",
-		PACKAGE," [Options]\n",
-		"\n\tOptions:\n",
-		"\t-a days\t\tSet the time in days for the automatic logoff.\n",
-		"\t-b name\t\tSet the name of the bot.\n",
-		"\t-c sec\t\tSet the ping timeout of the connection.\n",
-		"\t-d path\t\tUse this path for the database\n",
-        "\t-D Level\tSet the log level (0-7)\n",
-		"\t-e ms\t\tSet the delay time in millisecond for the slow sending.\n",
-       	"\t-f file\t\tUse this config file.\n",
-	    "\t-g group\tSet the group under wich the bot run (only root).\n",
-        "\t-h\t\tPrint this help information.\n",
-		"\t-i sec\t\tSet the startup intialization delay.\n",
-        "\t-k days\t\tSet the  account live time in days.\n",
-        "\t-l char/min\tSet the chrakter limit for the first sending delay level.\n",
-		"\t-m\t\tCreate a bot master.\n",
-		"\t-n ms\t\tSet the delay time in millisecond for the fast sending.\n",
-		"\t-p port\t\tSet the port of the irc server.\n"
-		"\t-r string\tSet the output  for a request of the real name.\n",
-		"\t-s server\tSet the irc server name.\n",
-		"\t-t count\tSet the number of creating  threads.\n",
-		"\t-u user\t\tSet the user under which the bot run (root only).\n",
-        "\t-v\t\tPrint version.\n",
-		"."
-	};
 #endif
