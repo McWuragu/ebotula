@@ -56,7 +56,14 @@ MsgBuf_t* preParser(char *pLine) {
          *
          * pMsg->identify=CMD_ONPING;
          */
-        pong();
+		if ((pStr=strstr(pPreamble," "))==NULL)
+		{
+			pong(NULL);
+		}else
+		{
+			pStr++; /* get next symbol */
+        	pong(pStr);
+		}
     } else if (strstr(pPos,CmdList[CMD_ONQUIT])) {
         pMsg->identify=CMD_ONQUIT;
     } else if (strstr(pPos,CmdList[CMD_ONJOIN])) {
@@ -116,7 +123,7 @@ void *ComandExecutionThread(void *argv) {
     QueueData *pCommand;
 	MsgBuf_t *pMsg;
     MsgItem_t *pMsgItem;
-    
+	
     char *pNetmask;
     char *pChannel;
     char *pNick;
@@ -164,7 +171,7 @@ void *ComandExecutionThread(void *argv) {
                 switch (pMsg->identify) {
                 // Event handler
                 case CMD_ONPING:
-                    pong();
+					pong(NULL);
                     break;
                 case CMD_ONNICKCHG:
                     hNickChange(pMsg->pMsgLine);

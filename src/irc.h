@@ -16,7 +16,7 @@
 #include "type.h"
 
 void user(void);
-void pong(void);
+void pong(char *pPong);
 void ping(char *pTarget);
 void topic(char *pChannel,char *pMsgStr);
 //void quit(void);

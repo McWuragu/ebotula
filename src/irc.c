@@ -101,14 +101,21 @@ void part(char *pChannel) {
     free (buffer);
 }
 // #############################################################################
-void pong(void) {
+void pong(char *pPong) {
     char *buffer,hostname[HOSTNAME_BUFFER_SIZE];
 
-    // get  hostname
-    gethostname(hostname,HOSTNAME_BUFFER_SIZE);
-
-    buffer=(char *)malloc((strlen("PONG ")+strlen(hostname)+3)*sizeof(char));
-    sprintf(buffer,"PONG %s\r\n",hostname);
+//    gethostname(hostname,HOSTNAME_BUFFER_SIZE);
+	if (pPong==NULL)
+	{
+		/* I have no parameter for pong */
+	    gethostname(hostname,HOSTNAME_BUFFER_SIZE);
+		buffer=(char *)malloc((strlen("PONG ")+strlen(hostname)+3)*sizeof(char));
+		sprintf(buffer,"PONG %s\r\n",hostname);
+	}else
+	{
+		buffer=(char *)malloc((strlen("PONG ")+strlen(pPong)+3)*sizeof(char));
+	    sprintf(buffer,"PONG %s\r\n",pPong);
+	}
     send_direct(buffer);
     free (buffer);
 }
