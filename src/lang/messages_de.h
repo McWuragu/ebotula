@@ -24,7 +24,7 @@
 	#define SYSLOG_UNKNOWN_CMDID		"Unbekannte Kommando ID %d"
 	#define SYSLOG_LOGIN_RM			"Der Account %s wurde automatisch abgemeldet"
 	#define SYSLOG_ACCOUNT_RM       	"Der Account %s wurde von der Liste entfernt"
-	#define SYSLOG_FAILED_NETPARA		"Der Servername oder die Protokollnummer wurden nicht gesetzt"
+	#define SYSLOG_FAILED_NETPARA		"Der Servername oder die Portnummer wurden nicht gesetzt"
 	#define SYSLOG_MSG_QUEUE		"Kann keine Messagequeue anlegen"
 	#define SYSLOG_RESOLVE_HOSTNAME		"Kann Servernamen nicht auflösen"
 	#define SYSLOG_RESOLVE_PROTOCOL		"TCP ist ein unbekanntes Protokoll"
@@ -44,7 +44,7 @@
 	// output of strerr
 	#define ERR_RESTART			"Kann nicht neustarten"
 	#define ERR_MISSING_PARAM		"Parameter fehlt"
-	#define ERR_PORT_PARAMETER		"Protokollnummer liegt ausserhalb  des Bereiches"
+	#define ERR_PORT_PARAMETER		"Portnummer liegt ausserhalb  des Bereiches"
 	#define ERR_WRONG_SERVERNAME		"Servername ist unzulässig"
 	#define ERR_WRONG_BOTNAME		"Botname ist unzulässig"
 	#define ERR_ALT_RANGE			"Die Accountlebenserwartung ist ungültig"
