@@ -16,34 +16,34 @@
 
 #define	EOM			'.'
 
-#ifdef		LANG_GERMAN
-// Here insert all message in german
+#ifdef LANG_DE
+	// Here insert all message in german
 
 #else
 	// syslog
-	#define SYSLOG_READ_CMD			"Comand line parameters found and read"
+	#define SYSLOG_READ_CMD		"Comand line parameters found and read"
 	#define SYSLOG_READ_CONFFILE	"Configuration file found and read"
-	#define SYSLOG_INIT_DB			"Initialization of the database"
-	#define SYSLOG_TRY_CONNECT		"Try connect to %s:%s"
-	#define SYSLOG_IS_CONNECT		"Connected to the server"
-	#define SYSLOG_BOT_RUN			"Runing...."
-	#define SYSLOG_BOT_STOP			"Stopped...."
-	#define SYSLOG_THREAD_RUN		"Thread %d is running"
-	#define SYSLOG_BOT_START		"Starting..."
+	#define SYSLOG_INIT_DB		"Initialization of the database"
+	#define SYSLOG_TRY_CONNECT	"Try connect to %s:%s"
+	#define SYSLOG_IS_CONNECT	"Connected to the server"
+	#define SYSLOG_BOT_RUN		"Runing...."
+	#define SYSLOG_BOT_STOP		"Stopped...."
+	#define SYSLOG_THREAD_RUN	"Thread %d is running"
+	#define SYSLOG_BOT_START	"Starting..."
 	#define SYSLOG_UNKNOWN_CMDID	"Unknown command id %d"
-	#define SYSLOG_LOGIN_RM			"The account %s was automatically loged off"
+	#define SYSLOG_LOGIN_RM		"The account %s was automatically loged off"
 	#define SYSLOG_ACCOUNT_RM       "The account %s is removed from the list"
 	#define SYSLOG_FAILED_NETPARA	"The servername or portnumber isn't set."
-	#define SYSLOG_MSG_QUEUE		"Can't create the message queue."
+	#define SYSLOG_MSG_QUEUE	"Can't create the message queue."
 	#define SYSLOG_RESOLVE_HOSTNAME	"Can't resolve the hostname."
 	#define SYSLOG_RESOLVE_PROTOCOL	"Tcp is a unknown protocol."
-	#define SYSLOG_SOCKET			"Can't create a tcp socket."
-	#define SYSLOG_CONNECT			"Connection failed."
-	#define SYSLOG_CONFIG_FILE		"Can't open the config file."
-	#define SYSLOG_SEND				"Can't send a command."
-	#define SYSLOG_RECV				"Can't receive a line."
-	#define SYSLOG_TIMEOUT			"Receiving timeout"
-	#define SYSLOG_DATABASE_ERR		"Can't open the databases."
+	#define SYSLOG_SOCKET		"Can't create a tcp socket."
+	#define SYSLOG_CONNECT		"Connection failed."
+	#define SYSLOG_CONFIG_FILE	"Can't open the config file."
+	#define SYSLOG_SEND		"Can't send a command."
+	#define SYSLOG_RECV		"Can't receive a line."
+	#define SYSLOG_TIMEOUT		"Receiving timeout"
+	#define SYSLOG_DATABASE_ERR	"Can't open the databases."
 	
 	// excute error
 	// output of strerr
@@ -80,6 +80,7 @@
 	#define MSG_USERMODE_OK			"The user mod are changed"
 	#define MSG_RMUSER_OK			"The account is removed"
 	#define MSG_MASTER				"You are a bot master"
+	#define MSG_DIE_OK				"The bot is going  down"
 	
 	// Informations for invalid input or using of the bot
 	#define MSG_NOT_LOGON			"You're not identified."
@@ -110,7 +111,11 @@
 	#define MSG_HELP_FOR			"Help for"
 	#define MSG_USERLIST_BEGIN		"User list:"
 	#define MSG_USERLIST_END		"End of user list."
-	#define MSG_CHANNELS			"Channel list:"
+	#define MSG_CHANNELLIST_BEGIN	"Channel list:"
+	#define MSG_CHANNELLIST_END		"End of channel list."
+	#define MSG_CHANNELLIST_MODE    "Channel modes:"
+	#define MSG_CHANNELLIST_TOPIC	"Topic:"
+	#define MSG_CHANNELLIST_GREAT	"Greating:"
 	#define MSG_DEFAULT_REASON		"You are kicked from the bot."
 	
 	// command  format erros
