@@ -65,4 +65,15 @@ rm -rf $RPM_BUILD_ROOT
 - added the configuration file generator for the users and  root
 - completed the default values
 
+* Thu Sep 09 2003 Steffen Laube <Laube.Steffen@gmx.de>
+- renamed the version
+- added the  rejoining after kicking
+- added the  command !invite
+- added  ebotula.spec file
+- added more information about the using of the bot 
+- maked better performance by seperate outgoing  thread
+- maked the  first rpm release of this version
+- modified the access level checking  implementation
+- modified the command handler parameter and used cached information
+
 
