@@ -43,7 +43,7 @@ void help(MsgItem_t *pMsg) {
     char *pMsgStr;
     char *pMsgPart;
     unsigned int i,j,iLength;
-	int nCmdHelpID;
+    IrcHelp_t *IRCHelp;
 
     pParameter=getParameters(pMsg->pRawLine);
 
@@ -52,10 +52,12 @@ void help(MsgItem_t *pMsg) {
     if (!pParameter) {
         logger(LOG_DEBUG,gettext("Commands list"));
 
+        IRCHelp = GetIrcHelp(CMD_NONE);
+
         /* Header of help message */
-        for (i=0;pIrcHelp[0][i][0]!=EOM;i++) {
+        for (i=0;IRCHelp->pIrcHelp[i];i++) {
             /* look for the end  of msg */
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pIrcHelp[0][i]);
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,IRCHelp->pIrcHelp[i]);
         }
 
         for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
@@ -66,17 +68,21 @@ void help(MsgItem_t *pMsg) {
                 continue;
             }
 
+            IRCHelp = GetIrcHelp(i);
+
             /* calculat the length of buffer */
-            pMsgStr=(char *)calloc(HELP_TAB+1+strlen((char*)pIrcHelp[CmdIdToHelpId(i)][0]),sizeof(char));
+            pMsgStr=(char *)calloc(HELP_TAB+1+strlen(IRCHelp->pShort),sizeof(char));
 
             /* build string */
             strcpy(pMsgStr,CmdList[i]);
             iLength=HELP_TAB-strlen(CmdList[i]);
+            
             /* fill */
             for (j=0;j<iLength;j++) {
                 strcat(pMsgStr," ");
             }
-            strcat(pMsgStr,(char*)pIrcHelp[CmdIdToHelpId(i)][0]);
+
+            strcat(pMsgStr,IRCHelp->pShort);
             /* send notice */
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
 
@@ -104,7 +110,6 @@ void help(MsgItem_t *pMsg) {
         for (i=CMD_OTHERS+1;i<CMDCOUNT;i++) {
             if (!strcmp((char*)CmdList[i],&pParameter[1])) {
                 logger(LOG_DEBUG,gettext("Command found %d",i));
-                nCmdHelpID=CmdIdToHelpId(i);
 
                 /* the head for help */
                 pMsgPart=gettext("Help for");
@@ -113,18 +118,16 @@ void help(MsgItem_t *pMsg) {
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pTmp);
                 free(pTmp);
 
+                IRCHelp = GetIrcHelp(i);
 
                 /* print  the  help text */
-                for (j=1;pIrcHelp[nCmdHelpID][j][0]!=EOM;j++) {
+                for (j=0;IRCHelp->pIrcHelp[j];j++) {
                     sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)
-                           pIrcHelp[nCmdHelpID][j]);
+                           IRCHelp->pIrcHelp[j]);
                 }
 
                 /* syntax from the command */
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pIrcSyntax[0][0]);
-                for (j=0;pIrcSyntax[nCmdHelpID][j][0]!=EOM;j++) {
-                    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pIrcSyntax[nCmdHelpID][j]);
-                }
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,IRCHelp->pIrcSyntax);
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Help end"));
                 free (pParameter);
                 return;

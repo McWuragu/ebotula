@@ -6,6 +6,7 @@ ebotula_SOURCES= \
 	dbaccess.c \
 	extract.c \
 	handles.c \
+	irchelp.c \
 	ircbot.c \
 	irc.c \
 	network.c \
