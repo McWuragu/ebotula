@@ -281,6 +281,9 @@
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
 
+/* Define the default path to the local files */
+#undef PACKAGE_LOCALE_DIR
+
 /* Define to the full name of this package. */
 #undef PACKAGE_NAME
 

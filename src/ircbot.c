@@ -17,6 +17,7 @@
 #include <signal.h>
 #include <libintl.h>
 #include <locale.h>
+
 #include <pwd.h>
 #include <grp.h>
 #include <dirent.h>
@@ -75,7 +76,7 @@ int main(int argc,char * const argv[]) {
    
     // nls support
     setlocale(LC_ALL, "");
-    bindtextdomain(PACKAGE,"/usr/share/locale");
+    bindtextdomain(PACKAGE,PACKAGE_LOCALE_DIR);
     textdomain(PACKAGE);
     
     
@@ -165,10 +166,10 @@ int main(int argc,char * const argv[]) {
             case 'D':
             {
                 int tmp;
-                logger(LOG_INFO,gettext("Found debug level option"));
+                logger(LOG_INFO,gettext("Found debug level option."));
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    perror(gettext("Missing value"));
                     exit(errno);
                 }
 
@@ -176,7 +177,7 @@ int main(int argc,char * const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<0  || tmp > MAX_LOGLEVEL) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_LOGLEVEL_RANGE));
+                    perror(gettext("The log level is invalid."));
                     exit(errno);
                 }
                 sSetup.nLogLevel=tmp;
@@ -193,7 +194,7 @@ int main(int argc,char * const argv[]) {
         		else
         		{	
         			errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    perror(gettext("Missing value"));
         			exit(errno);
         		}
                 break;
