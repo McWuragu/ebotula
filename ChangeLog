@@ -1,6 +1,7 @@
 ebotula-0.1.18
 --------------------
 - fixed the restart as root bug
+- fixed the crash of the command accountlist 
 - modified the error logging
 - renamed the command line parameter -D to -V
 - changed the domain of the command line parameter -V
