@@ -78,7 +78,7 @@ void  recv_line(char *line,unsigned int len) {
 
 struct MSGBUF_DS preParser(char *line) {
     struct MSGBUF_DS	msg;
-	char *str,*first_part;
+	char *str,*first_part,*pos;
 
 
 
@@ -89,12 +89,20 @@ struct MSGBUF_DS preParser(char *line) {
 	if (!(first_part=getCommand(line))) {
 		return msg;
 	}
+
+	if (!(pos=strchr(first_part,' '))){
+		pos=NULL;
+	}
 	
 	// preparse the line
-	if (!strncmp(first_part,"PING",4)) {
+	if (!strncmp(first_part,"PING",strlen("PING"))) {
 		msg.mtype=2;
 		msg.identify=CMD_PING;
 		DEBUG("Receive PING");
+	} else if (strstr(pos,"QUIT")) {
+		msg.mtype=2;
+		msg.identify=CMD_LOGOFF;
+		DEBUG("Receive QUIT");
 	} else if ((str=strstr(line," :!"))!=NULL) {
 
 		str+=3;
@@ -156,6 +164,9 @@ void *action_thread(void *argv) {
 		switch (msg.identify) {
 		case CMD_PING:
 			pong();
+			break;
+		case CMD_LOGOFF:
+			logoff(msg.msg_line);
 			break;
 		case CMD_HELP:
 			help(msg.msg_line);
