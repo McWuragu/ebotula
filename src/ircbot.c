@@ -1,3 +1,12 @@
+/*************************************************************
+*
+* This is a part of ebotula.
+* It is distributed under the GNU General Public License
+* See the file COPYING for details.
+*
+* (c)2003 Steffen Laube <realebula@gmx.de>
+*************************************************************/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -22,24 +31,28 @@
 
 
 
-CONFIG_TYPE setup;
-int key;
-int stop;
+CONFIG_TYPE setup;	// global config structur
+int key;			// key of the message  queue
+int stop;			// singal for stop the endless loop
 
-pthread_mutex_t	send_mutex;
-pthread_mutex_t	dbaccess_mutex;
+
+pthread_mutex_t	send_mutex;			// mutex for synchronize of send command
+pthread_mutex_t	dbaccess_mutex;		// mu8tex for synchronize of  database access
+
 
 int main(int argc,const char *argv[]) {
 	int i;
 	int msgid;
 	char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;;
 	pthread_t *thread;
+	
+	// container for a message for the queue
 	struct MSGBUF_DS msg;
-
 	bzero(&msg,sizeof(struct MSGBUF_DS));
-
-    
+	
+	// init default values
 	setup.createMaster=false;
+
 
 	// check for parameter
 	if (argc>1) {
@@ -119,7 +132,7 @@ int main(int argc,const char *argv[]) {
 		exit(errno);
 	}
 
-	//set signal handler
+	// redefine the signal handler for to stop the bot
 	signal(SIGINT,stopParser);
 	signal(SIGTERM,stopParser);
 	signal(SIGABRT,stopParser);
@@ -139,27 +152,44 @@ int main(int argc,const char *argv[]) {
 	// join the channels
 	join_all_channels();
 
+
+	// Main execution loop
 	stop=false;
 	while (!stop) {
+
+		// read line from tcp stack
 		recv_line(buffer,RECV_BUFFER_SIZE);
 
+		// parse all substrings of the  receiving line
 		tmp=buffer;
+        //while ((pos=strchr(tmp,'\r'))) {
 		while ((pos=strchr(tmp,'\n'))) {
 			*pos='\0';
 
+			// cut out a part of the  complete line
 			str=(char *)calloc(strlen(tmp)+1,sizeof(char));
 			strcpy(str,tmp);
 
-			DEBUG("Receive: %s",str);
-			msg=preParser(str);
+			// parse the part line
+			DEBUG("Parse: %s",str);
+            msg=preParser(str);
 
-			// put the identifiy line  on the  queue
+			// put the identified line  on the  queue
 			if (msg.identify!=0) {
 				msgsnd(msgid,&msg,sizeof(struct MSGBUF_DS)-sizeof(msg.mtype),0);
 			}
 
 			free(str);
-			tmp=pos+1;
+			
+			// checking the length of the next substring
+			// a irc answer line can't are ten charakter 
+			// it is to small for a complete line
+			//if (strlen(++pos)>10) {
+				// set the begin of new substring of the old end
+				// and plus one for the NL
+				tmp=pos+1;
+			//}
+			
 		}
 
 		
