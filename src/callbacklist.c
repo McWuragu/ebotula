@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 /* callbacklist.c - handling and functions  to handle the callback list
  */
@@ -17,11 +17,6 @@
 #include "utilities.h"
 #include "type.h"
 
-/************************************************************************************************/
-/************************************************************************************************/
-/************************ Functions *************************************************************/
-/************************************************************************************************/
-/************************************************************************************************/
 /* init_extendedCallbackDList
  *
  * Description: initing List
@@ -320,7 +315,7 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
 	temp=element;
 	if (isheadCallbackDList(element))
 	{
-		while(!strcmp(temp->data->nickname,nickname) && temp->next!=NULL)
+		while(strcmp(temp->data->nickname,nickname)!=0 && temp->next!=NULL)
 		{
 			temp=temp->next;
 		}
@@ -335,14 +330,14 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
 	}
 	else
 	{
-		while(!strcmp(temp->data->nickname,nickname) && temp->next!=NULL)
+		while(strcmp(temp->data->nickname,nickname)!=0 && temp->next!=NULL)
 		{
 			temp=temp->next;
 		}
 	}
 	
     
-    if (!strcmp(temp->data->nickname,nickname)) {
+    if (strcmp(temp->data->nickname,nickname)==0) {
         pthread_mutex_unlock(list->callbacklist_mutex);
         return temp;
     }
