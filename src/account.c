@@ -100,27 +100,34 @@ void log_on(char *pNetmask,char *pLogin) {
 /* ############################################################################# */
 void log_out(char *pLogin) {
     extern pthread_mutex_t account_mutex;
-    char *pNetmask;
 
     pthread_mutex_lock(&account_mutex);
+    
+    __log_out(pLogin);
+
+    pthread_mutex_unlock(&account_mutex);
+}
+
+/* ############################################################################# */
+void __log_out(char *pLogin) {
+    char *pNetmask;
+
     if ((pNetmask=get_db(USERTONICK_DB,pLogin))){
 	    del_db(NICKTOUSER_DB,pNetmask);
     	del_db(USERTONICK_DB,pLogin);
     	DEBUG("%s logged off",pLogin);
 	}
-    pthread_mutex_unlock(&account_mutex);
 }
-
 /* ############################################################################# */
 void rmAccount(char *pLogin) {
     extern pthread_mutex_t account_mutex;
     
-    pthread_mutex_lock(&account_mutex);
 	DEBUG("Remove the account %s",pLogin);
-    
-	/* logoff the user */
-    log_out(pLogin);
 
+    pthread_mutex_lock(&account_mutex);
+	/* logoff the user */
+    __log_out(pLogin);
+    
     /* remove the  rights */
     rmAccessRights(pLogin);
 
@@ -179,7 +186,7 @@ void rmDeadAccounts(long lCheckTime) {
         	/* check the time */
     	    if (lCheckTime>atol(pTime)) {
 	            rmAccount((char*)pLogin->data);
-            	syslog(LOG_NOTICE,SYSLOG_ACCOUNT_RM,(char*)pLogin->data);
+            	syslog(LOG_NOTICE,getSyslogString(SYSLOG_ACCOUNT_RM));
         	}
         	free(pTime);
 		}

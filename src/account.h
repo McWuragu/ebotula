@@ -21,13 +21,21 @@
 */
 void log_on(char *pNetmask,char *pLogin);
 /**
+* This function call the  helper __log_out(). This  function is a  mutex 
+* protecting version for the  logout
+*
+* @author Steffen Laube
+* @param pLogin the login name of the user which want logoff
+*/
+void log_out(char *pLogin);
+/**
 * This function remove the login name and the appendant  netmask from the databases
 * usertonick.dbf and nicktouser.dbf. After this is the user logged off.
 *
 * @author Steffen Laube
 * @param pLogin the login name of the user which want logoff
 */
-void log_out(char *pLogin);
+static void __log_out(char *pLogin);
 
 /**
 * This is for removing of a account. This  remove him form all databases and remove all access rights
