@@ -1,11 +1,25 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/msg.h>
+#include <sys/ipc.h>			 
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <errno.h>
+#include <pthread.h>
 
 #include "config.h"
-#include "macro.h"
+#include "utilities.h"
 #include "messages.h"
 #include "irc.h"
 #include "command.h"
 #include "network.h"
 
+int sockid;
 
 void connectServer(void) {
 	extern int sockid;
@@ -55,13 +69,29 @@ void connectServer(void) {
 	}
 }
 
+void disconnectServer(void){
+	shutdown(sockid,0);
+}
+
 void  send_line(char *line) {
 	extern int sockid;
+	extern pthread_mutex_t send_mutex;
+	
+	pthread_mutex_lock(&send_mutex);
+
 	if (!send(sockid,line,strlen(line),0)){
 		perror(ERR_SEND);
 		exit(errno);
 	}
+
 	DEBUG("Send(%d): %s",getpid(),line);
+
+	// protect excess flood
+	millisleep(1500);
+
+	pthread_mutex_unlock(&send_mutex);
+
+	
 }
 
 void  recv_line(char *line,unsigned int len) {
@@ -73,14 +103,13 @@ void  recv_line(char *line,unsigned int len) {
 		exit(errno);
 	}
 	line[str_len]='\0';
+	
 }
 
 
 struct MSGBUF_DS preParser(char *line) {
     struct MSGBUF_DS	msg;
 	char *str,*first_part,*pos;
-
-
 
 	// init the buffer with zero
 	bzero(&msg,sizeof(struct MSGBUF_DS));
@@ -98,11 +127,9 @@ struct MSGBUF_DS preParser(char *line) {
 	if (!strncmp(first_part,"PING",strlen("PING"))) {
 		msg.mtype=2;
 		msg.identify=CMD_PING;
-		DEBUG("Receive PING");
 	} else if (strstr(pos,"QUIT")) {
 		msg.mtype=2;
 		msg.identify=CMD_LOGOFF;
-		DEBUG("Receive QUIT");
 	} else if ((str=strstr(line," :!"))!=NULL) {
 
 		str+=3;
@@ -143,6 +170,12 @@ struct MSGBUF_DS preParser(char *line) {
 		} else if (!strncmp(str,"die",strlen("die"))) {
 			msg.mtype=1;
 			msg.identify=CMD_DIE;
+		} else if (!strncmp(str,"nick",strlen("nick"))) {
+			msg.mtype=1;
+			msg.identify=CMD_NICK;
+		} else if (!strncmp(str,"channels",strlen("channels"))) {
+			msg.mtype=1;
+			msg.identify=CMD_CHANNELS;
 		}
 	}
 
@@ -155,15 +188,14 @@ void *action_thread(void *argv) {
 	extern int key;
 	struct MSGBUF_DS	msg;
 
-	// set the thread cancelable
+	// set the thread cancelable 
 	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
 	
-	// open the message queue
+	// open the message queue 
 	msgid=msgget(key,0600 | IPC_EXCL );
 
-	DEBUG("Command: %d",msg.identify);
-	// execute loop
+	// execute loop 
 	while(1) {
 		msgrcv(msgid,&msg,sizeof(struct MSGBUF_DS)-sizeof(msg.mtype),0,0);
 
@@ -178,16 +210,16 @@ void *action_thread(void *argv) {
 			help(msg.msg_line);
 			break;
 		case CMD_VERSION:
-            version(msg.msg_line);
+            		version(msg.msg_line);
 			break;
 		case CMD_HELLO:
-            hello(msg.msg_line);
+            		hello(msg.msg_line);
 			break;
 		case CMD_PASS:
-            password(msg.msg_line);
+            		password(msg.msg_line);
 			break;
 		case CMD_IDENT:
-            ident(msg.msg_line);
+            		ident(msg.msg_line);
 			break;
 		case CMD_ADDCHANNEL:
 			channel_add(msg.msg_line);
@@ -204,11 +236,17 @@ void *action_thread(void *argv) {
 		case CMD_DIE:
 			die(msg.msg_line);
 			break;
+		case CMD_NICK:
+			change_nick(msg.msg_line);
+			break;
+		case CMD_CHANNELS:
+			channel_list(msg.msg_line);
+			break;
 		default:
             break;
 		}
 		
-		// clear buffer
+		// clear buffer	
 		bzero(&msg,sizeof(struct MSGBUF_DS));
 	}
 

@@ -1,21 +1,9 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <sys/msg.h>
-#include <sys/ipc.h>			 
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <string.h>
-#include <errno.h>
-#include <pthread.h>
 
-#define RECV_BUFFER_SIZE		1512
+
+#define RECV_BUFFER_SIZE		4096
 #define HOSTNAME_BUFFER_SIZE	256
 
 
@@ -32,9 +20,13 @@
 #define CMD_RMCHANNEL			10
 #define CMD_LOGOFF				11
 #define CMD_DIE					12
+#define CMD_NICK				13
+#define CMD_CHANNELS			14
 
 /// connect to the server
 void connectServer(void);
+/// close connection to the server
+void disconnectServer(void);
 /**
 * send a command string to the server
 * @param line the  commando string whiche  want  to send
