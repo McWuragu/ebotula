@@ -90,6 +90,10 @@ void version(char *line) {
 	notice(getNickname(line),str);
 }
 
+void quit(void) {
+	send_line("QUIT\n");
+}
+
 void join(char *channel) {
 	char *buffer=malloc(sizeof(char)*(strlen("JOIN ")+strlen(channel)+2));
 	
