@@ -48,11 +48,10 @@ void help(MsgItem_t *pMsg) {
 
     /* check for parameters */
     if (!pParameter) {
-        DEBUG("Default information\n");
+        DEBUG("Commands list\n");
 
         /* Header of help message */
-
-        for (i=0;pIrcHelp[0][i]!=NULL;i++) {
+        for (i=0;pIrcHelp[0][i][0]!=EOM;i++) {
             /* look for the end  of msg */
             privmsg(pMsg->pCallingNick,pIrcHelp[0][i]);
         }
@@ -82,7 +81,7 @@ void help(MsgItem_t *pMsg) {
         /* the tail */
         privmsg(pMsg->pCallingNick,getMsgString(INFO_HELP_END));
     } else {
-        DEBUG("Spezial information for a command\n");
+        DEBUG("Spezial help text for a command\n");
 
         /* cut the first word */
         strtok(pParameter," ");
@@ -95,12 +94,13 @@ void help(MsgItem_t *pMsg) {
             pParameter=pTmp;
         }
 
-        DEBUG("Looking for information about \"%s\"\n",pParameter);
+        DEBUG("Looking for the information about \"%s\"\n",pParameter);
 
         /* Help for a command */
         for (i=CMD_OTHERS+1;i<CMDCOUNT;i++) {
             if (!strcmp((char*)CmdList[i],&pParameter[1])) {
                 DEBUG("Command found %d\n",i);
+                int nCmdHelpID=CmdIdToHelpId(i);
 
                 /* the headi for help */
                 pMsgPart=getMsgString(INFO_HELP_FOR);
@@ -109,15 +109,15 @@ void help(MsgItem_t *pMsg) {
                 privmsg(pMsg->pCallingNick,pTmp);
 
                 /* print  the  help text */
-                for (j=1;pIrcHelp[CmdIdToHelpId(i)][j]!=NULL;j++) {
+                for (j=1;pIrcHelp[nCmdHelpID][j][0]!=EOM;j++) {
                     privmsg(pMsg->pCallingNick,(char*)
-                           pIrcHelp[CmdIdToHelpId(i)][j]);
+                           pIrcHelp[nCmdHelpID][j]);
                 }
 
                 /* syntax from the command */
                 privmsg(pMsg->pCallingNick,pIrcSyntax[0][0]);
-                for (j=0;pIrcSyntax[CmdIdToHelpId(i)][j]!=NULL;j++) {
-                    privmsg(pMsg->pCallingNick,(char*)pIrcSyntax[CmdIdToHelpId(i)][j]);
+                for (j=0;pIrcSyntax[nCmdHelpID][j][0]!=EOM;j++) {
+                    privmsg(pMsg->pCallingNick,(char*)pIrcSyntax[nCmdHelpID][j]);
                 }
                 privmsg(pMsg->pCallingNick,getMsgString(INFO_HELP_END));
                 return;
