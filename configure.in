@@ -14,7 +14,7 @@ dnl to build the configure script
 dnl *************************************************************
 
 AC_INIT(ebotula.spec.in)
-AM_INIT_AUTOMAKE(ebotula-devel,0.1.11)
+AM_INIT_AUTOMAKE(ebotula-devel,0.1.12)
 
 AM_SANITY_CHECK
 
