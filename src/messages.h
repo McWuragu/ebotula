@@ -24,7 +24,8 @@
 #define SYSLOG_THREAD_RUN		"Thread %d is running"
 #define SYSLOG_BOT_START		"Starting..."
 #define SYSLOG_UNKNOWN_CMDID	"Unknown command id %d"
-#define SYSLOG_LOGIN_RM			"The account %s with the nick %s was automatically loged off"
+#define SYSLOG_LOGIN_RM			"The account %s was automatically loged off"
+#define SYSLOG_ACCOUNT_RM       "The account %s is removed from the list"
 #define SYSLOG_FAILED_NETPARA	"The servername or portnumber isn't set."
 #define SYSLOG_MSG_QUEUE		"Can't create the message queue."
 #define SYSLOG_RESOLVE_HOSTNAME	"Can't resolve the hostname."
@@ -67,6 +68,7 @@
 #define MSG_RM_TOPIC			"The topic is removed"
 #define MSG_KICK_OK				"The user are kicked by the bot"
 #define MSG_USERMODE_OK			"The user mods are changed"
+#define MSG_RMUSER_OK			"The account is removed"
 #define MSG_MASTER				"You are a bot master"
 
 // Informations for invalid input or using of the bot
@@ -94,7 +96,7 @@
 #define MSG_HELP_END			"End of help."
 #define MSG_HELP_FOR			"Help for"
 #define MSG_CHANNELS			"Channel list:"
-
+#define MSG_DEFAULT_REASON		"You are kicked from the bot."
 
 // command  format erros
 #define MSG_ADDCHANNEL_ERR		"Invalid command: !addchannel <#channel>"
