@@ -14,12 +14,12 @@ ToDo Liste
 - Setzen von Op-Recht bei User nach !ident und Join
 - Setzen von Voice-Recht bei User nach !ident und Join
 - Reset Mods, wenn nicht  über Bot verändert wurden
-- Setzt Topic und Mode im Channel beim Join, Bekommen von OP und beim fremden Ändern
+- Setzt Topic und Mode im Channel beim Join, erhalten von OP und beim fremden Verändern wieder zurück setzen
 - Ausführen von Ban von der Liste 
 - Hilfetexte vervollständigen
 - Code cleanup
 - Debuggen
-- Bei fehlenden OP channel cycle
 - Anforderung der Rechte als ACTION
 - Hervorhebung von Messages per bold
-- insert allow and  disallow filter  for charaters in all  strings
+- insert allow and  disallow filter for charaters in all  strings
+- Server channel op
