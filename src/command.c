@@ -50,7 +50,7 @@ void help(MsgItem_t *pMsg) {
 
     /* check for parameters */
     if (!pParameter) {
-        logger(LOG_DEBUG,"Commands list");
+        logger(LOG_DEBUG,gettext("Commands list"));
 
         /* Header of help message */
         for (i=0;pIrcHelp[0][i][0]!=EOM;i++) {
@@ -85,7 +85,7 @@ void help(MsgItem_t *pMsg) {
         /* the tail */
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_HELP_END));
     } else {
-        logger(LOG_DEBUG,"Spezial help text for a command");
+        logger(LOG_DEBUG,gettext("Spezial help text for a command"));
 
         /* cut the first word */
         strtok(pParameter," ");
@@ -98,12 +98,12 @@ void help(MsgItem_t *pMsg) {
             pParameter=pTmp;
         }
 
-        logger(LOG_DEBUG,"Looking for the information about \"%s\"",pParameter);
+        logger(LOG_DEBUG,gettext("Looking for the information about \"%s\"",pParameter));
 
         /* Help for a command */
         for (i=CMD_OTHERS+1;i<CMDCOUNT;i++) {
             if (!strcmp((char*)CmdList[i],&pParameter[1])) {
-                logger(LOG_DEBUG,"Command found %d",i);
+                logger(LOG_DEBUG,gettext("Command found %d",i));
                 nCmdHelpID=CmdIdToHelpId(i);
 
                 /* the head for help */
@@ -138,7 +138,7 @@ void help(MsgItem_t *pMsg) {
    Bot comand: !hello
    ######################################################################### */
 void hello(MsgItem_t *pMsg) {
-    logger(LOG_DEBUG,"Try to create an new account for %s",pMsg->pCallingNick);
+    logger(LOG_DEBUG,gettext("Try to create an new account for %s",pMsg->pCallingNick));
 
     if (pMsg->UserLevel>LoggedLevel) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
@@ -150,9 +150,9 @@ void hello(MsgItem_t *pMsg) {
         /* autoidentify after create an new account */
         log_on(pMsg->pNetmask,pMsg->pCallingNick);
 
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_HELLO));
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_HELLO2));
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_IDENT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Nice to meet you."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You have got a new account now."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You're now identified."));
         
     } else {
 	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("A account with this nickname already exists."));
@@ -168,7 +168,7 @@ void password(MsgItem_t *pMsg) {
 
     if ((pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
 
-	    logger(LOG_DEBUG,"Check the  password for the account %s",pLogin);
+	    logger(LOG_DEBUG,gettext("Check the  password for the account %s",pLogin));
 
 	    /* get  the  login name */
 	    if (strlen(pLogin)) {
@@ -181,7 +181,7 @@ void password(MsgItem_t *pMsg) {
 
         	/* set password */
 	        replace_db(USER_DB,pLogin,((pPasswd)?pPasswd:""));
-        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_PASSWD)); 
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Password is changed.")); 
             if (pPasswd) free(pPasswd);
         }
         free(pLogin);
@@ -254,7 +254,7 @@ void ident(MsgItem_t *pMsg) {
     int i,login_len;
 
 
-    logger(LOG_DEBUG,"try to identify %s",pMsg->pCallingNick);
+    logger(LOG_DEBUG,gettext("try to identify %s",pMsg->pCallingNick));
 
     
     if (!exist_db(NICKTOUSER_DB,pMsg->pNetmask)) {
@@ -280,13 +280,13 @@ void ident(MsgItem_t *pMsg) {
             strcpy(pLogin,pParameter);
             StrToLower(pLogin);
         
-            logger(LOG_DEBUG,"Look for the account %s",pLogin);
+            logger(LOG_DEBUG,gettext("Look for the account %s",pLogin));
         
             /* check the account */
             if (check_db(USER_DB,pLogin,(pPasswd)?pPasswd:"")) {
-                logger(LOG_DEBUG,"User %s found",pLogin);
+                logger(LOG_DEBUG,gettext("User %s found",pLogin));
                 log_on(pMsg->pNetmask,pLogin);
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_IDENT));
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You're now identified."));
         
                 isMaster=exist_db(ACCESS_DB,pLogin);
         
@@ -294,7 +294,7 @@ void ident(MsgItem_t *pMsg) {
                 pChannelQueue=list_db(CHANNEL_DB);
                 login_len=strlen(pLogin);
         
-                logger(LOG_DEBUG,"Reconstruct the access rights for the channels");
+                logger(LOG_DEBUG,gettext("Reconstruct the access rights for the channels"));
                 while (isfullQueue(pChannelQueue)) {
                     pChannel=popQueue(pChannelQueue);
 
@@ -353,7 +353,7 @@ void addChannel(MsgItem_t *pMsg) {
 	if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
 		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
 	} else {
-    	logger(LOG_DEBUG,"Join and add the channnel %s",pMsg->pAccessChannel);
+    	logger(LOG_DEBUG,gettext("Join and add the channnel %s",pMsg->pAccessChannel));
 		/* add channel */
 		channelmod=(char *)malloc(3*sizeof(char));
 		strcpy(channelmod,"\t\t");
@@ -379,7 +379,7 @@ void rmChannel(MsgItem_t *pMsg){
         return;
     }
     
-    logger(LOG_DEBUG,"Part and  try to remove the channnel %s",pMsg->pAccessChannel);
+    logger(LOG_DEBUG,gettext("Part and  try to remove the channnel %s",pMsg->pAccessChannel));
 
 
     /* checking of channel exists */
@@ -415,7 +415,7 @@ void joinChannel(MsgItem_t *pMsg) {
 		}
 		free(pCmdChannel);
 	}
-	logger(LOG_DEBUG,"Join the channel %s",pMsg->pAccessChannel);
+	logger(LOG_DEBUG,gettext("Join the channel %s",pMsg->pAccessChannel));
 	
 	/* join the channel */
 	join(pMsg->pAccessChannel);
@@ -429,7 +429,7 @@ void partChannel(MsgItem_t *pMsg) {
     if (!pMsg->pAccessChannel){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
     } else {
-        logger(LOG_DEBUG,"Part the channel %s",pMsg->pAccessChannel);
+        logger(LOG_DEBUG,gettext("Part the channel %s",pMsg->pAccessChannel));
 
         /* part the channel */
         part(pMsg->pAccessChannel);
@@ -496,7 +496,7 @@ void chanlist(MsgItem_t *pMsg){
 	PQueue pChannelQueue;
 	QueueData *pChannel;
 
-    logger(LOG_DEBUG,"Build channel list.");
+    logger(LOG_DEBUG,gettext("Build channel list."));
 
 
     sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_CHANNELLIST_BEGIN));
@@ -512,7 +512,7 @@ void chanlist(MsgItem_t *pMsg){
 	        StrToChannelData(pChannelSet,&sChannelData);
     	    pMode=ChannelModeToStr(&(sChannelData.sModes));
 
-        	logger(LOG_DEBUG,"...for channel %s",(char*)pChannel->data);
+        	logger(LOG_DEBUG,gettext("...for channel %s",(char*)pChannel->data));
 	        //sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pChannel->data);
 
             //pMsgPart=getMsgString(INFO_CHANNELLIST_MODE);
@@ -574,7 +574,7 @@ void setGreeting(MsgItem_t *pMsg) {
     if (!pMsg->pAccessChannel){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
     } else {
-        logger(LOG_DEBUG,"Greeting seting for %s",pMsg->pAccessChannel);
+        logger(LOG_DEBUG,gettext("Greeting seting for %s",pMsg->pAccessChannel));
         
         /* check of  existenz of the channel */
         if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
@@ -622,7 +622,7 @@ void setTopic(MsgItem_t *pMsg) {
     if (!pMsg->pAccessChannel) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
     } else if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
-        logger(LOG_DEBUG,"Topic seting for %s",pMsg->pAccessChannel);
+        logger(LOG_DEBUG,gettext("Topic seting for %s",pMsg->pAccessChannel));
 	    
         StrToChannelData(pChannelSet,&sChannelData);
 
@@ -681,7 +681,7 @@ void greeting(MsgItem_t *pMsg) {
         /* only greeting  send  to other user */
         if (strcmp(pMsg->pCallingNick,pTmpBotName)) {
             if (pMsg->pAccessChannel){
-                logger(LOG_DEBUG,"Greeting for %s",pMsg->pAccessChannel);
+                logger(LOG_DEBUG,gettext("Greeting for %s",pMsg->pAccessChannel));
         
                 if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
                     if ((greeting=getGreeting(pChannelSet))) {
@@ -939,7 +939,7 @@ void usermode(MsgItem_t *pMsg){
         }
 
     	/* user mod */
-	    logger(LOG_DEBUG,"Modify user mod");
+	    logger(LOG_DEBUG,gettext("Modify user mod"));
 
     	/* look for the space and separat the login for the user which want modify */
 	    if (!(pPos=strchr(pParameter,' '))) {
@@ -985,7 +985,7 @@ void usermode(MsgItem_t *pMsg){
 
 	    }
 
-    	logger(LOG_DEBUG,"Modify account %s in channel %s",pLogin,pMsg->pAccessChannel);
+    	logger(LOG_DEBUG,gettext("Modify account %s in the channel %s",pLogin,pMsg->pAccessChannel));
 
 	    /* check for add or remove  mod */
     	if (pPos[0]!='+' && pPos[0]!='-') {
@@ -1015,7 +1015,7 @@ void usermode(MsgItem_t *pMsg){
     	/* set the end mark */
 	    mod[2]='\0';
 
-	    logger(LOG_DEBUG,"Found mod %s",mod);
+	    logger(LOG_DEBUG,gettext("Found usermodes %s",mod));
 
 		/* look for old master rights */
 		if (mod[1]!='m' && oldmod) {
@@ -1043,13 +1043,13 @@ void usermode(MsgItem_t *pMsg){
 	    
 		/* add or remove the mod */
    		if (mod[0]=='+') {
-        	logger(LOG_DEBUG,"Set new mode");
+        	logger(LOG_DEBUG,gettext("Set new usermodes"));
 
 	        if (!(add_db(ACCESS_DB,pKey,mod))) {
                 replace_db(ACCESS_DB,pKey,mod);
     	    }
 	  	} else {
-    	logger(LOG_DEBUG,"Remove new mode");
+    	logger(LOG_DEBUG,gettext("Remove new usermodes"));
 	        /* remove mod */
         	del_db(ACCESS_DB,pKey);
 
@@ -1058,7 +1058,7 @@ void usermode(MsgItem_t *pMsg){
 
 	    /* identify the  login and set the rights */
 		if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
-    	    	logger(LOG_DEBUG,"Modify the current mode");
+    	    	logger(LOG_DEBUG,gettext("Modify the current usermodes"));
 				usernick=getNickname(pNetmask);
 
                 if (usernick) {
@@ -1118,9 +1118,8 @@ void chanmode(MsgItem_t *pMsg) {
     
     	    /* read the new channel parameters */
     	    StrToChannelMode(pParameters,&sNewMode);
-        	logger(LOG_DEBUG,"Found the new channel modes \"%s\"",ChannelModeToStr(&sNewMode));
+        	logger(LOG_DEBUG,gettext("Found the new channel modes \"%s\" for the channel %s.",ChannelModeToStr(&sNewMode),pMsg->pAccessChannel));
     
-    	    logger(LOG_DEBUG,"Build the new modes for the channel %s",pMsg->pAccessChannel);
         	/* build the new channel parameters */
     	    for (i=1;i<MAX_MODES;i++) {
         	    if (sNewMode.pModeStr[MOD_TYPE]=='+') {
@@ -1183,7 +1182,7 @@ void chanmode(MsgItem_t *pMsg) {
         	    sChannelData.sModes.pModeStr[0]=' ';
     	    }
     
-        	logger(LOG_DEBUG,"Write the new modes channel \"%s\"",ChannelModeToStr(&(sChannelData.sModes)));
+        	logger(LOG_DEBUG,gettext("Write the new channel modes \"%s\" for the channel %s."),ChannelModeToStr(&(sChannelData.sModes)),pMsg->pAccessChannel);
     	    /* set the new mode in database */
         	free(pChannelSet);
     	    pChannelSet=ChannelDataToStr(&sChannelData);
@@ -1192,7 +1191,7 @@ void chanmode(MsgItem_t *pMsg) {
 
     
         	/* set the mods */
-    	    logger(LOG_DEBUG,"Set the new channel modes");
+    	    logger(LOG_DEBUG,gettext("Set the new channel modes for the channel %s"),pMsg->pAccessChannel);
             pNewModeStr=ChannelModeToStr(&sNewMode);
     	    mode(pMsg->pAccessChannel,pNewModeStr,NULL);
             free(pNewModeStr);
@@ -1249,7 +1248,7 @@ void rmuser(MsgItem_t *pMsg) {
             }
         }
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_RMUSER));        
-    	logger(LOG_DEBUG,"Remove %s from the user list",pLogin);
+    	logger(LOG_DEBUG,gettext("Remove %s from the user list"),pLogin);
     } else {
     	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
     }
@@ -1282,7 +1281,7 @@ void userlist(MsgItem_t *pMsg){
         /* Bot masters */
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_BEGIN));
         
-        logger(LOG_DEBUG,"Genrate the Userlist for a master");
+        logger(LOG_DEBUG,gettext("Create the userlist for a master"));
         pChannelQueue=list_db(CHANNEL_DB);
 		
         /* get the list of all channels */
@@ -1382,7 +1381,7 @@ void userlist(MsgItem_t *pMsg){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
     } else {
         
-        logger(LOG_DEBUG,"Genrate the Userlist for a owner");
+        logger(LOG_DEBUG,gettext("Create the userlist for a owner"));
 
         if (!pMsg->pAccessChannel) {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));

@@ -22,10 +22,6 @@
 typedef enum {
 
     // command acknowledgment
-	 OK_HELLO,	  
-	 OK_HELLO2,	 
-	 OK_PASSWD,	 
-	 OK_IDENT,	  
 	 OK_JOIN,	  
 	 OK_PART,	  
 	 OK_RMCHANNEL,	   
