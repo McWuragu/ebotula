@@ -17,7 +17,7 @@
 /** container for  message text */
 
 
-typedef enum eSyslogID {
+typedef enum   {
      SYSLOG_READ_CMD,		
 	 SYSLOG_READ_CONFFILE,	
 	 SYSLOG_INIT_DB,		
@@ -43,10 +43,10 @@ typedef enum eSyslogID {
 	 SYSLOG_DATABASE_ERR,	
 	 SYSLOG_RESTART,
 	 SYSLOG_STOPPED
-} eSyslogID_t;
+}eSyslogID_t;
 
 // output of strerr
-typedef enum eMsgID {
+typedef enum {
 	 INFO_MASTER_TITLE,  
 	 INFO_MASTER_LOGIN,  
 	 INFO_MASTER_PASS,  

@@ -13,7 +13,7 @@
 
 
 /** This is definetion of boolean datatype */
-typedef enum boolEnum {false,true} boolean;
+typedef enum {false,true} boolean;
 
 /** This stuctur is a data container for  all setup parameters.*/
 typedef struct ConfStruct{
