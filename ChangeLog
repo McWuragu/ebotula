@@ -1,3 +1,10 @@
+ebotula-0.1.18
+--------------------
+- fixed the restart as root bug
+- modified the error logging
+- renamed the command line parameter -D to -V
+- changed the domain of the command line parameter -V
+
 ebotula-0.1.17
 --------------------
 - Bugfix: fixed the rejoin-after-kick bug
