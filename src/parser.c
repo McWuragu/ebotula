@@ -221,6 +221,7 @@ void *ComandExecutionThread(void *argv) {
 				}
 			}
 		}
+        msleep(250);
     }
 
     return NULL;
