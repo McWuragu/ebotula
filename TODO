@@ -1,0 +1,27 @@
+ToDo Liste
+----------
+- Fehledne Kommandos
+	- !mode
+	- !topic
+	- !greating
+	- !kick
+	- !ban
+	- !timeban
+	- !userlist
+	- !banlist
+	- !allban
+	- !restart
+	- !rmuser
+
+- Automasitsches Löschen von Accounts nach einer Zeit  delta t 
+- Ausgabe  der Begrüssung anch dem eine User den Channel gejoint ist
+- Setzen von Op-Recht bei User nach Ident  und Join
+- Setzen von Voice-Recht bei User nach Ident  und Join
+- Ausführen von Ban von der Liste 
+- Automaisches Ausloggen eines user nach delta t 
+- Hilfetexte vervollständigen
+- code cleanup
+- debuggen
+- Bei fehlenden OP channel cyle
+- Bei fehlenden OP Rechten nachfragen
+- Status Loggign mit syslog
