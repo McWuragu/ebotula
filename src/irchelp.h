@@ -100,10 +100,6 @@ static char *pIrcSyntax[][5] = {
     {
         "!greeting <#Channel> [Text]"
     },
-    // CHANNELS
-    {
-        "!chanlist" 
-    },
     // BAN
     {
         "!ban <#channel> [Nickname]"
@@ -134,6 +130,10 @@ static char *pIrcSyntax[][5] = {
     // DIE
     {
         "!die"
+    },
+    // CHANNELS
+    {
+        "!chanlist" 
     },
     // RMCHANNEL
     {
