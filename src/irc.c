@@ -46,6 +46,7 @@ void user(void) {
 
 	// send commando
 	send_line(buffer);
+	free (buffer);
 }
 // ############################################################################# 
 void action(char *pTarget, char *pMsgStr){
@@ -67,6 +68,7 @@ void notice(char *pNick,char *pMsgStr) {
 	buffer=(char *)calloc(strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5,sizeof(char));
 	sprintf(buffer,"NOTICE %s :%s\r\n",pNick,pMsgStr);
 	send_line(buffer);
+	free (buffer);
 }
 
 // ############################################################################# 
@@ -79,6 +81,7 @@ void join(char *pChannel) {
 	buffer=(char *)calloc(strlen("JOIN ")+strlen(pChannel)+3,sizeof(char));
 	sprintf(buffer,"JOIN %s\r\n",pChannel);
 	send_line(buffer);
+	free (buffer);
 }
 // ############################################################################# 
 void part(char *pChannel) {
@@ -86,6 +89,7 @@ void part(char *pChannel) {
 	buffer=(char *)calloc(strlen("PART ")+strlen(pChannel)+3,sizeof(char));
 	sprintf(buffer,"PART %s\r\n",pChannel);
 	send_line(buffer);
+	free (buffer);
 }
 // ############################################################################# 
 void pong(void) {
@@ -97,6 +101,7 @@ void pong(void) {
 	buffer=(char *)calloc(strlen("PONG ")+strlen(hostname)+3,sizeof(char));
 	sprintf(buffer,"PONG %s\r\n",hostname);
 	send_line(buffer);
+	free (buffer);
 }
 // ############################################################################# 
 void ping(char *pTarget) {
@@ -104,6 +109,7 @@ void ping(char *pTarget) {
 	buffer=(char *)calloc(strlen("PING ")+strlen(pTarget)+3,sizeof(char));
 	sprintf(buffer,"PING %s\r\n",pTarget);
 	send_line(buffer);
+	free (buffer);
 }
 // ############################################################################# 
 void nick(char *pNick) {
@@ -111,6 +117,7 @@ void nick(char *pNick) {
 	buffer=(char *)calloc(strlen("NICK ")+strlen(pNick)+3,sizeof(char));
 	sprintf(buffer,"NICK %s\r\n",pNick);
 	send_line(buffer);
+	free (buffer);
 }
 // ############################################################################# 
 void topic(char *pChannel, char* pMsgStr) {
@@ -118,6 +125,7 @@ void topic(char *pChannel, char* pMsgStr) {
 	buffer=(char*)calloc(strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5,sizeof(char));
 	sprintf(buffer,"TOPIC %s :%s\r\n",pChannel,pMsgStr);
 	send_line(buffer);
+	free (buffer);
 }
 // ############################################################################# 
 void kick(char *pChannel, char *pNick, char *pMsgStr) {
@@ -131,6 +139,7 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
 	buffer=(char*)calloc(strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6,sizeof(char));
 	sprintf(buffer,"KICK %s %s :%s\r\n",pChannel,pNick,pMsgStr);
 	send_line(buffer);
+	free (buffer);
 }
 // ############################################################################# 
 void ban(char *pChannel,char *pMask){
@@ -138,7 +147,7 @@ void ban(char *pChannel,char *pMask){
 	buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6,sizeof(char));
 	sprintf(buffer,"MODE %s +b %s\r\n",pChannel,pMask);
 	send_line(buffer);
-
+	free (buffer);
 }
 // ############################################################################# 
 void deban(char *pChannel,char *pMask){
@@ -146,7 +155,7 @@ void deban(char *pChannel,char *pMask){
 	buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6,sizeof(char));
 	sprintf(buffer,"MODE %s -b %s\r\n",pChannel,pMask);
 	send_line(buffer);
-
+	free (buffer);
 }
 // ############################################################################# 
 void mode(char *pChannel, char *pMod, char *pModParameter) {
@@ -154,12 +163,12 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
 
 	// check  optional parameters and  set  it of default values
 	if (pModParameter==NULL) {
-		pModParameter=(char*)malloc(sizeof(char));
-		*pModParameter='\0';
+		pModParameter="";
 	}
 	buffer=(char*)calloc(strlen("MODE ")+strlen(pChannel)+strlen(pMod)+strlen(pModParameter)+5,sizeof(char));
 	sprintf(buffer,"MODE %s %s %s\r\n",pChannel,pMod,pModParameter);
 	send_line(buffer);
+	free (buffer);
 }
 
 
