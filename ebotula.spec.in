@@ -60,6 +60,8 @@ rm -rf $RPM_BUILD_ROOT
 - modified the  fast and slow sending  system (excess floodinf protection)
 - changed the default sending delay
 - added new error message for  wrong password
+- modified the configuration.in
+- fixed manpages
 
 * Mon Dec 22 2003 Steffen Laube <Laube.Steffen@gmx.de>
 - Bugfix: fixed -f option

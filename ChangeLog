@@ -14,6 +14,7 @@ ebotula-0.1.13
 - changed the default sending delay
 - added new error message for  wrong password
 - modified the configuration.in
+- fixed manpages
 
 ebotula-devel-0.1.12
 --------------------
