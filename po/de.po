@@ -458,7 +458,7 @@ msgstr "Datenbankpfad %s"
 #: src/ircbot.c:269
 #, c-format
 msgid "Ping timeout %ds"
-msgstr "Zeitüberschreitung "
+msgstr "Zeitüberschreitung %ds"
 
 #: src/ircbot.c:270
 #, c-format
@@ -555,7 +555,8 @@ msgstr "\t-b Name\t\tSetzt den Namen des Boots im.\n"
 
 #: src/messages.c:28
 msgid "\t-c sec\t\tSet the ping timeout of the network connection.\n"
-msgstr "\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
+msgstr ""
+"\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
 
 #: src/messages.c:29
 msgid "\t-d path\t\tSet the path of the database direcotry\n"
@@ -593,10 +594,12 @@ msgstr ""
 
 #: src/messages.c:36
 msgid "\t-k days\t\tSet the account live time in days.\n"
-msgstr "\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Account inaktiv sein kann.\n"
+msgstr ""
+"\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Account inaktiv sein kann.\n"
 
 #: src/messages.c:37
-msgid "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
+msgid ""
+"\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
 msgstr ""
 "\t-l Char/min\tSetzt das Limit in Zeichen je Minute für das beschleunigte "
 "Senden.\n"
@@ -629,7 +632,8 @@ msgstr "\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n"
 
 #: src/messages.c:44
 msgid "\t-u user\t\tSet the user under which the bot run (root only).\n"
-msgstr "\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
+msgstr ""
+"\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
 
 #: src/messages.c:45
 msgid "\t-v\t\tPrint version.\n"
@@ -862,4 +866,3 @@ msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
 
 #~ msgid "Empty list!"
 #~ msgstr "Liste ist leer."
-
