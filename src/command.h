@@ -77,7 +77,12 @@ typedef enum {
     CMD_RMCHANNEL,
     CMD_ADDCHANNEL,
     CMD_JOIN,
-    CMD_PART
+    CMD_PART,
+
+    /* CTCP commands */
+    CMD_CTCPPING,
+    CMD_CTCPVERSION,
+    CMD_CTCPTIME
 }Cmd_t;
 
 #define CMDCOUNT    (CMD_PART-CMD_NONE+1)
@@ -109,7 +114,9 @@ static char * const CmdList[]= {
     /* channel owner commands */
     "chanmode","userlist","usermode","say","kick","topic","greeting","ban","deban",
     /* master commands */
-    "restart","allsay","rmuser","nick","die","chanlist","rmchannel","addchannel","join","part"
+    "restart","allsay","rmuser","nick","die","chanlist","rmchannel","addchannel","join","part",
+    /* CTCP commands */
+    "\001PING","\001VERSION\001","\001TIME\001"
 };
 
 /** This is the structure for the entries in the message queue */
@@ -166,5 +173,8 @@ void chanmode(MsgItem_t *pMsg);
 void rmuser(MsgItem_t *pMsg);
 void userlist(MsgItem_t *pMsg);
 void inviteuser(MsgItem_t *pMsg);
-
+/* CTCP command functions */
+void ctcpping(MsgItem_t *pMsg);
+void ctcpversion(MsgItem_t *pMsg);
+void ctcptime(MsgItem_t *pMsg);
 #endif
