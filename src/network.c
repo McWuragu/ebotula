@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <sys/msg.h>
 #include <sys/ipc.h>			 
+#include <sys/poll.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -115,13 +116,25 @@ void  send_line(char *pLine) {
 
 void  recv_line(char *pLine,unsigned int len) {
 	extern int sockid;
-	int str_len;
+	extern int stop;
+	extern ConfType sSetup;
+	struct pollfd  sPoll;
+	int str_len=0;
 	
-	if (!(str_len=recv(sockid,pLine,len,0))){
-		perror(SYSLOG_RECV);
-		syslog(LOG_CRIT,SYSLOG_RECV);
-		exit(errno);
+	sPoll.fd=sockid;
+	sPoll.events=POLLIN;
+	
+	if (poll(&sPoll,1,sSetup.iTimeout*1000)) {
+		if (!(str_len=recv(sockid,pLine,len,0))){
+			perror(SYSLOG_RECV);
+			syslog(LOG_CRIT,SYSLOG_RECV);
+			exit(errno);
+		}
+	} else {
+		stop=true;
+		syslog(LOG_NOTICE,SYSLOG_TIMEOUT);
 	}
+
 	pLine[str_len]='\0';
 	
 }
