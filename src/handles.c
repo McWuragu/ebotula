@@ -340,35 +340,23 @@ void hCallback(char *pLine) {
     strcpy(pNick,ppLinePart[3]);
     StrToLower(pNick);
 
-    /*
-     * this  loop stop if no item more found  in the  queue
-     * Any  call of  this  callback handler execute one callback item
-     */
-    do {
-        /** lock for the Callback item for the nick **/
-        if ((pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,pNick))) {
-            /* 
-             * remove  entrie and read the  callback datum
-             * if  this item not more in the  queue then look for  the next
-             */
-            if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
-                // built netmask
-                pNetmask=(char*)malloc((strlen(ppLinePart[3])+strlen(ppLinePart[4])+strlen(ppLinePart[5])+3)*sizeof(char));
-                sprintf(pNetmask,"%s!%s@%s",ppLinePart[3],ppLinePart[4],ppLinePart[5]);
-        
-                // execute the callback
-                DEBUG("Callback\n");
-                CB_Data->CallbackFkt(pNetmask,CB_Data->data);
-        
-                /* destroy  callback item */
-                destroyCallbackItem(CB_Data);
+   /** lock for the Callback item for the nick **/
+    if ((pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,pNick))) {
+        /* 
+         * remove  entrie and read the  callback datum
+         * if  this item not more in the  queue then look for  the next
+         */
+        if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
+            // built netmask
+            pNetmask=(char*)malloc((strlen(ppLinePart[3])+strlen(ppLinePart[4])+strlen(ppLinePart[5])+3)*sizeof(char));
+            sprintf(pNetmask,"%s!%s@%s",ppLinePart[3],ppLinePart[4],ppLinePart[5]);
     
-                break;
-            }
-        } else {
-            /* no item found in the callback queue */
-            break;
+            // execute the callback
+            DEBUG("Callback\n");
+            CB_Data->CallbackFkt(pNetmask,CB_Data->data);
+    
+            /* destroy  callback item */
+            destroyCallbackItem(CB_Data);
         }
-      
-    } while ( true );
+    }
 }
