@@ -73,6 +73,7 @@
 	#define MSG_SET_TOPIC			"The new topic is set"
 	#define MSG_RM_TOPIC			"The topic is removed"
 	#define MSG_KICK_OK			"The user is kicked by the bot"
+    #define MSG_BAN_OK			"The user is banned by the bot"
 	#define MSG_USERMODE_OK			"The user mod are changed"
 	#define MSG_RMUSER_OK			"The account is removed"
 	#define MSG_MASTER			"You are a bot master"
@@ -91,8 +92,9 @@
 	#define MSG_NOT_ACCESS			"Access denied"
 	#define MSG_NOT_SELF			"You can't modify yourself"
     #define MSG_NOT_KICK            "Can't kick this user"
-    
-	// Errors
+    #define MSG_NOT_BAN             "Can't ban this user"
+	
+    // Errors
 	#define MSG_ADDCHANNEL_ALREADY	"This channel is already in the channel list."
 	#define MSG_NICK_INVALID		"Nickname is invalid."
 	#define MSG_NICK_EXIST			"A account with this nickname already exists."
@@ -103,7 +105,8 @@
 	#define MSG_MASTER_ERR			"Can't set this account as master."
 	#define MSG_USERLIST_EMPTY		"The userlist is empty"
 	#define MSG_UNKNOW_MODE			"Unknown mode parameter"
-    #define MSG_NOTSELF_KICK_ERR    "Can't kick myself" 
+    #define MSG_NOTSELF_KICK_ERR    "Can't kick myself"
+    #define MSG_NOTSELF_BAN_ERR    "Can't ban myself" 
     
 	// other informations
 	#define MSG_HELP_END			"End of help."
@@ -125,6 +128,7 @@
 	#define MSG_NICK_ERR			"Invalid command: !nick <nickname>"			
 	#define MSG_SAY_ERR			"Invalid command: !say [#channel] <message>"			
 	#define MSG_KICK_ERR			"Invalid command: !kick [#channel] <nickname> [reason]"
+    #define MSG_BAN_ERR			"Invalid command: !ban [#channel] <nickname>"
 	#define MSG_USERMODE_ERR		"Invalid command: !usermode [#channel] <login> <+/-><mod>"
 	#define MSG_CHANMODE_ERR		"Invalid command: !chamode [#channel] <+/-><mods>"
 	
