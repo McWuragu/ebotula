@@ -227,14 +227,25 @@ static const char *irchelp_msg[]={
 	"",
 	
 	"!usermode",
-	"This is to set  the mods for a user",
+	"This is to set  the mod for a user",
 	"This can only bot master or channel owner",
-	"!usermode LOGIN +/-MODS          -> Set the mods for the user in the current channel",
-	"!usermode #CHANNEL LOGIN +/-MODS -> Set the mods for the user in the given channel",
+	"!usermode LOGIN +/-MODS          -> Set the mod for the user in the current channel",
+	"!usermode #CHANNEL LOGIN +/-MODS -> Set the mod for the user in the given channel",
 	"Mods:",
 	"+v  Voice",
 	"+o  Operator/channel owner",
 	"+m  Operator/bot master",
+	"",
+
+	"!rmuser",
+	"This remove a user account of the bot",
+	"This can only bot master",
+	"!rmuser LOGIN   -> Remove this user inclusive all access rights",
+	"",
+	"",
+	"",
+	"",
+	"",
 	"",
 
 	// end mark of the complete array
