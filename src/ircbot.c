@@ -124,9 +124,9 @@ int main(int argc,char * const argv[]) {
     
     // send dealy
     sSetup.iSendDelay=DEFAULT_FAST_SEND_DELAY;
-    sSetup.iSendSafeDelay=DEFAULT_SLOW_SEND_DELAY;
+    sSetup.nSlowSendDelay=DEFAULT_SLOW_SEND_DELAY;
     sSetup.nFastSendingCharLimit=DEFAULT_FAST_SEND_LIMIT;
-    
+
     sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
     sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
     
@@ -185,8 +185,8 @@ int main(int argc,char * const argv[]) {
     }
 
     // check the  delay timings
-    if (sSetup.iSendSafeDelay<sSetup.iSendDelay) {
-        sSetup.iSendSafeDelay=sSetup.iSendDelay;
+    if (sSetup.nSlowSendDelay<sSetup.iSendDelay) {
+        sSetup.nSlowSendDelay=sSetup.iSendDelay;
     }
 
     
@@ -222,7 +222,7 @@ int main(int argc,char * const argv[]) {
     DEBUG("Database path %s\n",sSetup.pDatabasePath);
     DEBUG("Ping timeout %ds\n",sSetup.iTimeout);
     DEBUG("Fast sending delay %dms\n",sSetup.iSendDelay);
-    DEBUG("Slow sending delay %dms\n",sSetup.iSendSafeDelay);
+    DEBUG("Slow sending delay %dms\n",sSetup.nSlowSendDelay);
     DEBUG("Fast sending limit %d\n",sSetup.nFastSendingCharLimit);
     DEBUG("Account live time %dd\n",sSetup.AccountLiveTime);
     DEBUG("Autolog of after %dd\n",sSetup.AutoLoggoff);

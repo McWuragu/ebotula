@@ -112,7 +112,7 @@ void write_baseconfig()
 		fprintf(fd,"%s\n",bstr[i++]);
 		fprintf(fd,"%s\n",bstr[i++]);
 		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iSendDelay);
-		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iSendSafeDelay);
+		fprintf(fd,"%s%d\n",bstr[i++],sSetup.nSlowSendDelay);
 		fprintf(fd,"%s%d\n",bstr[i++],sSetup.nFastSendingCharLimit);
 		/* Accountlivtime */
 		fprintf(fd,"%s\n",bstr[i++]);

@@ -207,7 +207,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                     perror(getMsgString(ERR_SENDDELAY_RANGE));
                     exit(errno);
                 }
-                sSetup.iSendSafeDelay=tmp;
+                sSetup.nSlowSendDelay=tmp;
                 break;
             case 'l':
                 DEBUG("Found send line limit option\n");
@@ -400,7 +400,7 @@ void ConfigFileParser(void) {
                         exit(errno);
                     }   
                     // set second delay time
-                    sSetup.iSendSafeDelay=tmp;
+                    sSetup.nSlowSendDelay=tmp;
                 } else if (!strcmp(key,KEY_FASTSENDLIMIT)) {
                     tmp=atoi(value);
                     if (tmp<0) {
