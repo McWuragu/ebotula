@@ -24,7 +24,7 @@
 #define DEFAULT_IRC             "irc.fh-lausitz.de"
 
 #define DEFAULT_PING_TIMEOUT	90
-
+#define DEFAULT_INIT_DELAY      10
 #define DEFAULT_SLOW_SEND_DELAY  2000
 #define DEFAULT_FAST_SEND_DELAY  1500
 #define DEFAULT_FAST_SEND_LIMIT  500
@@ -57,6 +57,7 @@
 #define KEY_PINGTIMEOUT		"pingtimeout"
 #define KEY_SLOWSENDDELAY   "slowsenddelay"
 #define KEY_FASTSENDLIMIT   "fastsendlimit"
+#define KEY_INITDELAY       "initdelay"
 #define KEY_EXEUSER         "user"
 #define KEY_EXEGROUP        "group"
 #endif												

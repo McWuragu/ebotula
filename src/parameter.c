@@ -227,6 +227,23 @@ void CommandLineParser(int argc,char *const argv[]) {
                 }
                 sSetup.nFastSendingCharLimit=tmp;
                 break;
+            case 'i':
+                DEBUG("Found startup delay option\n");
+                if (++i>=argc) {
+                    errno=EINVAL;
+                    perror(getMsgString(ERR_MISSING_PARAM));
+                    exit(errno);
+                }
+
+                // linie limit  for the first send delay
+                tmp=atoi(argv[i]);
+                if (tmp<0) {
+                    errno=EDOM;
+                    perror(getMsgString(ERR_INIT_DELAY));
+                    exit(errno);
+                }
+                sSetup.nSettling=tmp;
+                break;
             case 'k':
                 DEBUG("Found account live time option\n");
                                             
@@ -417,6 +434,15 @@ void ConfigFileParser(void) {
                     }   
                     // set auto logoff time
                     sSetup.nFastSendingCharLimit=tmp;
+                } else if (!strcmp(key,KEY_INITDELAY)) {
+                    tmp=atoi(value);
+                    if (tmp<0) {
+                        errno=EDOM;
+                        perror(getMsgString(ERR_INIT_DELAY));
+                        exit(errno);
+                    }   
+                    // set auto logoff time
+                    sSetup.nSettling=tmp;
                 } else if (!strcmp(key,KEY_ALT)) {
                     tmp=atoi(value);
                     if (tmp<0) {

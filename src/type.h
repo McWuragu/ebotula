@@ -49,6 +49,8 @@ typedef struct ConfStruct{
     char * sExeUser;
     /** the name of the group for execution in the root mode */
     char *sExeGroup;
+    /** a delay of initialization of the channels */
+    unsigned int nSettling;
 } ConfigSetup_t;
 
 

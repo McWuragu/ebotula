@@ -48,6 +48,8 @@ char	* bstr[]={
 	KEY_FASTSENDDELAY,"=",
 	KEY_SLOWSENDDELAY,"=",
 	KEY_FASTSENDLIMIT,"=",
+    "\n# The delay of the start from the startup initialization",
+    KEY_INITDELAY,"=",
 	"\n# The time in days an account exists.",
 	"# Unused accounts will be removed after this time.",
 	KEY_ALT,"=",
@@ -180,8 +182,12 @@ void write_baseconfig()
 		i++;
 		fprintf(fd,"%s%d\n",bstr[i],sSetup.nFastSendingCharLimit);
 		i++;
+        /* KEY_INITDELAY"=", */
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%d\n",bstr[i],sSetup.nSettling);
+		i++;
 		/* Accountlivtime */
-		/* "\n# The time in days an account exists.", */
 		fprintf(fd,"%s\n",bstr[i]);
 		i++;
 		/* "# Unused accounts will be removed after this time.",*/

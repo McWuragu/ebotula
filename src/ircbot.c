@@ -65,7 +65,6 @@ int main(int argc,char * const argv[]) {
 	char *sDirDummy;
     DIR *pDir;
     int iTemp;
-    int nSettling;
     
     uid=geteuid();
     
@@ -132,7 +131,8 @@ int main(int argc,char * const argv[]) {
     sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
     sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
     
-    
+    sSetup.nSettling=DEFAULT_INIT_DELAY;
+
     // versions ausgabe
     printf(VERSIONSTR);
     printf("\n");
@@ -232,6 +232,7 @@ int main(int argc,char * const argv[]) {
     DEBUG("Fast sending delay %dms\n",sSetup.iSendDelay);
     DEBUG("Slow sending delay %dms\n",sSetup.nSlowSendDelay);
     DEBUG("Fast sending limit %d\n",sSetup.nFastSendingCharLimit);
+    DEBUG("Startup initialization delay %ds\n",sSetup.nSettling);
     DEBUG("Account live time %dd\n",sSetup.AccountLiveTime);
     DEBUG("Autolog of after %dd\n",sSetup.AutoLoggoff);
     DEBUG("-----------------------------------------------\n");
@@ -319,8 +320,7 @@ int main(int argc,char * const argv[]) {
     }
     
 	// join the channels
-    nSettling=30;
-    pthread_create(&joinThread,NULL,JoinAllChannelsThread,&nSettling);
+    pthread_create(&joinThread,NULL,JoinAllChannelsThread,&sSetup.nSettling);
     
         pthread_detach(joinThread);
 
