@@ -45,14 +45,14 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found server option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                
                 // set the server name
                 if (strpbrk(argv[i],SERVER_NOT_ALLOW_CHAR)) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_WRONG_SERVERNAME));
+                    fprintf(stderr,getMsgString(ERR_WRONG_SERVERNAME));
                     exit(errno);
                 }
                
@@ -64,14 +64,14 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found botname option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
                 // set the pBotname
                 if (!NickStringCheck(argv[i])) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_WRONG_BOTNAME));
+                    fprintf(stderr,getMsgString(ERR_WRONG_BOTNAME));
                     exit(errno);
                 }
                 
@@ -83,7 +83,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found execution user option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
@@ -96,7 +96,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found execution group option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
@@ -109,7 +109,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found realname option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
@@ -122,14 +122,14 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found port option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
                 // set port
                 if ((atoi(argv[i])<1) || (atoi(argv[i])>65535)) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_PORT_PARAMETER));
+                    fprintf(stderr,getMsgString(ERR_PORT_PARAMETER));
                     exit(errno);
                 }
                 
@@ -143,7 +143,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
@@ -151,7 +151,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if ((tmp<1) || (tmp>MAX_THREADS_LIMIT)) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_THREAD_RANGE));
+                    fprintf(stderr,getMsgString(ERR_THREAD_RANGE));
                     exit(errno);
                 }
                 sSetup.thread_limit=tmp;
@@ -161,7 +161,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
@@ -169,7 +169,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<MIN_LOGOFF) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_LOGOFF_RANGE));
+                    fprintf(stderr,getMsgString(ERR_LOGOFF_RANGE));
                     exit(errno);
                 }
                 sSetup.AutoLoggoff=tmp;
@@ -179,7 +179,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
@@ -187,7 +187,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<=0) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_SENDDELAY_RANGE));
+                    fprintf(stderr,getMsgString(ERR_SENDDELAY_RANGE));
                     exit(errno);
                 }
                 sSetup.iSendDelay=tmp;
@@ -197,7 +197,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
@@ -205,7 +205,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<=0) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_SENDDELAY_RANGE));
+                    fprintf(stderr,getMsgString(ERR_SENDDELAY_RANGE));
                     exit(errno);
                 }
                 sSetup.nSlowSendDelay=tmp;
@@ -214,7 +214,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found send line limit option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
 
@@ -222,7 +222,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<0) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_SENDLINE_RANGE));
+                    fprintf(stderr,getMsgString(ERR_SENDLINE_RANGE));
                     exit(errno);
                 }
                 sSetup.nFastSendingCharLimit=tmp;
@@ -231,7 +231,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found startup delay option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
 
@@ -239,7 +239,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<0) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_INIT_DELAY));
+                    fprintf(stderr,getMsgString(ERR_INIT_DELAY));
                     exit(errno);
                 }
                 sSetup.nSettling=tmp;
@@ -249,7 +249,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 
@@ -257,7 +257,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<MIN_ALT) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_ALT_RANGE));
+                    fprintf(stderr,getMsgString(ERR_ALT_RANGE));
                     exit(errno);
                 }
                 sSetup.AccountLiveTime=tmp;
@@ -270,7 +270,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found database path option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
                 // set database path
@@ -281,7 +281,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 logger(LOG_INFO,"Found ping timeout option");
                 if (++i>=argc) {
                     errno=EINVAL;
-                    perror(getMsgString(ERR_MISSING_PARAM));
+                    fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
                     exit(errno);
                 }
 
@@ -289,7 +289,7 @@ void CommandLineParser(int argc,char *const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<MIN_PINGTIME) {
                     errno=EDOM;
-                    perror(getMsgString(ERR_PINGTIMEOUT_RANGE));
+                    fprintf(stderr,getMsgString(ERR_PINGTIMEOUT_RANGE));
                     exit(errno);
                 }
                 sSetup.iTimeout=tmp;
@@ -354,7 +354,7 @@ void ConfigFileParser(void) {
                 if (!strcmp(key,KEY_SERVER)) {
                     if (strpbrk(value,SERVER_NOT_ALLOW_CHAR)) {
                         errno=EINVAL;
-                        perror(getMsgString(ERR_WRONG_SERVERNAME));
+                        fprintf(stderr,getMsgString(ERR_WRONG_SERVERNAME));
                         exit(errno);
                     }
                     // set servername
@@ -364,7 +364,7 @@ void ConfigFileParser(void) {
                 } else if (!strcmp(key,KEY_PORT)) {
                     if ((atoi(value)<1) || (atoi(value)>65535)) {
                         errno=EINVAL;
-                        perror(getMsgString(ERR_PORT_PARAMETER));
+                        fprintf(stderr,getMsgString(ERR_PORT_PARAMETER));
                         exit(errno);
                     }
                     // set port
@@ -374,7 +374,7 @@ void ConfigFileParser(void) {
                 } else if (!strcmp(key,KEY_BOTNAME)) {
                     if (!NickStringCheck(value)) {
                         errno=EINVAL;
-                        perror(getMsgString(ERR_WRONG_BOTNAME));
+                        fprintf(stderr,getMsgString(ERR_WRONG_BOTNAME));
                         exit(errno);
                     }
                     // set pBotname
@@ -390,7 +390,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if ((tmp<=0) || (tmp>MAX_THREADS_LIMIT)) {
                         errno=EDOM;
-                        perror(getMsgString(ERR_THREAD_RANGE));
+                        fprintf(stderr,getMsgString(ERR_THREAD_RANGE));
                         exit(errno);
                     }   
                     // set thread limit
@@ -404,7 +404,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<=0) {
                         errno=EDOM;
-                        perror(getMsgString(ERR_LOGOFF_RANGE));
+                        fprintf(stderr,getMsgString(ERR_LOGOFF_RANGE));
                         exit(errno);
                     }   
                     // set auto logoff time
@@ -413,7 +413,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        perror(getMsgString(ERR_SENDDELAY_RANGE));
+                        fprintf(stderr,getMsgString(ERR_SENDDELAY_RANGE));
                         exit(errno);
                     }   
                     // set first delay time
@@ -422,7 +422,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        perror(getMsgString(ERR_SENDDELAY_RANGE));
+                        fprintf(stderr,getMsgString(ERR_SENDDELAY_RANGE));
                         exit(errno);
                     }   
                     // set second delay time
@@ -431,7 +431,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        perror(getMsgString(ERR_SENDLINE_RANGE));
+                        fprintf(stderr,getMsgString(ERR_SENDLINE_RANGE));
                         exit(errno);
                     }   
                     // set auto logoff time
@@ -440,7 +440,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        perror(getMsgString(ERR_INIT_DELAY));
+                        fprintf(stderr,getMsgString(ERR_INIT_DELAY));
                         exit(errno);
                     }   
                     // set auto logoff time
@@ -449,7 +449,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<0) {
                         errno=EDOM;
-                        perror(getMsgString(ERR_ALT_RANGE));
+                        fprintf(stderr,getMsgString(ERR_ALT_RANGE));
                         exit(errno);
                     }   
                     // set account live time
@@ -458,7 +458,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<=0) {
                         errno=EDOM;
-                        perror(getMsgString(ERR_PINGTIMEOUT_RANGE));
+                        fprintf(stderr,getMsgString(ERR_PINGTIMEOUT_RANGE));
                         exit(errno);
                     }   
                     // set account live time
@@ -469,7 +469,7 @@ void ConfigFileParser(void) {
                     tmp=atoi(value);
                     if (tmp<=0 || tmp > MAX_LOGLEVEL) {
                         errno=EDOM;
-                        perror(getMsgString(ERR_LOGLEVEL_RANGE));
+                        fprintf(stderr,getMsgString(ERR_LOGLEVEL_RANGE));
                         exit(errno);
                     }
                     sSetup.nLogLevel=tmp;
@@ -513,14 +513,14 @@ boolean dialogMaster(void){
     /* getting the password		  */
     /* get term-attribut */
     if (tcgetattr(0, &stBuf) == -1)
-	perror("tcgetattr");
+	fprintf(stderr,"tcgetattr");
     /* save option */
     stBufsave=stBuf;
     /* disable echo */
     stBuf.c_lflag &= ~(ECHO);
     /* set attributs */
     if (tcsetattr(0, TCSADRAIN, &stBuf) == -1)
-        perror("tcsetattr");
+        fprintf(stderr,"tcsetattr");
     /* insert the password */
     printf("%s",getMsgString(INFO_MASTER_PASS));
     fgets(passwd,PASSWD_LENGTH+1,stdin);
@@ -528,7 +528,7 @@ boolean dialogMaster(void){
     fgets(repasswd,PASSWD_LENGTH+1,stdin);
     /* set save attributs to terminal */
     if (tcsetattr(0, TCSADRAIN, &stBufsave) == -1)
-        perror("tcsetattr");
+        fprintf(stderr,"tcsetattr");
     /* empty lines to screen */
     printf("\n\n");
 		      

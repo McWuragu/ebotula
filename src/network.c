@@ -52,7 +52,7 @@ static pthread_mutex_t mutexSend;
 
 static int GetCharPerMin(unsigned int nCharCount);
 /* #############################################################################  */
-void connectServer(void) {
+boolean connectServer(void) {
     extern ConfigSetup_t sSetup;
     
     struct sockaddr_in socketaddr;
@@ -60,6 +60,23 @@ void connectServer(void) {
     struct protoent *protocol;
 
     errno=0;
+
+    if ((sSetup.server==NULL) && (sSetup.port==NULL)) {
+        errno=EINVAL;
+        #ifdef NDEBUG
+        printf(gettext("The servername or portnumber isn't set."));
+        printf("\n");
+        #endif
+        logger(LOG_ERR,gettext("The servername or portnumber isn't set."));
+        return false;
+    }
+
+    #ifdef NDEBUG
+    printf(gettext("Try to connect to %s"),sSetup.server);
+    printf("\n");
+    #endif
+    logger(LOG_INFO,gettext("Try to connect to %s"),sSetup.server);
+
 
     pthread_mutex_init(&mutexSend,NULL);
 
@@ -71,38 +88,57 @@ void connectServer(void) {
     /* resolve hostname */
     hostaddr=gethostbyname(sSetup.server);
     if (!hostaddr) {
-        perror(getSyslogString(SYSLOG_RESOLVE_HOSTNAME));
-        logger(LOG_ERR,getSyslogString(SYSLOG_RESOLVE_HOSTNAME));
-	exit(errno);
+        #ifdef NDEBUG
+        fprintf(stderr,gettext("Couldn't resolve the hostname %s."),sSetup.server);
+        fprintf(stderr,"\n");
+        #endif
+        logger(LOG_ERR,gettext("Couldn't resolve the hostname %s."),sSetup.server);
+        return false;
     }
-    logger(LOG_NOTICE,"Connecting to %s",hostaddr->h_name);
     
     memcpy(&socketaddr.sin_addr,hostaddr->h_addr,hostaddr->h_length);
 
     /* resolve protocol */
     protocol = getprotobyname("tcp");
     if (!protocol) {
-        perror(getSyslogString(SYSLOG_RESOLVE_PROTOCOL));
-        logger(LOG_CRIT,getSyslogString(SYSLOG_RESOLVE_PROTOCOL));
-exit(errno);
+        #ifdef NDEBUG
+        fprintf(stderr,gettext("Couldn't found the tcp protocol."));
+        fprintf(stderr,"\n");
+        #endif
+        logger(LOG_CRIT,gettext("Couldn't found the tcp protocol."));
+        return false;
     }
 
     /* create the socket */
     sockid=socket(PF_INET,SOCK_STREAM,protocol->p_proto);
     if (sockid <= 0) {
-        perror(getSyslogString(SYSLOG_SOCKET));
-	logger(LOG_CRIT,getSyslogString(SYSLOG_SOCKET));
-        exit(errno);
+        #ifdef NDEBUG
+        fprintf(stderr,gettext("Couldn't create a tcp socket."));
+        fprintf(stderr,"\n");
+        #endif
+        logger(LOG_CRIT,gettext("Couldn't create a tcp socket."));
+        return false;
     }
 
 
     /* connect to server */
     if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
-        perror(getSyslogString(SYSLOG_CONNECT));
-        logger(LOG_ERR,getSyslogString(SYSLOG_CONNECT));
-exit(errno);
+        #ifdef NDEBUG
+        fprintf(stderr,gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
+        fprintf(stderr,"\n");
+        #endif
+        logger(LOG_ERR,gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
+        return false;
     }
 
+    #ifdef NDEBUG
+    printf(gettext("The bot is connect to %s"),sSetup.server);
+    printf("\n");
+    #endif
+    
+    logger(LOG_NOTICE,gettext("The bot is connect to %s"),sSetup.server);
+
+    return true;
 }
 /* ############################################################################# */
 void disconnectServer(void){
@@ -128,10 +164,10 @@ void SendLine(char* pMsg){
 
         /* send the line */
         if (!send(sockid,pMsg,nSendLength,0)){
-            logger(LOG_CRIT,getSyslogString(SYSLOG_SEND));
+            logger(LOG_CRIT,gettext("Couldn't send a command."));
 	     stop=true;
         }
-        logger(LOG_DEBUG,"send(%d/%d): %s",nCharPerMinute,sSetup.nFastSendingCharLimit,pMsg);
+        logger(LOG_DEBUG,gettext("Send(%d/%d): \"%s\""),nCharPerMinute,sSetup.nFastSendingCharLimit,pMsg);
     
         
         nCharPerMinute=GetCharPerMin(nSendLength);
@@ -151,12 +187,12 @@ void  RecvLine(char *pLine,unsigned int len) {
     
     if (poll(&sPoll,1,sSetup.iTimeout*1000)) {
         if (!(str_len=recv(sockid,pLine,len,0))){
-            logger(LOG_CRIT,getSyslogString(SYSLOG_RECV));
+            logger(LOG_CRIT,gettext("Can't receive a line."));
 	    stop=true;
         }
     } else {
         stop=true;
-        logger(LOG_ERR,getSyslogString(SYSLOG_TIMEOUT));
+        logger(LOG_ERR,gettext("Receiving timeout"));
     }
 
     pLine[str_len]='\0';
@@ -225,7 +261,7 @@ int GetCharPerMin(unsigned int nCharCount) {
 }
 
 /* ############################################################################# */
-void ConnectToIrc(void){
+boolean ConnectToIrc(void){
     char recv_buffer[RECV_BUFFER_SIZE], *tmp;
     int i,trying=0;
     extern ConfigSetup_t sSetup;
@@ -257,10 +293,15 @@ void ConnectToIrc(void){
         /* Try MAX_NICKS times to set */
         if ( trying>MAX_NICKS) {
             errno=EAGAIN;
-            perror(getMsgString(ERR_NICK));
-            exit(errno);
+            #ifndef NDEBUG
+            fprintf(stderr,gettext("Couldn't set the nickname %s."),sSetup.pBotname);
+            fprintf(stderr,"\n");
+            #endif
+            logger(LOG_ERR,gettext("Couldn't set the nickname %s."),sSetup.pBotname);
+            return false;
         }
     } while (i==1);
+    return;true;
 }
 /* ############################################################################# */
 void * JoinAllChannelsThread(void * args) {

@@ -35,7 +35,7 @@ typedef enum {
 /**
  * initDatabase() open all databases
  */
-void initDatabases(void);
+boolean initDatabases(void);
 /**
  * close all open databases
  */

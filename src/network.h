@@ -11,18 +11,19 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
+#include "type.h"
 /** the size of  the receive buffer */
 #define RECV_BUFFER_SIZE        1<<10
 /** the size of the buffer for the  hostname */
 #define HOSTNAME_BUFFER_SIZE    0xFF
 
-void ConnectToIrc(void);
+boolean ConnectToIrc(void);
 void * JoinAllChannelsThread(void*);
 
 
 
 /// connect to the server
-void connectServer(void);
+boolean connectServer(void);
 /// close connection to the server
 void disconnectServer(void);
 

@@ -48,13 +48,13 @@ static Database_t pDB[MAX_DB]= {
 };
 
 // ############################################################################# 
-void initDatabases(void) {
+boolean initDatabases(void) {
     extern ConfigSetup_t sSetup;
     DIR *pDir;
 	int i;
     char *pDBPath;
 
-
+    logger(LOG_NOTICE,gettext("Initialization of the database" ));
     
     // check directory
     // if  this not existe then try to create
@@ -62,13 +62,14 @@ void initDatabases(void) {
     if (!(pDir=opendir(sSetup.pDatabasePath))) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
-            logger(LOG_ERR,getSyslogString(SYSLOG_CREATE_DIR_ERR));
+            logger(LOG_ERR,gettext("Couldn't create the directory %s for the database.",sSetup.pDatabasePath ));
             #ifdef NDEBUG
-            perror(getSyslogString(SYSLOG_CREATE_DIR_ERR));
+            fprintf(stderr,gettext("Couldn't create the directory %s for the database.",sSetup.pDatabasePath ));
+            fprintf(stderr,"\n");
             #endif
-            exit(errno);
+            return false;
         } else {
-            logger(LOG_INFO,getSyslogString(SYSLOG_CREATE_DIR));
+            logger(LOG_INFO,gettext("Create the directory %s for the database."),sSetup.pDatabasePath);
         }
     }
     closedir(pDir);
@@ -83,11 +84,13 @@ void initDatabases(void) {
         
         if (!dbf[i]) {
             //errno=EBUSY;
-            logger(LOG_ERR,getSyslogString(SYSLOG_DATABASE_ERR));
+            logger(LOG_ERR,gettext("Couldn't open the databases %s.",pDBPath));
             #ifdef NDEBUG
-            perror(getSyslogString(SYSLOG_DATABASE_ERR));
+            fprintf(stderr,gettext("Couldn't open the databases %s.",pDBPath));
+            fprintf(stderr,"\n");
+
             #endif
-            exit(errno);
+            return false;
         }
 
         // init the mutexs
@@ -95,7 +98,8 @@ void initDatabases(void) {
 
         free(pDBPath);
     }
-    logger(LOG_NOTICE,getSyslogString(SYSLOG_INIT_DB));
+    
+    return true;
 }
 // ############################################################################# 
 void closeDatabase(void) {
@@ -114,7 +118,7 @@ void closeDatabase(void) {
 static GDBM_FILE get_dbf(int db) {
     
     if (db>=MAX_DB || db <0) {
-        logger(LOG_ERR,"Unkown database %d",db);
+        logger(LOG_DEBUG,gettext("Unkown database id %d"),db);
         return 0;
     } else {
         return dbf[db];

@@ -1,2 +1,5 @@
 src/ircbot.c
 src/timing.c
+src/network.c
+src/irc.c
+src/dbaccess.c

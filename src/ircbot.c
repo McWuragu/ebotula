@@ -169,7 +169,8 @@ int main(int argc,char * const argv[]) {
                 logger(LOG_INFO,gettext("Found debug level option."));
                 if (++i>=argc) {
                     errno=EINVAL;
-                    printf(gettext("%s need a parameter value"),argv[i-1]);
+                    fprintf(stderr,gettext("%s need a parameter value"),argv[i-1]);
+                    fprintf(stderr,"\n");
                     exit(errno);
                 }
 
@@ -177,7 +178,8 @@ int main(int argc,char * const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<0  || tmp > MAX_LOGLEVEL) {
                     errno=EDOM;
-                    printf(gettext("The log level %i is invalid."),tmp);
+                    fprintf(stderr,gettext("The log level %i is invalid."),tmp);
+                    fprintf(stderr,"\n");
                     exit(errno);
                 }
                 sSetup.nLogLevel=tmp;
@@ -194,8 +196,9 @@ int main(int argc,char * const argv[]) {
         		else
         		{	
         			errno=EINVAL;
-                    printf(gettext("%s need a parameter value"),argv[i-1]);
-        			exit(errno);
+                    fprintf(stderr,gettext("%s need a parameter value"),argv[i-1]);
+        			fprintf(stderr,"\n");
+                    exit(errno);
         		}
                 break;
             case 'v':
@@ -278,7 +281,8 @@ int main(int argc,char * const argv[]) {
 
 
     // init Database and the mutex for  access to the database
-    initDatabases();
+    if (!initDatabases())
+        exit(errno);
 
     // create master dialog
     if (sSetup.newMaster) {
@@ -291,36 +295,20 @@ int main(int argc,char * const argv[]) {
     
 
     // create the network connection
-    if ((sSetup.server!=NULL) && (sSetup.port!=NULL)) {
-        #ifdef NDEBUG
-        printf(gettext("Try to connect to %s"),sSetup.server);
-        printf("\n");
-        #endif
-        logger(LOG_INFO,gettext("Try to connect to %s"),sSetup.server);
-        
-        connectServer();
-        
-        #ifdef NDEBUG
-        printf(gettext("The bot is connect to %s"),sSetup.server);
-        printf("\n");
-        #endif
-        
-        logger(LOG_INFO,gettext("The bot is connect to %s"),sSetup.server);
-    } else {
+    if (!connectServer()) {
         closeDatabase();
-        errno=EINVAL;
-        #ifdef NDEBUG
-        printf(gettext("The servername or portnumber isn't set."));
-        printf("\n");
-        #endif
-        logger(LOG_ERR,gettext("The servername or portnumber isn't set."));
+        closelog();
+        exit(errno);
+    }
+    
+    // connect to the irc service
+    if (!ConnectToIrc()) {
+        disconnectServer();
+        closeDatabase();
+        closelog();
         exit(errno);
     }
 
-    
-
-    // connect to the server
-    ConnectToIrc();
     #ifdef NDEBUG
     printf("%s\n",gettext("Running..."));
     #endif
@@ -386,7 +374,7 @@ int main(int argc,char * const argv[]) {
             strcpy(pCurrLine,pCurrStringPos);
 
             /* parse the part line */
-            logger(LOG_DEBUG,"Parse: \"%s\"",pCurrLine);
+            logger(LOG_DEBUG,gettext("Receive: \"%s\""),pCurrLine);
             preParser(pCurrLine,&sMsg);
 
             /* put the identified line  on the  queue */
@@ -460,7 +448,8 @@ int main(int argc,char * const argv[]) {
         
         execvp(argv[0],argv);
         #ifdef NDEBUG
-        perror(gettext("Restart failed"));
+        fprintf(stderr,gettext("Restart failed"));
+        fprintf(stderr,"\n");
         #endif
         
         #ifdef HAVE_SYSLOG_H
