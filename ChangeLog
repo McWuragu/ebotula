@@ -13,7 +13,7 @@ ebotula-0.1.13
 - modified the  fast and slow sending  system (excess floodinf protection)
 - changed the default sending delay
 - added new error message for  wrong password
-
+- modified the configuration.in
 
 ebotula-devel-0.1.12
 --------------------
