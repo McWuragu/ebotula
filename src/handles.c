@@ -139,7 +139,7 @@ void hSetModUser(char *pLine) {
             if (pNetmask) {
                 
                 if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-            	    logger(LOG_DEBUG,gettext("Set the usermodes for the account %s with nickname %s"),pLogin,pNick);
+            	    logger(LOG_DEBUG,gettext("Set the account modes for the account %s with nickname %s"),pLogin,pNick);
         
                     if ((pChannel=getAccessChannel(pLine))) {
                     	// build key for access.dbf
@@ -212,7 +212,7 @@ void hResetModes(char *pLine) {
               
                 // check of bot new mods or  other user
                 if (strcmp(pNick,pTmpBotName)==0) {
-                    logger(LOG_DEBUG,gettext("Bot get a new usermode"));
+                    logger(LOG_DEBUG,gettext("Bot get a new account mode"));
                     // mode set for the bot from other user of operator
                     // then initiallize this  channel
                     if (strcmp(pMode,"+o")==0) {
@@ -222,7 +222,7 @@ void hResetModes(char *pLine) {
                     }
                 } else {
                     // add callback for reset the modes for a user    
-                    logger(LOG_DEBUG,gettext("Added callback routine for the reset of the usermodes"));
+                    logger(LOG_DEBUG,gettext("Added callback routine for the reset of the account modes"));
                     
                     // built the data for callback
                     pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));

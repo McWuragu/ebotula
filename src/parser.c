@@ -256,14 +256,14 @@ void *CommandExecutionThread(void *argv) {
                 case CMD_KICK:
                     kickuser(&sMsgItem);
                     break;
-                case CMD_USERMODE:
-                    usermode(&sMsgItem);
+                case CMD_ACCOUNTMODE:
+                    accountmode(&sMsgItem);
                     break;
                 case CMD_RMUSER:
                     rmuser(&sMsgItem);
                     break;
-                case CMD_USERLIST:
-                    userlist(&sMsgItem);
+                case CMD_ACCOUNTLIST:
+                    accountlist(&sMsgItem);
                     break;
                 case CMD_ALLSAY:
                     allsay(&sMsgItem);
@@ -297,7 +297,7 @@ void *CommandExecutionThread(void *argv) {
 		    break;
                 }
             } else {
-                notice(sMsgItem.pCallingNick,getMsgString(ERR_NOT_ACCESS));
+                notice(sMsgItem.pCallingNick,gettext("Access denied"));
             }
 
 

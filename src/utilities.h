@@ -88,8 +88,6 @@ void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData);
 */
 char *ChannelDataToStr(ChannelData_t *pChannelData);
 
-void printMsg(char *const pMsg[]);
-
 /**
 * This function remove all spaces in a string until from double quote include spaces.
 * This space in double quote untouched.

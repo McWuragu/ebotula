@@ -6,18 +6,7 @@
 	#include "config.h"
 #endif
 
-#ifdef LANG_DE
-    #include "lang/messages_de.h"
-#else 
-    #include "lang/messages_eng.h"
-#endif
-
 #include "messages.h"
-
-char * getMsgString(eMsgID_t const MsgID){
-    assert(MsgID==Msg[MsgID].MsgID);
-    return Msg[MsgID].MsgString;   
-}
 
 void printCmdLineHelp() {
 

@@ -79,14 +79,6 @@ void clearspace(char *pStr) {
     }
 }
 // ############################################################################# 
-void printMsg( char *const pMsg[]) {
-    int i;
-    for (i=0;pMsg[i][0]!=EOM;i++) {
-        printf("%s",pMsg[i]);
-    }
-
-}
-// ############################################################################# 
 void StrToLower(char *pStr) {
      unsigned int str_length,i;
 

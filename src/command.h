@@ -15,7 +15,7 @@
 #include "network.h"
 #include "account.h"
 
-#define USERLIST_TAB    20
+#define ACCOUNT_LIST_TAB    20
 #define HELP_TAB        12
 
 #define CHANNEL_MODES   "kltnmsprqi"
@@ -66,8 +66,8 @@ typedef enum {
 
     /* owner commands */
     CMD_CHANMODE,
-    CMD_USERLIST,
-    CMD_USERMODE,
+    CMD_ACCOUNTLIST,
+    CMD_ACCOUNTMODE,
     CMD_SAY,
     CMD_KICK,
     CMD_SET_TOPIC,
@@ -118,7 +118,7 @@ static char * const CmdList[]= {
     /* friend commands */
     "invite",
     /* channel owner commands */
-    "chanmode","userlist","usermode","say","kick","topic","greeting","ban","deban",
+    "chanmode","accountlist","accountmode","say","kick","topic","greeting","ban","deban",
     /* master commands */
     "restart","allsay","rmuser","nick","die","chanlist","rmchannel","addchannel","join","part"
 };
@@ -177,10 +177,10 @@ void allsay(MsgItem_t *pMsg);
 void banuser(MsgItem_t *pMsg);
 void debanuser(MsgItem_t *pMsg);
 void kickuser(MsgItem_t *pMsg);
-void usermode(MsgItem_t *pMsg);
+void accountmode(MsgItem_t *pMsg);
 void chanmode(MsgItem_t *pMsg);
 void rmuser(MsgItem_t *pMsg);
-void userlist(MsgItem_t *pMsg);
+void accountlist(MsgItem_t *pMsg);
 void inviteuser(MsgItem_t *pMsg);
 /* CTCP command functions */
 void ctcpping(MsgItem_t *pMsg);

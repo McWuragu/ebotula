@@ -1,10 +1,5 @@
-SUBDIRS=lang
 bin_PROGRAMS = ebotula
 ebotula_SOURCES= \
-	lang/messages_de.h \
-	lang/irchelp_de.h \
-	lang/messages_eng.h \
-	lang/irchelp_eng.h \
 	messages.c \
 	account.c \
 	command.c \

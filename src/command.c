@@ -83,7 +83,7 @@ void help(MsgItem_t *pMsg) {
             free (pMsgStr);
         }
         /* the tail */
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_HELP_END));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Help end"));
     } else {
         logger(LOG_DEBUG,gettext("Spezial help text for a command"));
 
@@ -107,7 +107,7 @@ void help(MsgItem_t *pMsg) {
                 nCmdHelpID=CmdIdToHelpId(i);
 
                 /* the head for help */
-                pMsgPart=getMsgString(INFO_HELP_FOR);
+                pMsgPart=gettext("Help for");
                 pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdList[i])+3)*sizeof(char));
                 sprintf(pTmp,"%s %s:",pMsgPart,pParameter);
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pTmp);
@@ -125,13 +125,13 @@ void help(MsgItem_t *pMsg) {
                 for (j=0;pIrcSyntax[nCmdHelpID][j][0]!=EOM;j++) {
                     sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pIrcSyntax[nCmdHelpID][j]);
                 }
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_HELP_END));
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Help end"));
                 free (pParameter);
                 return;
             }
         }
         free (pParameter);
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_COMMAND));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("No help found for this command."));
     }
 }
 /* #########################################################################
@@ -141,7 +141,7 @@ void hello(MsgItem_t *pMsg) {
     logger(LOG_DEBUG,gettext("Try to create an new account for %s",pMsg->pCallingNick));
 
     if (pMsg->UserLevel>LoggedLevel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You're already identified."));
         return;
     }
 
@@ -315,16 +315,16 @@ void ident(MsgItem_t *pMsg) {
                 }
 				deleteQueue(pChannelQueue);
             } else {
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_WRONG_PW));
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Invalid password"));
             }
             free(pLogin);
             free(pParameter);
             if (pPasswd) free(pPasswd);
         } else {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         }
     } else {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You're already identified."));
     }
 }
 /* #########################################################################
@@ -335,14 +335,14 @@ void addChannel(MsgItem_t *pMsg) {
     char *channelmod;
 
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
         return;
     }
 
     /* check that the command channel and  access channel are diffrence	*/
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
          if (!strcmp(pMsg->pAccessChannel,pCmdChannel)) {
-			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
 			return;
 		}
 		free(pCmdChannel);
@@ -351,7 +351,7 @@ void addChannel(MsgItem_t *pMsg) {
 
 	/* checking of channel exist */
 	if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
+		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This channel is already on the channel list."));
 	} else {
     	logger(LOG_DEBUG,gettext("Join and add the channnel %s",pMsg->pAccessChannel));
 		/* add channel */
@@ -375,7 +375,7 @@ void rmChannel(MsgItem_t *pMsg){
     
     /* check channel parameter */
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
         return;
     }
     
@@ -384,7 +384,7 @@ void rmChannel(MsgItem_t *pMsg){
 
     /* checking of channel exists */
     if (!del_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This channel isn't in the channel list."));
     } else {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The channel is removed from the channel list."));
     }
@@ -403,14 +403,14 @@ void joinChannel(MsgItem_t *pMsg) {
     char *pCmdChannel;
     
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
         return;
     }
 
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
         /* compare the current channel and  the channel for joining */
         if (!(strcmp(pMsg->pAccessChannel,pCmdChannel))) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
 			return;
 		}
 		free(pCmdChannel);
@@ -427,7 +427,7 @@ void joinChannel(MsgItem_t *pMsg) {
 void partChannel(MsgItem_t *pMsg) {
 
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
     } else {
         logger(LOG_DEBUG,gettext("Part the channel %s",pMsg->pAccessChannel));
 
@@ -464,10 +464,10 @@ void setNick(MsgItem_t *pMsg){
 
     /* read parameters */
     if (!pParameter) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
     } else {
         if (!NickStringCheck(pParameter)) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NICK_INVALID));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The Nickname is invalid."));
         } else {
             /* set the nickname for the bot on the irc */
             nick(pParameter);
@@ -499,7 +499,7 @@ void chanlist(MsgItem_t *pMsg){
     logger(LOG_DEBUG,gettext("Build channel list."));
 
 
-    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_CHANNELLIST_BEGIN));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Channel list:"));
 
     /* get  the channel list form the DB */
     pChannelQueue=list_db(CHANNEL_DB);
@@ -523,7 +523,7 @@ void chanlist(MsgItem_t *pMsg){
     	    free(pMsgStr);
 
         	if (sChannelData.pTopic) {
-                pMsgPart=getMsgString(INFO_CHANNELLIST_TOPIC);
+                pMsgPart=gettext("Topic:");
             	pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(sChannelData.pTopic)+2)*sizeof(char));
 	            sprintf(pMsgStr,"%s %s",pMsgPart,sChannelData.pTopic);
     	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
@@ -531,7 +531,7 @@ void chanlist(MsgItem_t *pMsg){
 	        }
 
     	    if (sChannelData.pGreeting) {
-                pMsgPart=getMsgString(INFO_CHANNELLIST_GREET);
+                pMsgPart=gettext("Greeting:");
         	    pMsgStr=(char*)malloc((strlen(pMsgPart)+strlen(sChannelData.pGreeting)+2)*sizeof(char));
             	sprintf(pMsgStr,"%s %s",pMsgPart,sChannelData.pGreeting);
 	            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
@@ -550,7 +550,7 @@ void chanlist(MsgItem_t *pMsg){
 		free(pChannel);
     }
 	deleteQueue(pChannelQueue);
-    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_CHANNELLIST_END));
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("End of the channel list."));
 }
 /* #########################################################################
    Bot comand: !version
@@ -572,7 +572,7 @@ void setGreeting(MsgItem_t *pMsg) {
     ChannelData_t sChannelData;
 
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
     } else {
         logger(LOG_DEBUG,gettext("Greeting seting for %s",pMsg->pAccessChannel));
         
@@ -605,7 +605,7 @@ void setGreeting(MsgItem_t *pMsg) {
             free(sChannelData.pGreeting);
             free(sChannelData.pTopic);
         } else {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This channel isn't in the channel list."));
         }
     }
 }
@@ -620,7 +620,7 @@ void setTopic(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
     } else if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
         logger(LOG_DEBUG,gettext("Topic seting for %s",pMsg->pAccessChannel));
 	    
@@ -660,7 +660,7 @@ void setTopic(MsgItem_t *pMsg) {
         free(sChannelData.pTopic);
 
 	} else {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This channel isn't in the channel list."));
 	}
 }
 /* #########################################################################
@@ -703,13 +703,13 @@ void say(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
         return;
     }
 
     pParameter=getParameters(pMsg->pRawLine);
     if (!pParameter) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         return;
     }
 
@@ -725,7 +725,7 @@ void allsay(MsgItem_t *pMsg) {
     
 
     if (!(pMsgStr=getParameters(pMsg->pRawLine))) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         return;
     }
 
@@ -759,19 +759,19 @@ void banuser(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
         return;
     }
 
     if (!(pParameter=getParameters(pMsg->pRawLine))) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         return;
     }
 
     pToBanNick=getFirstPart(pParameter,NULL);
 
     if (!pToBanNick) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         return;
     }
 
@@ -781,7 +781,7 @@ void banuser(MsgItem_t *pMsg) {
     StrToLower(pTmpBotName);
 
     if (strcmp(pToBanNick,pTmpBotName)==0) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOTSELF_BAN));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Can't ban myself"));
         free(pTmpBotName);
         return;
     }
@@ -815,13 +815,13 @@ void debanuser(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
         return;
     }
 
     /* extract parameters */
     if (!(pParameter=getParameters(pMsg->pRawLine))){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         return;
     }
 
@@ -850,13 +850,13 @@ void kickuser(MsgItem_t *pMsg) {
     char *pTmpBotName;
 
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
         return;
     }
 
     /* get parameters*/
     if (!(pParameter=getParameters(pMsg->pRawLine))){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         return;
     }
     pKicknick=getFirstPart(pParameter,&pReason);
@@ -872,7 +872,7 @@ void kickuser(MsgItem_t *pMsg) {
     StrToLower(pTmpBotName);
 
     if (strcmp(pKicknick,pTmpBotName)==0) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOTSELF_KICK));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Can't kick myself"));
         free(pTmpBotName);
         return;
     }
@@ -885,7 +885,7 @@ void kickuser(MsgItem_t *pMsg) {
 
     /* read  the  login name of the  kicking user */
     if (!(pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_KICK));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't kick this user"));
     } else {
         /* built data for the callback */
         pData=(char*)malloc((strlen(pLogin)+strlen(pMsg->pAccessChannel)+strlen(pReason)+5)*sizeof(char));
@@ -906,9 +906,9 @@ void kickuser(MsgItem_t *pMsg) {
     free (pTmpBotName);
 }
 /* #########################################################################
-   Bot comand: !usermode [#channel] <login> <mod>
+   Bot comand: !accountmode [#channel] <login> <mod>
    ######################################################################### */
-void usermode(MsgItem_t *pMsg){
+void accountmode(MsgItem_t *pMsg){
     char *pPos;
     char *accesslogin;
     char *pLogin;
@@ -920,7 +920,7 @@ void usermode(MsgItem_t *pMsg){
     char mod[3];
 
     if(!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
         return;
     }
     
@@ -928,13 +928,13 @@ void usermode(MsgItem_t *pMsg){
 
 	    /* check the channel */
     	if (!(exist_db(CHANNEL_DB,pMsg->pAccessChannel))) {
-        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This channel isn't in the channel list."));
     	    return;
 	    }
                    
     	/* get parameters */
 	    if (!(pParameter=getParameters(pMsg->pRawLine))) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
             return;
         }
 
@@ -943,7 +943,7 @@ void usermode(MsgItem_t *pMsg){
 
     	/* look for the space and separat the login for the user which want modify */
 	    if (!(pPos=strchr(pParameter,' '))) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         	return;
     	}
 
@@ -959,10 +959,10 @@ void usermode(MsgItem_t *pMsg){
 
     	/* check login in the user db */
 	    if (!(exist_db(USER_DB,pLogin))) {
-	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Account wasn't found."));
         	return;
     	} else if (!strcmp(pLogin,accesslogin)) {
-        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_SELF));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You can't modify yourself"));
     	    return;
 	    }
 
@@ -977,7 +977,7 @@ void usermode(MsgItem_t *pMsg){
 	        if ((oldmod=get_db(ACCESS_DB,pLogin))) {
 		   	    /* only a master  can modify  a other master */
     		    if (strchr(oldmod,'m') && pMsg->UserLevel != MasterLevel) {
-            		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_MASTER));
+            		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You're not a bot master."));
 	        	    return;
     		    }
 		
@@ -1002,20 +1002,20 @@ void usermode(MsgItem_t *pMsg){
         	break;
     	case 'm':
 	        if (pMsg->UserLevel != MasterLevel) {
-        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_MASTER));
+        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("You're not a bot master."));
     	    } else {
 	            mod[1]=pPos[1];
         	}
     	    break;
 	    default:
-        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_UNKNOWN_MODS));
+        	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This mod is invalid."));
     	    return;
 	    }
 
     	/* set the end mark */
 	    mod[2]='\0';
 
-	    logger(LOG_DEBUG,gettext("Found usermodes %s",mod));
+	    logger(LOG_DEBUG,gettext("Found account modes %s",mod));
 
 		/* look for old master rights */
 		if (mod[1]!='m' && oldmod) {
@@ -1043,13 +1043,13 @@ void usermode(MsgItem_t *pMsg){
 	    
 		/* add or remove the mod */
    		if (mod[0]=='+') {
-        	logger(LOG_DEBUG,gettext("Set new usermodes"));
+        	logger(LOG_DEBUG,gettext("Set new account modes"));
 
 	        if (!(add_db(ACCESS_DB,pKey,mod))) {
                 replace_db(ACCESS_DB,pKey,mod);
     	    }
 	  	} else {
-    	logger(LOG_DEBUG,gettext("Remove new usermodes"));
+    	logger(LOG_DEBUG,gettext("Remove new account modes"));
 	        /* remove mod */
         	del_db(ACCESS_DB,pKey);
 
@@ -1058,7 +1058,7 @@ void usermode(MsgItem_t *pMsg){
 
 	    /* identify the  login and set the rights */
 		if ((pNetmask=get_db(USERTONICK_DB,pLogin))) {
-    	    	logger(LOG_DEBUG,gettext("Modify the current usermodes"));
+    	    	logger(LOG_DEBUG,gettext("Modify the current account modes"));
 				usernick=getNickname(pNetmask);
 
                 if (usernick) {
@@ -1107,9 +1107,9 @@ void chanmode(MsgItem_t *pMsg) {
 
 
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
     } else if(!(pParameters=getParameters(pMsg->pRawLine))) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
     } else {
         /* read the old channel parameters */
         
@@ -1201,7 +1201,7 @@ void chanmode(MsgItem_t *pMsg) {
             free(sChannelData.sModes.pKeyword);
             free(sChannelData.sModes.pLimit);
         } else {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNEL));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This channel isn't in the channel list."));
         }
         free(pParameters);
     }
@@ -1217,7 +1217,7 @@ void rmuser(MsgItem_t *pMsg) {
 	QueueData *pChannel;
 	
     if (!(pLogin=getParameters(pMsg->pRawLine))) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         return;
     }
 
@@ -1250,13 +1250,13 @@ void rmuser(MsgItem_t *pMsg) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("The account is removed"));        
     	logger(LOG_DEBUG,gettext("Remove %s from the user list"),pLogin);
     } else {
-    	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
+    	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Account wasn't found."));
     }
 }
 /* #########################################################################
-   Bot comand: !userlist [#channel]
+   Bot comand: !accountlist [#channel]
    ######################################################################### */
-void userlist(MsgItem_t *pMsg){
+void accountlist(MsgItem_t *pMsg){
     char *pLogin;
     char *pArgv;
     char *pKey;
@@ -1279,9 +1279,9 @@ void userlist(MsgItem_t *pMsg){
     /* build the  login list  for output */
     if (pMsg->UserLevel==MasterLevel && !pArgv) {
         /* Bot masters */
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_BEGIN));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Account list:"));
         
-        logger(LOG_DEBUG,gettext("Create the userlist for a master"));
+        logger(LOG_DEBUG,gettext("Create the accountlist for a master"));
         pChannelQueue=list_db(CHANNEL_DB);
 		
         /* get the list of all channels */
@@ -1292,11 +1292,11 @@ void userlist(MsgItem_t *pMsg){
             /* check for master or normal user */
             if (exist_db(ACCESS_DB,(char*)pLoginItem->data)) {
                 /* user is master */
-                pMsgStr=(char*)malloc((USERLIST_TAB+strlen("Master   Status:")+5)*sizeof(char));
+                pMsgStr=(char*)malloc((ACCOUNT_LIST_TAB+strlen("Master   Status:")+5)*sizeof(char));
                 strcpy(pMsgStr,(char*)pLoginItem->data);
 
                 /* fill */
-                for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
+                for (j=0;j<(ACCOUNT_LIST_TAB-iLoginLen);j++) {
                     strcat(pMsgStr," ");
                 }
 
@@ -1325,12 +1325,12 @@ void userlist(MsgItem_t *pMsg){
         			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
         			sprintf(pKey,"%s%s",(char*)pLoginItem->data,(char*)pChannel->data);
         
-                    /* "Status:" + USERLIST_TAB + "Friend from " + strlen(pChannel->data) + "   Status: "+ "OFF" */
-                    pMsgStr=(char*)malloc((USERLIST_TAB+iChanLen+40)*sizeof(char));
+                    /* "Status:" + ACCOUNT_LIST_TAB + "Friend from " + strlen(pChannel->data) + "   Status: "+ "OFF" */
+                    pMsgStr=(char*)malloc((ACCOUNT_LIST_TAB+iChanLen+40)*sizeof(char));
                     strcpy(pMsgStr,(char*)pLoginItem->data);
         
                     /* fill */
-                    for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
+                    for (j=0;j<(ACCOUNT_LIST_TAB-iLoginLen);j++) {
                         strcat(pMsgStr," ");
                     }
     
@@ -1378,17 +1378,17 @@ void userlist(MsgItem_t *pMsg){
         
         
         deleteQueue(pChannelQueue);
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("End of the account list."));
     } else {
         
-        logger(LOG_DEBUG,gettext("Create the userlist for a owner"));
+        logger(LOG_DEBUG,gettext("Create the accountlist for a owner"));
 
         if (!pMsg->pAccessChannel) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("This command requieres a channel name."));
             return;
         }
         
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_BEGIN));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Account list:"));
         
         /* look for  rights of  user for  the channel */
 		iChanLen=strlen(pMsg->pAccessChannel);
@@ -1402,12 +1402,12 @@ void userlist(MsgItem_t *pMsg){
 			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
 			sprintf(pKey,"%s%s",(char*)pLoginItem->data,pMsg->pAccessChannel);
 
-            /* "Status:" + USERLIST_TAB + "Owner "+ "   Status: "+"ON " */
-            pMsgStr=(char*)malloc((USERLIST_TAB+30)*sizeof(char));
+            /* "Status:" + ACCOUNT_LIST_TAB + "Owner "+ "   Status: "+"ON " */
+            pMsgStr=(char*)malloc((ACCOUNT_LIST_TAB+30)*sizeof(char));
             strcpy(pMsgStr,(char*)pLoginItem->data);
 
             /* fill */
-            for (j=0;j<(USERLIST_TAB-iLoginLen);j++) {
+            for (j=0;j<(ACCOUNT_LIST_TAB-iLoginLen);j++) {
                 strcat(pMsgStr," ");
             }
 
@@ -1446,7 +1446,7 @@ void userlist(MsgItem_t *pMsg){
             free(pLoginItem->data);
             free(pLoginItem);
         }
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("End of the account list."));
     }
     if (pArgv) {free(pArgv);}
 	deleteQueue(pLoginQueue);
@@ -1463,7 +1463,7 @@ void inviteuser(MsgItem_t *pMsg){
     
     // extract and select the nick name  for inviting
     if (!(pParameter=getArgument(pMsg->pRawLine))) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("Couldn't found regulare parameters."));
         return;
     }
     
