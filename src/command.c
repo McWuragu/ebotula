@@ -227,7 +227,8 @@ void logoff(char *pLine,int iRemoveMode) {
 			pChannelQueue=list_db(CHANNEL_DB);
 			iLength=strlen(pLogin);
 			/* remove the mod  for  this account */
-			while ((pChannel=popQueue(pChannelQueue))){
+			while (isfullQueue(pChannelQueue)){
+                pChannel=popQueue(pChannelQueue);
 				pKey=(char *)malloc((pChannel->t_size+iLength)*sizeof(char));
 				sprintf(pKey,"%s%s",pLogin,(char *)pChannel->data);
 				
@@ -307,7 +308,9 @@ void ident(char *pLine) {
                 pChannelQueue=list_db(CHANNEL_DB);
                 login_len=strlen(pLogin);
         
-                while ((pChannel=popQueue(pChannelQueue))) {
+                while (isfullQueue(pChannelQueue)) {
+                    pChannel=popQueue(pChannelQueue);
+
                     if (isMaster) {
                         mode((char*)pChannel->data,"+o",pNick);
                     } else {
@@ -496,7 +499,9 @@ void chanlist(char *pLine){
     pChannelQueue=list_db(CHANNEL_DB);
 
 
-    while ((pChannel=popQueue(pChannelQueue))) {
+    while (isfullQueue(pChannelQueue)) {
+        pChannel=popQueue(pChannelQueue);
+
 		if ((pChannelSet=get_db(CHANNEL_DB,(char*)pChannel->data))) {
 	        pChannelData=StrToChannelData(pChannelSet);
     	    pMode=ChannelModeToStr(pChannelData->pModes);
@@ -687,7 +692,8 @@ void allsay(char *pline) {
     pChannelQueue=list_db(CHANNEL_DB);
 
 	/* send privmsg to all channels */
-    while ((pChannel=popQueue(pChannelQueue))) {
+    while (isfullQueue(pChannelQueue)) {
+        pChannel=popQueue(pChannelQueue);
         privmsg((char*)pChannel->data,pMsgStr);
 		free(pChannel);
     }
@@ -1062,7 +1068,8 @@ void rmuser(char *pLine) {
 			rmnick=getNickname(pNetmask);
         	
 			pChannelQueue=list_db(CHANNEL_DB);
-            while ((pChannel=popQueue(pChannelQueue))) {
+            while (isfullQueue(pChannelQueue)) {
+                pChannel=popQueue(pChannelQueue);
                 mode((char*)pChannel->data,"-o",rmnick);
                 mode((char*)pChannel->data,"-v",rmnick);
 				free(pChannel);
@@ -1111,7 +1118,8 @@ void userlist(char *pLine){
 
         /* get the kist of all channels */
         pChannelQueue=list_db(CHANNEL_DB);
-        while ((pLoginItem=popQueue(pLoginQueue))) {
+        while (isfullQueue(pLoginQueue)) {
+            pLoginItem=popQueue(pLoginQueue);
             iLoginLen=pLoginItem->t_size;
 
             /* check for master or normal user */
@@ -1139,7 +1147,8 @@ void userlist(char *pLine){
                 free(pMsgStr);
             } else {
                 /* normal user */
-				while ((pChannel=popQueue(pChannelQueue))) {
+				while (isfullQueue(pChannelQueue)) {
+                    pChannel=popQueue(pChannelQueue);
 					iChanLen=pChannel->t_size;
 
 					/* build key for access.dbf */
@@ -1192,7 +1201,8 @@ void userlist(char *pLine){
         /* look for  rights of  user for  the channel */
 		iChanLen=strlen(pAccessChannel);
 
-		 while ((pLoginItem=popQueue(pLoginQueue))) {
+		 while (isfullQueue(pLoginQueue)) {
+            pLoginItem=popQueue(pLoginQueue);
 			iLoginLen=pLoginItem->t_size;
 
 			/* build the key  for  access.dbf */

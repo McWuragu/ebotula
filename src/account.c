@@ -31,16 +31,19 @@ void rmDeadLogins(long lCheckTime) {
     /* get the  list */
 	pLoginQueue=list_db(USER_DB);
 		
-    while ((pLogin=popQueue(pLoginQueue))) {
+    while (isfullQueue(pLoginQueue)) {
+        pLogin=popQueue(pLoginQueue);
 
         /* read time */
    	    if ((pTime=get_db(TIMELOG_DB,(char*)pLogin->data))) {
-	
-	        /* check the time */
-    	    if (lCheckTime>atol(pTime)) {
-	            log_out((char*)pLogin->data);
-            	syslog(LOG_NOTICE,SYSLOG_LOGIN_RM,(char*)pLogin->data);
-        	}
+	        /* check login status */
+            if (exist_db(USERTONICK_DB,(char*)pLogin->data)) {
+                /* check the time */
+        	    if (lCheckTime>atol(pTime)) {
+    	            log_out((char*)pLogin->data);
+                	DEBUG(SYSLOG_LOGIN_RM,(char*)pLogin->data);
+            	}
+            }
     	    free(pTime);
 		}
 		free(pLogin);
@@ -89,8 +92,6 @@ void log_out(char *pLogin) {
     extern pthread_mutex_t account_mutex;
     char *pNetmask;
 
-
-    
     pthread_mutex_lock(&account_mutex);
     if ((pNetmask=get_db(USERTONICK_DB,pLogin))){
 	    del_db(NICKTOUSER_DB,pNetmask);
@@ -133,7 +134,8 @@ void rmAccessRights(char *pLogin){
 
     iLoginLen=strlen(pLogin);
     /* remove access rights from the user */
-    while ((pChannel=popQueue(pChannelQueue))) {
+    while (isfullQueue(pChannelQueue)) {
+        pChannel=popQueue(pChannelQueue);
 
         /* build  the key for access.dbf */
         pKey=(char *)malloc((pChannel->t_size+iLoginLen+1)*sizeof(char));
@@ -159,7 +161,8 @@ void rmDeadAccounts(long lCheckTime) {
 	pLoginQueue=list_db(TIMELOG_DB);
     
     /* get the  list */
-    while ((pLogin=popQueue(pLoginQueue))) {
+    while (isfullQueue(pLoginQueue)) {
+        pLogin=popQueue(pLoginQueue);
 
         /* read time */
         if ((pTime=get_db(TIMELOG_DB,(char*)pLogin->data))) {

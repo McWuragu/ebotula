@@ -101,127 +101,122 @@ void *ComandExecutionThread(void *argv) {
     // execute loop
     while(!stop) {
 
-		// check the fill status of the Command Queue
-		if (!(isemptyQueue(pCommandQueue))) {
-			// try to pop out a command
-			pCommand=popQueue(pCommandQueue);
-			
-			if (pCommand) {
-				pMsg=(MsgBuf_t*)pCommand->data;
+        pCommand=popQueue(pCommandQueue);
+        
+        if (pCommand) {
+            pMsg=(MsgBuf_t*)pCommand->data;
 
-				// check the access level
-				if (AccessRight(pMsg->pMsgLine,pMsg->identify)) {
-					
-					// command router 
-					switch (pMsg->identify) {
-					case CMD_ONPING:
-						pong();
-						break;
-					case CMD_ONQUIT:
-						logoff(pMsg->pMsgLine,false);
-					case CMD_LOGOFF:
-						logoff(pMsg->pMsgLine,true);
-						break;
-					case CMD_HELP:
-						help(pMsg->pMsgLine);
-						break;
-					case CMD_VERSION:
-						version(pMsg->pMsgLine);
-						break;
-					case CMD_HELLO:
-						hello(pMsg->pMsgLine);
-						break;
-					case CMD_PASS:
-						password(pMsg->pMsgLine);
-						break;
-					case CMD_IDENT:
-						ident(pMsg->pMsgLine);
-						break;
-					case CMD_ADDCHANNEL:
-						addChannel(pMsg->pMsgLine);
-						break;
-					case CMD_RMCHANNEL:
-						rmChannel(pMsg->pMsgLine);
-						break;
-					case CMD_JOIN:
-						joinChannel(pMsg->pMsgLine);
-						break;
-					case CMD_PART:
-						partChannel(pMsg->pMsgLine);
-						break;
-					case CMD_DIE:
-						die(pMsg->pMsgLine);
-						break;
-					case CMD_NICK:
-						setNick(pMsg->pMsgLine);
-						break;
-					case CMD_CHANNELS:
-						chanlist(pMsg->pMsgLine);
-						break;
-					case CMD_ONNAMES:
-						hBotNeedOp(pMsg->pMsgLine);
-						break;
-					case CMD_ONJOIN:
-						hSetModUser(pMsg->pMsgLine);
-					case CMD_VIEWGREAT:
-						greeting(pMsg->pMsgLine);
-						break;
-					case CMD_SET_GREATING:
-						setGreeting(pMsg->pMsgLine);
-						break;
-					case CMD_SET_TOPIC:
-						setTopic(pMsg->pMsgLine);
-						break;
-					case CMD_SAY:
-						say(pMsg->pMsgLine);
-						break;
-					case CMD_KICK:
-						kickuser(pMsg->pMsgLine);
-						break;
-					case CMD_USERMODE:
-						usermode(pMsg->pMsgLine);
-						break;
-					case CMD_ONNICKCHG:
-						hNickChange(pMsg->pMsgLine);
-						break;
-					case CMD_RMUSER:
-						rmuser(pMsg->pMsgLine);
-						break;
-					case CMD_USERLIST:
-						userlist(pMsg->pMsgLine);
-						break;
-					case CMD_ONMODE:
-						hResetModes(pMsg->pMsgLine);
-						break;
-					case CMD_ALLSAY:
-						allsay(pMsg->pMsgLine);
-						break;
-					case CMD_ONTOPIC:
-						hResetTopic(pMsg->pMsgLine);
-						break;
-					case CMD_CHANMODE:
-						chanmode(pMsg->pMsgLine);
-						break;
-					case CMD_RESTART:
-						restart(pMsg->pMsgLine);
-						break;
-                    case CMD_ONWHOIS:
-						hCallback(pMsg->pMsgLine);
-						break;
-					default:
-						syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,pMsg->identify);
-						break;
-					}
+            // check the access level
+            if (AccessRight(pMsg->pMsgLine,pMsg->identify)) {
+                
+                // command router 
+                switch (pMsg->identify) {
+                case CMD_ONPING:
+                    pong();
+                    break;
+                case CMD_ONQUIT:
+                    logoff(pMsg->pMsgLine,false);
+                case CMD_LOGOFF:
+                    logoff(pMsg->pMsgLine,true);
+                    break;
+                case CMD_HELP:
+                    help(pMsg->pMsgLine);
+                    break;
+                case CMD_VERSION:
+                    version(pMsg->pMsgLine);
+                    break;
+                case CMD_HELLO:
+                    hello(pMsg->pMsgLine);
+                    break;
+                case CMD_PASS:
+                    password(pMsg->pMsgLine);
+                    break;
+                case CMD_IDENT:
+                    ident(pMsg->pMsgLine);
+                    break;
+                case CMD_ADDCHANNEL:
+                    addChannel(pMsg->pMsgLine);
+                    break;
+                case CMD_RMCHANNEL:
+                    rmChannel(pMsg->pMsgLine);
+                    break;
+                case CMD_JOIN:
+                    joinChannel(pMsg->pMsgLine);
+                    break;
+                case CMD_PART:
+                    partChannel(pMsg->pMsgLine);
+                    break;
+                case CMD_DIE:
+                    die(pMsg->pMsgLine);
+                    break;
+                case CMD_NICK:
+                    setNick(pMsg->pMsgLine);
+                    break;
+                case CMD_CHANNELS:
+                    chanlist(pMsg->pMsgLine);
+                    break;
+                case CMD_ONNAMES:
+                    hBotNeedOp(pMsg->pMsgLine);
+                    break;
+                case CMD_ONJOIN:
+                    hSetModUser(pMsg->pMsgLine);
+                case CMD_VIEWGREAT:
+                    greeting(pMsg->pMsgLine);
+                    break;
+                case CMD_SET_GREATING:
+                    setGreeting(pMsg->pMsgLine);
+                    break;
+                case CMD_SET_TOPIC:
+                    setTopic(pMsg->pMsgLine);
+                    break;
+                case CMD_SAY:
+                    say(pMsg->pMsgLine);
+                    break;
+                case CMD_KICK:
+                    kickuser(pMsg->pMsgLine);
+                    break;
+                case CMD_USERMODE:
+                    usermode(pMsg->pMsgLine);
+                    break;
+                case CMD_ONNICKCHG:
+                    hNickChange(pMsg->pMsgLine);
+                    break;
+                case CMD_RMUSER:
+                    rmuser(pMsg->pMsgLine);
+                    break;
+                case CMD_USERLIST:
+                    userlist(pMsg->pMsgLine);
+                    break;
+                case CMD_ONMODE:
+                    hResetModes(pMsg->pMsgLine);
+                    break;
+                case CMD_ALLSAY:
+                    allsay(pMsg->pMsgLine);
+                    break;
+                case CMD_ONTOPIC:
+                    hResetTopic(pMsg->pMsgLine);
+                    break;
+                case CMD_CHANMODE:
+                    chanmode(pMsg->pMsgLine);
+                    break;
+                case CMD_RESTART:
+                    restart(pMsg->pMsgLine);
+                    break;
+                case CMD_ONWHOIS:
+                    hCallback(pMsg->pMsgLine);
+                    break;
+                default:
+                    syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,pMsg->identify);
+                    break;
+                }
 
-					// remove  destroy the last popped Command
-					free(pMsg->pMsgLine);
-					free(pMsg);
-					free(pCommand);
-				
-				}
-			}
-		}
-        msleep(250);
+                // remove  destroy the last popped Command
+                free(pMsg->pMsgLine);
+                free(pMsg);
+                free(pCommand);
+            
+            }
+        }
     }
 
     return NULL;

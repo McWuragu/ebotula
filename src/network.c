@@ -212,7 +212,8 @@ void join_all_channels(void) {
     pChannelQueue=list_db(CHANNEL_DB);
     
     /* join_Channels */
-	while ((pChannel=popQueue(pChannelQueue))) {
+	while (isfullQueue(pChannelQueue)) {
+        pChannel=popQueue(pChannelQueue);
         join((char*)pChannel->data);
 		free(pChannel);
 	}

@@ -36,7 +36,7 @@
   
 
 ConfigSetup_t sSetup;    // global config structure
-boolean stop;       // singal for stop the endless loop
+volatile boolean stop;       // singal for stop the endless loop
 boolean again;
 
 pthread_mutex_t account_mutex;      // mutex for synchronize the access of the login db 
@@ -269,6 +269,8 @@ int main(int argc,char * const argv[]) {
         
 
     }
+
+    flushQueue(pCommandQueue);
 
     syslog(LOG_NOTICE,SYSLOG_BOT_STOP);
     pthread_join(timeThread,NULL);
