@@ -93,6 +93,10 @@ static MsgStruct_t Msg[] = {
 	{ OK_RESTART,			"The bot is going to restart"},
 
 	// Informations for invalid input or using of the bot
+	{ ERR_NOT_LOGON,			"You're not identified."},
+	{ ERR_NOT_MASTER,			"You're not a irc bot master."},
+	{ ERR_NOT_OWNER,			"You're not the bot owner of this channel."},
+    	{ ERR_NOT_FRIEND,			"You're not a friend of this channel."},
 	{ ERR_NOT_LOGON,		"You're not identified."},
 	{ ERR_NOT_MASTER,		"You're not a irc bot master."},
 	{ ERR_NOT_OWNER,		"You're not the bot owner of this channel."},

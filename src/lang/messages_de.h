@@ -95,10 +95,12 @@ static MsgStruct_t Msg[] ={
 	{ OK_DIE,		"Der Bot beendet sich" },
 	{ OK_RESTART,		"Der Bot startet neu" },
 
+	
 	// Informations for invalid input or using of the bot
 	{ ERR_NOT_LOGON,	"Du bist nicht identifiziert" },
 	{ ERR_NOT_MASTER,	"Du bist kein Botmaster" },
 	{ ERR_NOT_OWNER,	"Du bist nicht der Channeleigentümer" },
+	{ ERR_NOT_FRIEND,		"Du bist kein Freund des Channels" },
 	{ ERR_NOT_CHANNELOPT,	"Dieses Kommando benötigt einen Channel" },
     { ERR_NOT_PARAMETER,	"Es konnnten keine gültigen Parameter gefunden werden."},
     { ERR_NOT_COMMAND,		"Es wurde keine Hilfe für das Kommando gefunden" },
