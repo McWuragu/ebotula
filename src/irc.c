@@ -15,55 +15,15 @@
 #include <pwd.h>
 
 #include "utilities.h"
-
 #include "messages.h"
-#include "config.h"
 #include "network.h"
 #include "dbaccess.h"
-#include "command.h"
 #include "irc.h"
 
 
 
 
-// ############################################################################# 
-void irc_connect(void){
-	char recv_buffer[RECV_BUFFER_SIZE], *tmp;
-	int i,trying=0;
-	extern ConfType setup;
-	
 
-	// send the  USER commado
-	user();
-    
-	// Try to set the nickname
-	// If the nickname are  using then try again with a leading underline.
-    do {
-		i=0;
-		trying++;
-		
-		
-		nick(setup.botname);
-        recv_line(recv_buffer,RECV_BUFFER_SIZE);
-
-		// check fpr  nickname alread in use
-		// if he in use then put a leading underline on the front of the name 
-		if (strstr(recv_buffer,"Nickname is already in use.")) {
-			tmp=(char *)calloc(strlen(setup.botname)+2,sizeof(char));
-			sprintf(tmp,"_%s",setup.botname);
-			free(setup.botname);
-			setup.botname=tmp;
-			i=1;
-		}
-		
-		// Try MAX_NICKS times to set
-		if ( trying>MAX_NICKS) {
-			errno=EAGAIN;
-			perror(ERR_NICK);
-			exit(errno);
-		}
-	} while (i==1);
-}
 
 // ############################################################################# 
 void user(void) {
@@ -117,20 +77,14 @@ void quit(void) {
 void join(char *channel) {
 	char *buffer;
 	buffer=(char *)calloc(strlen("JOIN ")+strlen(channel)+3,sizeof(char));
-	
 	sprintf(buffer,"JOIN %s\r\n",channel);
-	
-	// send commando
 	send_line(buffer);
 }
 // ############################################################################# 
 void part(char *channel) {
 	char *buffer;
 	buffer=(char *)calloc(strlen("PART ")+strlen(channel)+3,sizeof(char));
-
 	sprintf(buffer,"PART %s\r\n",channel);
-
-	// send commando
 	send_line(buffer);
 }
 // ############################################################################# 
@@ -140,26 +94,73 @@ void pong(void) {
 	// get  hostname
 	gethostname(hostname,HOSTNAME_BUFFER_SIZE);
 
-
-	// create commando string
 	buffer=(char *)calloc(strlen("PONG ")+strlen(hostname)+3,sizeof(char));
-	
 	sprintf(buffer,"PONG %s\r\n",hostname);
-
-
-	// send commando
+	send_line(buffer);
+}
+// ############################################################################# 
+void ping(char *target) {
+	char *buffer;
+	buffer=(char *)calloc(strlen("PING ")+strlen(target)+3,sizeof(char));
+	sprintf(buffer,"PING %s\r\n",target);
 	send_line(buffer);
 }
 // ############################################################################# 
 void nick(char *nick) {
 	char *buffer;
 	buffer=(char *)calloc(strlen("NICK ")+strlen(nick)+3,sizeof(char));
-
 	sprintf(buffer,"NICK %s\r\n",nick);
-
 	send_line(buffer);
 }
+// ############################################################################# 
+void topic(char *channel, char* text) {
+	char *buffer;
+	buffer=(char*)calloc(strlen("TOPIC ")+strlen(channel)+strlen(text)+4,sizeof(char));
+	sprintf(buffer,"TOPIC %s %s\r\n",channel,text);
+	send_line(buffer);
+}
+// ############################################################################# 
+void kick(char *channel, char *nick, char *reason) {
+	char *buffer;
 
+	// check  optional parameters and  set  it of default values
+	if (reason==NULL) {
+		reason=(char*)malloc(sizeof(char));
+		*reason='\0';
+	}
+	buffer=(char*)calloc(strlen("KICK ")+strlen(channel)+strlen(nick)+strlen(reason)+5,sizeof(char));
+	sprintf(buffer,"KICK %s %s %s\r\n",channel,nick,reason);
+	send_line(buffer);
+}
+// ############################################################################# 
+void ban(char *channel,char *mask){
+	char *buffer;
+	buffer=(char*)calloc(strlen("MODE ")+strlen(channel)+strlen(mask)+6,sizeof(char));
+	sprintf(buffer,"MODE %s +b %s\r\n",channel,mask);
+	send_line(buffer);
+
+}
+// ############################################################################# 
+void deban(char *channel,char *mask){
+	char *buffer;
+	buffer=(char*)calloc(strlen("MODE ")+strlen(channel)+strlen(mask)+6,sizeof(char));
+	sprintf(buffer,"MODE %s -b %s\r\n",channel,mask);
+	send_line(buffer);
+
+}
+// ############################################################################# 
+void mode(char *channel, char *mods, char *modsparam) {
+	char *buffer;
+
+	// check  optional parameters and  set  it of default values
+	if (modsparam==NULL) {
+		modsparam=(char*)malloc(sizeof(char));
+		*modsparam='\0';
+	}
+	buffer=(char*)calloc(strlen("MODE ")+strlen(channel)+strlen(mods)+strlen(modsparam)+5,sizeof(char));
+	sprintf(buffer,"TOPIC %s %s %s\r\n",channel,mods,modsparam);
+	send_line(buffer);
+}
 
 
 
