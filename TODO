@@ -11,17 +11,15 @@ ToDo Liste
 	- !rmuser
 	- !allsay
 - Automatisches Löschen von Accounts nach einer Zeit  delta t 
-- Setzen von Masterrechten per !usermode
 - Setzen von Op-Recht bei User nach !ident und Join
 - Setzen von Voice-Recht bei User nach !ident und Join
+- Reset Mods, wenn nicht  über Bot verändert wurden
 - Setzt Topic und Mode im Channel beim Join, Bekommen von OP und beim fremden Ändern
 - Ausführen von Ban von der Liste 
-- Automaisches Ausloggen eines User nach delta t 
 - Hilfetexte vervollständigen
 - Code cleanup
 - Debuggen
 - Bei fehlenden OP channel cycle
 - Anforderung der Rechte als ACTION
 - Hervorhebung von Messages per bold
-- Status Logging mit syslog
-- Update Nickname von eingelogten User in usertonick.dbf und nicktouser.dbf
+- insert allow and  disallow filter  for charaters in all  strings
