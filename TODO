@@ -11,16 +11,15 @@ ToDo Liste
 	- !rmuser
 	- !allsay
 - Automatisches Löschen von Accounts nach einer Zeit  delta t 
-- Wenn keine Rechte gesetzt sind mehr, den Eintrag aus access.dbf entfernen
-- setzen von Masterrechten per !usermode
+- Setzen von Masterrechten per !usermode
 - Setzen von Op-Recht bei User nach !ident und Join
 - Setzen von Voice-Recht bei User nach !ident und Join
 - Setzt Topic und Mode im Channel beim Join, Bekommen von OP und beim fremden Ändern
 - Ausführen von Ban von der Liste 
 - Automaisches Ausloggen eines User nach delta t 
 - Hilfetexte vervollständigen
-- code cleanup
-- debuggen
+- Code cleanup
+- Debuggen
 - Bei fehlenden OP channel cycle
 - Anforderung der Rechte als ACTION
 - Hervorhebung von Messages per bold
