@@ -1,5 +1,5 @@
 AC_INIT(src/ircbot.c)
-AM_INIT_AUTOMAKE(ebotula,0.2.0b)
+AM_INIT_AUTOMAKE(ebotula,0.1.4-dev)
 
 AM_SANITY_CHECK
 
@@ -49,10 +49,11 @@ test "x$prefix" = xNONE && prefix=$ac_default_prefix
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
 
 _sysconfdir=`eval echo $sysconfdir`
-_localstatedir=`eval echo $localstatedir`
+_databasedir=`eval echo $localstatedir`
+_databasedir="$_databasedir/ebotula"
 
 AC_DEFINE_UNQUOTED(CONFDIR,"$_sysconfdir", Define the default path to the configuration file)
-AC_DEFINE_UNQUOTED(DATABASEDIR,"$_localstatedir", Define the default path to the database files)
+AC_DEFINE_UNQUOTED(DATABASEDIR,"$_databasedir", Define the default path to the database files)
 
 dnl ===========================
 dnl configure options
