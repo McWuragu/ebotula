@@ -26,130 +26,158 @@ static char *pIrcSyntax[][5] = {
     // header
     
     {
-        "Syntax:"
+        "Syntax:",
+        ".",
     },
     // commands
     
     // others
     // VIEWGREAT
     {
-        "!viewgreet <#Channel>"
+        "!viewgreet <#Channel>",
+        ".",
     },
     // HELP
     {
-        "!help <Command>"
+        "!help <Command>",
+        ".",
     },
     // VERSION
     {
-        "!version"
+        "!version",
+        ".",
     },
     // HELLO
     {     
-        "!hello"
+        "!hello",
+        ".",
     },
     // IDENT
     {
-        "!ident [Login] <Password>"
+        "!ident [Login] <Password>",
+        ".",
     },
 
     // Logged user
     // LOGOFF
     {
-        "!logoff"
+        "!logoff",
+        ".",
     },
     // PASS
     {
-        "!pass <Password>"
+        "!pass <Password>",
+        ".",
     },
     
     /* friend commands */
     // INVITE
     {
-        "!invite <#channel> [nick]"
+        "!invite <#channel> [nick]",
+        ".",
     },
 
     // owner commands
     // CHANMODE
     {
-        "!chanmod <#Channel> [+|-][tnmpsklrqa] <Limit> <Keyword>"
+        "!chanmod <#Channel> [+|-][tnmpsklrqa] <Limit> <Keyword>",
+        ".",
     },
     // USERLIST
     {
-        "!userlist <#Channel>"
+        "!userlist <#Channel>",
+        ".",
     },
     // USERMODE
     {
         "!usermode <#Channel> [Login] [+|-][mov]",
         "m...Master",
         "o...Owner",
-        "v...Friend"
+        "v...Friend",
+        ".",
     },
     // SAY
     {
-        "!say <#Channel> [Text]"
+        "!say <#Channel> [Text]",
+        ".",
     },
     // KICK
     {
-        "!kick <#Channel> [Nickname]"
+        "!kick <#Channel> [Nickname]",
+        ".",
     },
     // SET_TOPIC
     {
-        "!topic <#Channel> [Topic]"
+        "!topic <#Channel> [Topic]",
+        ".",
     },
     // SET_GREATING
     {
-        "!greeting <#Channel> [Text]"
+        "!greeting <#Channel> [Text]",
+        ".",
     },
     // BAN
     {
-        "!ban <#channel> [Nickname]"
+        "!ban <#channel> [Nickname]",
+        ".",
     },
     // DEBAN
     {
-        "!deban <#channel> [Banmask]"
+        "!deban <#channel> [Banmask]",
+        ".",
     },
     
     // Master commands
     // RESTART
     {
-        "!restart"
+        "!restart",
+        ".",
     },
     // ALLSAY
     {
-        "!allsay [Text]"
+        "!allsay [Text]",
+        ".",
     },
     // RMUSER
     {
-        "!rmuser [Login]"
+        "!rmuser [Login]",
+        ".",
     },
     // NICK
     {
-        "!nick [Nickname]"
+        "!nick [Nickname]",
+        ".",
         
     },
     // DIE
     {
-        "!die"
+        "!die",
+        ".",
     },
     // CHANNELS
     {
-        "!chanlist" 
+        "!chanlist",
+        ".",
     },
     // RMCHANNEL
     {
-        "!rmchannel <#Channel>"
+        "!rmchannel <#Channel>",
+        ".",
     },
     // ADDCHANNEL
     {
-        "!addchannel [#Channel]"
+        "!addchannel [#Channel]",
+        ".",
     },
     // JOIN
     {
-        "!join [#Channel]"
+        "!join [#Channel]",
+        ".",
     },
     // PART
     {
-        "!part <#Channel>"
+        "!part <#Channel>",
+        ".",
     }
 };
 #endif
