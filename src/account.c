@@ -178,3 +178,39 @@ void rmDeadAccounts(long lCheckTime) {
     pthread_mutex_unlock(&account_mutex);
 	deleteQueue(pLoginQueue);
 }
+// #############################################################################
+boolean checkUserLevel(char *pCmdLogin, char *pLogin, char const *pChannel) {
+    char *pMod;
+    char *pAccessKey;
+    boolean bStatus;
+
+    /* read mods */
+    if (pLogin){
+        /* built db access key */
+        pAccessKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
+        sprintf(pAccessKey,"%s%s",pLogin,pChannel);
+    
+        /* read the access level of  the  user wiche want baning user */
+        if ((pMod=get_db(ACCESS_DB,pAccessKey))) {}
+        else if ((pMod=get_db(ACCESS_DB,pLogin))) {
+                
+        }
+        else pMod=NULL;
+    }
+
+    /* look for ban */
+    if (pMod==NULL) {
+        bStatus=true;
+    } else if (pMod[1]=='m') {
+        bStatus=false;
+    } else if (exist_db(ACCESS_DB,pCmdLogin)) {
+        /* kick by master */
+        bStatus=true;
+    } else if (pMod[1]!='o'){
+        /* ban by owner */
+        bStatus=true;
+    } else {
+        bStatus=false;
+    }
+}
+

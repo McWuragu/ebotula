@@ -57,5 +57,14 @@ void rmDeadLogins(long lCheckTime);
 * @param lCheckTimethe limit time
 */ 
 void rmDeadAccounts(long lCheckTime);
-
+/**
+ * This function check the access right from a user to a other user
+ * @author Steffen Laube
+ *
+ * @param pCmdLogin the login of the executionen user
+ * @param pLogin the login of the user in command
+ * @param pChannel the channel environment for the command
+ * @return the status of the  access right
+ */ 
+boolean checkUserLevel(char *pCmdLogin, char *pLogin, char const *pChannel);
 #endif
