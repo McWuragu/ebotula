@@ -12,6 +12,7 @@
 #ifndef __H_QUEUE
 #define __H_QUEUE
 
+#include<pthread.h>
 
 /** Internal Error defines **/
 #define QUEUE_SUCCESS				0
