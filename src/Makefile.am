@@ -18,6 +18,7 @@ ebotula_SOURCES= \
 	timing.c \
 	utilities.c \
 	queue.c \
+	callback.c \
 	type.h \
 	irchelp.h \
 	messages.h \
@@ -33,7 +34,8 @@ ebotula_SOURCES= \
 	parser.h \
 	timing.h \
 	utilities.h \
-	queue.h
+	queue.h \
+	callback.h 
 
 
 ebotula_LDADD= $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB)
