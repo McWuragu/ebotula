@@ -311,7 +311,7 @@ void ident(MsgItem_t *pMsg) {
                 }
 				deleteQueue(pChannelQueue);
             } else {
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_ACCOUNT));
+                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_WRONG_PW));
             }
             free(pLogin);
             free(pParameter);
