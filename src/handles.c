@@ -207,6 +207,8 @@ void hResetModes(char *pLine) {
                 // send the who
                 whois(pNick);
             }
+        } else if (pMode[1]='b') {
+            DEBUG("Ban reset not implemented jet");
         } else {
             // reset other mods
             pPos=strstr(pLine,pMode);
