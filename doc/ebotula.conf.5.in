@@ -1,23 +1,22 @@
-.\" 
-.TH "ebotula.conf" "5" "17 November 2003"
+.TH "@PACKAGE@.conf" 5 "Jul 2004" "v@VERSION@" 
 .SH "NAME"
-ebotula.conf \- Configuration file for IRC bot ebotula
+@PACKAGE@.conf \- Configuration file for IRC bot @PACKAGE@
 .SH "DESCRIPTION"
-.I ebotula.conf
+.I @PACKAGE@.conf
 is the configuration file for the IRC bot 
-.IR ebotula(1) .
+.IR @PACKAGE@(1) .
 It is usally placed in /etc. If you want to use another configuration
-file, you can do so by giving ebotula the parameter -f <name_of_conf_file>
-when you start it. In ebotula.conf the default values of the parameters
-for ebotula are set. The command line parameters are prior to options
+file, you can do so by giving @PACKAGE@ the parameter -f <name_of_conf_file>
+when you start it. In @PACKAGE@.conf the default values of the parameters
+for @PACKAGE@ are set. The command line parameters are prior to options
 set in the config file, so any command line parameter will overwrite the value
 taken from this config file. The Hash (#) is used as comment sign, i.e.
 everything from this sign to the end of line is ignored.
-.SH ENTRIES IN EBOTULA.CONF
+.SH ENTRIES
 .TP
-\fBbotname=ebotula\fP
+\fBbotname=@PACKAGE@\fP
 The name of the bot displayed in an IRC-channel is set here. One could
-say it is the nickname of the bot. The default value is ebotula.
+say it is the nickname of the bot. The default value is @PACKAGE@.
 .TP
 \fBrealname="I'm an IRC bot"\fP
 Why give a bot a realname? Well, if someone is calling for detailed information
@@ -35,7 +34,7 @@ being started with root privileges. If you start the bot as a normal
 user the bot is running under your UID and GID.
 .TP
 \fBthreadlimit=5\fP
-ebotula is using threads for internal communication. Here you can set the number
+@PACKAGE@ is using threads for internal communication. Here you can set the number
 of threads created at start time.
 .TP
 \fBservername=irc.fh-lausitz.de\fP
@@ -44,7 +43,7 @@ Here you can specify the name of the IRC server the bot is supposed to connect t
 \fBport=6667\fP
 Sets the portnumber the bot is going to use.
 .TP
-\fBdatabasepath=/usr/local/var/ebotula\fP
+\fBdatabasepath=/usr/local/var/@PACKAGE@\fP
 The bot uses a database for storing the account information. You can
 specify the database file by this option.
 NOTE: You have to specify the whole path including the filename.
@@ -67,12 +66,12 @@ Sets the time in days after which idle users are automatically log off from the 
 Sets the time in seconds after which a ping timeout error is given in case the server
 doesn't respond any more.
 .SH FILES
-/etc/ebotula.conf
+/etc/@PACKAGE@.conf
 .SH "SEE ALSO"
-ebotula(1)
+@PACKAGE@(1)
 .SH "AUTHORS"
 Steffen Laube <realebula@gmx.de>,
 Thomas Stein <linux@tstein.net>,
 Uwe Strempel <u.strempel@gmx.de>
 .SH VERSION
-0.2
+@VERSION@

@@ -1,16 +1,16 @@
-.TH "EBOTULA" "1" "17 Januar 04" "" ""
+.TH @PACKAGE@ 1 "Jul 2004" "v@VERSION@" 
 .SH "NAME"
-ebotula \- IRC bot
+@PACKAGE@ \- IRC bot
 .SH "SYNOPSIS"
-\fBebotula\fP [ options ]
+\fB@PACKAGE@\fP [ options ]
 .SH "DESCRIBTION"
-\fIEbotula\fP is an irc bot for general tasks in one or more channels. These
+\fI@PACKAGE@\fP is an irc bot for general tasks in one or more channels. These
 tasks are the administration of users and channels. The bot can save the channel
 topic and modes. Also the modes of the user are set and saved by the bot.
 .SS Options
 There are two ways to set the options for the bot:
 Either you pass the options via command line or you use the
-configuration file (standard is /etc/ebotula.conf, you can alter this by
+configuration file (standard is @sysconfdir@/@PACKAGE@.conf, you can alter this by
 the paramter \-f). Parameters given in the command line are prior to
 those in the configuration file.
 .TP 
@@ -157,7 +157,7 @@ himself before bot commands are accepted. This is done by this command.
 NOTE: Use this command only in a query to the bo so no one else can see
 your passwd!
 
-e.g.: /msg ebotula fooname foobar
+e.g.: /msg @PACKAGE@ fooname foobar
 .TP
 \fB!invite\fP <#channel> [nickname]
 Invites the user in a channel. If a channel is set invite\-only, you can only
@@ -197,7 +197,7 @@ you don't have got one yet. NOTE: For security reasons !pass should not
 be used within a channel. The proper way is to use it in a query to the
 bot so only the bot can read the password.
 
-e.g.: /msg ebotula !pass foobar
+e.g.: /msg @PACKAGE@ !pass foobar
 .TP
 \fB!restart\fP
 shuts the bot down and restarts it again
@@ -244,14 +244,14 @@ If #channel is given, this command shows the greeting line from the
 selected channel. Otherwise the greeting of the current channel is
 displayed.
 .SH "FILES"
-ebotula, ebotula.conf
+@PACKAGE@, @PACKAGE@.conf
 .SH "SEE ALSO"
-RFC1459, RFC2810, RFC2811, RFC2812, ebotula.conf(5)
+RFC1459, RFC2810, RFC2811, RFC2812, @PACKAGE@.conf(5)
 .SH "AUTHORS"
 Steffen Laube <Laube.Steffen@gmx.de>,
 Thomas Stein <linux@tstein.net>,
 Uwe Strempel <u.strempel@gmx.de>
 .SH "VERSION"
-v0.2
+v@VERSION@
 .SH "BUGS"
 He isn't finished and not completely stable.
