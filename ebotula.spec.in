@@ -1,0 +1,51 @@
+Name:    ebotula-devel
+Summary: ebotula - irc bot 
+Version: @VERSION@ 
+Release: 1
+Copyright: GPL
+Source: http://lux.fh-lausitz.de/~slaube/develop/ebotula-devel-%{PACKAGE_VERSION}.tar.gz
+Source0: ebotula-devel-%{PACKAGE_VERSION}.tar.gz
+Packager: Steffen Laube <realebula@gmx.de>
+Group: Applications/Communication 
+Requires: gdbm => 1.8.0
+BuildRoot: /tmp/%{name}-root
+URL: http://www.lugse.de
+Prefix: /usr/local
+Docdir: %{prefix}/doc
+
+%description
+Ebotula is a irc bot for general tasks in one or more channels. These
+tasks are the user and channel administration. He (the bot) can save the channel
+topic and modes. Also the modes of the user are set and saved by the bot.
+
+%prep
+rm -rf $RPM_BUILD_ROOT
+%setup -q
+
+%build
+CFLAGS="${RPM_OPT_FLAGS}" ./configure --prefix=%{prefix}
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{prefix}/var/ebotula
+make DESTDIR=$RPM_BUILD_ROOT  install
+
+%post
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%doc AUTHORS COPYING ChangeLog INSTALL NEWS README TODO
+
+%{prefix}/bin/*
+%{prefix}/man/man1/*
+%config %{prefix}/etc/ebotula/*
+%dir %{prefix}/var/ebotula/
+
+%changelog
+* Mon Jul 14 2003 Steffen Laube <realebula@gmx.de>
+- Kommt noch..
+

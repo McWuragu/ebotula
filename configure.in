@@ -13,8 +13,8 @@ dnl
 dnl to build the configure script
 dnl *************************************************************
 
-AC_INIT(src/ircbot.c)
-AM_INIT_AUTOMAKE(ebotula,0.1.10-dev)
+AC_INIT(ebotula.spec.in)
+AM_INIT_AUTOMAKE(ebotula-devel,0.1.10)
 
 AM_SANITY_CHECK
 
@@ -104,4 +104,4 @@ dnl ===========================
 dnl end 
 dnl ===========================
 
-AC_OUTPUT(Makefile src/Makefile src/lang/Makefile etc/Makefile doc/Makefile)
+AC_OUTPUT(Makefile ebotula.spec src/Makefile src/lang/Makefile etc/Makefile doc/Makefile)

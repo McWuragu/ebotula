@@ -1,3 +1,7 @@
+ebotula-devel-0.1.10
+--------------------
+- renamed the version
+
 ebotula-0.1.9-dev
 -----------------
 - Bugfix: fixed segmentation fault caused by ident command
