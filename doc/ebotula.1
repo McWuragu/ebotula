@@ -1,14 +1,14 @@
 .TH EBOTULA 1 "10 March 03"
 .SH NAME
-ebotula \-  IRC bot
+ebotula \- IRC bot
 .SH SYNOPSIS
 \fBebotula\fP [ options ]
 .SH DESCRIBTION
 \fIEbotula\fP is a irc bot for general task in one or more channels. This
-tasks are the  user and channel administration. He can secure the channel
+tasks are the user and channel administration. He can secure the channel
 topic and modes. The modes from the user were set and secure by the bot.
 .SS Options
-All command line options  override  the values from the confiugration file.
+All command line options override the values from the confiugration file.
 All other values are taken form the file.
 .TP
 \fB-a\fP days
@@ -18,10 +18,10 @@ set the limit for the automatic logoff in days
 set the nickname
 .TP
 \fB-c\fP sec
-set the limit  for ping timeout
+set the limit for ping timeout
 .TP
 \fB-d\fP path
-set the  path to the  directory for the databases
+set the path to the directory for the databases
 .TP
 \fB-f\fp file
 set a custom configuration file
@@ -30,13 +30,79 @@ set a custom configuration file
 show the help text and exit
 .TP
 \fB-k\fP days
-set the  live time of an account in days
+set the live time of an account in days
 .TP
 \fB-m\fP
 enable the dialog for creating a new master
 .TP
+\fB-n\fP ms
+set the sending delay time in millisecond
+.TP
+\fB-p\fP port
+set the portnumber for connecting
+.TP
+\fB-r\fP string
+set a string for the realname field
+.TP
+\fB-s\fP server
+set the irc servername
+.TP
+\fB-t\fP number
+set the number fo parallel working command threads
+.TP
 \fB-v\fP
 show the version and exit
+.SS Access levels
+The bot have four access levels. This level represent the privilege of the
+access to the bot. 
+.PP
+The levels are:
+.TP
+\fBmaster\fP
+This level is for the adimistrator of the bot. He have complete access to all
+functions and become in all channels where the bot is operator access.
+.TP
+\fBchannel owner\fP
+This mean that the user is administrator of a channel. A user can be much
+more that one channel a administrator, but it must set expliciltly for any
+channel.
+.TP
+\fBfriend\fP
+A friend is a user with automatic voice. He have not realy more access rights.
+It is a nice feature to show which persons are seen fain in a channel.
+.TP 
+\fBothers\fP
+This are all other people which aren't logged on.
+.SS Commands
+The bot have a lot of commands for the work and manipulation in one or more
+channels. It give a online help for this bot. You can become a simple list of
+all commands or detail infoamtion about a spezial command. 
+.PP
+Here comes now a list of all supported commands and a little describtion:
+.TP
+\fB!die\fP
+shutdown the bot
+.TP
+\fB!greeting\fP < #channel > [ message ]
+set the greeting line for joining user in the current or selected channel
+.TP
+\fB!help\fP [ command ]
+give a list of all commands or detail information about the selected command
+.TP
+\fB!restart\fP
+shutdown and start the bot again
+.TP
+\fB!say\fP < #channel > [ message ]
+send the message to the current or selected channel
+.TP
+\fB!topic\fP < #channel > [ topic ]
+set the topic for the current or selected channel
+.TP
+\fB!version\fP
+print the version
+.TP
+\fB!viewgreet\fP < #channel >
+show the greeting line form the current or selected channel
 .SH FILES
 ebotula, ebotula.conf
 .SH "SEE ALSO"
@@ -44,6 +110,6 @@ RFC1459, RFC2810, RFC2811, RFC2812
 .SH AUTHOR
 Steffen Laube <realebula@gmx.de>
 .SH VERSION
-v0.1.2b-dev
+v0.2b
 .SH BUGS
-He close not right all time and is little unstable.
+He isn't finish and not complete stable.
