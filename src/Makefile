@@ -24,6 +24,7 @@ OBJS=   parameter.o \
 	command.o \
 	dbaccess.o \
 	utilities.o \
+	extract.o \
 	ircbot.o 
 
 DEPS= $(patsubst %.o,%.d,$(OBJS))
