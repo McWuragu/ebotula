@@ -19,29 +19,10 @@
 static MsgStruct_t Syslog[]= {
 	{ SYSLOG_READ_CMD,		"Kommandozeilenparameter gefunden und eingelesen"},
 	{ SYSLOG_READ_CONFFILE,		"Konfigurationsdatei gefunden und eingelesen"},
-	{ SYSLOG_INIT_DB,		"Initialisierung der Datenbank"},
-	{ SYSLOG_TRY_CONNECT,		"Versuche zu verbinden"},
-	{ SYSLOG_IS_CONNECT,		"Mit Server verbunden"},
-	{ SYSLOG_BOT_RUN,		"Wird ausgeführt...."},
-	{ SYSLOG_BOT_STOP,		"Stoppe...."},
-	{ SYSLOG_BOT_START,		"Starte..."},
 	{ SYSLOG_UNKNOWN_CMDID,		"Unbekannte Kommando ID"},
 	{ SYSLOG_ACCOUNT_RM,		"Ein Account wurde von der Liste entfernt"},
-	{ SYSLOG_FAILED_NETPARA,	"Der Servername oder die Portnummer wurden nicht gesetzt"},
 	{ SYSLOG_MSG_QUEUE,		"Kann keine Messagequeue anlegen"},
-	{ SYSLOG_RESOLVE_HOSTNAME,	"Kann Servernamen nicht auflösen"},
-	{ SYSLOG_RESOLVE_PROTOCOL,	"TCP ist ein unbekanntes Protokoll"},
-	{ SYSLOG_SOCKET,		"Kann Socket nicht anlegen"},
-	{ SYSLOG_CONNECT,		"Verbindung fehlgeschlagen"},
 	{ SYSLOG_CONFIG_FILE,		"Kann Konfigurationsdatei nicht	öffnen"},
-	{ SYSLOG_SEND,			"Kann nicht senden"},
-	{ SYSLOG_RECV,			"Kann nichts empfangen"},
-	{ SYSLOG_TIMEOUT,		"Timeout beim Empfang"},
-	{ SYSLOG_CREATE_DIR,		"Lege Verzeichnis für die Datenbank an"},
-	{ SYSLOG_CREATE_DIR_ERR,	"Kann kein Verzeichnis für die Datenbank anlegen"},
-	{ SYSLOG_DATABASE_ERR,		"Kann Datenbank nicht öffnen"},
-	{ SYSLOG_RESTART,		"Neustart..."},
-	{ SYSLOG_STOPPED,		"Angehalten..."}
 };
 
 // excute error
@@ -68,7 +49,6 @@ static MsgStruct_t Msg[] ={
 	{ ERR_INIT_DELAY,       "Die Verzögerung für das Einrichten der Channels ist ungültig"},
     { ERR_LOGOFF_RANGE,	"Die Auslogzeit ist ungültig" },
 	{ ERR_THREAD_RANGE,	"Das Threadlimit liegt ausserhalb des Bereiches" },
-	{ ERR_NICK,		"Kann Nicknamen nicht setzen" },
 	{ ERR_MUTEX,		"Synchronisation der Threads nicht möglich" },
 	{ ERR_NOT_ALLOW_CHAR,	"Nicht erlaubte Zeichen wurden verwendet" },
 

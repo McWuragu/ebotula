@@ -15,31 +15,12 @@
 
 static MsgStruct_t  Syslog[] = {
 	// syslog
-	{ SYSLOG_READ_CMD,		"Command line parameters found and read" },
+	{ SYSLOG_READ_CMD,		    "Command line parameters found and read" },
 	{ SYSLOG_READ_CONFFILE,		"Configuration file found and read" },
-	{ SYSLOG_INIT_DB,		"Initialization of the database" },
-	{ SYSLOG_TRY_CONNECT,		"Trying to connect" },
-	{ SYSLOG_IS_CONNECT,		"Connected to the server" },
-	{ SYSLOG_BOT_RUN,		"Running...."  },
-	{ SYSLOG_BOT_STOP,		"Stopped...." },
-	{ SYSLOG_BOT_START,		"Starting..." },
 	{ SYSLOG_UNKNOWN_CMDID,		"Unknown command id" },
 	{ SYSLOG_ACCOUNT_RM,		"An account is removed from the list" },
-	{ SYSLOG_FAILED_NETPARA,	"The servername or portnumber isn't set." },
-	{ SYSLOG_MSG_QUEUE,		"Can't create the message queue." },
-	{ SYSLOG_RESOLVE_HOSTNAME,	"Can't resolve the hostname." },
-	{ SYSLOG_RESOLVE_PROTOCOL,	"TCP is an unknown protocol." },
-	{ SYSLOG_SOCKET,		"Can't create a tcp socket." },
-	{ SYSLOG_CONNECT,		"Connection failed." },
+	{ SYSLOG_MSG_QUEUE,		    "Can't create the message queue." },
 	{ SYSLOG_CONFIG_FILE,		"Can't open the config file." },
-	{ SYSLOG_SEND,			"Can't send a command." },
-	{ SYSLOG_RECV,			"Can't receive a line." },
-	{ SYSLOG_TIMEOUT,		"Receiving timeout" },
-	{ SYSLOG_CREATE_DIR,		"Create the directory for the database." },
-	{ SYSLOG_CREATE_DIR_ERR, 	"Can't create the directory for the database." },
-	{ SYSLOG_DATABASE_ERR,		"Can't open the databases." },
-    { SYSLOG_RESTART,		"Restart..." },
-	{ SYSLOG_STOPPED,		"Bot down..." }
 };
 
 static MsgStruct_t Msg[] = {
@@ -65,8 +46,7 @@ static MsgStruct_t Msg[] = {
     { ERR_INIT_DELAY,           "The delay of the startup initialization is invalid."},
     { ERR_LOGOFF_RANGE,			"The auto logoff time is invalid."},
 	{ ERR_THREAD_RANGE,		"The threadlimit is out of range." },
-	{ ERR_NICK,			"Can't set the nickname."},
-	{ ERR_MUTEX,			"Can't synchronize the threads." },
+    { ERR_MUTEX,			"Can't synchronize the threads." },
 	{ ERR_NOT_ALLOW_CHAR,		"Forbidden characters used." },
 
 
