@@ -32,12 +32,10 @@ void channel_list(char *line);
 void setGreating(char *line);
 void setTopic(char *line);
 void greating(char *line);
-void bot_op(char *line);
 void say(char *line);
 void kickuser(char *line);
 void usermode(char *line);
 void chanmode(char *line);
-void nickchg(char *line);
-
+void rmuser(char *line);
 
 #endif

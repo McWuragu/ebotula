@@ -223,12 +223,23 @@ void logoff(char *line) {
 	char *login;
 	char *nick;
 	char *netmask;
+	char **channels;
+
+	int i;
 
 	netmask=getNetmask(line);
 	nick=getNickname(line);
     login=get_db(NICKTOUSER_DB,netmask);
 	
-	log_out(netmask,login);
+	log_out(login);
+	
+
+	// remove the mods  for  this account
+    if ((channels=list_db(CHANNEL_DB))) {
+		for (i=0;channels[i]!=NULL;i++) {
+			mode(channels[i],"-ov",nick);
+		}
+	}
 
 	notice(nick,MSG_LOGOFF);
 }
@@ -242,6 +253,11 @@ void ident(char *line) {
 	char *nick;
 	char *netmask;
 	char *parameter;
+	char **channels;
+	char *key;
+	char *mods;
+
+	int i,login_len;
 
 	netmask=getNetmask(line);
 	nick=getNickname(line);
@@ -282,9 +298,32 @@ void ident(char *line) {
 	if(check_db(USER_DB,login,passwd)) {
 		log_on(netmask,login);
 		notice(nick,MSG_IDENT_OK);
+   		
+		// set the mods  for  this account
+		if ((channels=list_db(CHANNEL_DB))) {
+			login_len=strlen(login);
+	
+			for (i=0;channels[i]!=NULL;i++) {
+				key=malloc((strlen(channels[i])+login_len+1)*sizeof(char));
+				sprintf(key,"%s%s",login,channels[i]);
+				mods=get_db(ACCESS_DB,key);
+
+				if (strlen(mods)) {
+					mode(channels[i],mods,nick);
+					free(mods);
+				} else if (exist_db(ACCESS_DB,login)) {
+					mode(channels[i],"+o",nick);
+				}
+				free(key);
+				
+			}
+		}
 		return;
 	}
 	notice(nick,MSG_NOT_ACCOUNT);
+
+
+
 }
 // ######################################################################### 
 // Bot comand: !addchannel #channel
@@ -320,6 +359,8 @@ void channel_add(char *line) {
 	// join the channel 
 	join(channel);
 	notice(nick,MSG_JOIN_OK);
+	
+    
 
 }
 // ######################################################################### 
@@ -562,33 +603,6 @@ void greating(char *line) {
 
 }
 // ######################################################################### 
-// Event handler: JOIN
-// ######################################################################### 
-void bot_op(char *line){
-	extern ConfType setup;
-	char *channel;
-	char *names;
-	char *pos;
-	char *searchstr;
-
-	channel=getChannel(line);
-	
-	// extrakt Namelist
-	pos=strchr(&line[1],':');
-	names=(char*)malloc((strlen(pos)+1)*sizeof(char));
-	strcpy(names,pos);
-
-	searchstr=(char *) malloc((strlen(setup.botname)+2)*sizeof(char));
-	sprintf(searchstr,"@%s",setup.botname);
-
-	DEBUG("Look for OP right for %s",searchstr);
-	if (strstr(names,searchstr)) {
-		return;
-	}
-
-  	privmsg(channel,MSG_NEED_OP);
-}
-// ######################################################################### 
 // Bot comand: !say <#channel> text
 // ######################################################################### 
 void say(char *line) {
@@ -661,11 +675,12 @@ void usermode(char *line){
 	char *login;
 	char *usernick;
 	char *key;
-	char *mods;
-	char *oldmods;
-	char newmods[strlen(USER_MODS)+2];
+    char *oldmods;
+	char mods[3];
 
-	int len,i,j;
+	int len,i;
+
+	bzero(mods,sizeof(char)*3);
 
     nick=getNickname(line);
 	channel=getAccessChannel(line);
@@ -709,8 +724,6 @@ void usermode(char *line){
 	// check and parse the mods
 	// build a correct mode parameter line
 	len=strlen(pos);
-	j=0;
-	mods=(char *)malloc((len+1)*sizeof(char));
 	for(i=0;i<len;i++){
 		switch (pos[i]) {
 		case '-':
@@ -718,13 +731,24 @@ void usermode(char *line){
 			// ignore plus and minus after the  first position
 			if (i>0) {
 				break;
+			} else {
+				mods[0]=pos[i];
 			}
-		case 'o':
 		case 'v':
-		case 'm':
-			// build the mods line
-			mods[j]=pos[i];
-			j++;
+			if (mods[1]!='o') {
+				mods[1]='v';
+			}
+			break;
+		case 'o':
+			mods[1]='o';
+			break;
+        case 'm':
+			// only master can do this
+			if (!exist_db(ACCESS_DB,get_db(NICKTOUSER_DB,getNetmask(line)))) {
+				notice(nick,MSG_NOT_MASTER);
+				return;
+			}
+			mods[1]='o';
 			break;
 		default:
 			notice(nick,MSG_UNKNOWN_MODS);
@@ -733,8 +757,6 @@ void usermode(char *line){
 	}
 
 	// set end mark	for the  mode line
-	mods[j]='\0';
-
 	DEBUG("Found mods %s",mods);
 	
 	
@@ -750,53 +772,34 @@ void usermode(char *line){
 		oldmods=get_db(ACCESS_DB,login);
 	}
 
-	// add or remove the mods
-	len=strlen(mods);
-	if (mods[0]=='+') {
-		// add mods
-		strcpy(newmods,oldmods);
-
-		for (i=1;i<len;i++) {
-			if(!(strchr(oldmods,mods[i]))) {
-				strncat(newmods,&mods[i],sizeof(char));
-			}
-		}
-	} else {
-		// remove mods
-		for(i=1;i<len;i++){
-			if ((pos=strchr(oldmods,mods[i]))) {
-				//replace old  mode entry
-				*pos=' ';
-			}
-		}
-		clearspace(oldmods);
-		strcpy(newmods,oldmods);
-	}
-
-
 	// check for old or new master and  replace key  with login
-	if ((strchr(oldmods,'m')) || (strchr(newmods,'m'))) {
+	if ((oldmods[1]=='m') || (mods[1]=='m')) {
 		free(key);
 		key=(char *)malloc((strlen(login)+1)*sizeof(char));
 		strcpy(key,login);
-		
-		if (strlen(newmods)) {
-			strcpy(newmods,"ov");
+	}
+
+	// add or remove the mods
+	len=strlen(mods);
+	if (mods[0]=='+') {
+        // try to add the new mods
+		// if this faild then replace
+		if (mods[i]=='m') {
+			rmAccessRights(key);
 		}
 
+		if (!(add_db(ACCESS_DB,key,mods))) {
+			replace_db(ACCESS_DB,key,mods);
+		}
+	} else {
+		// remove mods
+		del_db(ACCESS_DB,key);
+		
 	}
 
-	// remove by  empty mods
-	if (strlen(newmods)==0) {
-		del_db(ACCESS_DB,key);
-	} else 
-		if (!(add_db(ACCESS_DB,key,newmods))) {
-		replace_db(ACCESS_DB,key,newmods);
-	}
 	
 	// identify the  login and set the rights
 	usernick=getNickname(get_db(USERTONICK_DB,login));
-
 	if (strlen(usernick)) {
 		mode(channel,mods,usernick);
 	}
@@ -809,27 +812,36 @@ void usermode(char *line){
 void chanmode(char *line) {
 }
 // ######################################################################### 
-// Event handler: NICK
+// Bot comand: !rmuser <login>
 // ######################################################################### 
-void nickchg(char *line) {
-	char *netmask;
+void rmuser(char *line) {
 	char *login;
-	char *newnetmask;
+	char *nick;
+	char *rmnick;
+	char **channels;
+	int i;
 
-	netmask=getNetmask(line);
-	login=get_db(NICKTOUSER_DB,netmask);
+	nick=getNickname(line);
+	login=getParameters(line);
+	rmnick=getNickname(get_db(USERTONICK_DB,login));
 
-	newnetmask=strstr(line," :");
-	newnetmask+=2;
-    strtok(newnetmask,"\r");
+	// extract the first parameter
+	strtok(login," ");
 
-	// replace  the netmask
-	if (del_db(NICKTOUSER_DB,netmask)) {
-		add_db(NICKTOUSER_DB,newnetmask,login);
-		replace_db(USERTONICK_DB,login,newnetmask);
+	if (!exist_db(USER_DB,login)) {
+		notice(nick,MSG_NOT_ACCOUNT);
+		return;
 	}
 
-	DEBUG("Changethe netmask \"%s\" to \"%s\"",netmask,newnetmask);
+	// remove the account
+	rmAccount(login);
 
+	// remove the mods  for  this account
+    if ((channels=list_db(CHANNEL_DB)) && strlen(rmnick)) {
+		for (i=0;channels[i]!=NULL;i++) {
+			mode(channels[i],"-ov",rmnick);
+		}
+	}
+
+	notice(nick,MSG_RMUSER_OK);
 }
-
