@@ -130,5 +130,7 @@ QueueExeStatus flushQueue(PQueue pqueueIn);
  * @param pqueueIn pointer to queue
  * @return pointer of the datum	 		
  */
- QueueData * getnextitrQueue(PQueue pqueueIn);
+ QueueData * getNextitrQueue(PQueue pqueueIn);
+
+#define SetIterToFirstQueue(_PQueue)     ((_PQueue)->Sentinel->Iterator = (_PQueue)->Sentinel)
 #endif

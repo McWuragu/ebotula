@@ -232,7 +232,7 @@ QueueExeStatus flushQueue(PQueue pqueueIn) {
     return err;
 }
 /* ############################################################################# */
-QueueData * getnextitrQueue(PQueue pqueueIn) {
+QueueData * getNextitrQueue(PQueue pqueueIn) {
     PQueue pqueueSentinel;
     QueueData* pQueueData=NULL;
     
