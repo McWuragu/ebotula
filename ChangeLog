@@ -3,6 +3,7 @@ ebotula-devel-0.1.11
 - Bugfix: fixed SIGSEGV from the commands !addchannel and !join
 - Bugfix: fixed mode event handle
 - Bugfix: fixed online help message
+- Bugfix: fixed the crash after mode change from other user as the bot
 - added the parameter user and group
 - added the option -u and -g
 - added the creating of the  direction ~/.ebotula for the user mode
