@@ -74,14 +74,14 @@ void notice(char *pNick,char *pMsgStr) {
 
 // #############################################################################
 void quit(void) {
-    send_line("QUIT\r\n");
+    send_direct("QUIT\r\n");
 }
 // #############################################################################
 void join(char *pChannel) {
     char *buffer;
     buffer=(char *)calloc(strlen("JOIN ")+strlen(pChannel)+3,sizeof(char));
     sprintf(buffer,"JOIN %s\r\n",pChannel);
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -89,7 +89,7 @@ void part(char *pChannel) {
     char *buffer;
     buffer=(char *)calloc(strlen("PART ")+strlen(pChannel)+3,sizeof(char));
     sprintf(buffer,"PART %s\r\n",pChannel);
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -101,7 +101,7 @@ void pong(void) {
 
     buffer=(char *)calloc(strlen("PONG ")+strlen(hostname)+3,sizeof(char));
     sprintf(buffer,"PONG %s\r\n",hostname);
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -109,7 +109,7 @@ void ping(char *pTarget) {
     char *buffer;
     buffer=(char *)calloc(strlen("PING ")+strlen(pTarget)+3,sizeof(char));
     sprintf(buffer,"PING %s\r\n",pTarget);
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -117,7 +117,7 @@ void nick(char *pNick) {
     char *buffer;
     buffer=(char *)calloc(strlen("NICK ")+strlen(pNick)+3,sizeof(char));
     sprintf(buffer,"NICK %s\r\n",pNick);
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
@@ -139,7 +139,7 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
     }
     buffer=(char*)calloc(strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6,sizeof(char));
     sprintf(buffer,"KICK %s %s :%s\r\n",pChannel,pNick,pMsgStr);
-    send_line(buffer);
+    send_direct(buffer);
     free (buffer);
 }
 // #############################################################################
