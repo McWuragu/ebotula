@@ -6,6 +6,9 @@
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
 
+/* Define if you have the poll function.  */
+#undef HAVE_POLL
+
 /* Define if you have the <syslog.h> header file.  */
 #undef HAVE_SYSLOG_H
 
@@ -23,6 +26,9 @@
 
 /* Define the default path to the database files */
 #undef DATABASEDIR
+
+/* Define if you want german output. */
+#undef LANG_DE
 
 /* Define if you want create a debugging version */
 #undef _DEBUG
