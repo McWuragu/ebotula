@@ -83,7 +83,7 @@ char *getCommand(char *pLine) {
 }
 // ############################################################################# 
 char *getArgument(char *pLine) {
-	char *pStr,*pPos,*pArg;;
+	char *pStr,*pPos,*pArg;
 	int i,iLineLen;
 	
 	// found  the begining  of Parameter 
