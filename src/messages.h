@@ -67,7 +67,7 @@
 #define MSG_SET_TOPIC			"The new topic is set"
 #define MSG_RM_TOPIC			"The topic is removed"
 #define MSG_KICK_OK				"The user are kicked by the bot"
-#define MSG_USERMODE_OK			"The user mods are changed"
+#define MSG_USERMODE_OK			"The user mod are changed"
 #define MSG_RMUSER_OK			"The account is removed"
 #define MSG_MASTER				"You are a bot master"
 
@@ -81,6 +81,7 @@
 #define MSG_NOT_ACCOUNT			"Account isn't found."
 #define MSG_NOT_CHANNEL			"This channel isn't in the channel list."
 #define MSG_NOT_ACCESS			"Access denied or unknown command"
+#define MSG_NOT_SELF			"You can't modify yourself"
 
 // Errors
 #define MSG_ADDCHANNEL_ALREADY	"This channel is already in the channel list."
@@ -88,13 +89,16 @@
 #define MSG_NICK_EXIST			"A account with this nickname already exists."
 #define MSG_ALREADY_LOGON		"You're already identified."
 #define MSG_NEED_OP				"I need operator access rights."
-#define MSG_UNKNOWN_MODS		"This mods are invalid."
+#define MSG_UNKNOWN_MODS		"This mod are invalid."
 #define MSG_MASTER_PASS_ERR		"Typing error..not equal passwords"
 #define MSG_MASTER_ERR			"Can't set this account as master."
+#define MSG_USERLIST_EMPTY		"the user list is empty"
 
 // other informations
 #define MSG_HELP_END			"End of help."
 #define MSG_HELP_FOR			"Help for"
+#define MSG_USERLIST_BEGIN		"User list:"
+#define MSG_USERLIST_END		"End of user list."
 #define MSG_CHANNELS			"Channel list:"
 #define MSG_DEFAULT_REASON		"You are kicked from the bot."
 
@@ -105,7 +109,7 @@
 #define MSG_NICK_ERR			"Invalid command: !nick <nickname>"			
 #define MSG_SAY_ERR			    "Invalid command: !say [#channel] <message>"			
 #define MSG_KICK_ERR			"Invalid command: !kick [#channel] <nickname> [reason]"
-#define MSG_USERMODE_ERR		"Invalid command: !usermode [#channel] <login> <+/-><mods>"
+#define MSG_USERMODE_ERR		"Invalid command: !usermode [#channel] <login> <+/-><mod>"
 
 // Messages for the master dialog
 #define MSG_MASTER_TITLE		"Create a master account\n\n"
