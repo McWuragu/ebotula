@@ -1,5 +1,5 @@
 Name:    @PACKAGE@ 
-Summary: ebotula - IRC bot
+Summary: %{name} - IRC bot
 Version: @VERSION@
 Release: 1
 License: GPL
