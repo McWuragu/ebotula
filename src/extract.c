@@ -23,7 +23,7 @@
 char *getNickname(char const *pLine){
 	char *pNick=NULL,*pStr;
 	
-    if (!pLine) {
+    if (pLine) {
     	pStr=getNetmask(pLine);
     
         if (pStr) {
