@@ -52,6 +52,9 @@ typedef enum CmdEnum {
     CMD_LOGOFF,
     CMD_PASS,
 
+    /* friends commands */
+    CMD_INVITE,
+
     /* owner commands */
     CMD_CHANMODE,
     CMD_USERLIST,
@@ -80,6 +83,7 @@ typedef enum CmdEnum {
 
 #define CMD_MASTER  CMD_RESTART
 #define CMD_OWNER   CMD_CHANMODE
+#define CMD_FRIEND  CMD_INVITE
 #define CMD_LOGGED  CMD_LOGOFF
 #define CMD_EVENT   CMD_ONPING
 #define CMD_OTHERS  CMD_VIEWGREAT
@@ -95,6 +99,8 @@ static char * const CmdList[]= {
     "viewgreet","help","version","hello","ident",
     /* logged user commands */
     "logoff","pass",
+    /* friend commands */
+    "invite",
     /* channel owner commands */
     "chanmode","userlist","usermode","say","kick","topic","greeting","ban","deban",
     /* master commands */
@@ -135,4 +141,5 @@ void usermode(char *pLine);
 void chanmode(char *pLine);
 void rmuser(char *pLine);
 void userlist(char *pLine);
+void inviteuser(char *pLine);
 #endif

@@ -1420,3 +1420,38 @@ void userlist(char *pLine){
     }
 	deleteQueue(pLoginQueue);
 }
+
+/* #########################################################################
+   Bot comand: !invite <#channel> [Nick]
+   ######################################################################### */
+void inviteuser(char *pLine){
+    char *pChannel;
+    char *pNick; 
+    char *pParameter;
+    char **pParts;
+    char *pInviteNick;
+
+    pChannel=getAccessChannel(pLine);
+    pNick=getNickname(pLine);
+    
+    // extract and select the nick name  for inviting
+    if (!(pParameter=getArgument(pLine))) {
+        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+        return;
+    }
+    
+    // extract the parameters
+    pParts=splitString(pParameter,3);
+
+
+    // TODO: checke the access level. Friend can invite only himself
+    // select the nickname
+    if (pParts[1]== NULL) {
+            pInviteNick=pNick;
+    } else {
+            pInviteNick=pParts[1];
+    }
+
+    // invite
+    invite(pChannel,pInviteNick);
+}
