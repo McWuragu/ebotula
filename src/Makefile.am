@@ -41,5 +41,5 @@ ebotula_SOURCES= \
 
 
 ebotula_LDADD= $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB)
-
-ebotula_CFLAGS= $(DFLAGS)
+ebotula_LDFLAGS=$(DFLAGS) $(PFLAGS)
+ebotula_CFLAGS= $(DFLAGS) $(PFLAGS)
