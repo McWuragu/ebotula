@@ -38,13 +38,13 @@ void help(char *pLine) {
 	char *pParameter;
 	char *pTmp;
 	char *pMsgStr;
+	unsigned int i,j;
 
 	pNetmask=getNetmask(pLine);
 	pNick=getNickname(pLine);
 
 	pParameter=getParameters(pLine);
 
-	unsigned int i,j;
 	boolean bIsLogin=false,bIsMaster=false;
 
 	// check for parameters
