@@ -47,15 +47,15 @@ char *getNetmask(char const *pLine){
 	if (!strchr(pStr,'!') || !strchr(pStr,'@') && pLine==NULL) {
 		return "";
 	} else if (pStr[0]==':'){
-		pNetmask=(char *)malloc(strlen(pStr)*sizeof(char));
+		pNetmask=(char *)malloc((strlen(pStr)+1)*sizeof(char));
 		strcpy(pNetmask,&pStr[1]);
-		return pNetmask;
 	} else {
 		pNetmask=(char *)malloc((strlen(pStr)+1)*sizeof(char));
 		strcpy(pNetmask,pStr);
-		return pNetmask;
 	}
-
+    
+    free(pStr);
+    return pNetmask;
 
 }
 // ############################################################################# 
