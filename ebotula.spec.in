@@ -46,6 +46,16 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{prefix}/var/ebotula/
 
 %changelog
+* Sun May 08 2004 Steffen Laube <Laube.Steffen@gmx.de>
+- Bugfix: fixed the command !logoff
+- Bugfix: fixed a lot of memory leaks
+- Bugfix: fixed the identification of a unkown option at the command line
+- removed the sending thread
+- maked the reaction time of commands shorter
+- added the cleanup of the zombies in the callback list
+- spell checking
+- maked sturdier the bot 
+
 * Sun Feb 08 2004 Steffen Laube <Laube.Steffen@gmx.de>
 - fixed the pong return string
 - cleanup the command and event  parser
