@@ -7,7 +7,8 @@
  * (c)2003 Steffen Laube <Laube.Steffen@gmx.de>
  * ############################################################# 
  */
-
+#include <stdio.h>
+#include <stdlib.h>
 #include"dbaccess.h"
 #include"irc.h"
 #include"extract.h"
@@ -20,7 +21,7 @@
 void destroyCallbackItem(CallbackItem_t *data)
 {
       /** destroy all sub-element of CallbackIten_t **/
-        free(data->nickname);
+    free(data->nickname);
         free(data->data);
         free(data);
         return;
@@ -28,13 +29,13 @@ void destroyCallbackItem(CallbackItem_t *data)
 /* ############################################################################# */
 void ModeResetCb(char *pNetmask,void* data){
     extern ConfigSetup_t sSetup;
-    char *pChannel;
+    char *pChannel=NULL;
     char *pOldMode=NULL;
-    char *pAccessKey;
-    char *pLogin;
-    char *pNick;
-    char *pMod;
-    char *pTmpBotName;
+    char *pAccessKey=NULL;
+    char *pLogin=NULL;
+    char *pNick=NULL;
+    char *pMod=NULL;
+    char *pTmpBotName=NULL;
 
 	logger(LOG_DEBUG,_("Callback routine for the reset of the modes"));
 
@@ -93,9 +94,8 @@ void ModeResetCb(char *pNetmask,void* data){
         }
 
         free(pTmpBotName);
-        free(pNick);
+	free(pNick);
     }
-    
     free(pChannel);
     free(pOldMode);
 
