@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-15 20:52+0200\n"
-"PO-Revision-Date: 2004-07-15 20:55+0200\n"
+"POT-Creation-Date: 2004-07-15 22:31+0200\n"
+"PO-Revision-Date: 2004-07-15 22:34+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -24,15 +24,77 @@ msgid "Found debug level option."
 msgstr "Debug-Level-Option gefunden"
 
 #: src/ircbot.c:172 src/ircbot.c:197
-msgid "Missing value"
-msgstr "Wert fehlt"
+#, c-format
+msgid "%s need a parameter value"
+msgstr "%s benötigt einen Parameterwert"
 
 #: src/ircbot.c:180
-msgid "The log level is invalid."
-msgstr "Das Log-Level ist ungültig"
+#, c-format
+msgid "The log level %i is invalid."
+msgstr "Das Log-Level %i ist ungültig"
+
+#: src/ircbot.c:243
+#, c-format
+msgid "The group %s couldn't found"
+msgstr "Die Gruppe %s kann nicht gefunden werden."
 
 #: src/ircbot.c:252
 #, c-format
-msgid "User %s not found"
-msgstr "Benutzer %s nicht gefunden"
+msgid "Th user %s couldn't found"
+msgstr "Der Benutzer %s konnte nicht gefunden werden."
+
+#: src/ircbot.c:277
+msgid "Start..."
+msgstr "Starten..."
+
+#: src/ircbot.c:296 src/ircbot.c:299
+#, c-format
+msgid "Try to connect to %s"
+msgstr "Versucht mit %s zu verbinden"
+
+#: src/ircbot.c:304 src/ircbot.c:308
+#, c-format
+msgid "The bot is connect to %s"
+msgstr "Der Bot ist mit %s verbunden."
+
+#: src/ircbot.c:313 src/ircbot.c:316
+msgid "The servername or portnumber isn't set."
+msgstr "Der Servername oder die Portnummer ist nicht gesetzt."
+
+#: src/ircbot.c:325 src/ircbot.c:327
+msgid "Running..."
+msgstr "Läuft..."
+
+#: src/ircbot.c:430
+msgid "The bot is stopping."
+msgstr "Der Bot stoppt."
+
+#: src/ircbot.c:455
+msgid "Restart..."
+msgstr "Neustart..."
+
+#: src/ircbot.c:463 src/ircbot.c:470
+msgid "Restart failed"
+msgstr "Neustart fehlgeschlagen"
+
+#: src/ircbot.c:476
+msgid "Stopped..."
+msgstr "Gestoppt..."
+
+#: src/timing.c:43
+#, c-format
+msgid "The timing thread is running (pid%d)"
+msgstr "Der Thread für die  Zeitsteuerung läuft (PID%d)"
+
+#: src/timing.c:57
+msgid "Remove the dead logins"
+msgstr "Entfernt die tote Logins"
+
+#: src/timing.c:64
+msgid "Remove the dead accounts"
+msgstr "Entfernt die toten Accounts"
+
+#: src/timing.c:71
+msgid "The timing thread is stopped"
+msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
 
