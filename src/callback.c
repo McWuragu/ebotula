@@ -1,11 +1,11 @@
-/*************************************************************
+/* -------------------------------------------------------------
 *
 * This is a part of ebotula.
 * It is distributed under the GNU General Public License
 * See the file COPYING for details.
 *
 * (c)2003 Steffen Laube <realebula@gmx.de>
-*************************************************************/
+ -------------------------------------------------------------*/
 
 
 #include"dbaccess.h"
@@ -47,7 +47,7 @@ void ModeResetCb(char *pNetmask,void* data){
 	DEBUG("Callback for ResetMode");
 
     // split the  input datums
-    ppDataPart=splitString((char*)data);
+    ppDataPart=splitString((char*)data,2);
     pNick=getNickname(pNetmask);
 
     if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
@@ -97,6 +97,7 @@ void SetBanCb(char *pNetmask,void * data){
 
 void RemoveBanCb(char *pNetmask,void * data){
 	DEBUG("GetBan");
+
 }
 
 void KickCb(char *pNetmask, void *data) {
@@ -114,7 +115,7 @@ void KickCb(char *pNetmask, void *data) {
 
 
     /* split Datums */
-    ppDataPart=splitString((char*)data);
+    ppDataPart=splitString((char*)data,3);
 
     /* get user information */
     pNick=getNickname(pNetmask);
@@ -122,13 +123,16 @@ void KickCb(char *pNetmask, void *data) {
     pCmdNick=getNickname(get_db(USERTONICK_DB,ppDataPart[0]));
 
     /* extract reason */
-    pPos=strchr((char*)data,':');
-    pPos++;
-    pReason=(char*)malloc((strlen(pPos)+1)*sizeof(char));
-    strcpy(pReason,pPos);
+    if (ppDataPart[2]) {
+        pReason=(char*)ppDataPart[2];
+    } else {
+        pReason=(char*)malloc(strlen(MSG_DEFAULT_REASON)*sizeof(char));
+        sprintf(pReason,MSG_DEFAULT_REASON);
+    }
+    
 
     /* read mods */
-    if (pLogin) {
+    if (pLogin){
         /* built db access key */
         pAccessKey=(char*)malloc((strlen(pLogin)+strlen(ppDataPart[1])+1)*sizeof(char));
         sprintf(pAccessKey,"%s%s",pLogin,ppDataPart[1]);
