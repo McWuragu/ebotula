@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <time.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/msg.h>
@@ -40,9 +41,15 @@
 
 static int sockid;
 
-int nCharSendingCounter=0;
-int nCharSendingIncrement=0;
+static int nCharMinute[60];
+static int nCharPerMinute=0;
+static time_t lastTime=0;
+static int nLastIndex=0;
+static int nItemCount=1;
+static int nFirstIndex=-1;
 
+
+static int GetCharPerMin(unsigned int nCharCount);
 /* #############################################################################  */
 void connectServer(void) {
     extern ConfigSetup_t sSetup;
@@ -113,7 +120,7 @@ void * SendingThread(void *argv){
         
         if (Data) {
             /* protect excess flood */
-            if (nCharSendingCounter < sSetup.nFastSendingCharLimit) {
+            if (nCharPerMinute < sSetup.nFastSendingCharLimit) {
                 msleep(sSetup.iSendDelay);
             } else {
                 msleep(sSetup.nSlowSendDelay);
@@ -124,11 +131,10 @@ void * SendingThread(void *argv){
                 syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));
                 stop=true;
             }
-            DEBUG("send(%d/%d): %s",nCharSendingCounter,sSetup.nFastSendingCharLimit,(char*)Data->data);
+            DEBUG("send(%d/%d): %s",nCharPerMinute,sSetup.nFastSendingCharLimit,(char*)Data->data);
         
             nSendLength=strlen((char*)Data->data);
-            nCharSendingCounter+=nSendLength;                           
-            nCharSendingIncrement=(nCharSendingIncrement+nSendLength)/2;
+            nCharPerMinute=GetCharPerMin(nSendLength);
 
             free(Data->data);
             free(Data);
@@ -190,6 +196,66 @@ void  recv_line(char *pLine,unsigned int len) {
     
 }
 
+/* ############################################################################# */
+
+int GetCharPerMin(unsigned int nCharCount) {
+    time_t currTime;
+    int diffMinTime;
+    int i;
+    int nSum=0;
+
+    struct tm *formatCurrTime;
+
+    if (time(&currTime)) {
+        formatCurrTime=localtime(&currTime);
+
+        /* the differnze from the last update */
+        if (lastTime) {
+            diffMinTime=(currTime-lastTime)/60;
+        }
+        lastTime=currTime;
+
+
+        /* reset fieldes */
+        if (diffMinTime < 60) {
+            if (diffMinTime==0) {
+                nCharCount+=nCharMinute[formatCurrTime->tm_min];
+            } else if (nLastIndex > formatCurrTime->tm_min ) {
+                for (i=nLastIndex;i < 60;i++) {nCharMinute[i]=0;}
+                for (i=0; i<diffMinTime;i++) {nCharMinute[i]=0;}
+            } else {
+                for (i=(nLastIndex+1);i<formatCurrTime->tm_min;i++) {nCharMinute[i]=0;}
+            }
+        } else {
+            for (i=0;i<60;i++) {nCharMinute[i]=0;}
+        }
+
+        /* index of the first item */
+        nFirstIndex=(nFirstIndex<0)?formatCurrTime->tm_min:nFirstIndex;
+
+        /* count  of the first  60 items */
+        if (nItemCount<60 && nLastIndex!=formatCurrTime->tm_min) {
+            if (formatCurrTime->tm_min >= nFirstIndex ) {
+                nItemCount=(formatCurrTime->tm_min-nFirstIndex)+1;
+            } else {
+                nItemCount=60-nFirstIndex+formatCurrTime->tm_min+1;
+            }
+        }
+
+        /* set the new value */
+        nCharMinute[formatCurrTime->tm_min]=nCharCount;
+        nLastIndex=formatCurrTime->tm_min;
+
+
+        /* calculate the char per min */
+        for (i=0;i<60;i++) {
+            nSum+=nCharMinute[i];
+        }
+    }
+
+    
+    return (nSum/nItemCount);
+}
 
 /* ############################################################################# */
 void ConnectToIrc(void){

@@ -30,8 +30,6 @@
 
 void *TimingThread(void *argv){
     extern ConfigSetup_t sSetup;
-    extern int nCharSendingCounter;
-    extern int nCharSendingIncrement;
     extern boolean stop;
     time_t newTime;
     time_t lastPing=0;
@@ -71,15 +69,7 @@ void *TimingThread(void *argv){
             lastRemoveDeadAccounts=newTime;
         }
         
-        /* increment the line count */
-        if ((newTime-lastLineCount)>=(((sSetup.iSendDelay+nCharSendingCounter*2)*2)/1000)) {
-            if (nCharSendingCounter>0) {
-                nCharSendingCounter=(nCharSendingCounter<nCharSendingIncrement)?0:nCharSendingCounter-nCharSendingIncrement;
-            }
-            lastLineCount=newTime;
-        }
-        
-        msleep(10);
+        msleep(100);
     }
     DEBUG("The timing thread stopped\n");
 }
