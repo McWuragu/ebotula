@@ -115,8 +115,8 @@ void nick(char *nick) {
 // ############################################################################# 
 void topic(char *channel, char* text) {
 	char *buffer;
-	buffer=(char*)calloc(strlen("TOPIC ")+strlen(channel)+strlen(text)+4,sizeof(char));
-	sprintf(buffer,"TOPIC %s %s\r\n",channel,text);
+	buffer=(char*)calloc(strlen("TOPIC ")+strlen(channel)+strlen(text)+5,sizeof(char));
+	sprintf(buffer,"TOPIC %s :%s\r\n",channel,text);
 	send_line(buffer);
 }
 // ############################################################################# 
@@ -125,11 +125,11 @@ void kick(char *channel, char *nick, char *reason) {
 
 	// check  optional parameters and  set  it of default values
 	if (reason==NULL) {
-		reason=(char*)malloc(sizeof(char));
-		*reason='\0';
+		reason=(char*)malloc((strlen(MSG_DEFAULT_REASON)+1)*sizeof(char));
+		strcpy(reason,MSG_DEFAULT_REASON);
 	}
-	buffer=(char*)calloc(strlen("KICK ")+strlen(channel)+strlen(nick)+strlen(reason)+5,sizeof(char));
-	sprintf(buffer,"KICK %s %s %s\r\n",channel,nick,reason);
+	buffer=(char*)calloc(strlen("KICK ")+strlen(channel)+strlen(nick)+strlen(reason)+6,sizeof(char));
+	sprintf(buffer,"KICK %s %s :%s\r\n",channel,nick,reason);
 	send_line(buffer);
 }
 // ############################################################################# 
