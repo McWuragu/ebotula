@@ -7,12 +7,11 @@
 * (c)2003 Steffen Laube <realebula@gmx.de>
 *************************************************************/
 
-//#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-//#include <errno.h>
 
+#include "irc.h"
 #include "utilities.h"
 #include "extract.h"
 // ############################################################################# 
@@ -128,6 +127,7 @@ char *getChannel(char *line){
 	channel=(char *)malloc((strlen(pos)+1)*sizeof(char));
 	strcpy(channel,pos);
 
+	StrToLower(channel);
 	return channel;
 }
 // ######################################################################### 
@@ -135,26 +135,37 @@ char *getAccessChannel(char *line) {
 	char *parameter;
 	char *channel;
 	char *pos;
-	unsigned int paramsize=0;
 
 	parameter=getArgument(line);
 
 	// look channel name  in preamble
 	if ((parameter == NULL) || (parameter[0]!='#')) {
 	
-		// look for channelname  as parameter
+		// look for channelname  as preamble
 		if (!(channel=getChannel(line))) {
-            return NULL;
+			if (!(pos=strstr(line," :#"))) {
+			return NULL;
+			}
+			// move to '#'
+			pos+=2;
+			// marked the end of str and  copy out
+			strtok(pos," ");
+			channel=(char *)malloc((strlen(pos)+1)*sizeof(char));
+		    strcpy(channel,pos);
 		}
 	} else {
 		
 		// parse Channel name
-		paramsize=strlen(parameter);
-		pos=strtok(parameter," ");
+		strtok(parameter," ");
+		// check the  chrakter in the  channel name
+		if (strpbrk(parameter,CHANNEL_NOT_ALLOW_CHAR)) {
+			return NULL;
+		}
 		channel=(char *)malloc((strlen(parameter)+1)*sizeof(char));
 		strcpy(channel,parameter);
     }
 
+	StrToLower(channel);
 	return channel;
 }
 // ######################################################################### 
@@ -227,4 +238,26 @@ char *getMode(char *channelstr){
 		strcpy(mode,str);
 	}
 	return mode;
+}
+// ############################################################################# 
+char *getParameters(char *line){
+	char *parameters;
+	char *arg;
+	char *pos; 
+
+	if (!(arg=getArgument(line))) {
+		return NULL;
+	}
+
+	if (arg[0]!='#') {
+		return arg;
+	} else if(!(pos=strchr(arg,' '))) {
+		return NULL;
+	} else {
+		// jump over the space
+		pos++;
+		parameters=(char*)malloc((strlen(pos)+1)*sizeof(char));
+		strcpy(parameters,pos);
+		return parameters;
+	}
 }

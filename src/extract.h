@@ -13,6 +13,7 @@
 char *getNickname(char *line);
 char *getNetmask(char *line);
 char *getArgument(char *line);
+char *getParameters(char *line);
 char *getCommand(char *line);
 char *getChannel(char *line);
 char *getAccessChannel(char *line);
