@@ -34,7 +34,7 @@ int sockid;
 
 void connectServer(void) {
 	extern int sockid;
-	extern CONFIG_TYPE setup;
+	extern ConfType setup;
 
 	
 	struct sockaddr_in socketaddr;
@@ -119,12 +119,12 @@ void  recv_line(char *line,unsigned int len) {
 }
 
 
-struct MSGBUF_DS preParser(char *line) {
-    struct MSGBUF_DS	msg;
+MsgBufType preParser(char *line) {
+    MsgBufType msg;
 	char *str,*first_part,*pos;
 
 	// init the buffer with zero
-	bzero(&msg,sizeof(struct MSGBUF_DS));
+	bzero(&msg,sizeof(MsgBufType));
 		
 	// get the first part of the  answer from server
 	if (!(first_part=getCommand(line))) {
@@ -209,7 +209,7 @@ struct MSGBUF_DS preParser(char *line) {
 void *action_thread(void *argv) {
 	int msgid;
 	extern int key;
-	struct MSGBUF_DS	msg;
+	MsgBufType msg;
 
 	// set the thread cancelable 
 	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
@@ -220,66 +220,69 @@ void *action_thread(void *argv) {
 
 	// execute loop 
 	while(1) {
-		msgrcv(msgid,&msg,sizeof(struct MSGBUF_DS)-sizeof(msg.mtype),0,0);
+		msgrcv(msgid,&msg,sizeof(MsgBufType)-sizeof(msg.mtype),0,0);
 
-		switch (msg.identify) {
-		case CMD_PING:
-			pong();
-			break;
-		case CMD_LOGOFF:
-			logoff(msg.msg_line);
-			break;
-		case CMD_HELP:
-			help(msg.msg_line);
-			break;
-		case CMD_VERSION:
-            		version(msg.msg_line);
-			break;
-		case CMD_HELLO:
-            		hello(msg.msg_line);
-			break;
-		case CMD_PASS:
-            		password(msg.msg_line);
-			break;
-		case CMD_IDENT:
-            		ident(msg.msg_line);
-			break;
-		case CMD_ADDCHANNEL:
-			channel_add(msg.msg_line);
-			break;
-		case CMD_RMCHANNEL:
-			channel_rm(msg.msg_line);
-			break;
-		case CMD_JOIN:
-			join_channel(msg.msg_line);
-			break;
-		case CMD_PART:
-			part_channel(msg.msg_line);
-			break;
-		case CMD_DIE:
-			die(msg.msg_line);
-			break;
-		case CMD_NICK:
-			change_nick(msg.msg_line);
-			break;
-		case CMD_CHANNELS:
-			channel_list(msg.msg_line);
-			break;
-		case CMD_NAMES:
-			bot_op(msg.msg_line);
-			break;
-		case CMD_JOIN_GREATING:
-			print_greating(msg.msg_line);
-			break;
-		case CMD_GREATING:
-			greating(msg.msg_line);
-			break;
-		default:
-            break;
+		if (AccessRight(msg.msg_line,msg.identify)) {
+		
+			switch (msg.identify) {
+			case CMD_PING:
+				pong();
+				break;
+			case CMD_LOGOFF:
+				logoff(msg.msg_line);
+				break;
+			case CMD_HELP:
+				help(msg.msg_line);
+				break;
+			case CMD_VERSION:
+				version(msg.msg_line);
+				break;
+			case CMD_HELLO:
+				hello(msg.msg_line);
+				break;
+			case CMD_PASS:
+				password(msg.msg_line);
+				break;
+			case CMD_IDENT:
+				ident(msg.msg_line);
+				break;
+			case CMD_ADDCHANNEL:
+				channel_add(msg.msg_line);
+				break;
+			case CMD_RMCHANNEL:
+				channel_rm(msg.msg_line);
+				break;
+			case CMD_JOIN:
+				join_channel(msg.msg_line);
+				break;
+			case CMD_PART:
+				part_channel(msg.msg_line);
+				break;
+			case CMD_DIE:
+				die(msg.msg_line);
+				break;
+			case CMD_NICK:
+				change_nick(msg.msg_line);
+				break;
+			case CMD_CHANNELS:
+				channel_list(msg.msg_line);
+				break;
+			case CMD_NAMES:
+				bot_op(msg.msg_line);
+				break;
+			case CMD_JOIN_GREATING:
+				print_greating(msg.msg_line);
+				break;
+			case CMD_GREATING:
+				greating(msg.msg_line);
+				break;
+			default:
+				break;
+			}
 		}
 		
 		// clear buffer	
-		bzero(&msg,sizeof(struct MSGBUF_DS));
+		bzero(&msg,sizeof(MsgBufType));
 	}
 
 	return NULL;
