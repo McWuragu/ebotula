@@ -1,12 +1,12 @@
 Name:    ebotula-devel
-Summary: ebotula - IRC bot 
-Version: @VERSION@ 
+Summary: ebotula - IRC bot
+Version: @VERSION@
 Release: 1
 Copyright: GPL
 Source: http://lux.fh-lausitz.de/~slaube/develop/ebotula-devel-%{PACKAGE_VERSION}.tar.gz
 Source0: ebotula-devel-%{PACKAGE_VERSION}.tar.gz
-Packager: Steffen Laube <realebula@gmx.de>
-Group: Applications/Communication 
+Packager: Steffen Laube <Laube.Steffen@gmx.de>
+Group: Applications/Communication
 Requires: gdbm => 1.8.0
 BuildRoot: /tmp/%{name}-root
 URL: http://www.lugse.de
@@ -52,6 +52,7 @@ rm -rf $RPM_BUILD_ROOT
 - Bugfix: fixed mode event handle
 - Bugfix: fixed online help message
 - Bugfix: fixed the crash after mode change from other user as the bot
+- Bugfix: fixed the command online help for !ban
 - added the parameter user and group
 - added the option -u and -g
 - added the creating of the  direction ~/.ebotula for the user mode
