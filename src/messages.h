@@ -122,7 +122,8 @@ typedef enum {
 	 ERR_UNKNOW_MODE,	    
 	 ERR_NOTSELF_KICK,    
      ERR_NOTSELF_BAN,        
-    
+     ERR_WRONG_PW,
+
 	// other informations
 	 INFO_HELP_END,	 
 	 INFO_HELP_FOR,		    
