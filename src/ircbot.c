@@ -105,7 +105,6 @@ int main(int argc,const char *argv[]) {
     
 	// join the channels
 	join_all_channels();
-	join("#test");
 
 	stop=false;
 	while(!stop){
@@ -237,13 +236,13 @@ void dialog_master(void){
 	
 	
 	// create account
-	if (!add_user(name,passwd)){
+	if (!add_db(USER_DB,name,passwd)){
 		printf(MSG_MASTER_EXISTS);
 		exit(1);
 	}
 	
 	
-	if (!add_channel_access(name,"+ov")) {
+	if (!add_db(ACCESS_DB,name,"+ov")) {
 		printf(MSG_MASTER_ERR);
 		exit(1);
 	}
