@@ -40,7 +40,9 @@ static MsgStruct_t Syslog[]= {
 	{ SYSLOG_CREATE_DIR,		"Lege Verzeichnis für die Datenbank an"},
 	{ SYSLOG_CREATE_DIR_ERR,	"Kann kein Verzeichnis für die Datenbank anlegen"},
 	{ SYSLOG_DATABASE_ERR,		"Kann Datenbank nicht öffen"},
-	{ SYSLOG_RESTART,		"Neustart..."},
+    { SYSLOG_USER_NOT_FOUND,    "User nicht gefunden"},
+    { SYSLOG_USER_NOT_FOUND,    "Gruppe nicht gefunden"},
+    { SYSLOG_RESTART,		"Neustart..."},
 	{ SYSLOG_STOPPED,		"Angehalten..."}
 };
 
@@ -158,7 +160,8 @@ static MsgStruct_t Msg[] ={
 		"\t-c Sek\t\tSetzt das Timeoutlimit.\n",
 		"\t-d Pfad\t\tsetzt den Pfad zu Datenbank an\n",
 		"\t-f Datei\tSetzt Pfad zur Konfigurationdatei\n",
-		"\t-h\t\tGibt diese Hilfe aus.\n",
+		"\t-g group\tSetzt die Group unter der gestartet werden soll (nur root).\n",
+        	"\t-h\t\tGibt diese Hilfe aus.\n",
 		"\t-k Tage\t\tSetzt die maximal Lebenszeit eines Account bei.\n",
 		"\t-m\t\tLegt neuen Master an.\n",
 		"\t-n ms\t\tSetzt die Verzögerung  für das Senden.\n",
@@ -166,7 +169,7 @@ static MsgStruct_t Msg[] ={
 		"\t-r String\tSetzt den String für Realnamefeld.\n",
 		"\t-s Server\tSetzt den IRC Server.\n",
 		"\t-t Anzahl\tSetzt die Anzaahl der zu erzeugenden Threads.\n",
-        "\t-u user\t\tSetzt den User unter dem gestartet werden soll (nur root)\n",
+        	"\t-u user\t\tSetzt den User unter dem gestartet werden soll (nur root).\n",
 		"\t-v\t\tGibt die Version aus.\n",
 		"."
 	};

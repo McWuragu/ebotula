@@ -38,6 +38,8 @@ static MsgStruct_t  Syslog[] = {
 	{ SYSLOG_CREATE_DIR,		"Create the directory for the database." },
 	{ SYSLOG_CREATE_DIR_ERR, 	"Can't create the directory for the database." },
 	{ SYSLOG_DATABASE_ERR,		"Can't open the databases." },
+    { SYSLOG_USER_NOT_FOUND,    "User not found"},
+    { SYSLOG_USER_NOT_FOUND,    "Group not found"},
 	{ SYSLOG_RESTART,		"Restart..." },
 	{ SYSLOG_STOPPED,		"Bot down..." }
 };
@@ -155,9 +157,10 @@ static MsgStruct_t Msg[] = {
 		"\t-c sec\t\tSet the ping timeout of the connection.\n",
 		"\t-d path\t\tUse this path for the database\n",
 		"\t-e ms\t\tSet the second delay time in millisecond for sending.\n",
-        "\t-f file\t\tUse this config file.\n",
-		"\t-h\t\tPrint this help information.\n",
-	    "\t-l lines\tSet the line limit for the first sending delay level.\n",
+        	"\t-f file\t\tUse this config file.\n",
+		"\t-g group\tSet the group under wich the bot run (only root).\n",
+        	"\t-h\t\tPrint this help information.\n",
+        	"\t-l lines\tSet the line limit for the first sending delay level.\n",
 		"\t-k days\t\tSet the  account live time in days.\n",
 		"\t-m\t\tCreate a bot master.\n",
 		"\t-n ms\t\tSet the first delay time in millisecond for sending.\n",
@@ -165,8 +168,8 @@ static MsgStruct_t Msg[] = {
 		"\t-r string\tSet the output  for a request of the real name.\n",
 		"\t-s server\tSet the irc server name.\n",
 		"\t-t count\tSet the number of creating  threads.\n",
-		"\t-u user\t\tSet the user under which the bot run (root only)\n",
-        "\t-v\t\tPrint version.\n",
+		"\t-u user\t\tSet the user under which the bot run (root only).\n",
+        	"\t-v\t\tPrint version.\n",
 		"."
 	};
 #endif
