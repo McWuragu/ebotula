@@ -1188,7 +1188,7 @@ void chanmode(MsgItem_t *pMsg) {
         	free(pChannelSet);
     	    pChannelSet=ChannelDataToStr(&sChannelData);
         	replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
-  
+            free(pChannelSet);
 
     
         	/* set the mods */

@@ -300,7 +300,7 @@ void ConfigFileParser(void) {
     extern ConfigSetup_t sSetup;
     int tmp;
     char buffer[MAX_READ_BUFFER_SIZE], *c,*value,*key;
-    errno=0;
+    //errno=0;
 
     if (!(fd=fopen(sSetup.configfile,"r"))) {
 	    // generating basicconfig for ebotula
