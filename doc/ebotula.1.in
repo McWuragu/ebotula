@@ -25,6 +25,9 @@ sets the limit for ping timeout
 .TP 
 \fB\-d\fP path
 sets the path to the directory for the databases
+.TP
+\fB\-D\fP level
+sets the outputlevel (0-7)
 .TP 
 \fB\-e\fP milliseconds
 sets the delay time for the slow sending
@@ -41,6 +44,9 @@ shows the help text and exit
 .TP
 \fB\-?\fP
 same as -h
+.TP
+\fB\-i\fP
+The delay puts for establishing the channels within seconds
 .TP 
 \fB\-k\fP days
 sets the living time of an account in days
@@ -66,8 +72,8 @@ sets the portnumber for connecting
 \fB\-r\fP string
 sets a string for the realname field of the bot
 .TP 
-\fB\-s\fP server
-sets the irc servername the bot connects to
+\fB\-s\fP hostname
+sets the irc hostname the bot connects to
 .TP 
 \fB\-t\fP number
 sets the ammount of parallel working command threads
@@ -125,7 +131,7 @@ t (topic protected [topic can't be changed by users]),i	(invite only
 [no user can join unless he is invited]),m (moderated [only channel
 admins and users with voice can write into the channel]) and so on...
 .TP
-\fB!channels\fP
+\fB!chanlist\fP
 Shows a list of all channels the bot is within.
 .TP
 \fB!deban\fP [nickname]
@@ -208,7 +214,7 @@ Usefull if configuration is changed. By restarting config is read again.
 Let the bot part and remove a old channel. The bot leaves the given channel
 and removes it from its channel list.
 .TP
-\fB!rmuser\fP [login]
+\fB!rmaccount\fP [login]
 This removes an user account from the bot. Selfexplaining. Accounts no
 longer needed can be removed this way.
 .TP
@@ -227,12 +233,12 @@ The Channel #LUGse has got the topic "\-== LUGse \- Linux User
 Group Senftenberg ==\-"
 Topics are used to discripe a channel.
 .TP 
-\fB!userlist\fP <#channel>
+\fB!accountlist\fP <#channel>
 Prints a list of users from the channel or all. If a channel is given as
 parameter, all users with an account in this channel are listed. If no
 channel given, all users with an account in any channel are listed.
 .TP
-\fB!usermode\fP <#channel> [login] [+/-][ovm]
+\fB!accountmode\fP <#channel> [login] [+/-][ovm]
 This is used to set the mod for a user. User modes are for example
 channel operator (channel administrator, OP) (+o) or voice (+v).
 .TP
