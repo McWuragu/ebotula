@@ -77,7 +77,7 @@ void ModeResetCb(char *pNetmask,void* data){
     
             free(pAccessKey);
     
-        } else if (ppDataPart[1][0]=='+' && strcmp(pNick,sSetup.botname)) {
+        } else if (ppDataPart[1][0]=='+' && strcmp(pNick,sSetup.pBotname)) {
             DEBUG("Reset the mode for %s\n",pNick);
             // reset the mode for not identify user
             ppDataPart[1][0]='-';
@@ -86,6 +86,7 @@ void ModeResetCb(char *pNetmask,void* data){
     
         free(pNick);
     }
+
 }
 // #############################################################################
 void SetBanCb(char *pNetmask,void * data){
