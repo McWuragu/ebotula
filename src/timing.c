@@ -50,7 +50,7 @@ void *TimingThread(void *argv){
         time(&newTime);
 
         /* ping the server for detection of connection lost */
-        if ((newTime-lastPing)>=(sSetup.iTimeout/4)) {
+        if ((newTime-lastPing)>=(sSetup.iTimeout/2)) {
             ping(sSetup.server);
             lastPing=newTime;
         }
