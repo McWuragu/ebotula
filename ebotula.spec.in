@@ -37,11 +37,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS COPYING ChangeLog INSTALL NEWS README README.de BUGS TODO
+%doc AUTHORS COPYING ChangeLog INSTALL NEWS README README.de BUGS TODO ABOUT-NLS
 
+%{prefix}/share/locale/*
 %{prefix}/bin/*
-%{prefix}/man/man1/*
-%{prefix}/man/man5/*
+%{prefix}/man/*
 %config %{prefix}/etc/ebotula/*
 %dir %{prefix}/var/ebotula/
 
