@@ -98,7 +98,8 @@ typedef enum eMsgID {
 	// Informations for invalid input or using of the bot
 	 ERR_NOT_LOGON,	  
 	 ERR_NOT_MASTER,    
-	 ERR_NOT_OWNER,	    
+	 ERR_NOT_OWNER,
+     ERR_NOT_FRIEND,
 	 ERR_NOT_CHANNELOPT,
      ERR_NOT_PARAMETER,
      ERR_NOT_COMMAND,	  
