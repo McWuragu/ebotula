@@ -1375,6 +1375,9 @@ void userlist(MsgItem_t *pMsg){
 	        free(pLoginItem);    
         }
 	    flushQueue(pChannelQueue);
+        
+        
+        
         deleteQueue(pChannelQueue);
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
     } else {
@@ -1434,14 +1437,19 @@ void userlist(MsgItem_t *pMsg){
                     /* send notice out */
                     sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
                 }
-                free(pMsgStr);
+                free(pMod);
+
+
+
             }
+            free(pMsgStr);
 			free(pKey);
             free(pLoginItem->data);
             free(pLoginItem);
         }
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(INFO_USERLIST_END));
     }
+    if (pArgv) {free(pArgv);}
 	deleteQueue(pLoginQueue);
 }
 

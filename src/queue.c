@@ -218,6 +218,7 @@ QueueExeStatus flushQueue(PQueue pqueueIn) {
 		{
 			/** remove one  item and destroy it */
 			if((pTmp=popQueue(pqueueIn))){
+                free(pTmp->data);
 				free(pTmp);
 			}
 		}
