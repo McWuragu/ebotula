@@ -6,8 +6,38 @@
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
 
-/* Define if you have the poll function.  */
-#undef HAVE_POLL
+/* Define if you can safely include both <sys/time.h> and <time.h>.  */
+#undef TIME_WITH_SYS_TIME
+
+/* Define if you have the <ctype.h> header file.  */
+#undef HAVE_CTYPE_H
+
+/* Define if you have the <gdbm.h> header file.  */
+#undef HAVE_GDBM_H
+
+/* Define if you have the <netdb.h> header file.  */
+#undef HAVE_NETDB_H
+
+/* Define if you have the <netinet/in.h> header file.  */
+#undef HAVE_NETINET_IN_H
+
+/* Define if you have the <pthread.h> header file.  */
+#undef HAVE_PTHREAD_H
+
+/* Define if you have the <string.h> header file.  */
+#undef HAVE_STRING_H
+
+/* Define if you have the <sys/ipc.h> header file.  */
+#undef HAVE_SYS_IPC_H
+
+/* Define if you have the <sys/msg.h> header file.  */
+#undef HAVE_SYS_MSG_H
+
+/* Define if you have the <sys/poll.h> header file.  */
+#undef HAVE_SYS_POLL_H
+
+/* Define if you have the <sys/socket.h> header file.  */
+#undef HAVE_SYS_SOCKET_H
 
 /* Define if you have the <syslog.h> header file.  */
 #undef HAVE_SYSLOG_H
