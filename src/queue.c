@@ -1,12 +1,21 @@
+/*************************************************************
+*
+* This is a part of ebotula.
+* It is distributed under the GNU General Public License
+* See the file COPYING for details.
+*
+* (c)2003 Steffen Laube <realebula@gmx.de>
+*************************************************************/
+
 /** Queue functions		 **/
 /** This Ring list -> Fifo 	**/
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-#include "queue.h"
 #include "utilities.h"
 #include "type.h"
+#include "queue.h"
 
 /**							**
  ** Function: 		initQueue			**
@@ -17,38 +26,32 @@
  ** Desctiption:		initing Queue,		**
  **				creating Sentinel	**
  **							**/
-int initQueue(PQueue *pqueueInit)
+PQueue initQueue()
 {
-	/** Initing Queue **/
-	PQueue pqueueWork;
+	PQueue pqueueInit;
 	
 	/** Alocationg memory for base Structure **/
-	if ((pqueueWork=(PQueue) malloc(sizeof(PQueue)))==NULL)
+	if (!(pqueueInit=(PQueue)malloc(sizeof(Queue))))
 	{
 		/** Error not enough memory **/
-		DEBUG(" initQueue() - Can't allocate memory!\n");
-		return QUEUE_MEMORY_ALLOC_ERROR;
+		DEBUG("initQueue() - Can't allocate memory!");
+		return NULL;
 	}
 	
 	/** creating Sentinel pointer **/
-	(pqueueWork)->sentinel=(pqueueWork);
-	(pqueueWork)->queuetypeT=(QueueType)QUEUESENTINEL;
+	pqueueInit->sentinel=pqueueInit;
+	pqueueInit->queuetypeT=(QueueType)QUEUESENTINEL;
 	
 	/** creating rest of pointer **/
-	(pqueueWork)->next=(PQueue)(pqueueWork);
-	(pqueueWork)->prev=(PQueue)(pqueueWork);
-	(pqueueWork)->queuedataData=NULL;
-	(pqueueWork)->longCount=0;
+	pqueueInit->next=pqueueInit;
+	pqueueInit->prev=pqueueInit;
+	pqueueInit->queuedataData=NULL;
+	pqueueInit->longCount=0;
 	
-	/** create and init the miutex */
-	(pqueueWork)->sentinel->QueueMutex=(pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));	
-	pthread_mutex_init((pqueueWork)->sentinel->QueueMutex,NULL);	
-	
-	/** Success - I've did it **/
-	*pqueueInit=(PQueue)pqueueWork;
-
-
-	return	QUEUE_SUCCESS;
+	/** create and init the  mutex */
+	pqueueInit->queue_mutex=(pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(pqueueInit->queue_mutex);	
+	return	pqueueInit;
 }
 
 /**							**
@@ -60,65 +63,70 @@ int initQueue(PQueue *pqueueInit)
  **				0 if Success		**
  ** Description:	pushing 1 element to Queue 	**
  **							**/
-int pushQueue(PQueue *pqueueIn, QueueData queuedataElement)
+int pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 {
 	/** lokal auto vars **/
-	PQueue pqueueWork;
 	PQueue pqueueNew;/** new Element **/
 	
 	int intStatus;
-	pqueueWork=*pqueueIn;
 	
-	pthread_mutex_lock(pqueueWork->sentinel->QueueMutex);
 	
+	pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
 	/** cheçk if Queue not initialized **/
-	if (pqueueWork==NULL)
+	if (!pqueueIn)
 	{
 		/** creating Queue and check for Status **/
-		intStatus=initQueue(&pqueueWork);
-		if (!intStatus==QUEUE_SUCCESS)
+		;
+		if (!(pqueueIn=initQueue()))
 		{
-			pthread_mutex_unlock(pqueueWork->sentinel->QueueMutex);
-			return intStatus;
+			pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
+			return QUEUE_MEMORY_ALLOC_ERROR;
 		}
 	}
 	
 	/** creating elements for Queue **/
-	if ((pqueueNew=(PQueue)malloc(sizeof(PQueue)))==NULL)
+	if ((pqueueNew=(PQueue)malloc(sizeof(Queue)))==NULL)
 	{
 		/** Error not enough memory **/
-		DEBUG(" FATAL: pushQueue() - Can't allocate memory!\n");
-		pthread_mutex_unlock(pqueueWork->sentinel->QueueMutex);
+		DEBUG("pushQueue() - Can't allocate memory!");
+			pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 		return QUEUE_MEMORY_ALLOC_ERROR;
 	}
 	/** assembling Queue **/
-	pqueueNew->sentinel=(PQueue)pqueueWork->sentinel;
-	pqueueNew->next=(PQueue)pqueueWork->sentinel->next;
-	if (pqueueWork->sentinel->longCount==0)
+	pqueueNew->sentinel=pqueueIn->sentinel;
+	pqueueNew->next=pqueueIn->sentinel->next;
+	if (pqueueIn->sentinel->longCount==0)
 	{
-		pqueueWork->sentinel->prev=(PQueue)pqueueNew;
+		pqueueIn->sentinel->prev=(PQueue)pqueueNew;
 	}
 	else
 	{
-		pqueueWork->sentinel->next->prev=(PQueue)pqueueNew;
+		pqueueIn->sentinel->next->prev=(PQueue)pqueueNew;
 		
 	}
 
-	pqueueNew->prev=(PQueue)pqueueWork->sentinel;
-	pqueueWork->sentinel->next=(PQueue)pqueueNew;
+	pqueueNew->prev=pqueueIn->sentinel;
+	pqueueIn->sentinel->next=pqueueNew;
 	pqueueNew->queuetypeT=(QueueType)QUEUENONE;
-	pqueueWork->sentinel->longCount++;
+	pqueueIn->sentinel->longCount++;
+
 	/** Adding Data **/
-	if(( pqueueNew->queuedataData=(QueueData*) malloc(sizeof(QueueData*)))==NULL)
+	if(( pqueueNew->queuedataData=(QueueData*) malloc(sizeof(QueueData)))==NULL)
 	{
 		/** Error not enough memory **/
-		DEBUG(" FATAL: pushQueue() - Can't allocate memory!\n");
-		pthread_mutex_unlock(pqueueWork->sentinel->QueueMutex);
+		DEBUG("pushQueue() - Can't allocate memory!");
+		pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 		return QUEUE_MEMORY_ALLOC_ERROR;
 
 	}
-	memcpy(pqueueNew->queuedataData,(QueueData *)&queuedataElement,1*sizeof(QueueData*));
-	pthread_mutex_unlock(pqueueWork->sentinel->QueueMutex);
+
+	/** allocate the memmory and copy data */
+	pqueueNew->queuedataData->t_size=queuedataElement.t_size;
+	pqueueNew->queuedataData->data=malloc(sizeof(QueueData));	
+	
+	memcpy(pqueueNew->queuedataData->data,queuedataElement.data,sizeof(QueueData));
+	
+	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return QUEUE_SUCCESS;
 }
 /**							**
@@ -130,41 +138,37 @@ int pushQueue(PQueue *pqueueIn, QueueData queuedataElement)
  ** Description:	poping 1 element from Queue 	**
  **			until Queue is empty		**
  **							**/
-QueueData * popQueue(PQueue *pqueueIn)
+QueueData * popQueue(PQueue pqueueIn)
 {
-	PQueue pqueueWork,pqueueOld;
+	PQueue pqueueWork;
+	PQueue pqueueOld;
 	QueueData *queuedataElement;
-	pqueueWork=(PQueue)*pqueueIn;
+	pqueueWork=pqueueIn;
+	
+	pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
+	
 	/** check for valid Queue **/
-	
-	pthread_mutex_lock(pqueueWork->sentinel->QueueMutex);
-	
-	if (pqueueWork==NULL)
+	if (pqueueWork)
 	{
-		DEBUG(" ERROR: popQueue() - empty Queue!\n");
-		pthread_mutex_unlock(pqueueWork->sentinel->QueueMutex);
-		return NULL;
+		pqueueWork=(PQueue )pqueueWork->sentinel;
+		if (pqueueWork->sentinel->prev!=(PQueue)pqueueWork->sentinel)
+		{
+			/** poping **/
+			pqueueOld=(PQueue)pqueueWork->prev;
+			queuedataElement=(QueueData *)pqueueOld->queuedataData;
+			pqueueWork->prev=(PQueue )pqueueOld->prev;
+			pqueueWork->prev->next=(PQueue )pqueueWork->sentinel;
+			pqueueWork->sentinel->longCount--;
+			free(pqueueOld);
+			
+			pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
+			return (QueueData *)queuedataElement;
+		}	
+	} else {
+		DEBUG("ERROR: popQueue() - empty Queue!");
 	}
-	pqueueWork=(PQueue )pqueueWork->sentinel;
-	if (pqueueWork->sentinel->prev!=(PQueue)pqueueWork->sentinel)
-	{
-		/** poping **/
-		pqueueOld=(PQueue)pqueueWork->prev;
-		queuedataElement=(QueueData *)pqueueOld->queuedataData;
-		pqueueWork->prev=(PQueue )pqueueOld->prev;
-		pqueueWork->prev->next=(PQueue )pqueueWork->sentinel;
-		pqueueWork->sentinel->longCount--;
-		free(pqueueOld);
-		pthread_mutex_unlock(pqueueWork->sentinel->QueueMutex);
-		return (QueueData *)queuedataElement;
-	} 
-	else
-	{
-		/** nothing to pop empty Queue **/
-		pthread_mutex_unlock(pqueueWork->sentinel->QueueMutex);
-		return (QueueData *)NULL;
-	}
-	pthread_mutex_unlock(pqueueWork->sentinel->QueueMutex);
+	
+	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	return (QueueData *)NULL;
 }
 /**							**
@@ -174,20 +178,19 @@ QueueData * popQueue(PQueue *pqueueIn)
  ** Return:		int BOOLEAN			**
  **				true if empty		**
  **							**/
-int isemptyQueue(PQueue *pqueueIn)
+int isemptyQueue(PQueue pqueueIn)
 {
-	if (*pqueueIn!=NULL)
-	{	
-		/** Error not enough memory **/
-		DEBUG(" FATAL: pushQueue() - Can't allocate memory!\n");
-		return QUEUE_NULL_POINTER_AS_IN_PARAMETER;
+	if (pqueueIn) {	
+		pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
+		if ((pqueueIn)->sentinel->longCount){
+			/** SHOULD be not empty **/
+			pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
+			return false;
+		}
+
+		pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
 	}
-	if ((*pqueueIn)->sentinel->longCount==0)
-	{
-		/** SHOULD be empty **/
-		return true;
-	}
-	return false;
+	return true;
 }
 /**							**
  ** Function:		isfullQueue			**
@@ -196,7 +199,7 @@ int isemptyQueue(PQueue *pqueueIn)
  ** Return:		int BOOLEAN			**
  **				true if full 		**
  **							**/
-int isfullQueue(PQueue *pqueueIn)
+int isfullQueue(PQueue pqueueIn)
 {
 	return !isemptyQueue(pqueueIn);
 }
@@ -209,32 +212,26 @@ int isfullQueue(PQueue *pqueueIn)
  ** Description:	deleting Queue 			**
  **			until Queue is empty		**
  **							**/
-int deleteQueue(PQueue *pqueueIn)
+int deleteQueue(PQueue pqueueIn)
 {
-	PQueue pqueueWork;
-	
-	pqueueWork=(PQueue)*pqueueIn;
-	
+	QueueData *pTmp;
 	
 	/** do it while something is in the queue **/
-	if (pqueueWork!=NULL)
+	if (pqueueIn!=NULL)
 	{
-		while(isfullQueue(&pqueueWork))
+		while(isfullQueue(pqueueIn))
 		{
-			if (popQueue(&pqueueWork)!=NULL)
-			{
-				return QUEUE_NULL_POINTER_AS_IN_PARAMETER;
-
+			/** remove one  item and destroy it */
+			if((pTmp=popQueue(pqueueIn))){
+				free(pTmp);
 			}
 		}
 	}
 	else return QUEUE_NULL_POINTER_AS_IN_PARAMETER;
 	
-	pthread_mutex_destroy(pqueueWork->sentinel->QueueMutex);	
-
-	free(pqueueWork);
-	pqueueWork=(PQueue)NULL;
-	*pqueueIn=(PQueue )pqueueWork;
+	pthread_mutex_destroy(pqueueIn->sentinel->queue_mutex);
+	free(pqueueIn->sentinel->queue_mutex);
+	free(pqueueIn);
 	return QUEUE_SUCCESS;
 }
 
