@@ -167,6 +167,22 @@ void password(char *line) {
 	notice(getNickname(line),MSG_PASSWD);
 }
 
+void logoff(char *line) {
+	char *netmask;
+
+	netmask=getNetmask(line);
+
+	if (!check_login(netmask)) {
+		DEBUG("User is not login");
+		return;
+	} else {
+		// user ausloggen
+		del_login(netmask);
+	}
+
+
+}
+
 void ident(char *line) {
 	char *login,*passwd,*pos;
 	char *netmask=getNetmask(line);
@@ -215,6 +231,7 @@ void channel_add(char *line) {
 	char *netmask=getNetmask(line);
 	char *login,*parameter;
 	char *nick=getNickname(line);
+	char *channelmod;
 
 
 	// checking of login
@@ -247,6 +264,9 @@ void channel_add(char *line) {
 		notice(nick,MSG_ADDCHANNEL_ALREADY);
 	} else {
 		// add channel
+		channelmod=malloc(sizeof(char)*3);
+		sprintf(channelmod,"\t\t");
+		add_channel(parameter,channelmod);
 		notice(nick,MSG_ADDCHANNEL_OK);
 	}
 

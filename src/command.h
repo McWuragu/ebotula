@@ -9,6 +9,7 @@ char *getCommand(char *line);
 void help(char *line);
 void password(char *line);
 void ident(char *line);
+void logoff(char *line);
 void version(char *line);
 void hello(char *line);
 void channel_add(char *line);
