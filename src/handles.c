@@ -102,7 +102,7 @@ void hBotNeedOp(char *pLine){
     sprintf(pSearchStr,"@%s",sSetup.pBotname);
 
     if (!strstr(pNickList,pSearchStr)) {
-        privmsg(pChannel,getMsgString(INFO_NEED_OP));
+        action(pChannel,getMsgString(INFO_NEED_OP));
     } else {
         channelInit(pChannel);
     }
@@ -218,7 +218,7 @@ void hResetModes(char *pLine) {
                     if (strcmp(pMode,"+o")==0) {
                         channelInit(pChannel);
                     } else {
-                        privmsg(pChannel,getMsgString(INFO_NEED_OP));
+                        action(pChannel,getMsgString(INFO_NEED_OP));
                     }
                 } else {
                     // add callback for reset the modes for a user    
@@ -382,7 +382,7 @@ static void channelInit(char *pChannel) {
         free (sChannelData.sModes.pKeyword);
         free (sChannelData.sModes.pLimit);
 	
-        privmsg(pChannel,getMsgString(INFO_INIT_CHANNEL));
+        action(pChannel,getMsgString(INFO_INIT_CHANNEL));
         DEBUG("Initialize the channel %s\n", pChannel);
     }
 }

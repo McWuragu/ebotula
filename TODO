@@ -8,7 +8,6 @@ ToDo List
 - global bot master message (is like global greeting)
 - Emphasize per bold the messages
 - Complete the  documentation
-- global channel messages as ACTIONs
 - join in channel after a inviting by the owner or master
 - join in channel with keyword
 - support von for other CTCP functions like:

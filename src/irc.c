@@ -56,16 +56,24 @@ void user(void) {
 }
 // #############################################################################
 void action(char *pTarget, char *pMsgStr){
+    int nStrSize;
     char *buffer;
 
-    if ((buffer=(char *)malloc((strlen("ACTION ")+strlen(pMsgStr)+1)*sizeof(char)))==NULL)
+    nStrSize=strlen("ACTION ")+strlen(pMsgStr)+3;
+
+    if ((buffer=(char *)malloc(nStrSize*sizeof(char)))==NULL)
 	{
 	   DEBUG("action() - Can't allocate memory!\n");
 	   return;
     }	   
 
-    sprintf(buffer,"ACTION %s",pMsgStr);
+    buffer[0]=1;
+    sprintf(&buffer[1],"ACTION %s",pMsgStr);
+    buffer[nStrSize-2]=1;
+    buffer[nStrSize-1]='\0';
+
     privmsg(pTarget,buffer);
+    free(buffer);
 }
 // #############################################################################
 void privmsg(char *pTarget, char *pMsgStr){

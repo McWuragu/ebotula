@@ -132,8 +132,8 @@ static MsgStruct_t Msg[] = {
 	{ INFO_CHANNELLIST_TOPIC,	"Topic:"},
 	{ INFO_CHANNELLIST_GREET,	"Greeting:"},
 	{ INFO_DEFAULT_REASON,		"You are kicked from the bot."},
-	{ INFO_INIT_CHANNEL,		"I have initialized this channnel"},
-	{ INFO_NEED_OP,			"I need operator access rights." },
+	{ INFO_INIT_CHANNEL,		"has initialized this channnel"},
+	{ INFO_NEED_OP,			"need operator access rights." },
     { INFO_NOT_PASS,			"You've set a empty password."},
 
 
