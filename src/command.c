@@ -302,6 +302,7 @@ void ident(char *pLine) {
         
             /* check the account */
             if (check_db(USER_DB,pLogin,pPasswd)) {
+                DEBUG("User %s found",pLogin);
                 log_on(pNetmask,pLogin);
                 notice(pNick,getMsgString(OK_IDENT));
         
@@ -311,6 +312,7 @@ void ident(char *pLine) {
                 pChannelQueue=list_db(CHANNEL_DB);
                 login_len=strlen(pLogin);
         
+                DEBUG("Reconstruct the access rights for the channels");
                 while (isfullQueue(pChannelQueue)) {
                     pChannel=popQueue(pChannelQueue);
 
