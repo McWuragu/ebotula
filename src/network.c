@@ -23,7 +23,7 @@
 #include <pthread.h>
 #include <syslog.h>
 
-#include "config.h"
+#include "ircbot.h"
 #include "dbaccess.h"
 #include "type.h"
 #include "utilities.h"
@@ -32,12 +32,11 @@
 #include "command.h"
 #include "network.h"
 
-int sockid;
+static int sockid;
 
+// ############################################################################# 
 void connectServer(void) {
-	extern int sockid;
 	extern ConfType sSetup;
-
 	
 	struct sockaddr_in socketaddr;
 	struct hostent *hostaddr;
@@ -85,14 +84,14 @@ void connectServer(void) {
 		exit(errno);
 	}
 }
-
+// ############################################################################# 
 void disconnectServer(void){
 	shutdown(sockid,0);
 }
-
+// ############################################################################# 
 void  send_line(char *pLine) {
 	extern ConfType sSetup;
-	extern int sockid;
+	extern int stop;
 	extern pthread_mutex_t send_mutex;
 
 
@@ -103,7 +102,7 @@ void  send_line(char *pLine) {
 	
 	if (!send(sockid,pLine,strlen(pLine),0)){
 		syslog(LOG_CRIT,SYSLOG_SEND);
-		exit(errno);
+		stop=true;
 	}
 
 	DEBUG("Send(%d): %s",getpid(),pLine);
@@ -112,9 +111,8 @@ void  send_line(char *pLine) {
 
 	
 }
-
+// ############################################################################# 
 void  recv_line(char *pLine,unsigned int len) {
-	extern int sockid;
 	extern int stop;
 	extern ConfType sSetup;
 	struct pollfd  sPoll;
@@ -126,7 +124,7 @@ void  recv_line(char *pLine,unsigned int len) {
 	if (poll(&sPoll,1,sSetup.iTimeout*1000)) {
 		if (!(str_len=recv(sockid,pLine,len,0))){
 			syslog(LOG_CRIT,SYSLOG_RECV);
-			exit(errno);
+			stop=true;
 		}
 	} else {
 		stop=true;
