@@ -17,6 +17,6 @@
 * @param argv is a pointer for any parameters This is unused but necessary for  pthread_create()
 * @return a pointer of any return values. This is unused but necessary for  pthread_create()
 */
-void *synchron(void *argv);
+void *TimingThread(void *argv);
 
 #endif

@@ -23,7 +23,7 @@
 #include "timing.h"
 
 
-void *synchron(void *argv){
+void *TimingThread(void *argv){
 	extern ConfType sSetup;
 	time_t newTime;
 	time_t lastPing=0;
