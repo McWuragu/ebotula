@@ -57,7 +57,7 @@ char *getNetmask(char *pLine){
 }
 // ############################################################################# 
 char *getCommand(char *pLine) {
-	char *pStr,*pPos,*pTmp;
+	char *pStr,*pTmp;
 
 	// mirror  of the orginal string 
 	pTmp=(char *)malloc((strlen(pLine)+1)*sizeof(char));
@@ -65,10 +65,11 @@ char *getCommand(char *pLine) {
 
 	// find the  secondary double point
 	// and put after this a null byte
-	if (pTmp[0]!=':' || !(pPos=strchr(&pTmp[1],':'))) {
+	if (pTmp[0]!=':') {
 		return "";
 	}
-	pPos[1]='\0';
+	// find the next colon and replace  him with null byte
+	strtok(&pTmp[1],":");
 	
 	// cut out  the first part of the server answer 
 	pStr=(char *)malloc((strlen(pTmp)+1)*sizeof(char));
