@@ -231,10 +231,10 @@ static const char *irchelp_msg[]={
 	"This can only bot master or channel owner",
 	"!usermode LOGIN +/-MODS          -> Set the mods for the user in the current channel",
 	"!usermode #CHANNEL LOGIN +/-MODS -> Set the mods for the user in the given channel",
-	"",
-	"",
-	"",
-	"",
+	"Mods:",
+	"+v  Voice",
+	"+o  Operator/channel owner",
+	"+m  Operator/bot master",
 	"",
 
 	// end mark of the complete array
