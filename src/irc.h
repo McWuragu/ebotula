@@ -10,14 +10,14 @@
 #ifndef IRC_H
 #define IRC_H
 
-
+#define  quit()  send_direct("QUIT\r\n");
 
 
 void user(void);
 void pong(void);
 void ping(char *pTarget);
 void topic(char *pChannel,char *pMsgStr);
-void quit(void);
+//void quit(void);
 void nick(char *pNick);
 void part(char *pChannel);
 void join(char *pChannel);

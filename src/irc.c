@@ -73,9 +73,9 @@ void notice(char *pNick,char *pMsgStr) {
 }
 
 // #############################################################################
-void quit(void) {
-    send_direct("QUIT\r\n");
-}
+//void quit(void) {
+//    send_direct("QUIT\r\n");
+//}
 // #############################################################################
 void join(char *pChannel) {
     char *buffer;
