@@ -38,7 +38,7 @@ char	* bstr[]={
     "\n# Number of the created threads",
 	KEY_THREADLIMIT,"= ",
 	"\n# The server the bot connects to",
-    KEY_SERVER,"=",
+	KEY_SERVER,"=",
 	"\n# The port the bot connects to",
 	KEY_PORT,"=",
 	"\n# The location of the database for the bot",
@@ -46,8 +46,8 @@ char	* bstr[]={
 	"\n# The delay time in millisecond for sending",
 	"# It is used for the prevention of excess flooding",
 	KEY_FASTSENDDELAY,"=",
-	KEY_SLOWSENDDELAY"=",
-	KEY_FASTSENDLIMIT"=",
+	KEY_SLOWSENDDELAY,"=",
+	KEY_FASTSENDLIMIT,"=",
 	"\n# The time in days an account exists.",
 	"# Unused accounts will be removed after this time.",
 	KEY_ALT,"=",
@@ -84,46 +84,132 @@ void write_baseconfig()
 		/* Version string */
 		sprintf(tmpstr,VERSIONSTR);
 		strcat(tmpstr,"\n");
-		fprintf(fd,"%s\n",bstr[i++]);
+		/*    "# Config file for the ebotula", 	*/
+		i=0;
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
 		fprintf(fd,"# %s\n",tmpstr);
-		/* borname */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s%s\n",bstr[i++],sSetup.botname);
+		/* botname */
+		/*  "# The name of the bot",*/
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/*    KEY_BOTNAME,"=",*/
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%s\n",bstr[i],sSetup.botname);
+		i++;
 		/* realname */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s\"%s\"\n",bstr[i++],sSetup.realname);
+		/*    "\n# String for the realname",*/
+ 		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/*   KEY_REALNAME,"=",*/
+ 		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s\"%s\"\n",bstr[i],sSetup.realname);
+		i++;
 		/* user & group */
-        fprintf(fd,"%s\n",bstr[i++]);
-        fprintf(fd,"%s%s\n",bstr[i++],sSetup.sExeUser);
-        fprintf(fd,"%s%s\n",bstr[i++],sSetup.sExeGroup);
-        /* Thread limit */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s%d\n",bstr[i++],sSetup.thread_limit);
+	        /* "\n# execute the bot as this user and this group", */
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/* KEY_EXEUSER,"=",*/
+        	fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%s\n",bstr[i],sSetup.sExeUser);
+		i++;
+	        /* KEY_EXEGROUP,"=", */
+        	fprintf(fd,"%s",bstr[i]);
+		i++;
+	        fprintf(fd,"%s%s\n",bstr[i],sSetup.sExeGroup);
+		i++;
+	        /* Thread limit */
+		/*    "\n# Number of the created threads",*/
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/*KEY_THREADLIMIT,"= ",*/
+        	fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%d\n",bstr[i],sSetup.thread_limit);
+		i++;
 		/* Servername */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s%s\n",bstr[i++],sSetup.server);
+		/*"\n# The server the bot connects to",*/
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/* KEY_SERVER,"=", */
+        	fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%s\n",bstr[i],sSetup.server);
+		i++;
 		/* Serverport */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s%s\n",bstr[i++],sSetup.port);
+		/* "\n# The port the bot connects to", */
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/*KEY_PORT,"=",*/
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%s\n",bstr[i],sSetup.port);
+		i++;
 		/* databasepath */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s%s\n",bstr[i++],sSetup.pDatabasePath);
+		/* "\n# The location of the database for the bot", */
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/* KEY_DATABASEPATH,"=", */
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%s\n",bstr[i],sSetup.pDatabasePath);
+		i++;
 		/* delays */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iSendDelay);
-		fprintf(fd,"%s%d\n",bstr[i++],sSetup.nSlowSendDelay);
-		fprintf(fd,"%s%d\n",bstr[i++],sSetup.nFastSendingCharLimit);
+		/* "\n# The delay time in millisecond for sending",  */
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/* "# It is used for the prevention of excess flooding", */
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/* KEY_FASTSENDDELAY,"=",*/
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%d\n",bstr[i],sSetup.iSendDelay);
+		i++;
+		/* KEY_SLOWSENDDELAY"=", */
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%d\n",bstr[i],sSetup.nSlowSendDelay);
+		i++;
+		/* KEY_FASTSENDLIMIT"=", */
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%d\n",bstr[i],sSetup.nFastSendingCharLimit);
+		i++;
 		/* Accountlivtime */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s%d\n",bstr[i++],sSetup.AccountLiveTime);
+		/* "\n# The time in days an account exists.", */
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/* "# Unused accounts will be removed after this time.",*/
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/* KEY_ALT,"=",*/
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%d\n",bstr[i],sSetup.AccountLiveTime);
+		i++;
 		/* Autologoff */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s%d\n",bstr[i++],sSetup.AutoLoggoff);
+	    	/* "\n# The time limit in days for maximum login time",*/
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		/* KEY_AUTOLOGOFF,"=",*/
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%d\n",bstr[i],sSetup.AutoLoggoff);
+		i++;
 		/* Pingtimeout */
-		fprintf(fd,"%s\n",bstr[i++]);
-		fprintf(fd,"%s%d\n",bstr[i++],sSetup.iTimeout);
+		/*"\n# The time limit in seconds for ping timeout.",*/
+		fprintf(fd,"%s\n",bstr[i]);
+		i++;
+		fflush(fd);
+		/* KEY_PINGTIMEOUT,"="*/
+		fprintf(fd,"%s",bstr[i]);
+		i++;
+		fprintf(fd,"%s%d\n",bstr[i],sSetup.iTimeout);
+		i++;
 
 		/* closing file */
 		fclose(fd);
