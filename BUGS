@@ -1,6 +1,5 @@
 - The bot isn't complete protect for the kicking becaus of exess flooding
 - The bot can't join a keyword  protected channel
 - The bot don't join a channel after the  inviting from a other user
-- SIGSEGV by the command !userlist as master
 - restart at  root not  realy work
 - memory leaks
