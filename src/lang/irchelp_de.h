@@ -80,7 +80,7 @@ static char *pIrcHelp[][15] = {
     /* friend commands */
     // INVITE
     {
-        "lädt den user in einen Channel ein",
+        "lädt den User in einen Channel ein",
         "Das Kommando ermöglicht es, sich selbst in einen Channel, der Invite"
         "gesetzt ist, einzuladen",
         ".",
@@ -167,7 +167,7 @@ static char *pIrcHelp[][15] = {
     },
     // RMUSER
     {
-        "löscht accounts",
+        "löscht Accounts",
         "Hierrüber kann man manuell Accounts und ihre Rechte löschen.",
         ".",
     },
@@ -182,7 +182,7 @@ static char *pIrcHelp[][15] = {
     },
     // DIE
     {
-        "stopt den bot",
+        "stoppt den Bot",
         "Damit läßt sich der Bot beenden und sauber remote herunterfahren.",
         ".",
     },
