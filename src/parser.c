@@ -61,6 +61,8 @@ MsgBuf_t* preParser(char *pLine) {
         pMsg->identify= CMD_ONTOPIC;
     } else if (strstr(pPos,CmdList[CMD_ONNAMES])) {
         pMsg->identify=CMD_ONNAMES;
+    } else if (strstr(pPos,CmdList[CMD_ONWHOIS])) {
+        pMsg->identify=CMD_ONWHOIS;
     } else if ((pStr=strstr(pLine," :!"))!=NULL) {
 
         if (strlen(pStr)>=3) {
@@ -201,6 +203,9 @@ void *ComandExecutionThread(void *argv) {
 						break;
 					case CMD_RESTART:
 						restart(pMsg->pMsgLine);
+						break;
+                    case CMD_ONWHOIS:
+						hCallback(pMsg->pMsgLine);
 						break;
 					default:
 						syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,pMsg->identify);
