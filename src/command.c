@@ -705,10 +705,12 @@ void allsay(char *pline) {
    ######################################################################### */
 void banuser(char *pLine) {
     extern CallbackDList CallbackList;
+    extern ConfigSetup_t sSetup;
     CallbackItem_t *Callback;
     char *Data;
 
     char **pArgv;
+    char *pNick;
     char *pNetmask;
     char *pChannel;
     char *pToBanNick;
@@ -717,12 +719,24 @@ void banuser(char *pLine) {
     
     // pars line
     pChannel=getAccessChannel(pLine);
+    pNick=getNickname(pLine);
     pNetmask=getNetmask(pLine);
     pArgv=splitString(getParameters(pLine),2);
     pToBanNick=pArgv[0];
 
     // read the login from the database
     pLogin=get_db(NICKTOUSER_DB,pNetmask);
+
+    if (!pToBanNick) {
+    notice(pNick,MSG_KICK_ERR);
+    return;
+    }
+
+
+    if (strcmp(pToBanNick,sSetup.botname)==0) {
+        notice(pNick,MSG_NOTSELF_BAN_ERR);
+        return;
+    }
 
     Data=(char*)malloc((strlen(pLogin)+strlen(pChannel)+2)*sizeof(char));
     sprintf(Data,"%s %s",pLogin,pChannel);
@@ -770,7 +784,7 @@ void kickuser(char *pLine) {
     
     /* parse nick */
     pKicknick=pArgv[0];
-    if (!pArgv[0]) {
+    if (!pKicknick) {
         notice(pNick,MSG_KICK_ERR);
         return;
     }
