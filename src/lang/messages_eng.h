@@ -48,6 +48,8 @@ static MsgStruct_t Msg[] = {
 	{ INFO_MASTER_LOGIN,		"Type the login: " },
 	{ INFO_MASTER_PASS,			"Enter the password: "},
 	{ INFO_MASTER_REPASS,		"Reenter the password: "},
+	{ ERR_MASTER_PASS,		"Typing error..not equal passwords" },
+	{ ERR_MASTER,			"Can't set this account as master." },
 
     // output of strerr
 	{ ERR_RESTART,			"Can't restart"},
@@ -109,8 +111,6 @@ static MsgStruct_t Msg[] = {
 	{ ERR_NICK_EXIST,			"A account with this nickname already exists." },
 	{ ERR_ALREADY_LOGON,		"You're already identified." },
 	{ ERR_UNKNOWN_MODS,		"This mod is invalid."},
-	{ ERR_MASTER_PASS,		"Typing error..not equal passwords" },
-	{ ERR_MASTER,			"Can't set this account as master." },
 	{ ERR_USERLIST_EMPTY,		"The userlist is empty"},
 	{ ERR_UNKNOW_MODE,			"Unknown mode parameter"},
     { ERR_NOTSELF_KICK,    "Can't kick myself"},
