@@ -1,4 +1,5 @@
 - little bit unstabile
 - charakter sensitive channel names (fixed)
-- !usermode SIGSEGV
+- !usermode SIGSEGV (fixed)
+- !kick von owner SIGSEGV
 - !kick nur ein wort von reason
