@@ -1,10 +1,10 @@
-Name:    ebotula-devel
+Name:    ebotula
 Summary: ebotula - IRC bot
 Version: @VERSION@
 Release: 1
 Copyright: GPL
-Source: http://lux.fh-lausitz.de/~slaube/develop/ebotula-devel-%{PACKAGE_VERSION}.tar.gz
-Source0: ebotula-devel-%{PACKAGE_VERSION}.tar.gz
+Source: http://lux.fh-lausitz.de/~slaube/develop/%{name}-%{PACKAGE_VERSION}.tar.gz
+Source0: %{name}-%{PACKAGE_VERSION}.tar.gz
 Packager: Steffen Laube <Laube.Steffen@gmx.de>
 Group: Applications/Communication
 Requires: gdbm => 1.8.0
@@ -47,6 +47,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{prefix}/var/ebotula/
 
 %changelog
+* Wed Sep 24 2003 Steffen Laube <Laube.Steffen@gmx.de>
+- Bugfix: fixed the bug by the access level controlling
+- Bugfix: fixed the command !hello
+- modified the dialog for the creation of a master
+
 * Thu Sep 18 2003 Steffen Laube <Laube.Steffen@gmx.de>
 - Bugfix: fixed SIGSEGV from the commands !addchannel and !join
 - Bugfix: fixed mode event handle
