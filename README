@@ -1,54 +1,53 @@
-ebotula - IRC Verwaltungsbot
+ebotula - IRC management bot
 ----------------------------
 
-Ebotula ist ein IRC-Bot, der grundlegende Aufgaben übernimmt. Er kann
-eingesetzt werden, um einen oder mehrere Channel  zu verwalten. Diese
-Verwaltung umfasst:
+Ebotula is an IRC-bot taking charge of basic tasks. It can be used to
+manage one or more channels. Management includes:
 
-	- automatisches Setzen und Sichern von Userrechten nach Login
-	- Setzen und Sichern der Channelrechte
-	- Setzen und Sichern der Topic eines Channels
-	- Setzen und Anzeigen einer Begrüssung
-	- Setzen und Lschen von Banmasken
-	- Anlegen von Useraccounts
-	- Join und Part von Channels
-	- Broadcastmessages ohne IRC-Operatorrechten
-	- Anzeigen von Userlisten 
-	- Stoppen des Bots
-	- Neustart des Bots
+	- automatic setting and saving of user permissions after login
+	- setting and saving of channel modes
+	- setting and saving of channel topic
+	- setting and displaying of channel greeting
+	- setting and removing of ban masks
+	- creating of user accounts
+	- joining/parting of/from channels
+	- broadcast messages without IRC operator rights
+	- displaying of user lists
+	- stopping the bot
+	- restarting the bot
 
-Des Weiteren ist der Bot  mit einer Onlinehilfe ausgestattet. Sie enthält eine
-Liste aller Kommandos des Bots und biete auch eine detailierte Beschreibung.
-Es können aber nur Inforamtionen abgerufen werden, die für das aktuelle 
-Zugriffslevel bestimmt sind.
+An online help for the bot is also included. It includes a list of all commands
+known to the bot as well as detailed discription for every command. The
+information that can be displayed depends on the permissions the asking user has.
 
-Der Bot sichert seine Daten, wie z.b. Channeltopic und  Userrechten,  in
-seperaten Dateien und rekonstruiert die Daten aus diesen  nach einem Neustart.
-Der Loginstatus wird ebenfalls  in diesen Dateien erfasst und beim Neustart
-zurückgesetzt. Wären dem Betriebt  geschieht das Ausloggen von Zombielogins
-automatisch. Auch werden Accounts die länger nicht  benutzt wurden nach einer
-eingestellten Zeit entfernt.
+The bot saves his data (e.g. channel topic, user permissions etc.) in seperate
+files. So these data can be restored after restarting the bot. The login state
+is also saved in these files but reseted after restart. Zombie logins will be
+logged out automatically as long as the bot is running. Accounts not being used
+for a certain time are removed by the bot. The time after which this happens can
+be configured.
 
-Der Bot läuft als Multithreadapplikation und kann somit Kommandos
-parallel bearbeiten. Die Anzahl der Threads und somit die der
-parallel verarbeiteten Kommandos ist steuerbar. Damit ist der Bot in der Lage
-mehre Channels gleichzeitig zuverwalten und auf mehre User zureagieren.
+The bot is running as a multi thread application so it can process multiple
+commands at the same time. The number of used threads (equivalent to the number
+of commands which can be processed parallel) can be configured. This way the
+bot is able to manage multiple channels at the same time and react to numerous
+commands send by numerous users parallel.
 
-Alle Einstellungen und  Konfiguration werden in der Datei ebotula.conf, die
-sich defaultmässig in /usr/local/etc befindet, getätigt. Alle Parameter können
-aber per Kommandozeile überschrieben werden.
+All settings and configuration are done in the file ebotula.conf, usually
+located in /usr/local/etc/. All command line parameters given will overwrite
+the settings in the config file.
 
-Für weitere Information und Änderungen sei hier auf die Dateien  NEWS,
-ChangLog, INSTALL, BUGS und TODO verwiessen. Des Weitern sei drauf
-hingewissen, das der Bot unter GPL steht. Die Licenzebedingungen können in 
-Copyright nachgelesen werden.
+For more information and changes see the files NEWS,ChangLog, INSTALL, BUGS
+and TODO.
 
-Es wurde versucht den Bot IRC-konform nach RFC 1459, 2810, 2811 und 2812
-zugestallten. Aber dennoch kann eine fehlerfrei und einwandfrei Funktion nicht
-garantiert werden, darum Bugs, Kommentar und Patches bitte an folgender 
-Adresse senden:
+The bot is being released under the terms of the GNU General Public License GPL.
+See COPYING for details.
+
+This programm should be compatible to the RFC 1459, 2810, 2811 and 2812. Besides
+that it comes without any warranty. Feel free to report bugs, comments and send
+patches to:
 
 Steffen Laube, <realebula@gmx.de>
 
 
-Danke
+Thanks
