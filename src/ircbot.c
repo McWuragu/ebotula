@@ -25,9 +25,12 @@
 	#include "config.h"
 #endif
 
+#define	CMD_MSG
+#include "messages.h"
+#undef CMD_MSG
+
 #include "utilities.h"
 #include "parameter.h"
-#include "messages.h"
 #include "network.h"
 #include "parser.h"
 #include "timing.h"
@@ -85,13 +88,25 @@ int main(int argc,const char *argv[]) {
 	#endif
 	
     
-    // Look for the config file  parameter
+    // Look for simple parameter and  custom config file
 	for (i=1;i<argc;i++) {
-		if (argv[i][0]=='-') {
-			if (argv[i][1]=='f') {
+		if (argv[i][0]==PARAMETER_CHAR) {
+			switch (argv[i][1]) {
+			case 'f':
 				free(sSetup.configfile);
 				sSetup.configfile=(char *)malloc((strlen(argv[++i])+1)*sizeof(char));
 				strcpy(sSetup.configfile,argv[i]);
+				break;
+			case 'v':
+				exit(0);
+                break;
+			case 'h':
+			case '?':
+				printMsg(help_msg);
+				exit(0);
+				break;
+			default:
+				break;
 			}
 		}
 
@@ -113,7 +128,7 @@ int main(int argc,const char *argv[]) {
 		sSetup.AutoLoggoff=sSetup.AccountLiveTime;
 	}
 
-	DEBUG("-----------------------------------------------");
+	DEBUG("----------------------------------------------");
 	DEBUG("Server %s",sSetup.server);
 	DEBUG("Port %s",sSetup.port);
 	DEBUG("Nickname %s", sSetup.botname);
