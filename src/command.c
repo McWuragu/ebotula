@@ -1384,8 +1384,7 @@ void ctcpping(MsgItem_t *pMsg) {
     }    
    pPing+=2;
    sprintf(pPong,"%s\r\n",pPing);
-   printf("%s\n",pPing);
-    notice(pMsg->pCallingNick,pPong);
+   notice(pMsg->pCallingNick,pPong);
 }
 /* #########################################################################
    Bot comand: \001VERSION\001
