@@ -84,6 +84,8 @@ MsgBuf_t* preParser(char *pLine) {
         pMsg->identify=CMD_ONNAMES;
     } else if (!strncmp(pPos,CmdList[CMD_ONWHOIS],strlen(CmdList[CMD_ONWHOIS]))) {
         pMsg->identify=CMD_ONWHOIS;
+    } else if (!strncmp(pPos,CmdList[CMD_ONNONICK],strlen(CmdList[CMD_ONNONICK]))) {
+        pMsg->identify=CMD_ONNONICK;
     } else if (!strncmp(pPos,CmdList[CMD_ONPRIVMSG],strlen(CmdList[CMD_ONPRIVMSG])) ||
                !strncmp(pPos,CmdList[CMD_ONNOTICE],strlen(CmdList[CMD_ONNOTICE]))) {
         if ((pStr=strstr(pLine," :!"))!=NULL) {
@@ -123,7 +125,7 @@ MsgBuf_t* preParser(char *pLine) {
     return pMsg;
 }
 
-void *ComandExecutionThread(void *argv) {
+void *CommandExecutionThread(void *argv) {
 	extern boolean stop;
     QueueData *pCommand;
 	MsgBuf_t *pMsg;
@@ -344,7 +346,7 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
                                         if (cmd_id >= CMD_MASTER) {
                                             if (Level==MasterLevel) {
                                                 ret=true;
-					    }else {ret=false;}
+                                            }else {ret=false;}
                                         }
                                     }else{ret=false;}
                                 }

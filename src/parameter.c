@@ -32,7 +32,7 @@
 
 #include "parameter.h"
 // #############################################################################                  
-void ComandLineParser(int argc,char *const argv[]) {
+void CommandLineParser(int argc,char *const argv[]) {
     extern ConfigSetup_t sSetup;
     int i;
     int tmp;

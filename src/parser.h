@@ -29,7 +29,7 @@ MsgBuf_t *preParser(char *pLine);
 * @param argv a pointer  of arguements for  the
 * starting of  this thread
 */
-void *ComandExecutionThread(void *argv);
+void *CommandExecutionThread(void *argv);
 
 static int AccessRight(UserLevel_t Level,Cmd_t cmd_id);
 
