@@ -1,7 +1,6 @@
 ToDo Liste
 ----------
 - missing commands
-	- !chanmode
 	- !ban
 	- !timeban
 	- !banlist
@@ -19,4 +18,3 @@ ToDo Liste
 - make multilingual messages.h and irchelp.h
 - to complete the  documentation
 - to translate the documents
-- add a parameter for  ping timeout
