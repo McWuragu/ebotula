@@ -77,7 +77,10 @@ typedef enum CmdEnum {
 	CMD_KICK,
 	CMD_USERMODE,
 	CMD_ONNICKCHG,
-	CMD_RMUSER
+	CMD_RMUSER,
+	CMD_VIEWGREAT,
+	CMD_USERLIST,
+	CMD_ONMODE,
 }CmdType;
 
 /// This is the structur for the entries in the message queue
@@ -85,7 +88,7 @@ typedef struct MsgBufStruct {
 	long	mtype;
 	CmdType	identify;
 	/** the complete string which receive from the irc server */
-	char	msg_line[RECV_BUFFER_SIZE];
+	char	pMsgLine[RECV_BUFFER_SIZE];
 } MsgBufType;
 
 #endif
