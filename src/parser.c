@@ -86,19 +86,20 @@ MsgBuf_t* preParser(char *pLine) {
 void *ComandExecutionThread(void *argv) {
     int msgid;
 	extern pthread_mutex_t queue_mutex;
-	QueueData *pCommand;
+	extern boolean stop;
+    QueueData *pCommand;
 	MsgBuf_t *pMsg;
 	
 	PQueue pCommandQueue=(PQueue)argv;	
 
     // set the thread cancelable
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
-    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
+    //pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
 
     // open the message queue
 
     // execute loop
-    while(1) {
+    while(!stop) {
 
 		// check the fill status of the Command Queue
 		if (!(isemptyQueue(pCommandQueue))) {
@@ -234,9 +235,10 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
     char *pKey;
     char *pMod;
 
-
+    /* extract information form pline*/
     pNetmask=getNetmask(pLine);
     pNick=getNickname(pLine);
+    pChannel=getAccessChannel(pLine);
 
 
     // check Accesslevel

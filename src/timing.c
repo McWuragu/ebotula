@@ -30,6 +30,7 @@
 void *TimingThread(void *argv){
     extern ConfigSetup_t sSetup;
     extern int iLineCount;
+    extern boolean stop;
     time_t newTime;
     time_t lastPing=0;
     time_t lastLineCount=0;
@@ -37,12 +38,12 @@ void *TimingThread(void *argv){
     time_t lastRemoveDeadAccounts=0;
 
     // set the thread cancelable
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
-    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
+    //pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
 
     DEBUG("Synchronize Thread is running");
 
-    while (1) {
+    while (!stop) {
         sleep(1);
         
         time(&newTime);
