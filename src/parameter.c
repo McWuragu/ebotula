@@ -90,6 +90,19 @@ void ComandLineParser(int argc,char *const argv[]) {
                 strcpy(sSetup.sExeUser,argv[i]);
                 
                 break;
+            case 'g':
+                DEBUG("Found execution group option\n");
+                if (++i>=argc) {
+                    errno=EINVAL;
+                    perror(getMsgString(ERR_MISSING_PARAM));
+                    exit(errno);
+                }
+                
+                // set the group
+                sSetup.sExeGroup=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+                strcpy(sSetup.sExeGroup,argv[i]);
+                
+                break;
             case 'r':
                 DEBUG("Found realname option\n");
                 if (++i>=argc) {
@@ -234,7 +247,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 sSetup.newMaster=true;
                 break;
             case 'd':
-                DEBUG("Found  database path option\n");
+                DEBUG("Found database path option\n");
                 if (++i>=argc) {
                     errno=EINVAL;
                     perror(getMsgString(ERR_MISSING_PARAM));
@@ -408,6 +421,16 @@ void ConfigFileParser(void) {
                 }   
                 // set account live time
                 sSetup.iTimeout=tmp;
+            }else if (!strcmp(key,KEY_EXEUSER)) {
+                // set execution rights
+                if (sSetup.sExeUser)free(sSetup.sExeUser);
+                sSetup.sExeUser=(char *)malloc((strlen(value)+1)*sizeof(char));
+                strcpy(sSetup.sExeUser,value);
+            }else if (!strcmp(key,KEY_EXEGROUP)) {
+                // set execution rights
+                if (sSetup.sExeGroup) free(sSetup.sExeGroup);
+                sSetup.sExeGroup=(char *)malloc((strlen(value)+1)*sizeof(char));
+                strcpy(sSetup.sExeGroup,value);
             }
             free(value);
             free(key);
