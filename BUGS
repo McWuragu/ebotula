@@ -2,6 +2,6 @@
 - charakter sensitive channel names (fixed)
 - !usermode SIGSEGV (fixed)
 - !kick by channel owner SIGEV (fixed)
-- !kick not right reason output
+- !kick not right reason output (fixed)
 - wrong message by !hello (fixed)
-- !topic not right set
+- !topic not right set (fixed)
