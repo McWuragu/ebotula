@@ -132,7 +132,13 @@ void help(MsgItem_t *pMsg) {
 void hello(MsgItem_t *pMsg) {
     DEBUG("Try to create an new account for %s\n",pMsg->pCallingNick);
 
+    if (pMsg->UserLevel>LoggedLevel) {
+        notice(pMsg->pCallingNick,getMsgString(ERR_ALREADY_LOGON));
+        return;
+    }
+
     StrToLower(pMsg->pCallingNick);
+
 
     if (add_db(USER_DB,pMsg->pCallingNick,"")) {
         
