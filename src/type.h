@@ -47,6 +47,8 @@ typedef struct ConfStruct{
     boolean newMaster;
     /** the name of the user for execution in the root mode */
     char * sExeUser;
+    /** the name of the group for execution in the root mode */
+    char *sExeGroup;
 } ConfigSetup_t;
 
 
