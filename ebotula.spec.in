@@ -3,74 +3,72 @@ Summary: %{name} - IRC bot
 Version: @VERSION@
 Release: 1
 License: GPL
-Source: http://lux.fh-lausitz.de/~slaube/develop/%{name}-%{PACKAGE_VERSION}.tar.gz
-Source0: %{name}-%{PACKAGE_VERSION}.tar.gz
+Source0: http://lux.fh-lausitz.de/~slaube/develop/%{name}-%{version}.tar.gz
+Source1: %{name}-%{version}.tar.gz
 Packager: Steffen Laube <Laube.Steffen@gmx.de>
 Group: Applications/Communication
-BuildRoot: /tmp/%{name}-root
+BuildRoot: /tmp/%{name}-%{version}
 URL: http://freshmeat.net/projects/ebotula/
-Prefix: /usr/local
-Docdir: %{prefix}/doc
+
+%define _sysconfigdir /etc
+%define _localstatedir /var
 
 %description
 Ebotula is an irc bot for general tasks in one or more channels. These
 tasks are the administration of users and channels. The bot can save the channel
 topic and modes. Also the modes of the user are set and saved by the bot.
 
+#################
+# pre
 %prep
-rm -rf $RPM_BUILD_ROOT
-%setup -q
+if [ "$RPM_BUILD_ROOT" != "/" ]; then 
+	rm -rf $RPM_BUILD_ROOT
+fi
+%setup -n %{name}-%{version} -a 1
 
+#################
+# build
 %build
-CFLAGS="${RPM_OPT_FLAGS}" ./configure --prefix=%{prefix}
+CFLAGS="${RPM_OPT_FLAGS}" 
+./configure --prefix=%{_prefix} --sysconfdir=%{_sysconfdir} --mandir=%{_mandir} --localstatedir=%{_localstatedir}
 make
 
+#################
+# installation
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{prefix}/var/ebotula
 make DESTDIR=$RPM_BUILD_ROOT  install
+install -d  $RPM_BUILD_ROOT/%{_localstatedir}/%{name}
+gzip $RPM_BUILD_ROOT/%{_mandir}/man?/*
 
+#################
+# post install
 %post
+exit 0
 
+#################
+# clean
 %clean
-rm -rf $RPM_BUILD_ROOT
-
+if [ "$RPM_BUILD_ROOT" != "/" ]; then 
+	rm -rf $RPM_BUILD_ROOT
+fi
+exit 0
+#################
+# files
 %files
 %defattr(-,root,root)
 %doc AUTHORS COPYING ChangeLog INSTALL NEWS README README.de BUGS TODO ABOUT-NLS
 
-%{prefix}/share/locale/*
-%{prefix}/bin/*
-%{prefix}/man/*
-%config %{prefix}/etc/ebotula/*
-%dir %{prefix}/var/ebotula/
+%{_prefix}/share/locale/*
+%{_prefix}/bin/*
+%{_mandir}/*/*
+%config %dir %{_sysconfdir}/%{name}
+%config(noreplace) %{_sysconfdir}/%{name}/*
+%dir %{_localstatedir}/%{name}/
 
+#################
+# changelog
 %changelog
-* Mon Sep 13 2004 Steffen Laube <Laube.Steffen@gmx.de>
-- rebuilt
-
-* Sun May 16 2004 Steffen Laube <Laube.Steffen@gmx.de>
-- rebuilt
-
-* Sun May 08 2004 Steffen Laube <Laube.Steffen@gmx.de>
-- rebuilt
-
-* Sun Feb 08 2004 Steffen Laube <Laube.Steffen@gmx.de>
-- rebuilt
-
-* Thu Jan 15 2004 Steffen Laube <Laube.Steffen@gmx.de>
-- rebuilt
-
-* Mon Dec 22 2003 Steffen Laube <Laube.Steffen@gmx.de>
-- rebuilt
-
-* Wed Sep 24 2003 Steffen Laube <Laube.Steffen@gmx.de>
-- rebuilt
-
-* Thu Sep 18 2003 Steffen Laube <Laube.Steffen@gmx.de>
-- rebuilt
-
-* Thu Sep 09 2003 Steffen Laube <Laube.Steffen@gmx.de>
-- first built
-
-
+* Thu Mar 15 2005 Steffen Laube <Laube.Steffen@gmx.de>
+- changed the install directory to /usr
+- added the compressing  of the manpages
+- changed  the install directories for manpages
