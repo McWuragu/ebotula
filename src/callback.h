@@ -19,7 +19,6 @@ typedef struct CallbackStruct {
 
 /**
  * Destroys Dataelement und sub-item of it
- * @author Steffen Laube
  * 
  * @param data Pointer to CallbackItem_t
  */
@@ -29,7 +28,6 @@ void destroyCallbackItem(CallbackItem_t *data);
  * Callback routine for the  reset of user
  * access rigths. It is a part of  mode 
  * protection  featuer
- * @author Steffen Laube
  *
  * @param pNetmask pointer to a string of netmask
  * @param data a pointer to a container of data
@@ -38,7 +36,6 @@ void ModeResetCb(char *pNetmask,void *data);
 
 /**
  * Callback routine for the activation of a ban.
- * @author Steffen Laube 
  *
  * @param pNetmask Pointer to a string of netmask
  * @param data a pointer to a container of data
@@ -47,7 +44,6 @@ void SetBanCb(char *pNetmask,void *data);
 
 /**
  * Callback routine for the kicking of a user.
- * @author Steffen Laube
  *
  * @param pNetmask pointer to a string of netmask
  * @param data a pointer to a container of data
