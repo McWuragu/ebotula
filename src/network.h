@@ -29,6 +29,12 @@ void disconnectServer(void);
 void send_line(char *pLine);
 
 /**
+* send direkt a command  string to the server
+* @param pLine the commando string
+*/
+void send_direct(char *pLine);
+
+/**
 * reveive  oneline from the server
 * @param pLine a pointer of a buffer for the  receiving string
 * @param len the  size of the buffer
