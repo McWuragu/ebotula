@@ -61,7 +61,7 @@
 	#define MSG_HELLO			"Schön dich zu treffen"
 	#define MSG_HELLO2			"Du hast einen neuen Account erhalten"
 	#define MSG_PASSWD			"Password wurde geändert"
-	#define MSG_IDENT_OK			"Du bist nun idenifiziert"
+	#define MSG_IDENT_OK			"Du bist nun identifiziert"
 	#define MSG_JOIN_OK			"Der Bot ist in den Channel gejoint"
 	#define MSG_PART_OK			"Der Bot hat den Channel verlassen"
 	#define MSG_RMCHANNEL_OK		"Der Channel wurde von der Liste entfernt"
