@@ -15,3 +15,8 @@ ToDo List
 - Translate the all documents
 - make better performance
 - modify the mode removing after logoff
+- rejoin after kick
+- reconnect after connection lost
+- join in invite channel
+- join in channel with keyword
+- replace msgqueue by  normal queue
