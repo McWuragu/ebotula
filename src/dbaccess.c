@@ -34,22 +34,22 @@ void initDatabases(void) {
 	char *user,*channel,*access,*nicktouser,*usertonick,*banlist,*timelog;
 			
 	// generate the filenames
-	user=(char *)malloc((strlen(sSetup.database_path)+strlen("/user.dbf")+1)*sizeof(char));
-	channel=(char *)malloc((strlen(sSetup.database_path)+strlen("/channel.dbf")+1)*sizeof(char));
-	usertonick=(char *)malloc((strlen(sSetup.database_path)+strlen("/usertonick.dbf")+1)*sizeof(char));
-	nicktouser=(char *)malloc((strlen(sSetup.database_path)+strlen("/nicktouser.dbf")+1)*sizeof(char));
-	access=(char *)malloc((strlen(sSetup.database_path)+strlen("/access.dbf")+1)*sizeof(char));
-	banlist=(char *)malloc((strlen(sSetup.database_path)+strlen("/banlist.dbf")+1)*sizeof(char));
-	timelog=(char *)malloc((strlen(sSetup.database_path)+strlen("/timelog.dbf")+1)*sizeof(char));
+	user=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/user.dbf")+1)*sizeof(char));
+	channel=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/channel.dbf")+1)*sizeof(char));
+	usertonick=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/usertonick.dbf")+1)*sizeof(char));
+	nicktouser=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/nicktouser.dbf")+1)*sizeof(char));
+	access=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/access.dbf")+1)*sizeof(char));
+	banlist=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/banlist.dbf")+1)*sizeof(char));
+	timelog=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen("/timelog.dbf")+1)*sizeof(char));
 
 	// create filenames
-	sprintf(user,"%s/user.dbf",sSetup.database_path);
-	sprintf(channel,"%s/channel.dbf",sSetup.database_path);
-	sprintf(usertonick,"%s/usertonick.dbf",sSetup.database_path);
-	sprintf(nicktouser,"%s/nicktouser.dbf",sSetup.database_path);
-	sprintf(access,"%s/access.dbf",sSetup.database_path);
-	sprintf(banlist,"%s/banlist.dbf",sSetup.database_path);
-	sprintf(timelog,"%s/timelog.dbf",sSetup.database_path);
+	sprintf(user,"%s/user.dbf",sSetup.pDatabasePath);
+	sprintf(channel,"%s/channel.dbf",sSetup.pDatabasePath);
+	sprintf(usertonick,"%s/usertonick.dbf",sSetup.pDatabasePath);
+	sprintf(nicktouser,"%s/nicktouser.dbf",sSetup.pDatabasePath);
+	sprintf(access,"%s/access.dbf",sSetup.pDatabasePath);
+	sprintf(banlist,"%s/banlist.dbf",sSetup.pDatabasePath);
+	sprintf(timelog,"%s/timelog.dbf",sSetup.pDatabasePath);
 
 	// open the databases
 	dbf_user=gdbm_open(user,512,GDBM_WRCREAT,0600,NULL);
@@ -297,7 +297,7 @@ char ** list_db(int db){
 
 	// get the database handle
 	if (!(dbf=get_dbf(db))) {
-		ppList=malloc(sizeof(char *));
+		ppList=(char **)malloc(sizeof(char *));
 		ppList[0]=NULL;
 		return ppList;
 	}
