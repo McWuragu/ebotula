@@ -232,38 +232,28 @@ QueueExeStatus flushQueue(PQueue pqueueIn) {
     return err;
 }
 /* ############################################################################# */
-QueueData * getnextitrQueue(PQueue pqueueIn)
-{
-	PQueue pqueueWork;
-	PQueue pqueueOld;
-	QueueData *queuedataElement;
-	pqueueWork=pqueueIn;
-	
+QueueData * getnextitrQueue(PQueue pqueueIn) {
+    PQueue pqueueSentinel;
+    QueueData* pQueueData=NULL;
+    
+    if (!pqueueIn) {return NULL;}
     
     /* protect the queue access */
-	pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
+    pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
 	
-
+    pqueueSentinel=(PQueue )pqueueIn->sentinel;
+    
     /* check for valid Queue */
-	if (pqueueWork)
-	{
-		pqueueWork=(PQueue )pqueueWork->sentinel;
-		pqueueOld=(PQueue)pqueueWork->iterator;
-		if (pqueueWork->sentinel!=(PQueue)pqueueOld->next)
-		{
-			/** poping **/
-			pqueueOld=(PQueue)pqueueOld->next;
-			queuedataElement=(QueueData *)pqueueOld->queuedataData;
-			pqueueWork->iterator=(PQueue)pqueueOld;
+    if (pqueueSentinel->longCount!=0) {
+	if (pqueueSentinel!=(PQueue)pqueueSentinel->iterator->next){
+		/** poping **/
+		pqueueSentinel->iterator=(PQueue)pqueueSentinel->iterator->next;
+		pQueueData=(QueueData *)pqueueSentinel->iterator->queuedataData;	
+	}	
+    } else {
+	DEBUG("ERROR: popQueue() - empty Queue!\n");
+    }
 
-			
-            pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
-			return (QueueData *)queuedataElement;
-		}	
-	} else {
-		DEBUG("ERROR: popQueue() - empty Queue!\n");
-	}
-
-	pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
-	return (QueueData *)NULL;
+    pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	
+    return pQueueData;
 }
