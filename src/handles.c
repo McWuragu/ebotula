@@ -188,7 +188,8 @@ void hResetModes(char *pLine) {
             Callback.data=(void*)pData;
             
             // put  the  element  in the  callback list  before tail
-            insert_prev_CallbackDList(&CallbackList,&CallbackList.tail,&Callback);
+            //insert_prev_CallbackDList(&CallbackList,&CallbackList.tail,&Callback);
+	insert_prev_CallbackDList(&CallbackList,CallbackList.tail,&Callback);
 
             // send the who
             whois(pNick);
@@ -292,14 +293,18 @@ void hCallback(char *pLine) {
     extern CallbackDList CallbackList;
     CallbackItem_t *CB_Data;
     CallbackDListItem *pCallbackItem;
+    CallbackDListItem *pCallbackItemReturn;
     char *pNetmask;
     char **ppLinePart;
 
     ppLinePart=splitString(pLine);
 
-    // lock for the Callback item for the nick
-    CB_Data=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
-    
+    /** lock for the Callback item for the nick **/
+//    CB_Data=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
+	/** remove was removed from searchNicknameFromCallbackDList 
+	 * Remove all by hand 						**/
+      pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,ppLinePart[3]);
+	CB_Data=pCallbackItemReturn->data; 
     if (CB_Data) {
         // built netmask
         pNetmask=(char*)malloc((strlen(ppLinePart[3])+strlen(ppLinePart[4])+strlen(ppLinePart[5])+3)*sizeof(char));

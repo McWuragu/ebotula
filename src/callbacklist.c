@@ -40,7 +40,10 @@ void init_extended_CallbackDList(CallbackDList *list, void (*destroy)(CallbackIt
 	list->destroy=destroy;
 	list->head=NULL;
 	list->tail=NULL;
-	
+	  /** create and init the  mutex */
+        list->callbacklist_mutex=(pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+	 pthread_mutex_init(list->callbacklist_mutex,NULL);
+			
 	return;
 }
 
@@ -61,7 +64,7 @@ void destroyCallbackDList(CallbackDList *list)
 	/** delete elements **/
 	while(getSizeCallbackDList(list)>0)
 	{
-		if (removeCallbackDList(list,getTailCallbackDList(list),(CallbackItem_t **)&data) == 0 && list->destroy != NULL)
+		if (removeCallbackDList(list,getTailCallbackDList(list),(CallbackItem_t *)data) == 0 && list->destroy != NULL)
 		{
 			/** destroy element Data **/
 			list->destroy(data);	
@@ -70,6 +73,9 @@ void destroyCallbackDList(CallbackDList *list)
 
 	/** no opertions are allowed 
 	 * but we deleting the CallbackDList */
+	pthread_mutex_destroy(list->callbacklist_mutex);
+	free(list->callbacklist_mutex);
+		    
 	memset(list,0,sizeof(CallbackDList));
 
 	return;	
@@ -93,14 +99,23 @@ void destroyCallbackDList(CallbackDList *list)
 int insert_next_CallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data)
 {
 	CallbackDListItem *new_element;
-	
-	/** Don't allow a NULL-element while list is not empty **/
+
+	  pthread_mutex_lock(list->callbacklist_mutex);
+	  /** Don't allow a NULL-element while list is not empty **/
 	if (element==NULL && getSizeCallbackDList(list)!=0)
+	{
+		DEBUG("insert_next_CallbackDList() - NULL item! Is not allowed!");
+		pthread_mutex_unlock(list->callbacklist_mutex);
 		return -1;
+	}
 	
 	/** get memory for a new item **/
 	if ((new_element=(CallbackDListItem *) malloc(sizeof(CallbackDListItem)))==NULL)
+	{
+		DEBUG("insert_next_CallbackDList() - Memmory alloc error!");
+		pthread_mutex_unlock(list->callbacklist_mutex);
 		return -1;
+	}
 	
 	/** insert the new item **/
 	new_element->data=(CallbackItem_t *) data;
@@ -127,7 +142,8 @@ int insert_next_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
 		element->next=new_element;
 	}
 	list->size++;
-
+	pthread_mutex_unlock(list->callbacklist_mutex);
+			    
 	return 0;
 }
 
@@ -149,14 +165,23 @@ int insert_next_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
 int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data)
 {
 	CallbackDListItem *new_element;
-		
+	  
+	pthread_mutex_lock(list->callbacklist_mutex);
 	/** Don't allow a NULL-element while list is not empty **/
 	if (element==NULL && getSizeCallbackDList(list)!=0)
+	{
+		DEBUG("insert_next_CallbackDList() - NULL-item or emtpy is not allowed!");
+		pthread_mutex_unlock(list->callbacklist_mutex);
 		return -1;
+	}
 	
 	/** get memory for a new item **/
 	if ((new_element=(CallbackDListItem *) malloc(sizeof(CallbackDListItem)))==NULL)
+	{
+	   	DEBUG("insert_next_CallbackDList() - Memmory alloc error!");
+		pthread_mutex_unlock(list->callbacklist_mutex);
 		return -1;
+	}
 	
 	/** insert the new item **/
 	new_element->data=(CallbackItem_t *) data;
@@ -183,7 +208,8 @@ int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
 		element->prev=new_element;
 	}
 	list->size++;
-
+	
+	pthread_mutex_unlock(list->callbacklist_mutex);
 	return 0;
 
 }
@@ -205,9 +231,14 @@ int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
  */
 int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, CallbackItem_t *data)
 {
+	 pthread_mutex_lock(list->callbacklist_mutex);
 	/** Don't delete a NULL-element from an empty list **/
 	if (element == NULL || getSizeCallbackDList(list)==0)
+	{
+		DEBUG("removeCallbackDList() - Empty list!");
+	 	pthread_mutex_unlock(list->callbacklist_mutex);
 		return -1;
+	}
 	/** delete an element from list **/
 	data=element->data;
 	if (element == list->head)
@@ -238,6 +269,8 @@ int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, Callbac
 	free(element);
 	/** Resize size of list by on **/
 	list->size--;
+	
+	pthread_mutex_unlock(list->callbacklist_mutex);
 	return 0;
 }
 
@@ -256,21 +289,33 @@ int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, Callbac
  * 		- returns Null for error or elment were nickname is
  *
  */
-CallbackItem_t * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDListItem *element,char *nickname)
+CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDListItem *element,char *nickname)
 {
 	CallbackDListItem *temp;
     CallbackItem_t *data;
 	
-	/** check for empty list **/
+	 pthread_mutex_lock(list->callbacklist_mutex);
+    	/** check for empty list **/
 	if (list==NULL)
+	{
+		DEBUG("searchNicknameFromCallbackDList() - list=NULL!!!");
+	 	pthread_mutex_unlock(list->callbacklist_mutex);
 		return NULL;
+	}
 	if (getHeadCallbackDList(list)==NULL || getTailCallbackDList(list)==NULL || getSizeCallbackDList(list)==0)
 	{
+		
+		DEBUG("searchNicknameFromCallbackDList() - empty list!");
+	 	pthread_mutex_unlock(list->callbacklist_mutex);
 		return NULL;
 	}
 	/** check for empty start element **/
 	if (element==NULL)
+	{
+		DEBUG("searchNicknameFromCallbackDList() - NULL-Item is nor allowed!");
+	 	pthread_mutex_unlock(list->callbacklist_mutex);
 		return NULL;
+	}
 	/** checking for element, what is it head, tail or something else **/
 	temp=element;
 	if (isheadCallbackDList(element))
@@ -296,9 +341,13 @@ CallbackItem_t * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDL
 		}
 	}
 	if (!strcmp(temp->data->nickname,nickname)) {
-		removeCallbackDList(list,temp,data);
-        return data;
+//		removeCallbackDList(list,temp,data);
+        return temp;
     }
 	else
+	{
+		DEBUG("searchNicknameFromCallbackDList() - Nickname not found!");
+	 	pthread_mutex_unlock(list->callbacklist_mutex);
 		return NULL;
+	}
 }
