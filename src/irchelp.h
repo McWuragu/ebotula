@@ -16,6 +16,16 @@
 	#define	EOM		"."
 #endif
 
+
+/**
+* This array of char pointers is a container for  the help information. It is a part of the
+* help system. Here are the gernal and the detial information about the irc commands.
+* The size for a command are ten lines. The first ten lines contains the  header for the
+* command list. The following lines are the detail information for a command. Each tenth Line
+* represent the name of the  command and the  following line the smart describtion. 
+* This two first lines from the  detail commando help build the  command list. The dot at the end
+* is a sentinel for the  help text. After this comes a dummy for new command help
+*/
 static const char *irchelp_msg[]={
 	"This is the help system for using this bot.",
 	"!help COMMAND for information about a special command",
@@ -184,7 +194,7 @@ static const char *irchelp_msg[]={
 
 	"!topic",
 	"Set or remove the  topic of a channel",
-	"This can do the bot amster and the channel owner",
+	"Only the bot master or a channel owner can use this command.",
 	"!topic TEXT          -> Set it for the cuttent channel",
 	"!topic #CHANNEL TEXT -> Set it for the giving channel",
 	"!topic               -> Remove it for the current channel",
@@ -195,7 +205,7 @@ static const char *irchelp_msg[]={
 
 	"!say",
 	"This give out a message of a channel",
-	"This can do the bot amster and the channel owner",
+	"Only the bot master or a channel owner can use this command.",
 	"!say TEXT          -> Type a message of the current channel",
 	"!say #CHANNEL TEXT -> Type a message of the giving channel",
 	"",
@@ -207,7 +217,7 @@ static const char *irchelp_msg[]={
 	"!viewgreat",
 	"This give out the greating line of a channel",
     "!viewgreat          -> Type the greating line of the current channel",
-	"!viewgreat #CHANNEL -> Type the greating line of the given channel",
+	"!viewgreat #CHANNEL -> Type the greating line of the selected channel",
 	"",
 	"",
 	"",
@@ -217,9 +227,9 @@ static const char *irchelp_msg[]={
 		
 	"!kick",
 	"This kick a user out the channel",
-	"This can only bot master or channel owner",
+	"Only the bot master or a channel owner can use this command.",
 	"!kick NICK          -> Kick the user out the current channel",
-	"!kick #CHANNEL NICK -> kick the user out the given channel",
+	"!kick #CHANNEL NICK -> kick the user out the selected channel",
 	"",
 	"",
 	"",
@@ -228,9 +238,9 @@ static const char *irchelp_msg[]={
 	
 	"!usermode",
 	"This is to set  the mod for a user",
-	"This can only bot master or channel owner",
+	"Only the bot master or a channel owner can use this command.",
 	"!usermode LOGIN +/-MODS          -> Set the mod for the user in the current channel",
-	"!usermode #CHANNEL LOGIN +/-MODS -> Set the mod for the user in the given channel",
+	"!usermode #CHANNEL LOGIN +/-MODS -> Set the mod for the user in the selected channel",
 	"Mods:",
 	"+v  Voice",
 	"+o  Operator/channel owner",
@@ -239,9 +249,31 @@ static const char *irchelp_msg[]={
 
 	"!rmuser",
 	"This remove a user account of the bot",
-	"This can only bot master",
+	"Only the bot master can use this command.",
 	"!rmuser LOGIN   -> Remove this user inclusive all access rights",
 	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+
+	"!userlist",
+	"This print out a list of user for the channel or all",
+	"Only the bot master or a channel owner can use this command.",
+	"A channel owner become a list of user from his channel",
+	"But  a master can get  complete list or  list of a channel",
+	"!userlist          -> user list from the current channel or all",
+	"!userlist #CHANNEL -> user lsit from the selected channel",
+	"",
+	"",
+	"",
+
+	"!allsay",
+	"Send a message to all channels",
+	"Only the bot master can use this command.",
+	"The bot must be a irc operator",
+	"!allsay TEXT -> send text in all channels",
 	"",
 	"",
 	"",
