@@ -46,6 +46,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{prefix}/var/ebotula/
 
 %changelog
+* Sun May 16 2004 Steffen Laube <Laube.Steffen@gmx.de>
+- Bugfix: fixed the crash of the bot by the command topic with empty parameter
+- fixed memory leaks
+
 * Sun May 08 2004 Steffen Laube <Laube.Steffen@gmx.de>
 - Bugfix: fixed the command !logoff
 - Bugfix: fixed a lot of memory leaks
