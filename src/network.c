@@ -93,7 +93,7 @@ void  send_line(char *line) {
 	pthread_mutex_lock(&send_mutex);
 
 	// protect excess flood
-	millisleep(setup.sendDelay);
+	msleep(setup.sendDelay);
 	
 	if (!send(sockid,line,strlen(line),0)){
 		perror(ERR_SEND);
