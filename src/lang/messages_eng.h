@@ -17,12 +17,7 @@
 static MsgStruct_t Msg[] = {
   
 	// command acknowledgment
-    { OK_JOIN,			"The bot has joined the channel."},
-	{ OK_PART,			"The bot has left the channel."},
-	{ OK_RMCHANNEL,			"The channel is removed from the channel list."},
-	{ OK_ADDCHANNEL,		"The channel is added to the channel list"},
-	{ OK_NICK_SET,			"The bot tries to set the new nickname." },
-	{ OK_LOGOFF,			"You're now logged off."},
+    { OK_LOGOFF,			"You're now logged off."},
 	{ OK_SET_GREETING,		"The new greeting is set" },
 	{ OK_RM_GREETING,		"The greeting is removed"},
 	{ OK_SET_TOPIC,			"The new topic is set"},

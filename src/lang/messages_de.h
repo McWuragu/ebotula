@@ -20,11 +20,6 @@
 static MsgStruct_t Msg[] ={
 
     // command acknowledgment
-	{ OK_JOIN,		"Der Bot ist in den Channel gejoint" },
-	{ OK_PART,		"Der Bot hat den Channel verlassen" },
-	{ OK_RMCHANNEL,		"Der Channel wurde von der Liste entfernt" },
-	{ OK_ADDCHANNEL,	"Der Channel wurde der Liste hinzugefügt" },
-	{ OK_NICK_SET,		"Der Bot versucht den neuen Nickname zusetzen" },
 	{ OK_LOGOFF,		"Du bist ausgeloggt" },
 	{ OK_SET_GREETING,	"Die neue Begrüssung wurde gesetzt" },
 	{ OK_RM_GREETING,	"Die Begrüssung wurde entfernt" },
