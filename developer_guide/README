@@ -61,7 +61,11 @@ Kommandos
 
 !ban [channel] <nick>
 	- bannt ein  user
-	- darf master, owner
+	- darf nur master, owner
+
+!deban [channel] banmask
+	- setz Ban für eine Maske  zurück
+	- darf nur master, owner
 
 !kick [channel] <nick>
 	- kicket ein  user
@@ -184,8 +188,10 @@ realname="IRC Bot"
 threadlimit= 6
 servername=irc.fh-lausitz.de
 port = 6667
-databasepath=/var/ircbot
-senddelay=750
+databasepath=/var/ebotula
+firstsenddelay=750
+secsenddelay=1750
+sendlinelimit=20 
 autologoff=48
 accountlivetime=90
 pingtimeout=90
@@ -221,9 +227,11 @@ Aufbau der Datenbank
 	- Master nur Login als Key
 
 - banlist.dbf:
-	- banlist und  shitlist
-	- Netmaske und Channel
+	- banlist und shitlist
+	- Banmaske und Channel
 	- Channel gleich * dann Shiltlisteintrag
+	- mehre Channels für ein Ban nur ein Eintrag (1:n)
+	- mehre Channels als CSV mit Space getrennt
 
 - timelog.dbf:
 	- Liste der letzten !ident-Aufrufe der Logins
