@@ -331,8 +331,6 @@ void addChannel(MsgItem_t *pMsg) {
     char *pCmdChannel;
     char *channelmod;
 
-   
-
     if (!pMsg->pAccessChannel){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
@@ -341,29 +339,28 @@ void addChannel(MsgItem_t *pMsg) {
     /* check that the command channel and  access channel are diffrence	*/
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
          if (!strcmp(pMsg->pAccessChannel,pCmdChannel)) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
 			return;
 		}
 		free(pCmdChannel);
     }
             
-    DEBUG("Join and  try to add the channnel %s\n",pMsg->pAccessChannel);
 
-    /* checking of channel exist */
-    if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
+	/* checking of channel exist */
+	if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
 		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
-		return;
-    } else {
+	} else {
+    	DEBUG("Join and add the channnel %s\n",pMsg->pAccessChannel);
 		/* add channel */
 		channelmod=(char *)malloc(3*sizeof(char));
 		strcpy(channelmod,"\t\t");
 		add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
 		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
-    }
 
-    /* join the channel */
-    join(pMsg->pAccessChannel);
-    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
+		/* join the channel */
+		join(pMsg->pAccessChannel);
+		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
+	}
 }
 
 /* #########################################################################
