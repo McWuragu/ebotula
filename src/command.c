@@ -730,6 +730,9 @@ void kickuser(char *pLine) {
     kicknick=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
     strcpy(kicknick,pParameter);
 
+
+    #warning here must added  the callback featuer for kick with access rights
+
     kick(pChannel,kicknick,reason);
     notice(pNick,MSG_KICK_OK);
 }

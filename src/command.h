@@ -35,6 +35,7 @@ typedef enum CmdEnum {
     CMD_ONJOIN,
     CMD_ONNAMES,
     CMD_ONTOPIC,
+    CMD_ONWHOIS,
 
 
     /* others */
@@ -84,7 +85,7 @@ typedef enum CmdEnum {
 
 static char * const CmdList[]= {
     "none",
-    "PING","QUIT","NICK","MODE","JOIN","353","TOPIC",
+    "PING","QUIT","NICK","MODE","JOIN","353","TOPIC","311",
     "viewgreet","help","version","hello","ident",
     "logoff","pass",
     "chanmode","userlist","usermode","say","kick","topic","greeting","chanlist",
