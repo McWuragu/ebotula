@@ -26,6 +26,8 @@
 #include "irc.h"
 #include "irchelp.h"
 #include "account.h"
+#include "callbacklist.h"
+#include "callback.h"
 #include "command.h"
 
 
@@ -43,7 +45,7 @@ void help(char *pLine) {
 
     pNetmask=getNetmask(pLine);
     pNick=getNickname(pLine);
-
+    
     pParameter=getParameters(pLine);
 
 
@@ -55,7 +57,7 @@ void help(char *pLine) {
 
         for (i=0;pIrcHelp[0][i]!=NULL;i++) {
             /* look for the end  of msg */
-            notice(pNick,pIrcHelp[0][i]);
+            privmsg(pNick,pIrcHelp[0][i]);
         }
 
         /* checking  login and  master status */
@@ -84,10 +86,10 @@ void help(char *pLine) {
             }
             strcat(pMsgStr,(char*)pIrcHelp[CmdIdToHelpId(i)][0]);
             /* send notice */
-            notice(pNick,pMsgStr);
+            privmsg(pNick,pMsgStr);
         }
         /* the tail */
-        notice(pNick,MSG_HELP_END);
+        privmsg(pNick,MSG_HELP_END);
     } else {
         DEBUG("Spezial information for a command");
 
@@ -112,24 +114,24 @@ void help(char *pLine) {
                 /* the headi for help */
                 pTmp=(char*)malloc((strlen(MSG_HELP_FOR)+strlen((char *)CmdList[i])+3)*sizeof(char));
                 sprintf(pTmp,"%s %s:",MSG_HELP_FOR,pParameter);
-                notice(pNick,pTmp);
+                privmsg(pNick,pTmp);
 
                 /* print  the  help text */
                 for (j=1;pIrcHelp[CmdIdToHelpId(i)][j]!=NULL;j++) {
-                    notice(pNick,(char*)
+                    privmsg(pNick,(char*)
                            pIrcHelp[CmdIdToHelpId(i)][j]);
                 }
 
                 /* syntax from the command */
-                notice(pNick,pIrcSyntax[0][0]);
+                privmsg(pNick,pIrcSyntax[0][0]);
                 for (j=0;pIrcSyntax[CmdIdToHelpId(i)][j]!=NULL;j++) {
-                    notice(pNick,(char*)pIrcSyntax[CmdIdToHelpId(i)][j]);
+                    privmsg(pNick,(char*)pIrcSyntax[CmdIdToHelpId(i)][j]);
                 }
-                notice(pNick,MSG_HELP_END);
+                privmsg(pNick,MSG_HELP_END);
                 return;
             }
         }
-        notice(pNick,MSG_NOT_COMMAND);
+        privmsg(pNick,MSG_NOT_COMMAND);
     }
 }
 /* #########################################################################
@@ -219,7 +221,7 @@ void logoff(char *pLine,int iRemoveMode) {
    	if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
 	    log_out(pLogin);
    
-		/* only by manuel logof tmeove  the modes */
+		/* only by manuel logoff then remove  the modes */
 		if (iRemoveMode) {	
 			/* get channel list */
 			pChannelQueue=list_db(CHANNEL_DB);
@@ -488,7 +490,7 @@ void chanlist(char *pLine){
 
     pNick=getNickname(pLine);
 
-    notice(pNick,MSG_CHANNELLIST_BEGIN);
+    privmsg(pNick,MSG_CHANNELLIST_BEGIN);
 
     /* get  the channel list form the DB */
     pChannelQueue=list_db(CHANNEL_DB);
@@ -500,24 +502,24 @@ void chanlist(char *pLine){
     	    pMode=ChannelModeToStr(pChannelData->pModes);
 
         	DEBUG("...for channel %s",(char*)pChannel->data);
-	        notice(pNick,(char*)pChannel->data);
+	        privmsg(pNick,(char*)pChannel->data);
 
     	    pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_MODE)+strlen(pMode)+2)*sizeof(char));
         	sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_MODE,pMode);
-	        notice(pNick,pMsgStr);
+	        privmsg(pNick,pMsgStr);
     	    free(pMsgStr);
 
         	if (pChannelData->pTopic) {
             	pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_TOPIC)+strlen(pChannelData->pTopic)+2)*sizeof(char));
 	            sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_TOPIC,pChannelData->pTopic);
-    	        notice(pNick,pMsgStr);
+    	        privmsg(pNick,pMsgStr);
         	    free(pMsgStr);
 	        }
 
     	    if (pChannelData->pGreeting) {
         	    pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_GREAT)+strlen(pChannelData->pGreeting)+2)*sizeof(char));
             	sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_GREAT,pChannelData->pGreeting);
-	            notice(pNick,pMsgStr);
+	            privmsg(pNick,pMsgStr);
     	        free(pMsgStr);
         	}
 
@@ -529,7 +531,7 @@ void chanlist(char *pLine){
 		free(pChannel);
     }
 	deleteQueue(pChannelQueue);
-    notice(pNick,MSG_CHANNELLIST_END);
+    privmsg(pNick,MSG_CHANNELLIST_END);
 }
 /* #########################################################################
    Bot comand: !version
@@ -695,12 +697,16 @@ void allsay(char *pline) {
    Bot comand: !kick <#channel> nick reason
    ######################################################################### */
 void kickuser(char *pLine) {
+    extern CallbackDList CallbackList;
+    CallbackItem_t *Callback;
     char *pNick;
-    char *kicknick;
+    char *pKicknick;
     char *pChannel;
-    char *reason;
+    char *pReason;
     char *pParameter;
     char *pPos;
+    char *pLogin;
+    char *pData;
 
     pNick=getNickname(pLine);
     pChannel=getAccessChannel(pLine);
@@ -715,26 +721,47 @@ void kickuser(char *pLine) {
     /* parse reason */
     if (!(pPos=strchr(pParameter,' '))) {
         /* empty reason */
-        reason="";
+        pReason="";
     } else {
         /* set null byte  for  nick */
         *pPos='\0';
         /* over jump the  space */
         pPos++;
-        reason=(char*)malloc((strlen(pPos)+1)*sizeof(char));
-        strcpy(reason,pPos);
+        pReason=(char*)malloc((strlen(pPos)+1)*sizeof(char));
+        strcpy(pReason,pPos);
 
     }
 
     /* parse nick */
-    kicknick=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
-    strcpy(kicknick,pParameter);
+    pKicknick=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
+    strcpy(pKicknick,pParameter);
 
 
-    #warning here must added  the callback featuer for kick with access rights
+    /* read  the  login name of the  kicking user*/
+    if (!(pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
+        notice(pNick,MSG_NOT_KICK);
+        return;
+    }
 
+    /* built data for the callback */
+    pData=(char*)malloc((strlen(pLogin)+strlen(pChannel)+strlen(pReason)+5)*sizeof(char));
+    sprintf(pData,"%s %s :%s",pLogin,pChannel,pReason);
+    
+    
+    /* built  and add to callback list */
+    Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
+    Callback->CallbackFkt=KickCb;
+    Callback->nickname=pKicknick;
+    Callback->data=pData;
+
+    insert_next_CallbackDList(&CallbackList,CallbackList.tail,Callback);
+
+    whois(pKicknick);
+
+    /*
     kick(pChannel,kicknick,reason);
     notice(pNick,MSG_KICK_OK);
+    */
 }
 /* #########################################################################
    Bot comand: !usermode [#channel] <login> <mod>
@@ -743,13 +770,13 @@ void usermode(char *pLine){
     char *pChannel;
     char *pNick;
     char *pNetmask;
-	char *pParameter;
     char *pPos;
     char *accesslogin;
     char *pLogin;
     char *usernick;
     char *pKey;
     char *oldmod;
+    char *pParameter;
     char mod[3];
 
     pNick=getNickname(pLine);
@@ -1075,7 +1102,7 @@ void userlist(char *pLine){
     /* read the list of Logins */
     pLoginQueue=list_db(USER_DB);
 
-    notice(pNick,MSG_USERLIST_BEGIN);
+    privmsg(pNick,MSG_USERLIST_BEGIN);
 
     /* build the  login list  for output */
     if (exist_db(ACCESS_DB,pLogin) && !strlen(pArgv)) {
@@ -1108,7 +1135,7 @@ void userlist(char *pLine){
                     strcat(pMsgStr,"OFF");
                 }
 
-                notice(pNick,pMsgStr);
+                privmsg(pNick,pMsgStr);
                 free(pMsgStr);
             } else {
                 /* normal user */
@@ -1149,7 +1176,7 @@ void userlist(char *pLine){
 						}
 
 						/* send notice out */
-						notice(pNick,pMsgStr);
+						privmsg(pNick,pMsgStr);
 						free(pMsgStr);
 					}
 					free(pKey);
@@ -1208,5 +1235,5 @@ void userlist(char *pLine){
         }
     }
 	deleteQueue(pLoginQueue);
-    notice(pNick,MSG_USERLIST_END);
+    privmsg(pNick,MSG_USERLIST_END);
 }
