@@ -1,6 +1,7 @@
 - little bit unstabile
 - charakter sensitive channel names (fixed)
 - !usermode SIGSEGV (fixed)
-- !kick SIGSEGV if  try to use as owner
+- !kick by channel owner SIGEV (fixed)
 - !kick not right reason output
 - wrong message by !hello (fixed)
+- !topic not right set
