@@ -55,17 +55,23 @@
 #define MSG_ALREADY_LOGON		"You're already identified."
 #define MSG_NOT_LOGON			"You're not identified."
 #define MSG_NOT_MASTER			"You're not a irc bot master."
-#define MSG_IDENT_NO			"Account isn't found."
+#define MSG_NOT_OWNER			"You're not the bot owner of thiis channel."
+#define MSG_NOT_CHANNELOPT		"This command need a channel name."
+#define MSG_NOT_PASS			"You've set a empty password."
+#define MSG_NOT_COMMAND			"No help found for this command."
+#define MSG_NOT_ACCOUNT			"Account isn't found."
+#define MSG_NOT_CHANNEL			"This channel isn't in the channel list."
+
 #define MSG_ADDCHANNEL_ALREADY	"This channel is already in the channel list."
-#define MSG_NO_PASS				"You've set a empty password."
 #define MSG_CHANNEL_INVALID		"Channel name is invalid."
 #define MSG_NICK_INVALID		"Nickname is invalid."
-#define MSG_RMCHANNEL_FAIL		"This channel isn't in the channel list."
-#define MSG_NO_COMMAND			"No help found for this command."
+
 #define MSG_HELP_END			"End of help."
 #define MSG_HELP_FOR			"Help for"
 #define MSG_CHANNELS			"Channel list:"
-#define MSG_NEED_OP				"I need operator access right."
+#define MSG_NEED_OP				"I need operator access rights."
+#define MSG_SET_GREATING		"The new greating is set"
+#define MSG_RM_GREATING			"The greating is removed"
 
 
 // command  format erros
@@ -73,6 +79,7 @@
 #define MSG_RMCHANNEL_ERR		"Invalid command: !rmchannel #CHANNEL"
 #define MSG_IDENT_ERR			"Invalid command: !ident LOGIN PASSWORD"
 #define MSG_NICK_ERR			"Invalid command: !nick NICKNAME"			
+#define MSG_GREATING_ERR		"Invalid command: !greating <#channel> MESSAGE"			
 
 // Messages for the master dialog
 #define MSG_MASTER_TITLE		"Create a master account\n\n"
