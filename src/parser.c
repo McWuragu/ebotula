@@ -51,6 +51,9 @@ MsgBufType preParser(char *line) {
 	} else if (strstr(pos,"JOIN")) {
 		msg.mtype=2;
 		msg.identify=CMD_GREATING;
+	} else if (strstr(pos,"NICK")) {
+		msg.mtype=2;
+		msg.identify= CMD_NICKCHG;
 	} else if (strstr(pos,"353")) {
 		msg.mtype=2;
 		msg.identify=CMD_NAMES;
@@ -180,7 +183,7 @@ void *action_thread(void *argv) {
 				die(msg.msg_line);
 				break;
 			case CMD_NICK:
-				change_nick(msg.msg_line);
+				set_nick(msg.msg_line);
 				break;
 			case CMD_CHANNELS:
 				channel_list(msg.msg_line);
@@ -205,6 +208,9 @@ void *action_thread(void *argv) {
 				break;
 			case CMD_USERMODE:
 				usermode(msg.msg_line);
+				break;
+			case CMD_NICKCHG:
+				nickchg(msg.msg_line);
 				break;
 			default:
 				break;
@@ -242,6 +248,7 @@ int AccessRight(char *line,CmdType cmd_id) {
 	case CMD_IDENT:
 		return true;
 	// logged in user
+	case CMD_NICKCHG:
 	case CMD_LOGOFF:
 	case CMD_PASS:
 		if (!exist_db(NICKTOUSER_DB,nick)) {
