@@ -6,6 +6,9 @@
 #define PROGNAME	"ebotula"
 #define	EOM			'.'
 
+
+// excute error
+// output of strerr
 #define ERR_MSSING_PARA			"Missing value"
 #define ERR_PORT_PARAMETER		"The portvalue is out of range"
 #define ERR_WRONG_SERVERNAME	"The servername is irregular"
@@ -24,27 +27,40 @@
 #define ERR_NICK				"Can't set the nickname"
 #define ERR_MSG					"Can't create message queue"
 #define ERR_MUTEX				"Can't synchronize the threads"
-#define ERR_NOT_ALLOW_CHAR		"Using of  not allow charakters\n"
+#define ERR_NOT_ALLOW_CHAR		"Using of not allow charakters\n"
 
-#define MSG_NICK_EXIST			"It exist a account with this nickname"
-#define MSG_ALREADY_LOGON		"You're already declared"
+
+// command acknowledgment
 #define MSG_HELLO				"Nice to meet you."
 #define MSG_HELLO2				"You have an account now"
 #define MSG_PASSWD				"Password is changed"
-#define MSG_NOT_LOGON			"You're not declared"
-#define MSG_NOT_MASTER			"You're not a  irc bot master"
-#define MSG_IDENT_ERR			"Invalid command: !ident LOGIN PASSWORD"
-#define MSG_IDENT_NO			"Account not found"
-#define MSG_IDENT_OK			"You're logon now"
+#define MSG_IDENT_OK			"You're now identified"
 #define MSG_JOIN_OK				"The bot join the channel"
 #define MSG_PART_OK				"The bot part the channel"
-#define MSG_RMCHANNEL_OK		"The Channel are removed form the list"
-#define MSG_ADDCHANNEL_OK		"The Channel are added form the list"
-#define MSG_ADDCHANNEL_ALREADY	"This channel is already in the  channel list"
-#define MSG_ADDCHANNEL_ERR		"Invalid command: !addchannel #CHANNEL"
+#define MSG_RMCHANNEL_OK		"The channel is removed form the channel list"
+#define MSG_ADDCHANNEL_OK		"The channel is added to the channel list"
+#define MSG_LOGOFF				"You're logged out now"
+
+
+// Informations for invalid input or using of the bot
+#define MSG_NICK_EXIST			"It exist a account with this nickname"
+#define MSG_ALREADY_LOGON		"You're already identified"
+#define MSG_NOT_LOGON			"You're not identified"
+#define MSG_NOT_MASTER			"You're not a irc bot master"
+#define MSG_IDENT_NO			"Account not found"
+#define MSG_ADDCHANNEL_ALREADY	"This channel is already in the channel list"
 #define MSG_NO_PASS				"You've set a empty password"
 #define MSG_CHANNEL_INVALID		"Channel name is invalid"
+#define MSG_RMCHANNEL_FAIL		"This channel isn't in the channel list"
 
+
+// command  format erros
+#define MSG_ADDCHANNEL_ERR		"Invalid command: !addchannel #CHANNEL"
+#define MSG_RMCHANNEL_ERR		"Invalid command: !rmchannel #CHANNEL"
+#define MSG_IDENT_ERR			"Invalid command: !ident LOGIN PASSWORD"
+
+
+// Messages for the master dialog
 #define MSG_MASTER_TITLE		"Create a master account\n\n"
 #define MSG_MASTER_LOGIN		"Type the login (max 16): "
 #define MSG_MASTER_PASS			"\nEnter the password(max. 8): "
@@ -55,7 +71,7 @@
 
 
 
-#ifdef	BIG_MSG
+#ifdef	CMD_MSG
 static const char *unknow_parameter[]=
 {
 	"Unknow option\n",
