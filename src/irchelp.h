@@ -1,3 +1,12 @@
+/*************************************************************
+*
+* This is a part of ebotula.
+* It is distributed under the GNU General Public License
+* See the file COPYING for details.
+*
+* (c)2003 Steffen Laube <realebula@gmx.de>
+*************************************************************/
+
 #ifndef IRCHELP_H
 #define IRCHELP_H
 
@@ -8,8 +17,8 @@
 #endif
 
 static const char *irchelp_msg[]={
-	"This is the  help system of the using  this bot.",
-	"!help COMMAND for information to a spezial command",
+	"This is the help system for using this bot.",
+	"!help COMMAND for information about a special command",
 	"------------------------------------------------------------------------",
 	"",
 	"",
@@ -42,10 +51,10 @@ static const char *irchelp_msg[]={
 	"",
 	
 	"!ident",
-	"identify by the bot to using the other commands",
-	"You must have at account to using this command!(see !hello)",
-	"!ident LOGIN PASS    -> identify by the bot with password",
-	"!ident LOGIN         -> identify by the bot with epmty password",
+	"identify yourself to the bot",
+	"You must have an account to use this command!(see !hello)",
+	"!ident LOGIN PASS    -> identify at the bot with password",
+	"!ident LOGIN         -> identify at the bot with empty password",
 	"",
  	"",
 	"",
@@ -53,8 +62,8 @@ static const char *irchelp_msg[]={
 	"",
 	
 	"!logoff",
-	"log off by the  bot.",
-	"You must have identified",
+	"log off at the bot",
+	"You must have be identified before",
 	"",
 	"",
 	"",
@@ -64,7 +73,7 @@ static const char *irchelp_msg[]={
 	"",
 	
 	"!die",
-	"stop the execution of the bot.",
+	"Shutdown the bot.",
 	"Only the bot master can use this command.",
 	"",
 	"",
@@ -76,8 +85,8 @@ static const char *irchelp_msg[]={
 	
 	"!hello",
 	"create a new account.",
-	"Any user can use this to creating a account",
-	"The login of  this new account is the current nick",
+	"Any user can use this to create an account",
+	"The loginname of this new account is the current nick",
 	"",
 	"",
 	"",
@@ -97,7 +106,7 @@ static const char *irchelp_msg[]={
 	"",
 
 	"!addchannel",
-	"the bot join and add a new channel",
+	"let the bot join and add a new channel",
 	"Only the bot master can use this command.",
 	"!addchannel #CHANNEL ->Add and join this channel",
 	"",
@@ -108,7 +117,7 @@ static const char *irchelp_msg[]={
 	"",
 
 	"!rmchannel",
-	"the bot part and remove a old channel",
+	"let the bot part and remove a old channel",
 	"Only the bot master can use this command.",
 	"!rmchannel #CHANNEL  ->Remove and part this channel",
 	"",
@@ -119,7 +128,7 @@ static const char *irchelp_msg[]={
 	"",
 
 	"!join",
-	"the bot  join a new channel",
+	"let the bot  join a channel",
 	"Only the bot master can use this command.",
 	"!join #CHANNEL       ->Join this channel",
 	"",
@@ -130,7 +139,7 @@ static const char *irchelp_msg[]={
 	"",
 
 	"!part",
-	"the bot part a channel",
+	"let the bot part a channel",
 	"Only the bot master can use this command.",
 	"!part #CHANNEL       ->Part this channel",
 	"",
@@ -141,7 +150,7 @@ static const char *irchelp_msg[]={
 	"",
 
 	"!pass",
-	"change the password for the account",
+	"change the password for the current account",
 	"!pass PASSWORD       ->Set a new password",
 	"",
 	"",
@@ -152,7 +161,7 @@ static const char *irchelp_msg[]={
 	"",
 	
 	"!channels",
-	"Print out a list of all Channels from the bot",
+	"Print out a list of all channels from the bot",
 	"Only the bot master can use this command.",
 	"",
 	"",
@@ -162,7 +171,7 @@ static const char *irchelp_msg[]={
 	"",
 	"",
 	
-	// end mark of the complet array
+	// end mark of the complete array
 	"."
 
 	"!KOMMAND",

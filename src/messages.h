@@ -1,3 +1,12 @@
+/*************************************************************
+*
+* This is a part of ebotula.
+* It is distributed under the GNU General Public License
+* See the file COPYING for details.
+*
+* (c)2003 Steffen Laube <realebula@gmx.de>
+*************************************************************/
+
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
@@ -13,36 +22,36 @@
 #define ERR_WRONG_BOTNAME		"The botname is irregular."
 #define ERR_THREAD_RANGE		"The threadlimit is out of range."
 #define ERR_READ_CONFIG_FILE	"Can't read the config file."
-#define ERR_READ_PARAMETER		"Can't parse the comando line."
+#define ERR_READ_PARAMETER		"Can't parse the commando line."
 #define ERR_CONFIG_FILE			"Can't open the config file."
-#define ERR_FAILED_NETPARA		"Isn't set the servername or portnumber."
+#define ERR_FAILED_NETPARA		"The servername or portnumber isn't set."
 #define ERR_RESOLVE_HOSTNAME	"Can't resolve the hostname."
-#define ERR_RESOLVE_PROTOCOL	"Tcp is unknown protocol."
+#define ERR_RESOLVE_PROTOCOL	"Tcp is a unknown protocol."
 #define ERR_SOCKET				"Can't create a tcp socket."
 #define ERR_CONNECT				"Connection failed."
 #define ERR_SEND				"Can't send a command."
 #define ERR_RECV				"Can't receive a line."
 #define ERR_NICK				"Can't set the nickname."
-#define ERR_MSG					"Can't create message queue."
+#define ERR_MSG					"Can't create the message queue."
 #define ERR_MUTEX				"Can't synchronize the threads."
-#define ERR_NOT_ALLOW_CHAR		"Using of not allow charakters."
+#define ERR_NOT_ALLOW_CHAR		"Not allowed characters used."
 
 
 // command acknowledgment
 #define MSG_HELLO				"Nice to meet you."
-#define MSG_HELLO2				"You have an account now."
+#define MSG_HELLO2				"You have got a new account now."
 #define MSG_PASSWD				"Password is changed."
 #define MSG_IDENT_OK			"You're now identified."
-#define MSG_JOIN_OK				"The bot join the channel."
-#define MSG_PART_OK				"The bot part the channel."
+#define MSG_JOIN_OK				"The bot has joined the channel."
+#define MSG_PART_OK				"The bot has part the channel."
 #define MSG_RMCHANNEL_OK		"The channel is removed form the channel list."
 #define MSG_ADDCHANNEL_OK		"The channel is added to the channel list"
-#define MSG_NICK_SET			"The new Nickname is probing."
-#define MSG_LOGOFF				"You're logged out now."
+#define MSG_NICK_SET			"The bot tries to set the new nickname."
+#define MSG_LOGOFF				"You're now logged off."
 
 
 // Informations for invalid input or using of the bot
-#define MSG_NICK_EXIST			"It exist a account with this nickname."
+#define MSG_NICK_EXIST			"A account with this nickname already exists."
 #define MSG_ALREADY_LOGON		"You're already identified."
 #define MSG_NOT_LOGON			"You're not identified."
 #define MSG_NOT_MASTER			"You're not a irc bot master."
