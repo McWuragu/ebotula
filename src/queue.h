@@ -15,14 +15,13 @@
 #include<pthread.h>
 
 /** Internal Error defines **/
-#define QUEUE_SUCCESS				0
-#define QUEUE_ERROR 				1 
-#define QUEUE_MEMORY_ALLOC_ERROR		2
-#define QUEUE_NO_ELEMENT_LEFT			3
-#define QUEUE_NULL_POINTER_AS_IN_PARAMETER	4
-
-/** MAX_ELEMENTS_IN_QUEUE_FOR_THREADS */
-#define  MAX_ELEMENTS_IN_QUEUE_FOR_THREADS 256
+typedef enum {
+    QUEUE_SUCCESS=0,
+    QUEUE_ERROR=1, 
+    QUEUE_MEMORY_ALLOC_ERROR=2,
+    QUEUE_NO_ELEMENT_LEFT=3,
+    QUEUE_NULL_POINTER_AS_IN_PARAMETER=4,
+} QueueExeStatus;
 
 /** types **/
 /** Setting QueueType **/
@@ -42,11 +41,16 @@ typedef struct tag_Queue
 	struct tag_Queue *sentinel; /** pointer to the sentinel; To jump from every elment to the sentinel **/
 	QueueType queuetypeT; /** Type of Queue **/
 	QueueData *queuedataData; /**Data Elements **/
-	pthread_mutex_t *queue_mutex;
+	
 	unsigned long long longCount;
-	/* Thread control */
+	
+    /* Thread control */
+    pthread_mutex_t *queue_mutex;  /** global access mutex */
+
+    /* thread condition */
 	unsigned long long ElementsInQueueForThreads;
 	pthread_cond_t *StopThreadCond;
+    
 }Queue,*PQueue;
 
 
@@ -68,7 +72,7 @@ PQueue initQueue();
  **				0 if Success		**
  ** Description:	pushing 1 element to Queue 	**
  **						 	**/
-int pushQueue(PQueue pqueueIn, QueueData queuedataElement);
+QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement);
 
 /**							**
 ** Function: 		popQueue			**
@@ -104,6 +108,16 @@ int isfullQueue(PQueue pqueueIn);
  ** Description:	deleting Queue 			**
  **			until Queue is empty		**
  **							**/
-int deleteQueue(PQueue pqueueIn);
+QueueExeStatus deleteQueue(PQueue pqueueIn);
 
+/**							**
+ ** Function: 		flushQueue			**
+ ** Parameters: 	PQueue pqueueIn  	   	**
+ **				Pointer to Queue	**
+ ** Return:		int STATUS			**
+ **				0 if Success		**
+ ** Description:	flushing Queue 			**
+ **			until Queue is empty		**
+ **							**/
+QueueExeStatus flushQueue(PQueue pqueueIn);
 #endif
