@@ -55,6 +55,18 @@ void write_baseconfig()
 	double *pD;
 	char **pS;
 		
+        FILE * fd;
+
+       logger(LOG_INFO,"Creating Configfile: %s",sSetup.configfile);
+
+      /* Create & Openfile*/
+      if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
+      {
+              perror(getSyslogString(SYSLOG_CONFIG_FILE));
+              logger(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE));
+              exit(errno);
+      }
+					  
 	
 	for(i=0;i<VAL_COUNT;i++)
 	{
@@ -64,50 +76,51 @@ void write_baseconfig()
 			if (vsConfig[i].sDescription[t])
 			{
 				if (strlen(vsConfig[i].sDescription[t]))
-					fprintf(stderr,"%s\n",vsConfig[i].sDescription[t]);
+					fprintf(fd,"%s\n",vsConfig[i].sDescription[t]);
 			}else
 			{
 				break;
 			}
 		}
 		/* print Name */
-		fprintf(stderr,"%s=",vsConfig[i].sParamName);
+		fprintf(fd,"%s=",vsConfig[i].sParamName);
 		switch(vsConfig[i].iParamType)
 		{
 			case PARAM_CHAR:
 				pC=(vsConfig[i].pParam);
-				fprintf(stderr,"%c\n",*pC);
+				fprintf(fd,"%c\n",*pC);
 				break;
 			case PARAM_INT:
 				pI=(vsConfig[i].pParam);
-				fprintf(stderr,"%d\n",*pI);
+				fprintf(fd,"%d\n",*pI);
 				break;
 			case PARAM_LONG:
 				pL=(vsConfig[i].pParam);
-				fprintf(stderr,"%ld\n",*pL);
+				fprintf(fd,"%ld\n",*pL);
 				break;
 			case PARAM_HEX:
 				pI=(vsConfig[i].pParam);
-				fprintf(stderr,"%x\n",*pI);
+				fprintf(fd,"%x\n",*pI);
 				break;
 			case PARAM_FLOAT:
 				pF=(vsConfig[i].pParam);
-				fprintf(stderr,"%f\n",*pF);
+				fprintf(fd,"%f\n",*pF);
 				break;
 			case PARAM_DOUBLE:
 				pD=(vsConfig[i].pParam);
-				fprintf(stderr,"%G\n",*pD);
+				fprintf(fd,"%G\n",*pD);
 				break;
 			case PARAM_STRING:
 				pS=(vsConfig[i].pParam);
 				if (vsConfig[i].iModefier==MOD_NONE)
-					fprintf(stderr,"%s\n",*pS);
+					fprintf(fd,"%s\n",*pS);
 				else if (vsConfig[i].iModefier==MOD_QUOTED)
-					fprintf(stderr,"\"%s\"\n",*pS);
+					fprintf(fd,"\"%s\"\n",*pS);
 
 				break;
 			default:
 				break;
 		}
 	}
+	fclose(fd);
 }
