@@ -33,7 +33,6 @@
 #include "queue.h"
 #include "ircbot.h"
   
-     
 
 ConfigSetup_t sSetup;    // global config structure
 boolean stop;       // singal for stop the endless loop
@@ -51,10 +50,9 @@ int main(int argc,char * const argv[]) {
     pthread_t *threads;
     pthread_t timeThread;
     MsgBuf_t *pMsg;
-	QueueData Command;	
-	PQueue pCommandQueue;
+    QueueData Command;	
+    PQueue pCommandQueue;
 	
-    
     // init config
     sSetup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
     strcpy(sSetup.botname,DEFAULT_BOTNAME);
