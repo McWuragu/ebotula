@@ -157,8 +157,9 @@ ircbot [Options]
 
         Options:
 	-a days		Set the time in days for the automatic logoff.
-        -b name         Set  the name  of the bot.
-        -d path         Use this path for the database
+        -b name         Set the name of the bot.
+        -c sec		Set the ping timeout of the connection.
+	-d path         Use this path for the database
         -f file         Use this config file.
         -h              Print this help info.
 	-k days		Set the  account live time in days.
@@ -184,6 +185,7 @@ databasepath=/var/ircbot
 senddelay=750
 autologoff=48
 accountlivetime=90
+pingtimeout=90
 
 Aufbau der Datenbank
 --------------------
