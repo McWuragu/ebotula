@@ -28,6 +28,6 @@ void kick(char *pChannel, char *pNick, char *pMsgStr);
 void ban(char *pChannel, char *pMask);
 void deban(char *pChannel,char *pMask);
 void mode(char *pChannel, char *pMod, char *pModParameter);
-void who(char *pNickname);
+void whois(char *pNickname);
 
 #endif

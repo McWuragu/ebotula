@@ -172,10 +172,10 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
     free (buffer);
 }
 // #############################################################################
-void who(char *pNickname) {
+void whois(char *pNickname) {
     char *buffer;
-    buffer=(char*)calloc(strlen("WHO ")+strlen(pNickname)+3,sizeof(char));
-    sprintf(buffer,"WHO %s\r\n",pNickname);
+    buffer=(char*)calloc(strlen("WHOIS ")+strlen(pNickname)+3,sizeof(char));
+    sprintf(buffer,"WHOIS %s\r\n",pNickname);
     send_direct(buffer);
     free (buffer);
 }
