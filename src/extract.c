@@ -24,16 +24,14 @@ char *getNickname(char *pLine){
 	
 	pStr=getNetmask(pLine);
 
-
-	if (!strtok(pStr,"!")) {
-		return "";
-	} else {
-		pNick=(char *)malloc((strlen(pStr)+1)*sizeof(char));
-		strcpy(pNick,pStr);
-		return pNick;
+	if (strtok(pStr,"!")) {
+		if (NickStringCheck(pStr)) {
+			pNick=(char *)malloc((strlen(pStr)+1)*sizeof(char));
+			strcpy(pNick,pStr);
+			return pNick;
+		}
 	}
-
-
+	return "";
 }
 // ############################################################################# 
 char *getNetmask(char *pLine){ 
@@ -154,26 +152,29 @@ char *getAccessChannel(char *pLine) {
 		// look for channelname  as preamble
 		pChannel=getChannel(pLine);
 		if (!strlen(pChannel)) {
-			if (!(pPos=strstr(pLine," :#"))) {
-			return "";
+			if ((pPos=strstr(pLine," :#"))) {
+				// move to '#'
+				pPos+=2;
+				// marked the end of str and  copy out
+				strtok(pPos," ");
+				
+				pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
+				strcpy(pChannel,pPos);
+			} else {
+				return "";
 			}
-			// move to '#'
-			pPos+=2;
-			// marked the end of str and  copy out
-			strtok(pPos," ");
-			pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
-		    strcpy(pChannel,pPos);
 		}
+        
 	} else {
-		
 		// parse Channel name
 		strtok(pParameter," ");
 		// check the  chrakter in the  channel name
-		if (strpbrk(pParameter,CHANNEL_NOT_ALLOW_CHAR)) {
+		if (ChannelStringCheck(pParameter)) {
+			pChannel=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
+			strcpy(pChannel,pParameter);
+        } else {
 			return "";
 		}
-		pChannel=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
-		strcpy(pChannel,pParameter);
     }
 
 	StrToLower(pChannel);
@@ -211,11 +212,11 @@ char  *getTopic(char *pChannelSet) {
 	return pTopic;
 }
 // ######################################################################### 
-char  *getGreating(char *pChannelSet) {
-	char *pGreating;
+char  *getGreeting(char *pChannelSet) {
+	char *pGreeting;
 	char *pPos;
 
-    // look for the begin  of greating
+    // look for the begin  of greeting
 	if (!(pPos=strrchr(pChannelSet,'\t'))) {
 		return NULL;		  
     }
@@ -227,10 +228,10 @@ char  *getGreating(char *pChannelSet) {
 		return NULL;
 	}
 
-	pGreating=(char *)malloc((strlen(pPos)+1)*sizeof(char));
-	strcpy(pGreating,pPos);
+	pGreeting=(char *)malloc((strlen(pPos)+1)*sizeof(char));
+	strcpy(pGreeting,pPos);
 
-	return pGreating;
+	return pGreeting;
 }
 // ######################################################################### 
 char *getChannelMode(char *pChannelSet){

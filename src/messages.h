@@ -43,13 +43,16 @@
 	#define SYSLOG_SEND		"	Can't send a command."
 	#define SYSLOG_RECV			"Can't receive a line."
 	#define SYSLOG_TIMEOUT		"Receiving timeout"
+	#define SYSLOG_CREATE_DIR	"Create the directory for the database."
+	#define SYSLOG_CREAT_DIR_ERR "Can't create the directory for the database."
 	#define SYSLOG_DATABASE_ERR	"Can't open the databases."
 	#define SYSLOG_RESTART		"Restart..."
 	#define SYSLOG_STOPPED		"Bot down..."
 	
 	// excute error
 	// output of strerr
-	#define ERR_MISSING_PARAM			"Missing value"
+	#define ERR_RESTART				"Can't restart"
+	#define ERR_MISSING_PARAM		"Missing value"
 	#define ERR_PORT_PARAMETER		"The portvalue is out of range."
 	#define ERR_WRONG_SERVERNAME	"The servername is irregular."
 	#define ERR_WRONG_BOTNAME		"The botname is irregular."
@@ -74,8 +77,8 @@
 	#define MSG_ADDCHANNEL_OK		"The channel is added to the channel list"
 	#define MSG_NICK_SET			"The bot tries to set the new nickname."
 	#define MSG_LOGOFF				"You're now logged off."
-	#define MSG_SET_GREATING		"The new greating is set"
-	#define MSG_RM_GREATING			"The greating is removed"
+	#define MSG_SET_GREATING		"The new greeting is set"
+	#define MSG_RM_GREATING			"The greeting is removed"
 	#define MSG_SET_TOPIC			"The new topic is set"
 	#define MSG_RM_TOPIC			"The topic is removed"
 	#define MSG_KICK_OK				"The user are kicked by the bot"
@@ -118,7 +121,7 @@
 	#define MSG_CHANNELLIST_END		"End of channel list."
 	#define MSG_CHANNELLIST_MODE    "Channel modes:"
 	#define MSG_CHANNELLIST_TOPIC	"Topic:"
-	#define MSG_CHANNELLIST_GREAT	"Greating:"
+	#define MSG_CHANNELLIST_GREAT	"Greeting:"
 	#define MSG_DEFAULT_REASON		"You are kicked from the bot."
 	#define MSG_INIT_CHANNEL		"I have initialize this channnel"
 	

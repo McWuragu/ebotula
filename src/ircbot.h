@@ -24,7 +24,7 @@
 #define MIN_PINGTIME			60
 #define MAX_NICKS				3
 #define MAX_THREADS_LIMIT       25
-#define NOT_ALLOW_CHAR 			" :;<>*#/\"\'\\{}[]()=?§$"
+
 
 
 

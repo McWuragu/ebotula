@@ -47,7 +47,7 @@ void ComandLineParser(int argc,char *const argv[]) {
 				}
 			   
 				// set the server name
-				if (strpbrk(argv[i],NOT_ALLOW_CHAR)) {
+				if (strpbrk(argv[i],SERVER_NOT_ALLOW_CHAR)) {
 					errno=EINVAL;
 					perror(ERR_WRONG_SERVERNAME);
 					exit(errno);
@@ -66,7 +66,7 @@ void ComandLineParser(int argc,char *const argv[]) {
 				}
 				
 				// set the botname
-				if ((strpbrk(argv[i],USER_NOT_ALLOW_CHAR)) && isalpha(argv[i][0])) {
+				if (!NickStringCheck(argv[i])) {
 					errno=EINVAL;
 					perror(ERR_WRONG_BOTNAME);
 					exit(errno);
@@ -258,7 +258,7 @@ void ConfigFileParser(void) {
             
 			// set  the  reading values
 			if (!strcmp(key,KEY_SERVER)) {
-				if (strpbrk(value,NOT_ALLOW_CHAR)) {
+				if (strpbrk(value,SERVER_NOT_ALLOW_CHAR)) {
 					errno=EINVAL;
 					perror(ERR_WRONG_SERVERNAME);
 					exit(errno);
@@ -276,7 +276,7 @@ void ConfigFileParser(void) {
 				sSetup.port=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(sSetup.port,value);
 			} else if (!strcmp(key,KEY_BOTNAME)) {
-				if (strpbrk(value,USER_NOT_ALLOW_CHAR)) {
+				if (!NickStringCheck(value)) {
 					errno=EINVAL;
 					perror(ERR_WRONG_BOTNAME);
 					exit(errno);
@@ -361,7 +361,7 @@ boolean dialogMaster(void){
 	StrToLower(name);
 
 	// check loging
-	if (strpbrk(name,NOT_ALLOW_CHAR) || !strlen(name)) {
+	if (NickStringCheck(name) || !strlen(name)) {
 		fprintf(stderr,ERR_NOT_ALLOW_CHAR);
 		fprintf(stderr,"\n");
 		return false;

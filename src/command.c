@@ -473,7 +473,7 @@ void setNick(char *pLine){
 	if (!strlen(pParameter)) {
 		notice(pNick,MSG_NICK_ERR);
 		return;
-	} else if (strpbrk(pParameter,USER_NOT_ALLOW_CHAR)) {
+	} else if (!NickStringCheck(pParameter)) {
 		notice(pNick,MSG_NICK_INVALID);
 		return;
 	}
@@ -522,9 +522,9 @@ void chanlist(char *pLine){
 			free(pMsgStr);
 		}
 
-		if (pChannelData->pGreating) {
-			pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_GREAT)+strlen(pChannelData->pGreating)+2)*sizeof(char));
-			sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_GREAT,pChannelData->pGreating);
+		if (pChannelData->pGreeting) {
+			pMsgStr=(char*)malloc((strlen(MSG_CHANNELLIST_GREAT)+strlen(pChannelData->pGreeting)+2)*sizeof(char));
+			sprintf(pMsgStr,"%s %s",MSG_CHANNELLIST_GREAT,pChannelData->pGreeting);
 			notice(pNick,pMsgStr);
 			free(pMsgStr);
 		}
@@ -547,9 +547,9 @@ void version(char *pLine) {
 	notice(getNickname(pLine),pMsgStr);
 }
 // ######################################################################### 
-// Bot comand: !greating <#channel> <text>
+// Bot comand: !greeting <#channel> <text>
 // ######################################################################### 
-void setGreating(char *pLine) {
+void setGreeting(char *pLine) {
 	char *pChannel;
 	char *pChannelSet;
 	char *pMode;
@@ -560,7 +560,7 @@ void setGreating(char *pLine) {
 	pNick=getNickname(pLine);
 	pChannel=getAccessChannel(pLine);
 
-	DEBUG("Greating seting for %s",pChannel);
+	DEBUG("Greeting seting for %s",pChannel);
 
 
     // check of  existenz of the channel
@@ -571,10 +571,10 @@ void setGreating(char *pLine) {
 		return;
 	} else {
 		pChannelData=StrToChannelData(pChannelSet);
-		if (pChannelData->pGreating) {
-			free(pChannelData->pGreating);
+		if (pChannelData->pGreeting) {
+			free(pChannelData->pGreeting);
 		}
-		pChannelData->pGreating=getParameters(pLine);
+		pChannelData->pGreeting=getParameters(pLine);
 	}
 
 	free(pChannelSet);
@@ -582,7 +582,7 @@ void setGreating(char *pLine) {
 	replace_db(CHANNEL_DB,pChannel,pChannelSet);
     
 	// message
-	if (pChannelData->pGreating[0]=='\0') {
+	if (pChannelData->pGreeting[0]=='\0') {
 		notice(pNick,MSG_RM_GREATING);
 	} else {
 		notice(pNick,MSG_SET_GREATING);
@@ -632,24 +632,29 @@ void setTopic(char *pLine) {
 	topic(pChannel,pChannelData->pTopic);
 }
 // ######################################################################### 
-// Bot comand: !viewgreat <#channel>
+// Bot comand: !viewgreet <#channel>
 // ######################################################################### 
-void greating(char *pLine) {
+void greeting(char *pLine) {
+	extern ConfType sSetup;
 	char *pChannel;
 	char *pChannelSet;
-	char *greating;
+	char *greeting;
 	char *pNick;
 
     pNick=getNickname(pLine);
-	pChannel=getAccessChannel(pLine);
-
-	DEBUG("Greating for %s",pChannel);
-
-	pChannelSet=get_db(CHANNEL_DB,pChannel);
 	
-	if ((greating=getGreating(pChannelSet))) {
-		DEBUG("Greating line %s",greating);
-		notice(pNick,greating);
+	// only greeting  send  to other user
+	if (strcmp(pNick,sSetup.botname)) {
+		pChannel=getAccessChannel(pLine);
+	
+		DEBUG("Greeting for %s",pChannel);
+	
+		pChannelSet=get_db(CHANNEL_DB,pChannel);
+		
+		if ((greeting=getGreeting(pChannelSet))) {
+			DEBUG("Greeting line %s",greeting);
+			notice(pNick,greeting);
+		}
 	}
 }
 // ######################################################################### 

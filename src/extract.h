@@ -22,7 +22,7 @@ char *getAccessChannel(char *pLine);
 
 
 char *getTopic(char *pChannelSet);
-char *getGreating(char *pChannelSet);
+char *getGreeting(char *pChannelSet);
 char *getChannelMode(char *pChannelSet);
 
 #endif

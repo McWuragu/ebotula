@@ -217,7 +217,7 @@ ChannelDataType *StrToChannelData(char *pChannelSet) {
 	ChannelDataType *pChannelData;
 	pChannelData=(ChannelDataType *)malloc(sizeof(ChannelDataType));
 
-	pChannelData->pGreating=getGreating(pChannelSet);
+	pChannelData->pGreeting=getGreeting(pChannelSet);
 	pChannelData->pTopic=getTopic(pChannelSet);
 	
 	pMode=getChannelMode(pChannelSet);
@@ -235,8 +235,8 @@ char *ChannelDataToStr(ChannelDataType *pChannelData) {
 	pMode=ChannelModeToStr(pChannelData->pModes);
 	iLenght=strlen(pMode);
 
-	if (pChannelData->pGreating) {
-		iLenght+=strlen(pChannelData->pGreating);
+	if (pChannelData->pGreeting) {
+		iLenght+=strlen(pChannelData->pGreeting);
 	}
 
 	if (pChannelData->pTopic) {
@@ -245,8 +245,39 @@ char *ChannelDataToStr(ChannelDataType *pChannelData) {
 	pChannelSet=(char*)malloc((iLenght+3)*sizeof(char));
 	sprintf(pChannelSet,"%s\t%s\t%s",pMode,
 		(pChannelData->pTopic)?pChannelData->pTopic:"",
-		(pChannelData->pGreating)?pChannelData->pGreating:"");
+		(pChannelData->pGreeting)?pChannelData->pGreeting:"");
 	free(pMode);
 
 	return pChannelSet;
+}
+
+// ############################################################################# 
+boolean ChannelStringCheck(char *const pStr) {
+	if (pStr) {
+		if (CommonStringCheck(pStr)) {
+			if (pStr[0]!='#' && pStr[0]!='&') {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+// ############################################################################# 
+boolean NickStringCheck(char *const pStr) {
+	unsigned int i;
+
+	if (pStr) {
+		if (CommonStringCheck(pStr)) {
+			for (i=0;pStr[i]!='\0';i++) {
+				if (!(isalnum(pStr[i]))) {
+					if (!strchr(USER_ALLOW_CHAR,pStr[i])) {
+						return false;
+					}
+                }
+			}
+				return true;
+		}
+	}
+	return false;
 }

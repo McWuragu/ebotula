@@ -130,6 +130,6 @@ typedef struct ChannelModeStruct {
 typedef struct ChannelDataStruct {
 	ChannelModeType* pModes;
 	char *pTopic;
-	char *pGreating;
+	char *pGreeting;
 } ChannelDataType;
 #endif

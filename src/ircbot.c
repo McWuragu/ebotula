@@ -300,6 +300,7 @@ int main(int argc,char * const argv[]) {
 		syslog(LOG_NOTICE,SYSLOG_RESTART);
 		closelog();
 		execv(argv[0],argv);
+		perror(ERR_RESTART);
 	} else {
 		syslog(LOG_NOTICE,SYSLOG_STOPPED);
 		closelog();

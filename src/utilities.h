@@ -14,6 +14,13 @@
 
 #define msleep(m)   usleep((m)*1000)
 
+#define COMMON_NOT_ALLOW_CHAR		"\t\r\n, \a\0"
+#define USER_ALLOW_CHAR				"-[]\\^{}|_`"
+
+#define CommonStringCheck(m) ((strpbrk((m),COMMON_NOT_ALLOW_CHAR))?false:true)
+
+
+
 #ifdef _DEBUG
 	#include <syslog.h>
 	/** Macro for debugging messages */
@@ -79,6 +86,8 @@ void printMsg(const char **pMsg);
 */ 
 void clearspace(char *pStr);
 
+boolean ChannelStringCheck(char *const pStr);
+boolean NickStringCheck(char *const pStr);
 
 #endif
 

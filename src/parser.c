@@ -112,10 +112,10 @@ MsgBufType preParser(char *pLine) {
 			} else if (!strncmp(pStr,"chanlist",strlen("chanlist"))) {
 				sMsg.mtype=1;
 				sMsg.identify=CMD_CHANNELS;
-			} else if (!strncmp(pStr,"greating",strlen("greating"))) {
+			} else if (!strncmp(pStr,"greeting",strlen("greeting"))) {
 				sMsg.mtype=1;
 				sMsg.identify=CMD_SET_GREATING;
-			} else if (!strncmp(pStr,"viewgreat",strlen("viewgreat"))) {
+			} else if (!strncmp(pStr,"viewgreet",strlen("viewgreet"))) {
 				sMsg.mtype=1;
 				sMsg.identify=CMD_VIEWGREAT;
 			} else if (!strncmp(pStr,"topic",strlen("topic"))) {
@@ -221,10 +221,10 @@ void *ComandExecutionThread(void *argv) {
 			case CMD_ONJOIN:
 				hSetModUser(sMsg.pMsgLine);
             case CMD_VIEWGREAT:    
-				greating(sMsg.pMsgLine);
+				greeting(sMsg.pMsgLine);
 				break;
 			case CMD_SET_GREATING:
-				setGreating(sMsg.pMsgLine);
+				setGreeting(sMsg.pMsgLine);
 				break;
 			case CMD_SET_TOPIC:
 				setTopic(sMsg.pMsgLine);

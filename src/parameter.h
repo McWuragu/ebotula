@@ -14,6 +14,8 @@
 #define PASSWD_LENGTH	8
 #define LOGIN_LENGTH	8
 
+#define SERVER_NOT_ALLOW_CHAR 			" :;<>*#/\"\'\\{}[]()=?§$"	  
+	  
 void ComandLineParser(int argc,char *const argv[]);
 void ConfigFileParser(void);
 boolean dialogMaster(void);

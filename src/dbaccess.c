@@ -14,6 +14,8 @@
 #include <crypt.h>
 #include <pthread.h>
 #include <syslog.h>
+#include <dirent.h>
+#include <sys/types.h>
 
 #ifdef HAVE_CONFIG_H
 	#include "config.h"
@@ -34,6 +36,7 @@ static GDBM_FILE dbf_timelog;
 // ############################################################################# 
 void initDatabases(void) {
 	extern ConfType	sSetup;
+	DIR *pDir;
 
 	char *user,*channel,*access,*nicktouser,*usertonick,*banlist,*timelog;
 			
@@ -55,6 +58,20 @@ void initDatabases(void) {
 	sprintf(banlist,"%s/banlist.dbf",sSetup.pDatabasePath);
 	sprintf(timelog,"%s/timelog.dbf",sSetup.pDatabasePath);
 
+	// check directory
+	// if  this not existe then try to create
+	if (!(pDir=opendir(sSetup.pDatabasePath))) {
+		errno=0;
+		if (mkdir(sSetup.pDatabasePath,0700)) {
+            syslog(LOG_ERR,SYSLOG_CREAT_DIR_ERR);
+			perror(SYSLOG_CREAT_DIR_ERR);
+			exit(errno);
+		} else {
+			syslog(LOG_INFO,SYSLOG_CREATE_DIR);
+		}
+	}
+    closedir(pDir);
+											
 	// open the databases
 	dbf_user=gdbm_open(user,512,GDBM_WRCREAT,0600,NULL);
 	dbf_channel=gdbm_open(channel,512,GDBM_WRCREAT,0600,NULL);
@@ -66,9 +83,10 @@ void initDatabases(void) {
 	
 	if (!dbf_user || !dbf_channel || !dbf_usertonick || !dbf_nicktouser || !dbf_access || !dbf_banlist || !dbf_timelog) {
 		//errno=EBUSY;
+		syslog(LOG_ERR,SYSLOG_DATABASE_ERR);
 		perror(SYSLOG_DATABASE_ERR);
 		exit(errno);
-		syslog(LOG_ERR,SYSLOG_DATABASE_ERR);
+		
 	}
 
 	syslog(LOG_INFO,SYSLOG_INIT_DB);
