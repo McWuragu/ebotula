@@ -26,7 +26,7 @@
 #include "type.h"
 #include "baseconfig.h"
 extern ConfigSetup_t sSetup;
-ValueStruct_t vsConfig[VAL_COUNT]={
+OutputValueStruct_t vsConfig[VAL_COUNT]={
 	{ {"#",
        "# The name of the bot",
        "#",
