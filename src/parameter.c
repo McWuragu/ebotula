@@ -25,7 +25,7 @@
 
 #include "parameter.h"
 // ############################################################################# 				  
-void cmd_line(int argc,const char *argv[]) {
+void ComandLineParser(int argc,const char *argv[]) {
 	extern ConfType sSetup;
 	int i;
 	int tmp;
@@ -45,7 +45,7 @@ void cmd_line(int argc,const char *argv[]) {
 				DEBUG("Found server option");
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
 				}
 			   
@@ -64,7 +64,7 @@ void cmd_line(int argc,const char *argv[]) {
 				DEBUG("Found botname option");
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
 				}
 				
@@ -83,7 +83,7 @@ void cmd_line(int argc,const char *argv[]) {
 				DEBUG("Found realname option");
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
                 }
 				
@@ -96,7 +96,7 @@ void cmd_line(int argc,const char *argv[]) {
 				DEBUG("Found port option");
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
 				}
 				
@@ -116,7 +116,7 @@ void cmd_line(int argc,const char *argv[]) {
 											
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
 				}
 				
@@ -130,15 +130,15 @@ void cmd_line(int argc,const char *argv[]) {
 				sSetup.thread_limit=tmp;
 				break;
 			case 'a':
-				DEBUG("Found auto log off time option");
+				DEBUG("Found auto logoff time option");
 											
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
 				}
 				
-				// set auto log off time
+				// set auto logoff time
 				tmp=atoi(argv[i]);
 				if (tmp<MIN_LOGOFF) {
 					errno=EDOM;
@@ -152,13 +152,13 @@ void cmd_line(int argc,const char *argv[]) {
 											
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
 				}
 				
 				// set sending delay 
 				tmp=atoi(argv[i]);
-				if (tmp<0) {
+				if (tmp<=0) {
 					errno=EDOM;
 					perror(ERR_SENDDELAY_RANGE);
 					exit(errno);
@@ -170,7 +170,7 @@ void cmd_line(int argc,const char *argv[]) {
 											
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
 				}
 				
@@ -187,7 +187,7 @@ void cmd_line(int argc,const char *argv[]) {
 				DEBUG("Found config file option");
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
 					break;
 				}
@@ -204,12 +204,29 @@ void cmd_line(int argc,const char *argv[]) {
 				DEBUG("Found  database path option");
 				if (++i>=argc) {
 					errno=EINVAL;
-					perror(ERR_MSSING_PARA);
+					perror(ERR_MISSING_PARAM);
 					exit(errno);
 				}
 				// set database path
 				sSetup.database_path=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
 				strcpy(sSetup.database_path,argv[i]);
+				break;
+			case 'c':
+				DEBUG("Found ping timeout option");
+				if (++i>=argc) {
+					errno=EINVAL;
+					perror(ERR_MISSING_PARAM);
+					exit(errno);
+				}
+
+				// set the limit for ping timeout in s
+				tmp=atoi(argv[i]);
+				if (tmp<MIN_PINGTIME) {
+					errno=EDOM;
+					perror(ERR_PINGTIMEOUT_RANGE);
+					exit(errno);
+				}
+				sSetup.iTimeout=tmp;
 				break;
 			default:
 				printMsg(unknow_parameter);
@@ -219,7 +236,7 @@ void cmd_line(int argc,const char *argv[]) {
 	}
 }
 // ############################################################################# 
-void read_config_file(void) {
+void ConfigFileParser(void) {
 	FILE *fd;
 	extern ConfType sSetup;
 	int tmp;
@@ -300,25 +317,25 @@ void read_config_file(void) {
 				// set database path
 				sSetup.database_path=(char *)malloc((strlen(value)+1)*sizeof(char));
 				strcpy(sSetup.database_path,value);
-            } else if ((!strcmp(key,KEY_AUTOLOGOFF))&& (sSetup.AutoLoggoff==MIN_LOGOFF)) {
+            } else if ((!strcmp(key,KEY_AUTOLOGOFF))&& (sSetup.AutoLoggoff<MIN_LOGOFF)) {
 				tmp=atoi(value);
-				if (tmp<MIN_LOGOFF) {
+				if (tmp<=0) {
 					errno=EDOM;
 					perror(ERR_LOGOFF_RANGE);
 					exit(errno);
 				}	
-				// set auto log off time
+				// set auto logoff time
 				sSetup.AutoLoggoff=tmp;
-			} else if ((!strcmp(key,KEY_SENDDELAY))&& (sSetup.sendDelay<0)) {
+			} else if ((!strcmp(key,KEY_SENDDELAY))&& (sSetup.sendDelay<MIN_ALT)) {
 				tmp=atoi(value);
-				if (tmp<0) {
+				if (tmp<=0) {
 					errno=EDOM;
 					perror(ERR_SENDDELAY_RANGE);
 					exit(errno);
 				}	
-				// set auto log off time
+				// set auto logoff time
 				sSetup.sendDelay=tmp;
-			} else if ((!strcmp(key,KEY_ALT))&& (sSetup.AccountLiveTime==MIN_ALT)) {
+			} else if ((!strcmp(key,KEY_ALT))&& (sSetup.AccountLiveTime==0)) {
 				tmp=atoi(value);
 				if (tmp<0) {
 					errno=EDOM;
@@ -327,6 +344,15 @@ void read_config_file(void) {
 				}	
 				// set account live time
 				sSetup.AccountLiveTime=tmp;
+			} else if ((!strcmp(key,KEY_PINGTIMEOUT))&& (sSetup.iTimeout==0)) {
+				tmp=atoi(value);
+				if (tmp<=0) {
+					errno=EDOM;
+					perror(ERR_PINGTIMEOUT_RANGE);
+					exit(errno);
+				}	
+				// set account live time
+				sSetup.iTimeout=tmp;
 			}
 			free(value);
 			free(key);
@@ -337,12 +363,12 @@ void read_config_file(void) {
 
 // ############################################################################# 
 boolean dialogMaster(void){
-	char  name[9],passwd[PASSWD_LENGTH+1],repasswd[PASSWD_LENGTH+1];
+	char  name[LOGIN_LENGTH+1],passwd[PASSWD_LENGTH+1],repasswd[PASSWD_LENGTH+1];
 
 	// insert the login name
 	printf(MSG_MASTER_TITLE);
-	printf(MSG_MASTER_LOGIN);
-	fgets(name,8,stdin);
+	printf(MSG_MASTER_LOGIN,LOGIN_LENGTH);
+	fgets(name,LOGIN_LENGTH,stdin);
 
 	trim(name);
 	StrToLower(name);
@@ -356,7 +382,7 @@ boolean dialogMaster(void){
 
 
 	// insert the password
-	printf(MSG_MASTER_PASS);
+	printf(MSG_MASTER_PASS,PASSWD_LENGTH);
 	fgets(passwd,PASSWD_LENGTH+1,stdin);
 	printf(MSG_MASTER_REPASS);
     fgets(repasswd,PASSWD_LENGTH+1,stdin);
