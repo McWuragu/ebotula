@@ -81,7 +81,6 @@ static char *pIrcHelp[][15] = {
 	"bot invite you so you can join."
     },
 
-    },
 
     // owner commands
     // CHANMODE

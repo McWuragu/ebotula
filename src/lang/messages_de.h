@@ -95,7 +95,6 @@ static MsgStruct_t Msg[] ={
 	{ OK_DIE,		"Der Bot beendet sich" },
 	{ OK_RESTART,		"Der Bot startet neu" },
 
-	
 	// Informations for invalid input or using of the bot
 	{ ERR_NOT_LOGON,	"Du bist nicht identifiziert" },
 	{ ERR_NOT_MASTER,	"Du bist kein Botmaster" },
