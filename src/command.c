@@ -330,10 +330,11 @@ void join_all_channels(void) {
 	char **channelliste;
 	unsigned int i;
 
-	channelliste=list_db(CHANNEL_DB);
+	if ((channelliste=list_db(CHANNEL_DB))) {
 
-	for (i=0;channelliste[i]!=NULL;i++) {
-		join(channelliste[i]);
+		for (i=0;channelliste[i]!=NULL;i++) {
+			join(channelliste[i]);
+		}
 	}
 
 	
