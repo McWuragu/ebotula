@@ -161,8 +161,8 @@ static MsgStruct_t Msg[] = {
        	"\t-f file\t\tUse this config file.\n",
 	    "\t-g group\tSet the group under wich the bot run (only root).\n",
         "\t-h\t\tPrint this help information.\n",
-        "\t-l lines\tSet the line limit for the first sending delay level.\n",
 		"\t-k days\t\tSet the  account live time in days.\n",
+        "\t-l char\tSet the line limit for the first sending delay level.\n",
 		"\t-m\t\tCreate a bot master.\n",
 		"\t-n ms\t\tSet the delay time in millisecond for the fast sending.\n",
 		"\t-p port\t\tSet the port of the irc server.\n"
