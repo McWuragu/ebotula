@@ -162,8 +162,8 @@ int main(int argc,const char *argv[]) {
 
 		// parse all substrings of the  receiving line
 		tmp=buffer;
-        //while ((pos=strchr(tmp,'\r'))) {
-		while ((pos=strchr(tmp,'\n'))) {
+        while ((pos=strchr(tmp,'\r'))) {
+		//while ((pos=strchr(tmp,'\n'))) {
 			*pos='\0';
 
 			// cut out a part of the  complete line
@@ -171,7 +171,7 @@ int main(int argc,const char *argv[]) {
 			strcpy(str,tmp);
 
 			// parse the part line
-			DEBUG("Parse: %s",str);
+			DEBUG("Parse \"%s\"",str);
             msg=preParser(str);
 
 			// put the identified line  on the  queue
@@ -184,11 +184,11 @@ int main(int argc,const char *argv[]) {
 			// checking the length of the next substring
 			// a irc answer line can't are ten charakter 
 			// it is to small for a complete line
-			//if (strlen(++pos)>10) {
+			if (strlen(++pos)>0) {
 				// set the begin of new substring of the old end
 				// and plus one for the NL
 				tmp=pos+1;
-			//}
+			}
 			
 		}
 
