@@ -249,7 +249,7 @@ int main(int argc,char * const argv[]) {
             if ((User=getpwnam(sSetup.sExeUser)))
                seteuid(User->pw_uid);
             else {
-                logger(LOG_ERR,getSyslogString(SYSLOG_USER_NOT_FOUND));
+                logger(LOG_ERR,gettext("User %s not found"),sSetup.sExeUser);
             }
         }
     }
