@@ -10,8 +10,9 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#define USER_MODS	"Oovm"
+#define USER_MODS		"Oovm"
 #define CHANNEL_MODS	"tnmaiqpsrkl"
+#define MAX_USERMODE_SIZE		5
 				  
 // ######################### Bot commands ################################
 

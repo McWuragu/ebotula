@@ -153,16 +153,21 @@ void help(char *line) {
 // ######################################################################### 
 void hello(char *line) {
 	char *nick;
+	char *login;
 	
 	nick=getNickname(line);
+	login=malloc((strlen(nick)+1)*sizeof(char));
+	strcpy(login,nick);
+	
+	StrToLower(login);
 
-	if (!add_db(USER_DB,nick,"")) {
+	if (!add_db(USER_DB,login,"")) {
 		notice(nick,MSG_NICK_EXIST);
 		return;
 	}
 
 	// autoidentify after create an new account
-	log_on(nick,nick);
+	log_on(nick,login);
 
 	notice(nick,MSG_HELLO);
 	notice(nick,MSG_HELLO2);
@@ -260,6 +265,7 @@ void ident(char *line) {
 	strtok(parameter," ");
 	login=(char *)malloc((strlen(parameter)+1)*sizeof(char));
 	strcpy(login,parameter);
+	StrToLower(login);
 
 	// check the account 
 	if(check_db(USER_DB,login,passwd)) {
@@ -737,6 +743,7 @@ void usermode(char *line){
 	char *key;
 	char *mods;
 	char *oldmods;
+	char newmods[MAX_USERMODE_SIZE];
 
 	int len,i,j;
 
@@ -765,19 +772,20 @@ void usermode(char *line){
 	// user mods
 	DEBUG("Modify user mods");
 	
-	// look for the space and separat the login for  the user whiche  modify
+	// look for the space and separat the login for the user whiche want modify
 	if (!(pos=strchr(parameters,' '))) {
 		notice(nick,MSG_USERMODE_ERR);
 		return;
 	}
 
-	// set the end mark for loginstring and  set the pointer of the substr
+	// set the end mark for login string and  place the pointer of the substr
 	*pos='\0';
 	pos++;
 
 	// extract the  login
 	login=(char *)malloc((strlen(parameters)+1)*sizeof(char));
 	strcpy(login,parameters);
+	StrToLower(login);
 
 	// check login in the user db
 	if (!(exist_db(USER_DB,login))) {
@@ -825,24 +833,27 @@ void usermode(char *line){
 	key=(char*)malloc((strlen(login)+strlen(channel)+1)*sizeof(char));
 	sprintf(key,"%s%s",login,channel);
 
-	// get the  old mods from the  access db
+	// get the  old mods for  a  user from the  access db
 	if (!(oldmods=get_db(ACCESS_DB,key))) {
-		oldmods=(char *)malloc(sizeof(char));
-		*oldmods='\0';
+        // get the old mods for a master
+		if (!(oldmods=get_db(ACCESS_DB,login))) {
+			// set empty mods
+			oldmods=(char *)malloc(sizeof(char));
+			*oldmods='\0';
+		}
 	}
 
 	// add or remove the mods
 	len=strlen(mods);
 	if (mods[0]=='+') {
 		// add mods
-		for(i=1;i<len;i++){
-			if (!(pos=strchr(oldmods,mods[i]))) {
-				// add the new mode
-				oldmods=(char*)realloc(oldmods,(strlen(oldmods)+2)*sizeof(char));
-				sprintf(oldmods,"%s%c",oldmods,mods[i]);
+		strcpy(newmods,oldmods);
+
+		for (i=1;i<len;i++) {
+			if(!(strchr(oldmods,mods[i]))) {
+				strncat(newmods,&mods[i],sizeof(char));
 			}
 		}
-
 	} else {
 		// remove mods
 		for(i=1;i<len;i++){
@@ -852,14 +863,26 @@ void usermode(char *line){
 			}
 		}
 		clearspace(oldmods);
+		strcpy(newmods,oldmods);
 	}
 
-	// try to add
-	// if  this failed then make replace
-	if (!(add_db(ACCESS_DB,key,oldmods))) {
+
+	// check for old or new master and  replace key  with login
+	if ((strchr(oldmods,'m')) || (strchr(newmods,'m'))) {
+		free(key);
+		key=(char *)malloc((strlen(login)+1)*sizeof(char));
+		strcpy(key,login);
+	}
+
+	// remove by  empty mods
+	if (strlen(oldmods)==0) {
+		del_db(ACCESS_DB,key);
+	} else 
+		if (!(add_db(ACCESS_DB,key,oldmods))) {
 		replace_db(ACCESS_DB,key,oldmods);
 	}
 	
+	// identify the  login and set the rights
 	if ((usernick=get_db(USERTONICK_DB,login))) {
 		mode(channel,mods,usernick);
 	}
