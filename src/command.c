@@ -313,16 +313,18 @@ void addChannel(MsgItem_t *pMsg) {
     char *pCmdChannel;
     char *channelmod;
 
-    pCmdChannel=getChannel(pMsg->pRawLine);
+   
 
     if (!pMsg->pAccessChannel){
         notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
-    if (!strcmp(pMsg->pAccessChannel,pCmdChannel)) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
-        return;
+    if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
+         if (!strcmp(pMsg->pAccessChannel,pCmdChannel)) {
+            notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+            return;
+        }
     }
 
     DEBUG("Join and  try to add the channnel %s\n",pMsg->pAccessChannel);
@@ -377,17 +379,19 @@ void rmChannel(MsgItem_t *pMsg){
 void joinChannel(MsgItem_t *pMsg) {
     char *pCmdChannel;
 
-    pCmdChannel=getChannel(pMsg->pRawLine);
+    
 
     if (!pMsg->pAccessChannel){
         notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
-    /* compare the current channel and  the channel for joining */
-    if (!(strcmp(pMsg->pAccessChannel,pCmdChannel))) {
-        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
-        return;
+    if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
+        /* compare the current channel and  the channel for joining */
+        if (!(strcmp(pMsg->pAccessChannel,pCmdChannel))) {
+            notice(pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
+            return;
+        }
     }
 
     DEBUG("Join the channel %s\n",pMsg->pAccessChannel);
