@@ -34,18 +34,19 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
     char *pStr,*pPreamble,*pPos;
     int i;
 
-    // reset the buffer
+    /* reset the buffer */
     pMsg->identify=CMD_NONE;
     pMsg->pMsgLine=NULL;
 
-    // get the first part of the  answer from server
+    /* get the first part of the  answer from server */
     pPreamble=getCommand(pLine);
     if (pPreamble){
-        // look for  command position
+        /* look for  command position */
         if (!(pPos=strchr(pPreamble,' '))){
+		/* print log because no password was send */
             return;
         } else {
-            //set the pointr to the comaman start
+            /*set the pointr to the comaman start */
             pPos++;
         }
     } else {
@@ -54,8 +55,8 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
 
     
 
-    // preparse the line
-    // identify events and commands
+    /* preparse the line */
+    /* identify events and commands */
     if (!strncmp(pPos,CmdList[CMD_ONPING],strlen(CmdList[CMD_ONPING]))) {
         /*
          * The ping can't send over the threads. If you have high usage of the
@@ -105,9 +106,10 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
             }
         } else if ((pStr=strstr(pLine," :\001"))!=NULL) {
             /* ctcp command parser */
-            if (strlen(pStr)>=3) {
+                logger(LOG_DEBUG,_("Receive: \"%s\""),pLine);
+		if (strlen(pStr)>=3) {
                 pStr+=2;
-                // command parser
+                /* command parser */
                if (!strncmp(pStr,CmdList[CMD_CTCPPING],strlen(CmdList[CMD_CTCPPING]))){
                          pMsg->identify=CMD_CTCPPING;
                      logger(LOG_DEBUG,_("Found ctcp command %s"),CmdList[CMD_CTCPPING]);
@@ -121,7 +123,6 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
             }
         }
     } else {
-        
     }
 	
     if (pMsg->identify!=CMD_NONE) {
@@ -141,12 +142,12 @@ void *CommandExecutionThread(void *argv) {
 	
 	PQueue pCommandQueue=(PQueue)argv;	
 
-    // set the thread cancelable
+    /* set the thread cancelable */
     pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
 
     logger(LOG_DEBUG,_("Execution thread is running (pid%d)"),getpid());
 
-    // execute loop
+    /* execute loop */
     while(!stop) {
 
 
@@ -156,9 +157,9 @@ void *CommandExecutionThread(void *argv) {
             pMsg=(MsgBuf_t*)pCommand->data;
 
 
-            // extract the needed values
+            /* extract the needed values */
 
-            // fill the parameter
+            /* fill the parameter */
             sMsgItem.pNetmask=getNetmask(pMsg->pMsgLine);
             sMsgItem.pAccessChannel=getAccessChannel(pMsg->pMsgLine);
             sMsgItem.pCallingNick=getNickname(pMsg->pMsgLine);
@@ -166,12 +167,12 @@ void *CommandExecutionThread(void *argv) {
             sMsgItem.UserLevel=getUserLevel(sMsgItem.pAccessChannel,sMsgItem.pNetmask);
             sMsgItem.pRawLine=pMsg->pMsgLine;
             
-            // check the access level
+            /* check the access level */
             if (AccessRight(sMsgItem.UserLevel,pMsg->identify)) {
             
-                // command router 
+                /* command router  */
                 switch (pMsg->identify) {
-                // Event handler
+                /* Event handler */
                 case CMD_ONPING:
 					pong(NULL);
                     break;
@@ -199,7 +200,7 @@ void *CommandExecutionThread(void *argv) {
                 case CMD_ONJOIN:
                     hSetModUser(sMsgItem.pRawLine);
                 
-                // Command handler
+                /* Command handler */
                 case CMD_VIEWGREAT:
                     greeting(&sMsgItem);
                     break;
@@ -314,11 +315,11 @@ void *CommandExecutionThread(void *argv) {
     return NULL;
 }
 
-// #############################################################################
+/* ############################################################################# */
 static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
     boolean ret=false;  
 
-    // check Accesslevel
+    /* check Accesslevel */
     if (cmd_id >= CMD_EVENT) {
         if (((cmd_id == CMD_ONNICKCHG) || (cmd_id==CMD_ONQUIT)) && Level>=LoggedLevel) {
             ret=true;;
@@ -352,7 +353,7 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
    logger(LOG_DEBUG,_("Access status for the userlevel %i and the command id %i is %i"),Level,cmd_id,ret);
     return ret;
 }
-// #############################################################################
+/* ############################################################################# */
 RETSIGTYPE stopParser(int sig) {
     extern int stop;
     if (!stop) {

@@ -19,7 +19,7 @@
 #include "irc.h"
 #include "utilities.h"
 #include "extract.h"
-// ############################################################################# 
+/* ############################################################################# */
 char *getNickname(char const *pLine){
 	char *pNick=NULL,*pStr;
 	
@@ -39,7 +39,7 @@ char *getNickname(char const *pLine){
     }
 	return pNick;
 }
-// ############################################################################# 
+/* ############################################################################# */
 char *getNetmask(char const *pLine){ 
 	char *pNetmask=NULL,*pStr;
 
@@ -66,30 +66,30 @@ char *getNetmask(char const *pLine){
     return pNetmask;
 
 }
-// ############################################################################# 
+/* ############################################################################# */
 char *getCommand(char const *pLine) {
 	char *pStr=NULL,*pTmp;
 
     if (!pLine) {return "";}
 
-	// mirror  of the orginal string 
+	/* mirror  of the orginal string */
 	pTmp=(char *)malloc((strlen(pLine)+1)*sizeof(char));
 	strcpy(pTmp,pLine);
 
-	// find the  secondary double point
-	// and put after this a null byte
+	/* find the  secondary double point */
+	/* and put after this a null byte */
 	if (pTmp[0]==':' ) {
-		// find the next colon and replace  him with null byte
+		/* find the next colon and replace  him with null byte */
 		strtok(&pTmp[1],":");
 	
-		// cut out  the first part of the server answer 
+		/* cut out  the first part of the server answer */
 		pStr=(char *)malloc((strlen(pTmp)+1)*sizeof(char));
 		strcpy(pStr,pTmp);
 	}
     free(pTmp);
     return pStr;
 }
-// ############################################################################# 
+/* ############################################################################# */
 char *getArgument(char const *pLine) {
 	char *pStr,*pPos,*pArg;
 	int i,iLineLen;
@@ -97,22 +97,22 @@ char *getArgument(char const *pLine) {
 
 	if (!pLine) return NULL;
 	
-	// found  the begining  of Parameter 
+	/* found  the begining  of Parameter */
 	if ((pStr=strstr(pLine," :!"))==NULL) {
 		return NULL;
 	} else {
-		// set the begin of comand string
+		/* set the begin of comand string */
 		pStr+=3;
         iLineLen=strlen(pStr);
 
-		// search for the first space or end of string
+		/* search for the first space or end of string */
 		for (i=0;i<=iLineLen;i++) {
 				
 			if (pStr[i]==' ') {
 				pPos=&pStr[i];
                 pPos++;
 				trim(pPos);
-                // looking  for empty string
+                /* looking  for empty string */
 				if (strlen(pPos)>0) {
 					pArg=(char *)malloc((strlen(pPos)+1)*sizeof(char));
                     strcpy(pArg,pPos);
@@ -124,7 +124,7 @@ char *getArgument(char const *pLine) {
 	
 	return NULL;
 }
-// ######################################################################### 
+/* ######################################################################### */
 char *getChannel(char const *pLine){
 	char *pPreamble;
 	char *pPos;
@@ -132,17 +132,17 @@ char *getChannel(char const *pLine){
 	
 	if (!pLine) return NULL;
 
-	// extract  the substring
+	/* extract  the substring */
 	pPreamble=getCommand(pLine);
 
     if (pPreamble) {
-    	// look for the channelname
+    	/* look for the channelname */
     	if ((pPos=strchr(pPreamble,'#'))) {
         
-        	// market the end  of channelname
+        	/* market the end  of channelname */
         	strtok(pPos," ");
             
-        	// extract the channelname
+        	/* extract the channelname */
         	pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
         	strcpy(pChannel,pPos);
         
@@ -153,7 +153,7 @@ char *getChannel(char const *pLine){
     }
     return pChannel;
 }
-// #########################################################################
+/* ######################################################################### */
 char *getAccessChannel(char const *pLine) {
 	char *pParameter;
 	char *pChannel;
@@ -175,13 +175,13 @@ char *getAccessChannel(char const *pLine) {
 
     /* try to extract the channel name */
     if (bFoundInPreamble) {
-		// take the channelname  from preamble
+		/* take the channelname  from preamble */
 		pChannel=getChannel(pLine);
 		if (!pChannel) {
 			if ((pPos=strstr(pLine," :#"))) {
-				// move to '#'
+				/* move to '#' */
 				pPos+=2;
-				// marked the end of str and  copy out
+				/* marked the end of str and  copy out */
 				strtok(pPos," ");
 
 				pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
@@ -191,10 +191,10 @@ char *getAccessChannel(char const *pLine) {
 			}
 		}
 	} else {
-		// parse Channel name
+		/* parse Channel name */
 		strtok(pParameter," ");
 
-		// check the  chrakter in the  channel name
+		/* check the  chrakter in the  channel name */
 		if (ChannelStringCheck(pParameter)) {
 			pChannel=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
 			strcpy(pChannel,pParameter);
@@ -207,7 +207,7 @@ char *getAccessChannel(char const *pLine) {
 	StrToLower(pChannel);
 	return pChannel;
 }
-// #########################################################################
+/* ######################################################################### */
 char  *getTopic(char const *pChannelSet) {
 	char *pTopic=NULL;
 	char *pPos,*pPos2;
@@ -218,14 +218,14 @@ char  *getTopic(char const *pChannelSet) {
 	pStr=(char *)malloc((strlen(pChannelSet)+1)*sizeof(char));
 	strcpy(pStr,pChannelSet);
 
-	// look for topic;
+	/* look for topic; */
 	if ((pPos=strchr(pStr,'\t'))) {
         pPos++;
-        // look for the end  of topic
+        /* look for the end  of topic */
     	if ((pPos2=strchr(pPos,'\t'))) {
             *pPos2='\0';
         
-            // check length
+            /* check length */
             if (strlen(pPos)) {
                 pTopic=(char *)malloc((strlen(pPos)+1)*sizeof(char));
                 strcpy(pTopic,pPos);
@@ -236,21 +236,21 @@ char  *getTopic(char const *pChannelSet) {
     free(pStr);
 	return pTopic;
 }
-// ######################################################################### 
+/* ######################################################################### */
 char  *getGreeting(char const * pChannelSet) {
 	char *pGreeting;
 	char *pPos;
 	
 	if (!pChannelSet) return "";
     
-	// look for the begin  of greeting
+	/* look for the begin  of greeting */
 	if (!(pPos=strrchr(pChannelSet,'\t'))) {
 		return NULL;		  
     }
 
 	pPos++;
 
-	// check length
+	/* check length */
 	if (!strlen(pPos)) {
 		return NULL;
 	}
@@ -260,7 +260,7 @@ char  *getGreeting(char const * pChannelSet) {
 
 	return pGreeting;
 }
-// ######################################################################### 
+/* #########################################################################  */
 char *getChannelMode(char const * pChannelSet){
 	char *pMod;
 	char *pStr;
@@ -282,7 +282,7 @@ char *getChannelMode(char const * pChannelSet){
 
 	return pMod;
 }
-// ############################################################################# 
+/* ############################################################################# */
 char *getParameters(char const *pLine){
 	char *pParameter=NULL;
 	char *pArg;
@@ -294,7 +294,7 @@ char *getParameters(char const *pLine){
         if (pArg[0]!='#') {
     		pParameter=pArg;
     	} else if((pPos=strchr(pArg,' '))) {
-    		// jump over the space
+    		/* jump over the space */
     		pPos++;
     		pParameter=(char*)malloc((strlen(pPos)+1)*sizeof(char));
     		strcpy(pParameter,pPos);
@@ -305,7 +305,7 @@ char *getParameters(char const *pLine){
     }
     return pParameter;
 }
-// #############################################################################
+/* ############################################################################# */
 char *getFirstPart(char const *pLine,char **pRest) {
     char *pStr;
     char *pTmp;
@@ -316,19 +316,19 @@ char *getFirstPart(char const *pLine,char **pRest) {
         return NULL;
     }
     
-    // copy the orginal
+    /* copy the orginal */
     pTmp=(char*)malloc((strlen(pLine)+1)*sizeof(char));
     strcpy(pTmp,pLine);
 
-    // separete the first part of the string
+    /* separete the first part of the string */
     pPos=strchr(pTmp,' ');
     if (pPos) {
         *pPos='\0';
         pPos++;
         
-        // copy the rest
+        /* copy the rest */
         if (pRest) {
-            // check the state and  clean old memory
+            /* check the state and  clean old memory */
             if (*(pRest)) {free(*(pRest));}
             
             if (strlen(pPos)) {
@@ -340,29 +340,29 @@ char *getFirstPart(char const *pLine,char **pRest) {
         }
     }
 
-    // fill the return value
+    /* fill the return value */
     pStr=(char*)malloc((strlen(pTmp)+1)*sizeof(char));
     strcpy(pStr,pTmp);
     free(pTmp);
 
     return pStr;
 }
-// #############################################################################
+/* ############################################################################# */
 char * getBanmask(char const *pLine){ 
 	char *pBanmask=NULL;
     char *pStr;
 	char * pChar;
 
-	// getting netmask to get banmask
+	/* getting netmask to get banmask */
 	pStr=getNetmask(pLine);
 	
     if (pStr) {
-        // get the position of '!'
+        /* get the position of '!' */
 		pChar=(char *)strchr(pStr,'!');
-		// jump over '!'
-		//pChar++;
+		/* jump over '!' */
+		/*pChar++; */
         
-		// copy from '!' to pStr
+		/* copy from '!' to pStr */
         pBanmask=(char*) malloc(strlen(pChar)+3);
 
 		if (pBanmask){
@@ -370,13 +370,13 @@ char * getBanmask(char const *pLine){
     		strcat(pBanmask,pChar);
     		strcpy(pStr,pBanmask);
     		
-            // setting after @ a NULL-Byte
+            /* setting after @ a NULL-Byte */
     		pChar=(char *)strchr(pBanmask,'@');
     		pChar[1]='*';
     		pChar[2]='\0';
-            //strcat(pBanmask,pChar);
+            /*strcat(pBanmask,pChar);*/
 
-            // add rest of the netmask
+            /* add rest of the netmask*/
             pChar=(char *)strchr(pStr,'.');
             if (pChar) {
                 strcat(pBanmask,pChar);
@@ -389,7 +389,7 @@ char * getBanmask(char const *pLine){
 	
 	return pBanmask; 
 }
-// #############################################################################
+/* ############################################################################# */
 AnswerMode_t getAnswerMode(char const * pLine){
     AnswerMode_t _AnserMode;
     
@@ -397,7 +397,7 @@ AnswerMode_t getAnswerMode(char const * pLine){
         char *pChannel;
         pChannel=getChannel(pLine);
 
-        // look for  the  channel name  in preamble
+        /* look for  the  channel name  in preamble */
         if (!pChannel) {
             _AnserMode=PrvMsgMode;
         }else {

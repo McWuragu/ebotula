@@ -47,7 +47,7 @@ static Database_t pDB[MAX_DB]= {
 	{NICKTOUSER_DB,"nicktouser.dbf",GDBM_NEWDB}
 };
 
-// ############################################################################# 
+/* ############################################################################# */
 boolean initDatabases(void) {
     extern ConfigSetup_t sSetup;
     DIR *pDir;
@@ -56,9 +56,9 @@ boolean initDatabases(void) {
 
     logger(LOG_NOTICE,_("Initialization of the database" ));
     
-    // check directory
-    // if  this not existe then try to create
-    // this  create only the lowest  subdir
+    /* check directory
+       if  this not existe then try to create
+       this  create only the lowest  subdir*/
     if (!(pDir=opendir(sSetup.pDatabasePath))) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
@@ -74,7 +74,7 @@ boolean initDatabases(void) {
     }
     closedir(pDir);
     
-    // open the databases
+    /* open the databases*/
     for (i=0;i<MAX_DB;i++) {
         assert(i==pDB[i].id);
         
@@ -83,7 +83,7 @@ boolean initDatabases(void) {
         dbf[i]=gdbm_open(pDBPath,512,pDB[i].Access,0600,NULL);
         
         if (!dbf[i]) {
-            //errno=EBUSY;
+            /*errno=EBUSY;*/
             logger(LOG_ERR,_("Couldn't open the databases %s."),pDBPath);
             #ifdef NDEBUG
             fprintf(stderr,_("Couldn't open the databases %s."),pDBPath);
@@ -92,7 +92,7 @@ boolean initDatabases(void) {
             return false;
         }
 
-        // init the mutexs
+        /* init the mutexs*/
         pthread_mutex_init(&dbaccess_mutex[i],NULL);
 
         free(pDBPath);
@@ -100,20 +100,20 @@ boolean initDatabases(void) {
     
     return true;
 }
-// ############################################################################# 
+/* ############################################################################# */
 void closeDatabase(void) {
 	int i;
    
-	// destroy the mutex
+	/*/ destroy the mutex */
 	for (i=0;i<MAX_DB;i++){
 		pthread_mutex_destroy(&dbaccess_mutex[i]);
-        // close the databases
+        /* close the databases */
         gdbm_close(dbf[i]);
 	}
     logger(LOG_INFO,_("Database is closed"));
 }
 
-//######################### database access ##############################
+/* ######################### database access ##############################*/
 static GDBM_FILE get_dbf(int db) {
     
     if (db>=MAX_DB || db <0) {
@@ -124,21 +124,21 @@ static GDBM_FILE get_dbf(int db) {
     }
 
 }
-// ############################################################################# 
+/* ############################################################################# */
 boolean add_db(int db,char *_key, char *_value) {
     datum key,value;
     GDBM_FILE dbf;
     int iErr;
 
-    // check of exist  of this key in the database
+    /* check of exist  of this key in the database */
     CHECK_EXIST(db,_key);
 
-    // get the datebase handle
+    /* get the datebase handle */
     if ((dbf=get_dbf(db)) && _key!=NULL && _value!=NULL) {
         key.dptr=_key;
         key.dsize=strlen(key.dptr)+1;
     
-        // if try to use  the  user database then make  a crypt value
+        /* if try to use  the  user database then make  a crypt value */
         if (db==USER_DB) {
             value.dptr=crypt(_value,"SL");
         } else {
@@ -157,20 +157,20 @@ boolean add_db(int db,char *_key, char *_value) {
     }
     return false;
 }
-// ############################################################################# 
+/* ############################################################################# */
 boolean replace_db(int db,char *_key, char *_value){
     datum key,value;
     GDBM_FILE dbf;
     
     CHECK_NO_EXIST(db,_key);
     
-    // get the datebase handle
+    /* get the datebase handle */
     if ((dbf=get_dbf(db)) && _key!=NULL && _value!=NULL) {
-    	// build key
+    	/* build key */
 	   	key.dptr=_key;
 	    key.dsize=strlen(key.dptr)+1;
 
-    	// distinction of user database 
+    	/* distinction of user database */
 	    if (db==USER_DB) {
     	    value.dptr=crypt(_value,"SL");
 	    } else {
@@ -189,7 +189,7 @@ boolean replace_db(int db,char *_key, char *_value){
     return false;
 
 }
-// ############################################################################# 
+/* ############################################################################# */
 boolean del_db(int db,char *_key){
     datum key;
     GDBM_FILE dbf;
@@ -198,7 +198,7 @@ boolean del_db(int db,char *_key){
     CHECK_NO_EXIST(db,_key);
 
     if ((dbf=get_dbf(db)) && _key!=NULL) {
-        // build the  key
+        /* build the  key */
         key.dptr=_key;
         key.dsize=strlen(key.dptr)+1;
         
@@ -213,7 +213,7 @@ boolean del_db(int db,char *_key){
     }
     return false;
 }
-// ############################################################################# 
+/* ############################################################################# */
 boolean check_db(int db,char *_key,char* _value){
     datum key;
     datum value;
@@ -227,7 +227,7 @@ boolean check_db(int db,char *_key,char* _value){
     CHECK_NO_EXIST(db,_key);
     
     if ((dbf=get_dbf(db)) && _key!=NULL && _value!=NULL) {
-        // fetch the entry
+        /* fetch the entry */
         pthread_mutex_lock(&dbaccess_mutex[db]);
         value=gdbm_fetch(dbf,key);
         pthread_mutex_unlock(&dbaccess_mutex[db]);
@@ -238,7 +238,7 @@ boolean check_db(int db,char *_key,char* _value){
             __value=_value;
         }
     
-        // checke  the values
+        /* checke  the values */
         if (!strcmp(value.dptr,__value)) {
             bRet=true;
         }
@@ -247,7 +247,7 @@ boolean check_db(int db,char *_key,char* _value){
     }
     return bRet;
 }
-// ############################################################################# 
+/* ############################################################################# */
 boolean exist_db(int db,char *_key){
     datum key;
     GDBM_FILE dbf;
@@ -265,7 +265,7 @@ boolean exist_db(int db,char *_key){
     }
     return false;
 }
-// ############################################################################# 
+/* ############################################################################# */
 char * get_db(int db,char *_key){
     datum key,value;
     GDBM_FILE dbf;
@@ -291,17 +291,17 @@ char * get_db(int db,char *_key){
     
     return NULL;
 }
-// ############################################################################# 
+/* ############################################################################# */
 PQueue list_db(int db){
     PQueue pList;
 	QueueData QueueItem;
 	GDBM_FILE dbf;
-    datum key,nextkey,firstkey;
+    datum key,nextkey;
 	
-	// initialize the  queue
+	/* initialize the  queue */
 	pList=initQueue();
 
-    // get the database handle
+    /* get the database handle */
     if ((dbf=get_dbf(db))) {
 	    pthread_mutex_lock(&dbaccess_mutex[db]);
 		key=gdbm_firstkey(dbf);

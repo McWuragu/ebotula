@@ -28,7 +28,7 @@
 
 
 
-// #############################################################################
+/* ############################################################################# */
 void user(void) {
     extern ConfigSetup_t sSetup;
     struct passwd *pw;
@@ -36,11 +36,11 @@ void user(void) {
     char *buffer;
     int buffer_size;
 
-    // get the username  and hostname
+    /* get the username  and hostname */
     pw = getpwuid(geteuid());
     gethostname(hostname,HOSTNAME_BUFFER_SIZE);
 
-    // calculat the command size
+    /* calculat the command size */
     buffer_size=strlen("USER")+strlen(pw->pw_name)+strlen(hostname)+strlen(sSetup.sHostname)+strlen(sSetup.realname)+8;
 
 	if ((buffer=(char *)malloc(sizeof(char)*buffer_size))==NULL)
@@ -48,14 +48,14 @@ void user(void) {
 	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
    	}	   
-    // create the  commando string
+    /* create the  commando string */
     sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.sHostname,sSetup.realname);
 
-    // send commando
+    /* send commando */
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void action(char *pTarget, char *pMsgStr){
     int nStrSize;
     char *buffer;
@@ -76,7 +76,7 @@ void action(char *pTarget, char *pMsgStr){
     privmsg(pTarget,buffer);
     free(buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void privmsg(char *pTarget, char *pMsgStr){
     char *buffer;
     if ((buffer=(char *)malloc((strlen("PRIVMSG ")+strlen(pTarget)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
@@ -89,7 +89,7 @@ void privmsg(char *pTarget, char *pMsgStr){
     SendLine(buffer);
     free(buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void notice(char * pNick,char *pMsgStr) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
@@ -102,7 +102,7 @@ void notice(char * pNick,char *pMsgStr) {
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr,...){
     va_list arg;
     char pMsg[1<<10];
@@ -118,11 +118,11 @@ void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr,...){
     }
     va_end(arg);
 }
-// #############################################################################
-//void quit(void) {
-//    SendLine("QUIT\r\n");
-//}
-// #############################################################################
+/* ############################################################################# */
+/*void quit(void) {
+    SendLine("QUIT\r\n");
+} */
+/* ############################################################################# */
 void join(char *pChannel) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("JOIN ")+strlen(pChannel)+3)*sizeof(char)))==NULL)
@@ -135,7 +135,7 @@ void join(char *pChannel) {
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void part(char *pChannel) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("PART ")+strlen(pChannel)+3)*sizeof(char)))==NULL)
@@ -148,11 +148,11 @@ void part(char *pChannel) {
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void pong(char *pPong) {
     char *buffer,hostname[HOSTNAME_BUFFER_SIZE];
 
-//    gethostname(hostname,HOSTNAME_BUFFER_SIZE);
+/*    gethostname(hostname,HOSTNAME_BUFFER_SIZE); */
 	if (pPong==NULL)
 	{
 		/* I have no parameter for pong */
@@ -177,7 +177,7 @@ void pong(char *pPong) {
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void ping(char *pTarget) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("PING ")+strlen(pTarget)+3)*sizeof(char)))==NULL)
@@ -190,7 +190,7 @@ void ping(char *pTarget) {
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void invite(char *pChannel,char *pNick) {
     char *buffer;
     if ((buffer=(char*)malloc((strlen("INVITE")+strlen(pNick)+strlen(pChannel)+5)*sizeof(char)))==NULL)
@@ -203,7 +203,7 @@ void invite(char *pChannel,char *pNick) {
     SendLine(buffer);
     free(buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void nick(char *pNick) {
     char *buffer;
     if ((buffer=(char *)malloc((strlen("NICK ")+strlen(pNick)+3)*sizeof(char)))==NULL)
@@ -216,7 +216,7 @@ void nick(char *pNick) {
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void topic(char *pChannel, char* pMsgStr) {
     char *buffer;
     if ((buffer=(char*)malloc((strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
@@ -229,7 +229,7 @@ void topic(char *pChannel, char* pMsgStr) {
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void kick(char *pChannel, char *pNick, char *pMsgStr) {
     char *buffer;
 
@@ -243,7 +243,7 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void ban(char *pChannel,char *pMask){
     char *buffer;
     if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
@@ -256,7 +256,7 @@ void ban(char *pChannel,char *pMask){
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void deban(char *pChannel,char *pMask){
     char *buffer;
     if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
@@ -269,11 +269,11 @@ void deban(char *pChannel,char *pMask){
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void mode(char *pChannel, char *pMod, char *pModParameter) {
     char *buffer;
 
-    // check  optional parameters and  set  it of default values
+    /* check  optional parameters and  set  it of default values */
     if (pModParameter==NULL) {
         pModParameter="";
     }
@@ -287,7 +287,7 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
     SendLine(buffer);
     free (buffer);
 }
-// #############################################################################
+/* ############################################################################# */
 void whois(char *pNickname) {
     char *buffer;
     if ((buffer=(char*)malloc((strlen("WHOIS ")+strlen(pNickname)+3)*sizeof(char)))==NULL)

@@ -23,7 +23,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <unistd.h>
 #include <sys/types.h>
 
 #ifdef HAVE_CONFIG_H
@@ -45,18 +45,17 @@
 #include "queue.h"
 #include "ircbot.h"
 
-ConfigSetup_t sSetup;    // global config structure
-volatile boolean stop;       // singal for stop the endless loop
+ConfigSetup_t sSetup;    /* global config structure */
+volatile boolean stop;       /* singal for stop the endless loop*/
 boolean again;
 
-pthread_mutex_t mutexAccount;      // mutex for synchronize the access of the login db 
+pthread_mutex_t mutexAccount;      /* mutex for synchronize the access of the login db  */
 
 
 CallbackDList CallbackList;
 
 int main(int argc,char * const argv[]) {
     int i;
-    int msgid;
     char buffer[RECV_BUFFER_SIZE],*pStrPos,*pCurrLine,*pCurrString,*pCurrStringPos,*pUnparsed;
     pthread_t *threads;
     pthread_t timeThread;
@@ -69,62 +68,62 @@ int main(int argc,char * const argv[]) {
     struct group *Group;
 	char *sDirDummy;
     DIR *pDir;
-    int iTemp;
+    struct stat attribut;
     
     uid=geteuid();
    
-    // nls support
+    /* nls support */
     setlocale(LC_ALL, "");
     bindtextdomain(PACKAGE,PACKAGE_LOCALE_DIR);
     textdomain(PACKAGE);
     
     
-    // init config
+    /* init config */
     if (uid==0) {
-        // database path
+        /* database path */
         sSetup.pDatabasePath=(char *)malloc((strlen(DATABASEDIR)+1)*sizeof(char));
         strcpy(sSetup.pDatabasePath,DATABASEDIR);
         
-        // config file path
+        /* config file path */
         sSetup.configfile=(char *)malloc((strlen(CONFDIR)+strlen(CONFFILE)+1)*sizeof(char));
         sprintf(sSetup.configfile,"%s%s",CONFDIR,CONFFILE);
     } else {
         User=getpwuid(uid);
         
-        // built the path for the  user dir
+        /* built the path for the  user dir */
         sDirDummy=(char*)malloc((strlen(User->pw_dir)+strlen(DEFAULT_USER_CONFDIR)+1)*sizeof(char));
         sprintf(sDirDummy,"%s%s",User->pw_dir,DEFAULT_USER_CONFDIR);
 
-        // create the user config dir
+        /* create the user config dir */
         if (!(pDir=opendir(sDirDummy))) {
             mkdir(sDirDummy,0700);
         }
         closedir(pDir); 
 
-        // database path
+        /* database path */
         sSetup.pDatabasePath=(char *)malloc((strlen(sDirDummy)+strlen(DEFAULT_USER_DATABASEDIR)+1)*sizeof(char));
         sprintf(sSetup.pDatabasePath,"%s%s",sDirDummy,DEFAULT_USER_DATABASEDIR);
 
-        // config file path
+        /* config file path */
         sSetup.configfile=(char *)malloc((strlen(sDirDummy)+strlen(CONFFILE)+1)*sizeof(char));
         sprintf(sSetup.configfile,"%s%s",sDirDummy,CONFFILE);
 
         free (sDirDummy);
     }
     
-    // set the other default values
+    /* set the other default values */
     sSetup.pBotname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
     strcpy(sSetup.pBotname,DEFAULT_BOTNAME);
     sSetup.realname=(char *)malloc((strlen(DEFAULT_REALNAME)+1)*sizeof(char));
     strcpy(sSetup.realname,DEFAULT_REALNAME);
     
-    // irc connection
+    /* irc connection */
     sSetup.sHostname=(char *)malloc((strlen(DEFAULT_IRC)+1)*sizeof(char));
     strcpy(sSetup.sHostname,DEFAULT_IRC);
     sSetup.sPort=(char *)malloc((strlen(DEFAULT_PORT)+1)*sizeof(char));
     strcpy(sSetup.sPort,DEFAULT_PORT);
 
-    // user & group
+    /* user & group */
     sSetup.sExeGroup=(char *)malloc((strlen(DEFAULT_GROUP)+1)*sizeof(char));
     strcpy(sSetup.sExeGroup,DEFAULT_GROUP);
     sSetup.sExeUser=(char *)malloc((strlen(DEFAULT_USER)+1)*sizeof(char));
@@ -134,7 +133,7 @@ int main(int argc,char * const argv[]) {
     sSetup.AccountLiveTime=DEFAULT_ALT;
     sSetup.AutoLoggoff=DEFAULT_LOGOFF;
     
-    // send dealy
+    /* send dealy */
     sSetup.iSendDelay=DEFAULT_FAST_SEND_DELAY;
     sSetup.nSlowSendDelay=DEFAULT_SLOW_SEND_DELAY;
     sSetup.nFastSendingCharLimit=DEFAULT_FAST_SEND_LIMIT;
@@ -151,7 +150,7 @@ int main(int argc,char * const argv[]) {
     #endif
     sSetup.bLogLevelWasSet=0;
 
-    // versions ausgabe
+    /* versions ausgabe */
     printf(VERSIONSTR);
     printf("\n");
     
@@ -159,7 +158,7 @@ int main(int argc,char * const argv[]) {
     openlog(PACKAGE,0,LOG_DAEMON);
     #endif
     
-    // Look for simple parameter and  custom config file
+    /* Look for simple parameter and  custom config file */
     for (i=1;i<argc;i++) {
         if (argv[i][0]==PARAMETER_CHAR) {
             switch (argv[i][1]) {
@@ -173,7 +172,7 @@ int main(int argc,char * const argv[]) {
                     exit(errno);
                 }
 
-                // linie limit  for the first send delay
+                /* linie limit  for the first send delay */
                 tmp=atoi(argv[i]);
                 if (tmp<0  || tmp > MAX_LOGLEVEL) {
                     errno=EDOM;
@@ -187,9 +186,24 @@ int main(int argc,char * const argv[]) {
             case 'f':
                 if (argv[++i]!=NULL)
         		{
-        			free(sSetup.configfile);
-        			sSetup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-                	        strcpy(sSetup.configfile,argv[i]);
+				if (stat(argv[i],&attribut))
+				{
+					fprintf(stderr,"Error: %s\n",strerror(errno));
+					exit(errno);
+				}else
+				{
+					if (S_ISREG(attribut.st_mode))
+					{
+				      		free(sSetup.configfile);
+        					sSetup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+	        	        	        strcpy(sSetup.configfile,argv[i]);
+					}else
+					{
+						fprintf(stderr,"Error: '%s' is not a regulare file\n",argv[i]);
+						errno=EINVAL;
+						exit(errno);
+					}
+				}
         		}
         		else
         		{	
@@ -213,30 +227,30 @@ int main(int argc,char * const argv[]) {
 
     }
 
-    // read config file
+    /* read config file*/
     ConfigFileParser();
     
-    // check for parameter
+    /* check for parameter */
     if (argc>1) {
         if (!CommandLineParser(argc,argv))
             exit(errno);
     }
 
-    // check the automatic times
+    /* check the automatic times */
     if (sSetup.AccountLiveTime<sSetup.AutoLoggoff) {
         sSetup.AutoLoggoff=sSetup.AccountLiveTime;
     }
 
-    // check the  delay timings
+    /* check the  delay timings */
     if (sSetup.nSlowSendDelay<sSetup.iSendDelay) {
         sSetup.nSlowSendDelay=sSetup.iSendDelay;
     }
 
     
     
-    // change the uid and the gid for root
+    /* change the uid and the gid for root */
     if (uid==0) {
-        // group
+        /* group */
         if (sSetup.sExeGroup){
             if ((Group=getgrnam(sSetup.sExeGroup)))
                setegid(Group->gr_gid);
@@ -245,7 +259,7 @@ int main(int argc,char * const argv[]) {
             }
         }
 
-        // user
+        /* user */
         if (sSetup.sExeUser) {
             if ((User=getpwnam(sSetup.sExeUser)))
                seteuid(User->pw_uid);
@@ -278,11 +292,11 @@ int main(int argc,char * const argv[]) {
     logger(LOG_NOTICE,_("Start..."));
 
 
-    // init Database and the mutex for  access to the database
+    /* init Database and the mutex for  access to the database */
     if (!initDatabases())
         exit(errno);
 
-    // create master dialog
+    /* create master dialog */
     if (sSetup.newMaster) {
         if (!dialogMaster()){
             closeDatabase();
@@ -292,14 +306,14 @@ int main(int argc,char * const argv[]) {
     
     
 
-    // create the network connection
+    /* create the network connection */
     if (!connectServer()) {
         closeDatabase();
         closelog();
         exit(errno);
     }
     
-    // connect to the irc service
+    /* connect to the irc service */
     if (!ConnectToIrc()) {
         disconnectServer();
         closeDatabase();
@@ -312,7 +326,7 @@ int main(int argc,char * const argv[]) {
     #endif
     logger(LOG_NOTICE,_("Running..."));
 
-    // redefine the signal handler for to stop the bot
+    /* redefine the signal handler for to stop the bot */
     signal(SIGINT,stopParser);
     signal(SIGTERM,stopParser);
     signal(SIGABRT,stopParser);
@@ -322,22 +336,22 @@ int main(int argc,char * const argv[]) {
     signal(SIGIO,stopParser);
 
     #ifdef NDEBUG
-    // make a daemon 
+    /* make a daemon  */
     daemon(true,true);
     #endif
 	
     pthread_mutex_init(&mutexAccount,NULL);
     
 	 
-	// init the command queue
+	/* init the command queue */
 	pCommandQueue=initQueue();
     init_extended_CallbackDList(&CallbackList, destroyCallbackItem);
 
-    // Main execution loop
+    /* Main execution loop */
     stop=false;
     again=false;
 
-	// create the threads
+	/* create the threads */
     pthread_create(&timeThread,NULL,TimingThread,NULL);
 
     threads=(pthread_t *)malloc(sSetup.thread_limit*sizeof(pthread_t));
@@ -345,25 +359,25 @@ int main(int argc,char * const argv[]) {
         pthread_create(&threads[i],NULL,CommandExecutionThread,(void*)pCommandQueue);
     }
     
-	// join the channels
+	/* join the channels*/
     pthread_create(&joinThread,NULL,JoinAllChannelsThread,&sSetup.nSettling);
     pthread_detach(joinThread);
 
-    // init the  buffer  for unparsed string
+    /* init the  buffer  for unparsed string */
     pUnparsed=(char*)malloc(sizeof(char));
     *pUnparsed='\0';
 
     while (!stop) {
         
-        // read line from tcp stack
+        /* read line from tcp stack */
         RecvLine(buffer,RECV_BUFFER_SIZE);
 
-        // added the new string to the  unparsed string
+        /* added the new string to the  unparsed string */
         pCurrStringPos=(char*)malloc((strlen(buffer)+strlen(pUnparsed)+1)*sizeof(char));
         sprintf(pCurrStringPos,"%s%s",pUnparsed,buffer);
         pCurrString=pCurrStringPos;
 
-        // parse all substrings of the  receiving line
+        /* parse all substrings of the  receiving line */
         while ((pStrPos=strchr(pCurrStringPos,'\r'))) {
             *pStrPos='\0';
 
@@ -372,7 +386,13 @@ int main(int argc,char * const argv[]) {
             strcpy(pCurrLine,pCurrStringPos);
 
             /* parse the part line */
-            logger(LOG_DEBUG,_("Receive: \"%s\""),pCurrLine);
+	    if ((strstr(pCurrLine,CmdList[CMD_IDENT]))!=NULL)
+	    {
+	            logger(LOG_DEBUG,_("Receive: \"%s\""),"!ident <nickname> <password>\0");
+	    }else{
+		    
+		logger(LOG_DEBUG,_("Receive: \"%s\""),pCurrLine);
+	    }
             preParser(pCurrLine,&sMsg);
 
             /* put the identified line  on the  queue */
@@ -398,7 +418,7 @@ int main(int argc,char * const argv[]) {
             
         }
         
-        // buffer the  unparsed string
+        /* buffer the  unparsed string */
         free(pUnparsed);
         pUnparsed=(char*)malloc((strlen(pCurrStringPos)+1)*sizeof(char));
         strcpy(pUnparsed,pCurrStringPos);
@@ -417,26 +437,26 @@ int main(int argc,char * const argv[]) {
     pthread_join(timeThread,NULL);
     
 
-    // wait of  terminat all threads
+    /* wait of  terminat all threads */
     for (i=0;i<sSetup.thread_limit;i++) { 
         pthread_join(threads[i],NULL);
     }
 
 
-    // destroy the mutex
+    /* destroy the mutex */
     pthread_mutex_destroy(&mutexAccount);
     
 
-    // clear the wait queue and  callback list
+    /* clear the wait queue and  callback list */
 	deleteQueue(pCommandQueue);
     destroyCallbackDList(&CallbackList);
 
-    // disconnect from server
+    /* disconnect from server */
     disconnectServer();
     closeDatabase();
     
     
-    //  check for restart option
+    /*  check for restart option */
     if (again) {
         logger(LOG_NOTICE,_("Restart..."));
         
@@ -463,7 +483,7 @@ int main(int argc,char * const argv[]) {
         closelog();
     }
 
-    // clean up thread
+    /* clean up thread */
     free (threads);
 
     free (sSetup.pBotname);

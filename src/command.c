@@ -201,7 +201,7 @@ void logoff(MsgItem_t *pMsg,int nRemoveMode) {
 	QueueData *pChannel;
     PQueue pChannelQueue;
 
-    int i, nLength;
+    int  nLength;
 
 	/* check login status */
    	if ((pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask))) {
@@ -254,7 +254,7 @@ void ident(MsgItem_t *pMsg) {
     char *pMod;
     boolean isMaster;
 
-    int i,login_len;
+    int login_len;
 
 
     logger(LOG_DEBUG,_("try to identify %s"),pMsg->pCallingNick);
@@ -382,7 +382,7 @@ void rmChannel(MsgItem_t *pMsg){
         return;
     }
     
-    logger(LOG_DEBUG,_("Part and  try to remove the channnel %s",pMsg->pAccessChannel));
+    logger(LOG_DEBUG,_("Part and  try to remove the channnel %s"),pMsg->pAccessChannel);
 
 
     /* checking of channel exists */
@@ -392,7 +392,7 @@ void rmChannel(MsgItem_t *pMsg){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s is removed from the channel list."),pMsg->pAccessChannel);
     }
 
-    // TODO: remove old access  rights for this channel
+    /* TODO: remove old access  rights for this channel */
 
     /* part the channel */
     part(pMsg->pAccessChannel);
@@ -432,7 +432,7 @@ void partChannel(MsgItem_t *pMsg) {
     if (!pMsg->pAccessChannel){
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
     } else {
-        logger(LOG_DEBUG,_("Part the channel %s",pMsg->pAccessChannel));
+        logger(LOG_DEBUG,_("Part the channel %s"),pMsg->pAccessChannel);
 
         /* part the channel */
         part(pMsg->pAccessChannel);
@@ -489,12 +489,8 @@ void setNick(MsgItem_t *pMsg){
    Bot comand: !chanlist
    ######################################################################### */
 void chanlist(MsgItem_t *pMsg){
-    char *buffer;
     char *pMode;
-    char *pMsgStr;
-    char *pMsgPart;
 	char *pChannelSet;
-    int i=0,buffer_size=0;
     ChannelData_t sChannelData;
 	PQueue pChannelQueue;
 	QueueData *pChannel;
@@ -516,9 +512,9 @@ void chanlist(MsgItem_t *pMsg){
     	    pMode=ChannelModeToStr(&(sChannelData.sModes));
 
         	logger(LOG_DEBUG,_("...for channel %s"),(char*)pChannel->data);
-	        //sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pChannel->data);
+	        /*sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,(char*)pChannel->data);*/
 
-            //pMsgPart=getMsgString(INFO_CHANNELLIST_MODE);
+            /*pMsgPart=getMsgString(INFO_CHANNELLIST_MODE); */
     	    
 	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,"%s %s",pChannel->data,pMode);
 
@@ -549,7 +545,7 @@ void chanlist(MsgItem_t *pMsg){
    ######################################################################### */
 void version(MsgItem_t *pMsg) {
     char pMsgStr[256];
-    // creat Versions String
+    /* creat Versions String */
     sprintf(pMsgStr,VERSIONSTR);
     strcat(pMsgStr,"\r\n");
     sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
@@ -559,7 +555,6 @@ void version(MsgItem_t *pMsg) {
    ######################################################################### */
 void setGreeting(MsgItem_t *pMsg) {
     char *pChannelSet;
-    char *pMode;
 
     ChannelData_t sChannelData;
 
@@ -779,7 +774,7 @@ void banuser(MsgItem_t *pMsg) {
     }
     free (pTmpBotName);
 
-    // read the login from the database
+    /* read the login from the database */
     pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask);
 
     Data=(char*)malloc((strlen(pLogin)+strlen(pMsg->pAccessChannel)+2)*sizeof(char));
@@ -789,7 +784,7 @@ void banuser(MsgItem_t *pMsg) {
 
     StrToLower(pToBanNick);
 
-    // fill callback item
+    /* fill callback item */
     Callback->nickname=pToBanNick;
     Callback->CallbackFkt=SetBanCb;
     Callback->data=Data;
@@ -819,7 +814,7 @@ void debanuser(MsgItem_t *pMsg) {
 
     pBanmask=getFirstPart(pParameter,NULL);
 
-    // reset the ban
+    /* reset the ban */
     if (pBanmask) {
         deban(pMsg->pAccessChannel,pBanmask);
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The ban %s is removed by the bot from the channel %s"),pBanmask,pMsg->pAccessChannel);
@@ -836,7 +831,6 @@ void kickuser(MsgItem_t *pMsg) {
     char *pKicknick;
     char *pReason=NULL;
     char *pParameter;
-    char *pPos;
     char *pLogin;
     char *pData;
     char *pTmpBotName;
@@ -977,7 +971,7 @@ void accountmode(MsgItem_t *pMsg){
 
 	    }
 
-    	logger(LOG_DEBUG,_("Modify account %s in the channel %s",pLogin,pMsg->pAccessChannel));
+    	logger(LOG_DEBUG,_("Modify account %s in the channel %s"),pLogin,pMsg->pAccessChannel);
 
 	    /* check for add or remove  mod */
     	if (pPos[0]!='+' && pPos[0]!='-') {
@@ -1249,7 +1243,6 @@ void rmuser(MsgItem_t *pMsg) {
    Bot comand: !accountlist [#channel]
    ######################################################################### */
 void accountlist(MsgItem_t *pMsg){
-    char *pLogin;
     char *pArgv;
     char *pKey;
     PQueue pLoginQueue;
@@ -1260,7 +1253,7 @@ void accountlist(MsgItem_t *pMsg){
     char *pMsgStr;
     boolean bIsOther;
 
-    unsigned int i,j,k,iChanLen,iLoginLen;
+    unsigned int j,iChanLen,iLoginLen;
 
     pArgv=getArgument(pMsg->pRawLine);
 
@@ -1448,25 +1441,25 @@ void accountlist(MsgItem_t *pMsg){
    Bot comand: !invite <#channel> [Nick]
    ######################################################################### */
 void inviteuser(MsgItem_t *pMsg){
-    char *pParameter;
-    char *pRest;
-    char *pInviteNick;
-    char *pTmp;
+    char *pParameter=NULL;
+    char *pRest=NULL;
+    char *pInviteNick=NULL;
+    char *pTmp=NULL;
     extern ConfigSetup_t sSetup;
     
-    // extract and select the nick name  for inviting
+    /* extract and select the nick name  for inviting */
     if (!(pParameter=getArgument(pMsg->pRawLine))) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't found regulare parameters."));
         return;
     }
     
-    // extract the parameters
+    /* extract the parameters */
     rmFirstPart(pParameter,&pRest);
     pInviteNick=getFirstPart(pRest,NULL);
     free(pParameter);
     free(pRest);
 
-    // select the nickname
+    /* select the nickname */
     if (!pInviteNick) {
         pInviteNick=(char*)malloc((strlen(pMsg->pCallingNick)+1)*sizeof(char));
         if (!pInviteNick) {
@@ -1483,17 +1476,17 @@ void inviteuser(MsgItem_t *pMsg){
     }else {
         strcpy(pTmp,sSetup.pBotname);
     
-        // norming the strings
+        /* norming the strings */
         StrToLower(pTmp);
         StrToLower(pInviteNick);
         
     
-        // check the identity
-        // bot can't invite himself
+        /* check the identity */
+        /* bot can't invite himself */
         if (!strcmp(pInviteNick,pTmp)) {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Can't invite myself."));
         } else {
-            // invite
+            /* invite */
             invite(pMsg->pAccessChannel,pInviteNick);
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user %s to the channel %s."),pInviteNick,pMsg->pAccessChannel);
         }
@@ -1521,7 +1514,7 @@ void ctcpping(MsgItem_t *pMsg) {
    ######################################################################### */
 void ctcpversion(MsgItem_t *pMsg) {
     char pMsgStr[256];
-    char pVerStr[256];
+    /*char pVerStr[256];*/
     struct utsname env;
 
     uname(&env);

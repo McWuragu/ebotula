@@ -222,7 +222,7 @@ int removeCallbackDList(CallbackDList *list, CallbackDListItem *element, Callbac
 CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, CallbackDListItem *element,char *nickname)
 {
 	CallbackDListItem *temp;
-    CallbackItem_t *data;
+    /*CallbackItem_t *data;*/
 	
 	 pthread_mutex_lock(list->callbacklist_mutex);
     	/** check for empty list **/

@@ -33,7 +33,6 @@ void *TimingThread(void *argv){
     extern boolean stop;
     time_t newTime;
     time_t lastPing=0;
-    time_t lastLineCount=0;
     time_t lastRemoveDeadLogins=0;
     time_t lastRemoveDeadAccounts=0;
 
@@ -71,5 +70,5 @@ void *TimingThread(void *argv){
     logger(LOG_DEBUG,_("The timing thread is stopped"));
 }
 
-//#######################################################################
+/*####################################################################### */
 

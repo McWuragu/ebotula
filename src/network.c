@@ -305,7 +305,6 @@ void * JoinAllChannelsThread(void * args) {
     int nSettling;
     PQueue pChannelQueue;
 	QueueData *pChannel;
-    unsigned int i;
     pChannelQueue=list_db(CHANNEL_DB);
     
     if (args) {

@@ -30,7 +30,7 @@
 #undef CMD_MSG
 
 #include "parameter.h"
-// #############################################################################                  
+/* #############################################################################                   */
 boolean CommandLineParser(int argc,char *const argv[]) {
     extern ConfigSetup_t sSetup;
     int i;
@@ -40,7 +40,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
     
     for (i=1;i<argc;i++) {
         if (argv[i][0]==PARAMETER_CHAR) {
-            logger(LOG_INFO,_("Check option \"%s\"",argv[i]));
+            logger(LOG_INFO,_("Check option \"%s\""),argv[i]);
             switch  (argv[i][1]) {
             case 's':
                 if (++i>=argc) {
@@ -49,7 +49,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                
-                // set the server name
+                /* set the server name*/
                 if (strpbrk(argv[i],SERVER_NOT_ALLOW_CHAR)) {
                     errno=EINVAL;
                     fprintf(stderr,_("The hostname is irregular.\n"));
@@ -67,7 +67,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set the pBotname
+                /* set the pBotname */
                 if (!NickStringCheck(argv[i])) {
                     errno=EINVAL;
                     fprintf(stderr,_("The botname is irregular.\n"));
@@ -85,7 +85,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set the user
+                /* set the user */
                 sSetup.sExeUser=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
                 strcpy(sSetup.sExeUser,argv[i]);
                 
@@ -97,7 +97,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set the group
+                /* set the group */
                 sSetup.sExeGroup=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
                 strcpy(sSetup.sExeGroup,argv[i]);
                 
@@ -109,7 +109,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set realname
+                /* set realname */
                 sSetup.realname=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
                 strcpy(sSetup.realname,argv[i]);
                 
@@ -121,7 +121,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set portnumber
+                /* set portnumber */
                 if ((atoi(argv[i])<1) || (atoi(argv[i])>65535)) {
                     errno=EDOM;
                     fprintf(stderr,_("The portnumber %i value is out of range.\n"),atoi(argv[i]));
@@ -141,7 +141,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set threadlimit
+                /* set threadlimit */
                 tmp=atoi(argv[i]);
                 if ((tmp<1) || (tmp>MAX_THREADS_LIMIT)) {
                     errno=EDOM;
@@ -158,7 +158,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set auto logoff time
+                /* set auto logoff time */
                 tmp=atoi(argv[i]);
                 if (tmp<MIN_LOGOFF) {
                     errno=EDOM;
@@ -175,7 +175,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set sending delay 
+                /* set sending delay */
                 tmp=atoi(argv[i]);
                 if (tmp<=0) {
                     errno=EDOM;
@@ -192,7 +192,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set sending delay 
+                /* set sending delay */
                 tmp=atoi(argv[i]);
                 if (tmp<=0) {
                     errno=EDOM;
@@ -208,7 +208,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
 
-                // linie limit  for the first send delay
+                /* linie limit  for the first send delay */
                 tmp=atoi(argv[i]);
                 if (tmp<0) {
                     errno=EDOM;
@@ -224,7 +224,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
 
-                // linie limit  for the first send delay
+                /* linie limit  for the first send delay */
                 tmp=atoi(argv[i]);
                 if (tmp<0) {
                     errno=EDOM;
@@ -241,7 +241,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 
-                // set account live time
+                /* set account live time */
                 tmp=atoi(argv[i]);
                 if (tmp<MIN_ALT) {
                     errno=EDOM;
@@ -259,7 +259,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     fprintf(stderr,_("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
-                // set database path
+                /* set database path */
                 sSetup.pDatabasePath=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
                 strcpy(sSetup.pDatabasePath,argv[i]);
                 break;
@@ -270,7 +270,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
 
-                // set the limit for ping timeout in s
+                /* set the limit for ping timeout in s */
                 tmp=atoi(argv[i]);
                 if (tmp<MIN_PINGTIME) {
                     errno=EDOM;
@@ -300,51 +300,51 @@ boolean CommandLineParser(int argc,char *const argv[]) {
     }
     return true;
 }
-// ############################################################################# 
+/*############################################################################# */
 void ConfigFileParser(void) {
     FILE *fd;
     extern ConfigSetup_t sSetup;
     int tmp;
     char buffer[MAX_READ_BUFFER_SIZE], *c,*value,*key;
-    //errno=0;
+    /*errno=0; */
 
     logger(LOG_NOTICE,_("Read configuration file %s"),sSetup.configfile);
 
     if (!(fd=fopen(sSetup.configfile,"r"))) {
-	    // generating basicconfig for ebotula
+	    /* generating basicconfig for ebotula */
         write_baseconfig(sSetup.configfile);
     }else {
         logger(LOG_DEBUG,_("File is open"),sSetup.configfile);
     
         while((fgets(buffer,MAX_READ_BUFFER_SIZE,fd)!=NULL) && (errno==0)){
-            // remove newline and leading spaces
+            /* remove newline and leading spaces */
             trim(buffer);
             clearspace(buffer);
             
-            // ignore space lines and comments
+            /* ignore space lines and comments */
             if ((buffer[0]!=COMMENT_CHAR) && (buffer[0]!='\0')) {
                 logger(LOG_INFO,_("Found config line %s"),buffer);
                 
     
                 c=strchr(buffer,'=');
                 
-                // parse the value from the line
+                /* parse the value from the line */
                 value=(char *)malloc((strlen(c)+1)*sizeof(char));
                 strcpy(value,c+1);
                 
-                // parse the key from the line
+                /* parse the key from the line */
                 key=(char *)malloc((strlen(buffer)-strlen(c)+1)*sizeof(char));
                 strtok(buffer,"=");
                 strcpy(key,buffer);
                 
-                // set  the  reading values
+                /* set  the  reading values */
                 if (!strcmp(key,KEY_SERVER)) {
                     if (strpbrk(value,SERVER_NOT_ALLOW_CHAR)) {
                         errno=EINVAL;
                         fprintf(stderr,_("The hostname is irregular.\n"));
                         exit(errno);
                     }
-                    // set hostname
+                    /* set hostname */
                     free(sSetup.sHostname);
                     sSetup.sHostname=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.sHostname,value);
@@ -354,7 +354,7 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The portnumber %i value is out of range.\n"),atoi(value));
                         exit(errno);
                     }
-                    // set port
+                    /* set port */
                     free(sSetup.sPort);
                     sSetup.sPort=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.sPort,value);
@@ -364,12 +364,12 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The botname is irregular.\n"));
                         exit(errno);
                     }
-                    // set pBotname
+                    /* set pBotname */
                     free(sSetup.pBotname);
                     sSetup.pBotname=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.pBotname,value);
                 } else if (!strcmp(key,KEY_REALNAME)) {
-                    // ser realname
+                    /* ser realname */
                     free(sSetup.realname);
                     sSetup.realname=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.realname,value);
@@ -380,10 +380,10 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The thread limit is out of range.\n"));
                         exit(errno);
                     }   
-                    // set thread limit
+                    /* set thread limit */
                     sSetup.thread_limit=tmp;
                 } else  if (!strcmp(key,KEY_DATABASEPATH)) {
-                    // set database path
+                    /* set database path */
                     free(sSetup.pDatabasePath);
                     sSetup.pDatabasePath=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.pDatabasePath,value);
@@ -394,7 +394,7 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The automatic logoff time is invalid.\n"));
                         exit(errno);
                     }   
-                    // set auto logoff time
+                    /* set auto logoff time */
                     sSetup.AutoLoggoff=tmp;
                 } else if (!strcmp(key,KEY_FASTSENDDELAY)) {
                     tmp=atoi(value);
@@ -403,7 +403,7 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The send delay time is invalid.\n"));
                         exit(errno);
                     }   
-                    // set first delay time
+                    /* set first delay time */
                     sSetup.iSendDelay=tmp;
                 } else if (!strcmp(key,KEY_SLOWSENDDELAY)) {
                     tmp=atoi(value);
@@ -412,7 +412,7 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The send delay time is invalid.\n"));
                         exit(errno);
                     }   
-                    // set second delay time
+                    /* set second delay time */
                     sSetup.nSlowSendDelay=tmp;
                 } else if (!strcmp(key,KEY_FASTSENDLIMIT)) {
                     tmp=atoi(value);
@@ -421,7 +421,7 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The limit for sending with the fast send delay is invalid.\n"));
                         exit(errno);
                     }   
-                    // set auto logoff time
+                    /* set auto logoff time */
                     sSetup.nFastSendingCharLimit=tmp;
                 } else if (!strcmp(key,KEY_INITDELAY)) {
                     tmp=atoi(value);
@@ -430,7 +430,7 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The delay of the startup initialization is invalid.\n"));
                         exit(errno);
                     }   
-                    // set auto logoff time
+                    /* set auto logoff time */
                     sSetup.nSettling=tmp;
                 } else if (!strcmp(key,KEY_ALT)) {
                     tmp=atoi(value);
@@ -439,7 +439,7 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The account living time is invalid.\n"));
                         exit(errno);
                     }   
-                    // set account live time
+                    /* set account live time */
                     sSetup.AccountLiveTime=tmp;
                 } else if (!strcmp(key,KEY_PINGTIMEOUT)) {
                     tmp=atoi(value);
@@ -448,10 +448,10 @@ void ConfigFileParser(void) {
                         fprintf(stderr,_("The ping timeout is invalid.\n"));
                         exit(errno);
                     }   
-                    // set account live time
+                    /* set account live time */
                     sSetup.iTimeout=tmp;
                 } else if (!strcmp(key,KEY_LOGLEVEL)) {
-                    // cmd line has change  the log level
+                    /* cmd line has change  the log level */
                     if (!sSetup.bLogLevelWasSet) {
                         tmp=atoi(value);
                         if (tmp<=0 || tmp > MAX_LOGLEVEL) {
@@ -462,12 +462,12 @@ void ConfigFileParser(void) {
                         sSetup.nLogLevel=tmp;
                     }
                 }else if (!strcmp(key,KEY_EXEUSER)) {
-                    // set execution rights
+                    /* set execution rights */
                     if (sSetup.sExeUser)free(sSetup.sExeUser);
                     sSetup.sExeUser=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.sExeUser,value);
                 }else if (!strcmp(key,KEY_EXEGROUP)) {
-                    // set execution rights
+                    /* set execution rights */
                     if (sSetup.sExeGroup) free(sSetup.sExeGroup);
                     sSetup.sExeGroup=(char *)malloc((strlen(value)+1)*sizeof(char));
                     strcpy(sSetup.sExeGroup,value);
@@ -535,14 +535,14 @@ boolean dialogMaster(void){
 
     trim(passwd);
 
-    // create account
+    /* create account */
     if (!add_db(USER_DB,name,passwd)) {
         fprintf(stderr,_("A account %s already exists."),name);
         fprintf(stderr,"\n");
         return false;
     }
 
-    // make him to the master
+    /* make him to the master */
     if (!add_db(ACCESS_DB,name,"+m")) {
         del_db(USER_DB,name);
         fprintf(stderr,_("Couldn't set this account to master."));

@@ -39,13 +39,13 @@ UserLevel_t getUserLevel(char *const pChannel, char *const pNetmask) {
     char *pLevel;
     UserLevel_t UserLevel=NoneLevel;
 
-    // lock for the  login of this netmask
+    /* lock for the  login of this netmask */
     if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
         UserLevel=LoggedLevel;
         
-        // check the  other level
+        /* check the  other level */
         if (pChannel) {
-            // built the  key
+            /* built the  key */
             pAccessLevelKey=(char*)malloc((strlen(pChannel)+strlen(pLogin)+1)*sizeof(char));
             sprintf(pAccessLevelKey,"%s%s",pLogin,pChannel);
 
@@ -112,7 +112,7 @@ void log_on(char *pNetmask,char *pLogin) {
 
     pthread_mutex_lock(&mutexAccount);
     if (exist_db(USERTONICK_DB,pLogin)) {
-        // relog on
+        /* relog on */
         if ((pOldNetmask=get_db(USERTONICK_DB,pLogin))) {
 
 			del_db(NICKTOUSER_DB,pOldNetmask);
@@ -242,7 +242,7 @@ void rmDeadAccounts(long lCheckTime) {
     }
 	deleteQueue(pLoginQueue);
 }
-// #############################################################################
+/* ############################################################################# */
 boolean checkUserLevel(char *pCmdLogin, char *pLogin, char const *pChannel) {
     char *pMod;
     char *pAccessKey;

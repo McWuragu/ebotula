@@ -59,7 +59,7 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	/** lokal auto vars **/
 	PQueue pqueueNew;/** new Element **/
 	
-	int intStatus;
+	/*int intStatus;*/
 	
 	
     pthread_mutex_lock(pqueueIn->sentinel->queue_mutex);	
@@ -120,7 +120,7 @@ QueueExeStatus pushQueue(PQueue pqueueIn, QueueData queuedataElement)
 	
     memcpy(pqueueNew->queuedataData->data,queuedataElement.data,queuedataElement.t_size);
     
-    // increament  the counter for the reading  threads
+    /* increament  the counter for the reading  threads*/
     pthread_cond_signal(pqueueIn->sentinel->StopThreadCond);
 
     pthread_mutex_unlock(pqueueIn->sentinel->queue_mutex);	

@@ -29,9 +29,9 @@
 #include "handles.h"
 
 
-// #########################################################################
-// Event handler: NICK
-// #########################################################################
+/* #########################################################################
+   Event handler: NICK
+  #########################################################################*/
 void hNickChange(char *pLine) {
     char *pNetmask;
     char *pLogin;
@@ -44,7 +44,7 @@ void hNickChange(char *pLine) {
 
 	if (pNetmask) {
         if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-    		// get the new nickname
+    		/* get the new nickname */
     		pNewNick=strrchr(pLine,' ');
     		
     		if (strlen(pNewNick)>2) {
@@ -53,15 +53,15 @@ void hNickChange(char *pLine) {
     			pNetmaskCopy=(char*)malloc((strlen(pNetmask)+1)*sizeof(char));
     			strcpy(pNetmaskCopy,pNetmask);
     			
-    			// cut out the secondary part of the netmask
+    			/* cut out the secondary part of the netmask */
     			pTmp=strchr(pNetmaskCopy,'!');
     			strtok(pTmp," ");
     
-    			// build new netmask	
+    			/* build new netmask	*/
     			pNewNetmask=(char*)malloc((strlen(pNewNick)+strlen(pTmp)+1)*sizeof(char));
     			sprintf(pNewNetmask,"%s%s",pNewNick,pTmp);
 
-    			// reset Login Status
+    			/* reset Login Status*/
     			log_out(pLogin);
     			log_on(pNewNetmask,pLogin);
     
@@ -77,10 +77,10 @@ void hNickChange(char *pLine) {
     }
 
 }
-// #########################################################################
-// Event handler: JOIN
-// Action: Request OP
-// #########################################################################
+/* ######################################################################### 
+    Event handler: JOIN
+    Action: Request OP
+   ######################################################################### */
 void hBotNeedOp(char *pLine){
     extern ConfigSetup_t sSetup;
     char *pChannel;
@@ -93,7 +93,7 @@ void hBotNeedOp(char *pLine){
     if (!(pChannel=getAccessChannel(pLine)))
         return;
 
-    // extrakt Namelist
+    /* extrakt Namelist */
     pPos=strchr(&pLine[1],':');
     pNickList=(char*)malloc((strlen(pPos)+1)*sizeof(char));
     strcpy(pNickList,pPos);
@@ -112,10 +112,10 @@ void hBotNeedOp(char *pLine){
     free(pNickList);
     free(pChannel);
 }
-// #########################################################################
-// Event handler: JOIN
-// Action: set the mod  for the user
-// #########################################################################
+/* ######################################################################### 
+   Event handler: JOIN
+   Action: set the mod  for the user
+   ######################################################################### */
 void hSetModUser(char *pLine) {
     extern ConfigSetup_t sSetup;
     char *pLogin;
@@ -142,13 +142,13 @@ void hSetModUser(char *pLine) {
             	    logger(LOG_DEBUG,_("Set the account modes for the account %s with nickname %s"),pLogin,pNick);
         
                     if ((pChannel=getAccessChannel(pLine))) {
-                    	// build key for access.dbf
+                    	/* build key for access.dbf */
                         pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
             	        sprintf(pKey,"%s%s",pLogin,pChannel);
                	        
-            			// read  the  mod
+            			/* read  the  mod */
                    	    if ((pMod=get_db(ACCESS_DB,pKey))) {
-                    	    // set the mod  for this nick
+                    	    /* set the mod  for this nick */
                    	       	mode(pChannel,pMod,pNick);
                             free(pMod);
             	        } else if (exist_db(ACCESS_DB,pLogin)) {
@@ -167,11 +167,11 @@ void hSetModUser(char *pLine) {
         free(pNick);
     }
 }
-// #########################################################################
-// Event handler: MODE
-// Action:  added the callback item in the list for the user if this change
-//          not by bot self
-// #########################################################################
+/* #########################################################################
+   Event handler: MODE
+   Action:  added the callback item in the list for the user if this change
+            not by bot self
+   ######################################################################### */
 void hResetModes(char *pLine) {
     extern ConfigSetup_t sSetup;
     char *pPos;
@@ -187,7 +187,7 @@ void hResetModes(char *pLine) {
     
     
 
-    //splitt the string
+    /*splitt the string*/
     pNetmask=getFirstPart(pLine,&pRest);
     rmFirstPart(pRest,&pRest);
     
@@ -197,7 +197,7 @@ void hResetModes(char *pLine) {
     StrToLower(pNick);
     free(pRest);
     
-    // extract  the nick
+    /* extract  the nick */
     pAccessNick=getNickname(pNetmask);
     free(pNetmask);
 
@@ -210,25 +210,25 @@ void hResetModes(char *pLine) {
         if (strcmp(pAccessNick,pTmpBotName)!=0) {
             if (pMode[1]=='o' || pMode[1]=='v') {
               
-                // check of bot new mods or  other user
+                /* check of bot new mods or  other user */
                 if (strcmp(pNick,pTmpBotName)==0) {
                     logger(LOG_DEBUG,_("Bot get a new account mode"));
-                    // mode set for the bot from other user of operator
-                    // then initiallize this  channel
+                    /* mode set for the bot from other user of operator */
+                    /* then initiallize this  channel */
                     if (strcmp(pMode,"+o")==0) {
                         channelInit(pChannel);
                     } else {
                         action(pChannel,_("needs operator access rights."));
                     }
                 } else {
-                    // add callback for reset the modes for a user    
+                    /* add callback for reset the modes for a user    */
                     logger(LOG_DEBUG,_("Added callback routine for the reset of the account modes"));
                     
-                    // built the data for callback
+                    /* built the data for callback */
                     pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
                     sprintf(pData,"%s %s",pChannel,pMode);
                     
-                    // build  the  element
+                    /* build  the  element*/
                     StrToLower(pNick);
                     Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
                     Callback->nickname=(char*)malloc((strlen(pNick)+1)*sizeof(char));
@@ -236,16 +236,16 @@ void hResetModes(char *pLine) {
                     Callback->CallbackFkt=ModeResetCb;
                     Callback->data=pData;
                     
-                    // put  the  element  in the  callback list  before tail
+                    /* put  the  element  in the  callback list  before tail */
                     insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
         
-                    // send the who
+                    /* send the who*/
                     whois(pNick);
                 }
             } else if (pMode[1]=='b') {
                 logger(LOG_INFO,_("Ban reset not implemented jet"));
             } else {
-                // reset other mods
+                /* reset other mods */
                 pPos=strstr(pLine,pMode);
                 pPos[0]=(pPos[0]=='-')?'+':'-';
                 mode(pChannel,pPos,NULL);
@@ -260,10 +260,10 @@ void hResetModes(char *pLine) {
     free(pNick);
 
 }
-// #########################################################################
-// Event handler: TOPIC
-// Action: reset the top  for the chanel if this change not by bot self
-// #########################################################################
+/* #########################################################################
+   Event handler: TOPIC
+   Action: reset the top  for the chanel if this change not by bot self
+   ######################################################################### */
 void hResetTopic(char *pLine){
     extern ConfigSetup_t sSetup;
     char *pChannel;
@@ -282,14 +282,14 @@ void hResetTopic(char *pLine){
 
         if (strcmp(pNick,pTmpBotName)) {
     
-            // get the  right topic for this channel
+            /* get the  right topic for this channel*/
             if (!(pChannel=getAccessChannel(pLine)))
                 return;
     
     
             if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
             	if ((pTopic=getTopic(pChannelSet))) {
-                	// reset the topic
+                	/* reset the topic */
     	            topic(pChannel,pTopic);
         	        free(pTopic);
             	} else {
@@ -305,10 +305,10 @@ void hResetTopic(char *pLine){
         free(pTmpBotName);
     }
 }
-// #########################################################################
-// Event handler: KICK
-// Action: rejoin the channel fater  kick
-// #########################################################################
+/* #########################################################################
+   Event handler: KICK
+   Action: rejoin the channel fater  kick
+   #########################################################################*/
 void hRejoinAfterKick(char *pLine){
     char *pRest=NULL;
     char *pChannel;
@@ -341,10 +341,10 @@ void hRejoinAfterKick(char *pLine){
 
 }
 
-// #########################################################################
-// Event handler: MODE
-// Action: initialize the channel after  get operator access
-// #########################################################################
+/* #########################################################################
+   Event handler: MODE
+   Action: initialize the channel after  get operator access
+   #########################################################################*/
 
 void hInitAfterOp(char *pLine) {
     char *pChannel;
@@ -355,9 +355,9 @@ void hInitAfterOp(char *pLine) {
     channelInit(pChannel);
 }
 
-// #########################################################################
-// Event helper: Channel intializalisation
-// #########################################################################
+/* #########################################################################
+   Event helper: Channel intializalisation
+   #########################################################################*/
 static void channelInit(char *pChannel) {
     ChannelData_t sChannelData;
     char *pMode,*pChannelSet;
@@ -367,12 +367,12 @@ static void channelInit(char *pChannel) {
         StrToChannelData(pChannelSet,&sChannelData);
         free(pChannelSet);
                                              
-        // set Topic
+        /* set Topic */
         if (sChannelData.pTopic) {
             topic(pChannel,sChannelData.pTopic);
         }
 
-        // set Modes
+        /* set Modes */
         pMode=ChannelModeToStr(&(sChannelData.sModes));
         if (strlen(pMode)) {
             mode(pChannel,pMode,NULL);
@@ -389,14 +389,13 @@ static void channelInit(char *pChannel) {
     }
 }
 
-// #########################################################################
-// Event handler: 352
-// Action: call the callback function for a nickname
-// #########################################################################
+/* #########################################################################
+   Event handler: 352
+   Action: call the callback function for a nickname
+   #########################################################################*/
 void hCallback(char *pLine) {
     extern CallbackDList CallbackList;
     CallbackItem_t *CB_Data;
-    CallbackDListItem *pCallbackItem;
     CallbackDListItem *pCallbackItemReturn;
     char *pNetmask;
     char *pRest=NULL;
@@ -404,9 +403,9 @@ void hCallback(char *pLine) {
     char *pLogin;
     char *pDomain;
 
-    rmFirstPart(pLine,&pRest); // 0
-    rmFirstPart(pRest,&pRest); // 1
-    rmFirstPart(pRest,&pRest); // 2
+    rmFirstPart(pLine,&pRest); /* 0 */
+    rmFirstPart(pRest,&pRest); /* 1 */
+    rmFirstPart(pRest,&pRest); /* 2 */
     
     pNick=getFirstPart(pRest,&pRest);
     pLogin=getFirstPart(pRest,&pRest);
@@ -421,11 +420,11 @@ void hCallback(char *pLine) {
          * if  this item not more in the  queue then look for  the next
          */
         if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
-            // built netmask
+            /* built netmask */
             pNetmask=(char*)malloc((strlen(pNick)+strlen(pLogin)+strlen(pDomain)+3)*sizeof(char));
             sprintf(pNetmask,"%s!%s@%s",pNick,pLogin,pDomain);
     
-            // execute the callback
+            /* execute the callback */
             CB_Data->CallbackFkt(pNetmask,CB_Data->data);
     
             /* destroy  callback item */
@@ -439,10 +438,10 @@ void hCallback(char *pLine) {
     free(pDomain);
 }
 
-// #########################################################################
-// Event handler: 401
-// Action: handle a whois failed
-// #########################################################################
+/* #########################################################################
+   Event handler: 401
+   Action: handle a whois failed
+   #########################################################################*/
 void hWhoisFailed(char *pLine) {
     extern CallbackDList CallbackList;
     CallbackItem_t *CB_Data;
@@ -450,9 +449,9 @@ void hWhoisFailed(char *pLine) {
     char *pRest=NULL;
     char *pNick;
 
-    rmFirstPart(pLine,&pRest); // 0
-    rmFirstPart(pRest,&pRest); // 1
-    rmFirstPart(pRest,&pRest); // 2
+    rmFirstPart(pLine,&pRest); /* 0 */
+    rmFirstPart(pRest,&pRest); /* 1 */
+    rmFirstPart(pRest,&pRest); /* 2 */
     
     pNick=getFirstPart(pRest,NULL);
     free(pRest);

@@ -28,16 +28,16 @@
 
 
 
-// ############################################################################# 
+/* #############################################################################  */
 void trim(char* pStr) {
     boolean bIsAlpha;
     int iLineLength,i,j;
 
-    // remove leading space
-    // remove multispace
-    // remove newline
-    // remove carge return
-    // remove tabs
+    /* remove leading space
+       remove multispace
+       remove newline
+       remove carge return
+       remove tabs */
     bIsAlpha=false;
     j=0;
     iLineLength=strlen(pStr);
@@ -53,12 +53,12 @@ void trim(char* pStr) {
         }
     }
 
-    // remove the folling space
+    /* remove the folling space */
     if (pStr[--j]==' ') {
         pStr[j]='\0';
     }
 }
-// ############################################################################# 
+/* #############################################################################  */
 void clearspace(char *pStr) {
     int i,j,noclr;
     int iLineLength;
@@ -78,7 +78,7 @@ void clearspace(char *pStr) {
         }
     }
 }
-// ############################################################################# 
+/* #############################################################################  */
 void StrToLower(char *pStr) {
      unsigned int str_length,i;
 
@@ -93,7 +93,7 @@ void StrToLower(char *pStr) {
     
      }
 }
-// ############################################################################# 
+/* ############################################################################# */
 char *ChannelModeToStr(ChannelMode_t *pMode){
     char *pModeStr;
     int nStrSize;
@@ -107,8 +107,8 @@ char *ChannelModeToStr(ChannelMode_t *pMode){
     strcpy(pModeStr,pMode->pModeStr);
     clearspace(pModeStr);
 
-    // add the parameter for +k and/or +l 
-    // the order is: keyword is first then come limit
+    /* add the parameter for +k and/or +l  */
+    /* the order is: keyword is first then come limit */
     if (strchr(pModeStr,'k') && pMode->pKeyword) {
         strcat(pModeStr," ");
         strcat(pModeStr,pMode->pKeyword);
@@ -123,7 +123,7 @@ char *ChannelModeToStr(ChannelMode_t *pMode){
 
     return pModeStr;
 }
-// ############################################################################# 
+/* ############################################################################# */
 void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
     char *ppArgv[3];
     char *pPos,*pPos2;
@@ -131,13 +131,13 @@ void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
 
     if (!pMode) {return;}
 
-    // init  the struct
+    /* init  the struct */
     pMode->pKeyword=NULL;
     pMode->pLimit=NULL;
 
     strcpy(pMode->pModeStr,"            ");
 
-    // split the mode line in three parts
+    /* split the mode line in three parts */
     pPos=pModeStr;
     for (i=0;i<3;i++) {
         if (pPos) {
@@ -155,7 +155,7 @@ void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
         }
     }
 
-    // fill the struct
+    /* fill the struct */
     if (ppArgv[0]) {
         iLength=strlen(ppArgv[0]);
         j=1;
@@ -218,7 +218,7 @@ void StrToChannelMode(char *pModeStr,ChannelMode_t * pMode) {
     }
     return;
 }
-// ############################################################################# 
+/* #############################################################################  */
 void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData) {
     char *pMode;
 
@@ -232,7 +232,7 @@ void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData) {
 
     return;
 }
-// ############################################################################# 
+/* ############################################################################# */
 char *ChannelDataToStr(ChannelData_t *pChannelData) {
     char *pChannelSet;
     char *pMode;
@@ -257,7 +257,7 @@ char *ChannelDataToStr(ChannelData_t *pChannelData) {
     return pChannelSet;
 }
 
-// ############################################################################# 
+/* ############################################################################# */
 boolean ChannelStringCheck(char *const pStr) {
     if (pStr) {
         if (CommonStringCheck(pStr)) {
@@ -269,7 +269,7 @@ boolean ChannelStringCheck(char *const pStr) {
     return false;
 }
 
-// ############################################################################# 
+/* ############################################################################# */
 boolean NickStringCheck(char *const pStr) {
     unsigned int i;
 
@@ -287,7 +287,7 @@ boolean NickStringCheck(char *const pStr) {
     }
     return false;
 }
-// ############################################################################# 
+/* ############################################################################# */
 int logger(int priority, char *format, ...)
 {
     extern ConfigSetup_t sSetup;
