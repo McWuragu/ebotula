@@ -17,6 +17,7 @@
 #endif
 
 #include "extract.h"
+#include "callback.h"
 #include "utilities.h"
 #include "dbaccess.h"
 #include "messages.h"
@@ -62,7 +63,7 @@ void hNickChange(char *pLine) {
 			log_out(pLogin);
 			log_on(pNewNetmask,pLogin);
 
-    		DEBUG("Changethe netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
+    		DEBUG("Change the netmask \"%s\" to \"%s\"",pNetmask,pNewNetmask);
 	    	
 			free(pNetmaskCopy);
 	    	free(pNewNetmask);
@@ -93,7 +94,6 @@ void hBotNeedOp(char *pLine){
     pSearchStr=(char *) malloc((strlen(sSetup.botname)+2)*sizeof(char));
     sprintf(pSearchStr,"@%s",sSetup.botname);
 
-    DEBUG("Look for OP right for %s",pSearchStr);
     if (!strstr(pNickList,pSearchStr)) {
         privmsg(pChannel,MSG_NEED_OP);
     } else {
@@ -156,6 +156,8 @@ void hResetModes(char *pLine) {
     char *pChannel;
     char *pMod;
     char *pNick;
+    extern PQueue pCallbackQueue;
+    CallbackItem_t Callback;
 
     pChannel=getAccessChannel(pLine);
 
@@ -167,20 +169,30 @@ void hResetModes(char *pLine) {
     pPos++;
 
     if (!strstr(pLine,sSetup.botname)) {
-        DEBUG("Reset the Modes");
+        if (pPos[1]=='o' || pPos[1]=='v') {
+            // add callback for reset the modes for a user    
+            DEBUG("Added Callback for Mode Reset");
+           
+			#warning Mode reset for the user does not work at the Moment. It must fix!!!!  
+            /*
+            Callback.ttl=16;
+            Callback.nichname=pNick;
+            Callback.CallbackFtk=(void*)ModeResetCb;
+            */
 
-
-        pPos[0]=(pPos[0]=='+')?'-':'+';
-
-        // reset
-        mode(pChannel,pPos,NULL);
-        free(pChannel);
+        } else {
+            // reset channel
+            pPos[0]=(pPos[0]=='-')?'+':'-';
+            mode(pChannel,pPos,NULL);
+            DEBUG("Reset the modes from the channel %s",pChannel);
+        }
     } else if (strcmp(getNickname(pLine),sSetup.botname)) {
         // mode set for the bot from other user of operator
         // then initiallize this  channel
-        if (pPos[1]=='o') {
+        if (pPos[1]=='+' && pPos[1]=='o') {
             privmsg(pChannel,MSG_INIT_CHANNEL);
             channelInit(pChannel);
+            DEBUG("Initialize the channel %s", pChannel);
 
         }
     }
@@ -208,7 +220,9 @@ void hResetTopic(char *pLine){
     	        free(pTopic);
         	} else {
 	            topic(pChannel,"");
-    	    }	
+    	    }
+
+            DEBUG("Reset the topic in the channel %s",pChannel);
         	free(pChannelSet);
 		}	
         free(pChannel);
