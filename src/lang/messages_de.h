@@ -168,7 +168,7 @@ static MsgStruct_t Msg[] ={
 		"\t-l Zeichen/min\tLimit für das schnelle Senden.\n"
 		"\t-m\t\tLegt neuen Master an.\n",
 		"\t-n ms\t\tSetzt die Verzögerung für das schnelle Senden.\n",
-		"\t-p Port\t\tSetzt den Prot des IRC-Servers.\n"
+		"\t-p Port\t\tSetzt den Port des IRC-Servers.\n"
 		"\t-r String\tSetzt den String für Realnamefeld.\n",
 		"\t-s Server\tSetzt den IRC Server.\n",
 		"\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n",
