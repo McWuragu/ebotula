@@ -8,18 +8,14 @@ ToDo Liste
 	- !banlist
 	- !allban
 	- !restart
-	- !rmuser
 	- !allsay
-- Automatisches Löschen von Accounts nach einer Zeit  delta t 
-- Setzen von Op-Recht bei User nach !ident und Join
-- Setzen von Voice-Recht bei User nach !ident und Join
 - Reset Mods, wenn nicht  über Bot verändert wurden
-- Setzt Topic und Mode im Channel beim Join, erhalten von OP und beim fremden Verändern wieder zurück setzen
-- Ausführen von Ban von der Liste 
-- Hilfetexte vervollständigen
+- Set topic and mode from channel if the bot join, become op or other user have changed
+- execute the banlist 
+- complete the  help system
 - Code cleanup
 - Debuggen
 - Anforderung der Rechte als ACTION
 - Hervorhebung von Messages per bold
 - insert allow and  disallow filter for charaters in all  strings
-- Server channel op
+- set the bot channel op by the  server self 
