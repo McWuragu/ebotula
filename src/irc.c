@@ -114,6 +114,14 @@ void ping(char *pTarget) {
     free (buffer);
 }
 // #############################################################################
+void invite(char *pChannel,char *pNick) {
+    char *buffer;
+    buffer=(char*)malloc((strlen("INVITE")+strlen(pNick)+strlen(pChannel)+4)*sizeof(char));
+    sprintf(buffer,"INVITE %s %s\r\n",pNick,pChannel);
+    send_line(buffer);
+    free(buffer);
+}
+// #############################################################################
 void nick(char *pNick) {
     char *buffer;
     buffer=(char *)malloc((strlen("NICK ")+strlen(pNick)+3)*sizeof(char));
