@@ -65,13 +65,11 @@ MsgBuf_t* preParser(char *pLine) {
 
         if (strlen(pStr)>=3) {
             pStr+=3;
-            DEBUG("%s",pStr);
             // command parser
             for (i=CMD_OTHERS;i<CMDCOUNT;i++) {
-                DEBUG("Look for %s",CmdList[i]);
-
                 if (!strncmp(pStr,CmdList[i],strlen(CmdList[i]))){
                     pMsg->identify=i;
+                    DEBUG("Found Command %s",CmdList[i]);
                     i=CMDCOUNT;
                 }
             }
