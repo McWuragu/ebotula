@@ -1,20 +1,20 @@
-ToDo Liste
+ToDo List
 ----------
-- missing commands
+- Implement missing commands
 	- !ban
 	- !timeban
 	- !banlist
 	- !allban
 	- !restart
-- implement the banlist (set and execute)
+- Implement the banlist (set and execute)
 - Set topic for channel if the bot join and/or become op
 - Set mode for channel if the bot join, become op and/or other user have changed
-- complete the  help system
+- Complete the  help system
 - Code cleanup
 - Debuggen
-- emphasize per bold the messages
-- insert allow and  disallow filter for characters in all  strings
-- set the bot channel op by the  server self 
-- make multilingual messages.h and irchelp.h
-- to complete the  documentation
-- to translate the documents
+- Emphasize per bold the messages
+- Insert allow and  disallow filter for characters in all  strings
+- Set the bot channel op by the  server self 
+- Make multilingual messages.h and irchelp.h
+- Complete the  documentation
+- Translate the all documents
