@@ -132,5 +132,5 @@ QueueExeStatus flushQueue(PQueue pqueueIn);
  */
  QueueData * getNextitrQueue(PQueue pqueueIn);
 
-#define SetIterToFirstQueue(_PQueue)     ((_PQueue)->Sentinel->Iterator = (_PQueue)->Sentinel)
+#define SetIterToFirstQueue(_PQueue)     ((_PQueue)->sentinel->iterator = (_PQueue)->sentinel)
 #endif
