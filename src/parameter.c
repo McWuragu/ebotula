@@ -29,7 +29,7 @@
 
 #include "parameter.h"
 // ############################################################################# 				  
-void ComandLineParser(int argc,const char *argv[]) {
+void ComandLineParser(int argc,char *const argv[]) {
 	extern ConfType sSetup;
 	int i;
 	int tmp;
