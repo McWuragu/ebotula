@@ -340,14 +340,15 @@ char * getBanmask(char const *pLine){
 		// get the position of '!'
 		pChar=(char *)strchr(pStr,'!');
 		// jump over '!'
-		pChar++;
-		// copy from '!'+1 to pStr
-		if ((pBanmask=(char*) malloc(strlen(pChar)+1))==NULL)
+		pChar;
+		// copy from '!' to pStr
+		if ((pBanmask=(char*) malloc(strlen(pChar)+3))==NULL)
 		{
 			DEBUG("getBanmask: Error: Not enoug Memory!");
 			return NULL;
 		}
-		strcpy(pBanmask,pChar);
+		strcpy(pBanmask,"*");
+		strcat(pBanmask,pChar);
 		strcpy(pStr,pBanmask);
 		// setting after @ a NULL-Byte
 		pChar=(char *)strchr(pBanmask,'@');
