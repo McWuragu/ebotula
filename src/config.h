@@ -26,7 +26,7 @@
 #define USER_ALLOW_CHAR			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-[]\\`^{}~"
 #define CHANNEL_NOT_ALLOW_CHAR	" \a\r\n,"
 		
-typedef struct CONFIG_STRUCT {
+typedef struct ConfStruct{
 	char *botname;
 	char *realname;
 	char *server;
@@ -35,7 +35,7 @@ typedef struct CONFIG_STRUCT {
 	char *database_path;
 	unsigned thread_limit;
 	int newMaster;
-} CONFIG_TYPE;
+} ConfType;
 
 
 
