@@ -45,7 +45,6 @@ MsgBuf_t* preParser(char *pLine) {
     if (!(pPos=strchr(pPreamble,' '))){
         return pMsg;
     }
-
     // preparse the line
     // identify events and commands
 
@@ -87,6 +86,24 @@ MsgBuf_t* preParser(char *pLine) {
                 }
             }
         }
+    } else if ((pStr=strstr(pLine," :\001"))!=NULL) {
+	/* ctcp commands */
+	if (strlen(pStr)>=3) {
+            pStr+=2;
+     // command parser
+	        if (!strncmp(pStr,CmdList[CMD_CTCPPING],strlen(CmdList[CMD_CTCPPING]))){
+        	     pMsg->identify=CMD_CTCPPING;
+		     DEBUG("Found Command %s\n",CmdList[CMD_CTCPPING]);
+		}
+	        if (!strncmp(pStr,CmdList[CMD_CTCPVERSION],strlen(CmdList[CMD_CTCPVERSION]))){
+	             pMsg->identify=CMD_CTCPVERSION;
+		     DEBUG("Found Command %s\n",CmdList[CMD_CTCPVERSION]);
+		}
+        	if (!strncmp(pStr,CmdList[CMD_CTCPTIME],strlen(CmdList[CMD_CTCPTIME]))){
+	                pMsg->identify=CMD_CTCPTIME;
+			DEBUG("Found Command %s\n",CmdList[CMD_CTCPTIME]);
+		}
+	}
     }
 	
 	pMsg->pMsgLine=(char*)malloc((strlen(pLine)+1)*sizeof(char));
@@ -252,7 +269,16 @@ void *ComandExecutionThread(void *argv) {
                 case CMD_INVITE:
                     inviteuser(pMsgItem);
                     break;
-                default:
+		case CMD_CTCPPING:
+		    ctcpping(pMsgItem);
+		    break;
+       		case CMD_CTCPVERSION:
+		    ctcpversion(pMsgItem);
+		    break;
+       		case CMD_CTCPTIME:
+		    ctcptime(pMsgItem);
+		    break;
+       		default:
                     syslog(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
                     break;
                 }
@@ -287,7 +313,7 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
         }else if ((cmd_id != CMD_ONNICKCHG) && (cmd_id!=CMD_ONQUIT)) {
             ret=true;
         }
-        if (cmd_id >= CMD_OTHERS) {
+	if (cmd_id >= CMD_OTHERS) {
             ret=true;
             if (cmd_id >= CMD_LOGGED) {
                 if (Level>= LoggedLevel) {
@@ -301,7 +327,7 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
                                         if (cmd_id >= CMD_MASTER) {
                                             if (Level==MasterLevel) {
                                                 ret=true;
-                                            }else{ret=false;}
+					    }else {ret=false;}
                                         }
                                     }else{ret=false;}
                                 }
@@ -311,7 +337,11 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
             }
         } 
     }
-
+    /* not the best, please change this */
+    if ( (cmd_id==CMD_CTCPPING)|| (cmd_id==CMD_CTCPVERSION) || (cmd_id==CMD_CTCPTIME))
+    {
+    	ret=true;
+    }
     DEBUG("Userlevel %i AccessStatus %i of the command id %i\n",Level,ret,cmd_id);
     return ret;
 }
