@@ -48,6 +48,7 @@ Kommandos
 	- lädt den angebenen user oder den auf rufenden User ein
 	- darf Friend, owner und  master
 	- wo bei ein friend  nur sich selber  einladen kann
+
 !userlist [channel]
 	- listet die Userliste 
 	- alle oder nur für den angegeben channel
