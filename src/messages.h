@@ -2,8 +2,6 @@
 #define MESSAGES_H
 
 
-#define VERSION		"0.04-alpha"
-#define PROGNAME	"ebotula"
 #define	EOM			'.'
 
 
@@ -78,11 +76,13 @@ static const char *unknow_parameter[]=
 	"Type ",PROGNAME," -h for help.\n",
 	"."
 };
+
 static const char *version_msg[]=
 {
 	PROGNAME," Vers. ",VERSION," (C) 2003 Steffen Laube \n",
 	"."
 };
+
 static const char *help_msg[]=
 {
 	PROGNAME," [Options]\n",
