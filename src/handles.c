@@ -173,7 +173,7 @@ void hResetModes(char *pLine) {
     // extract  the nick
     pNick=(char*)ppLinePart[4];
     
-    if (strcmp(pNick,sSetup.botname)) {
+    if (strcmp(ppLinePart[4],sSetup.botname)!=0) {
         if (pMode[1]=='o' || pMode[1]=='v') {
             // add callback for reset the modes for a user    
             DEBUG("Added Callback for Mode Reset");
@@ -192,7 +192,7 @@ void hResetModes(char *pLine) {
             
             // put  the  element  in the  callback list  before tail
             //insert_prev_CallbackDList(&CallbackList,&CallbackList.tail,&Callback);
-	insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
+	        insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
 
             // send the who
             whois(pNick);
@@ -205,14 +205,14 @@ void hResetModes(char *pLine) {
             mode(pChannel,pPos,NULL);
             DEBUG("Reset the modes from the channel %s",pChannel);
         }
-    } else if (strcmp(getNickname(ppLinePart[0]),sSetup.botname)) {
+    } else if (strcmp(getNickname(ppLinePart[0]),sSetup.botname)!=0) {
+        DEBUG("Bot get new mods");
         // mode set for the bot from other user of operator
         // then initiallize this  channel
-        if (strcmp(pMode,"+o")) {
-            privmsg(pChannel,MSG_INIT_CHANNEL);
+        if (strcmp(pMode,"+o")==0) {
             channelInit(pChannel);
-            DEBUG("Initialize the channel %s", pChannel);
-
+        } else {
+            privmsg(pChannel,MSG_NEED_OP);
         }
     }
 }
@@ -258,7 +258,7 @@ void hInitAfterOp(char *pLine) {
 
     channelInit(pChannel);
 
-    privmsg(pChannel,MSG_INIT_CHANNEL);
+    
 }
 
 // #########################################################################
@@ -268,23 +268,23 @@ static void channelInit(char *pChannel) {
     ChannelData_t *pChannelData;
     char *pMode,*pChannelSet;
 
-    // check of  existenz of the channel
-    if (exist_db(CHANNEL_DB,pChannel)) {
-        
-        
-        if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
-	        pChannelData=StrToChannelData(pChannelSet);
+      
+    if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
+        pChannelData=StrToChannelData(pChannelSet);
 
-    	    // set Topic
-        	if (pChannelData->pTopic) {
-	            topic(pChannel,pChannelData->pTopic);
-    	    }
+        // set Topic
+        if (pChannelData->pTopic) {
+            topic(pChannel,pChannelData->pTopic);
+        }
 
-        	// set Modes
-	        if ((pMode=ChannelModeToStr(pChannelData->pModes))) {
-    	        mode(pChannel,pMode,NULL);
-        	}
-		}
+        // set Modes
+        pMode=ChannelModeToStr(pChannelData->pModes);
+        if (strlen(pMode)) {
+            mode(pChannel,pMode,NULL);
+        }
+
+        privmsg(pChannel,MSG_INIT_CHANNEL);
+        DEBUG("Initialize the channel %s", pChannel);
     }
 }
 
