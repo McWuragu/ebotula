@@ -22,6 +22,7 @@
 
 #define MIN_LOGOFF				1
 #define MIN_ALT					1
+#define MIN_PINGTIME			60
 #define MAX_NICKS				3
 #define MAX_THREADS_LIMIT       25
 #define NOT_ALLOW_CHAR 			" :;<>*#/\"\'\\{}[]()=?§$"
@@ -41,7 +42,7 @@
 #define KEY_AUTOLOGOFF		"autologoff"
 #define KEY_SENDDELAY		"senddelay"
 #define KEY_ALT				"accountlivetime"
-
+#define KEY_PINGTIMEOUT		"pingtimeout"
 
 
 
