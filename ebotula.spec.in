@@ -42,6 +42,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{prefix}/bin/*
 %{prefix}/man/man1/*
+%{prefix}/man/man5/*
 %config %{prefix}/etc/ebotula/*
 %dir %{prefix}/var/ebotula/
 
