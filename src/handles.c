@@ -413,6 +413,8 @@ void hWhoisFailed(char *pLine) {
     strcpy(pNick,ppLinePart[3]);
     StrToLower(pNick);
 
+    DEBUG("Callback Zombie %s\n",pNick);
+
    /** lock for the Callback item for the nick **/
     if ((pCallbackItemReturn=searchNicknameFromCallbackDList(&CallbackList,CallbackList.head,pNick))) {
         /* 
