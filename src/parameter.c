@@ -38,13 +38,6 @@ void ComandLineParser(int argc,const char *argv[]) {
 	for (i=1;i<argc;i++) {
 	   	if (argv[i][0]==PARAMETER_CHAR) {
 			switch	(argv[i][1]) {
-			case 'v':
-				exit(0);
-                break;
-			case 'h':
-			case '?':
-				printMsg(help_msg);
-				break;
 			case 's':
 				DEBUG("Found server option");
 				if (++i>=argc) {
