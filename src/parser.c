@@ -337,12 +337,7 @@ static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
             }
         } 
     }
-    /* not the best, please change this */
-    if ( (cmd_id==CMD_CTCPPING)|| (cmd_id==CMD_CTCPVERSION) || (cmd_id==CMD_CTCPTIME))
-    {
-    	ret=true;
-    }
-    DEBUG("Userlevel %i AccessStatus %i of the command id %i\n",Level,ret,cmd_id);
+   DEBUG("Userlevel %i AccessStatus %i of the command id %i\n",Level,ret,cmd_id);
     return ret;
 }
 // #############################################################################
