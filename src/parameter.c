@@ -145,7 +145,7 @@ void ComandLineParser(int argc,char *const argv[]) {
                 sSetup.AutoLoggoff=tmp;
                 break;
             case 'n':
-                DEBUG("Found sending delay option");
+                DEBUG("Found first sending delay option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -161,6 +161,41 @@ void ComandLineParser(int argc,char *const argv[]) {
                     exit(errno);
                 }
                 sSetup.iSendDelay=tmp;
+                break;
+            case 'e':
+                DEBUG("Found secondary sending delay option");
+                                            
+                if (++i>=argc) {
+                    errno=EINVAL;
+                    perror(ERR_MISSING_PARAM);
+                    exit(errno);
+                }
+                
+                // set sending delay 
+                tmp=atoi(argv[i]);
+                if (tmp<=0) {
+                    errno=EDOM;
+                    perror(ERR_SENDDELAY_RANGE);
+                    exit(errno);
+                }
+                sSetup.iSendSafeDelay=tmp;
+                break;
+            case 'l':
+                DEBUG("Found send line limit option");
+                if (++i>=argc) {
+                    errno=EINVAL;
+                    perror(ERR_MISSING_PARAM);
+                    exit(errno);
+                }
+
+                // linie limit  for the first send delay
+                tmp=atoi(argv[i]);
+                if (tmp<0) {
+                    errno=EDOM;
+                    perror(ERR_SENDLINE_RANGE);
+                    exit(errno);
+                }
+                sSetup.iSendSafeLine=tmp;
                 break;
             case 'k':
                 DEBUG("Found account live time option");
