@@ -42,4 +42,3 @@ void millisleep(unsigned long ms);
 
 #endif
 
-clearspace(
