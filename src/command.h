@@ -59,7 +59,6 @@ typedef enum CmdEnum {
     CMD_KICK,
     CMD_SET_TOPIC,
     CMD_SET_GREATING,
-    CMD_CHANNELS,
     CMD_BAN,
     CMD_DEBAN,
 
@@ -69,6 +68,7 @@ typedef enum CmdEnum {
     CMD_RMUSER,
     CMD_NICK,
     CMD_DIE,
+    CMD_CHANNELS,
     CMD_RMCHANNEL,
     CMD_ADDCHANNEL,
     CMD_JOIN,
@@ -95,9 +95,9 @@ static char * const CmdList[]= {
     /* logged user commands */
     "logoff","pass",
     /* channel owner commands */
-    "chanmode","userlist","usermode","say","kick","topic","greeting","chanlist","ban","deban",
+    "chanmode","userlist","usermode","say","kick","topic","greeting","ban","deban",
     /* master commands */
-    "restart","allsay","rmuser","nick","die","rmchannel","addchannel","join","part"
+    "restart","allsay","rmuser","nick","die","chanlist","rmchannel","addchannel","join","part"
 };
 
 /** This is the structure for the entries in the message queue */

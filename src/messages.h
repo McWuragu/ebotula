@@ -99,7 +99,8 @@ typedef enum eMsgID {
 	 ERR_NOT_LOGON,	  
 	 ERR_NOT_MASTER,    
 	 ERR_NOT_OWNER,	    
-	 ERR_NOT_CHANNELOPT,  
+	 ERR_NOT_CHANNELOPT,
+     ERR_NOT_PARAMETER,
      ERR_NOT_COMMAND,	  
 	 ERR_NOT_ACCOUNT,	  
 	 ERR_NOT_CHANNEL,	  
@@ -110,7 +111,7 @@ typedef enum eMsgID {
 	
 	// Errors
 	 ERR_ADDCHANNEL_ALREADY,	  
-	 ERR_NICK_INVALID,	     
+     ERR_NICK_INVALID,	     
 	 ERR_NICK_EXIST,	     
 	 ERR_ALREADY_LOGON,	     
 	 ERR_UNKNOWN_MODS,	      
@@ -119,19 +120,6 @@ typedef enum eMsgID {
 	 ERR_NOTSELF_KICK,    
      ERR_NOTSELF_BAN,        
     
-	// command  format erros
-	 ERR_CMD_ADDCHANNEL,  
-	 ERR_CMD_JOIN,		 
-	 ERR_CMD_IDENT,		  
-	 ERR_CMD_NICK,		  			
-	 ERR_CMD_SAY,		  			
-	 ERR_CMD_KICK,		 
-     ERR_CMD_BAN,		  
-     ERR_CMD_DEBAN,		  
-     ERR_CMD_USERMODE,	  
-	 ERR_CMD_CHANMODE,	   
-
-
 	// other informations
 	 INFO_HELP_END,	 
 	 INFO_HELP_FOR,		    

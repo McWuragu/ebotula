@@ -86,7 +86,8 @@ void hBotNeedOp(char *pLine){
     char *pPos;
     char *pSearchStr;
 
-    pChannel=getAccessChannel(pLine);
+    if (!(pChannel=getAccessChannel(pLine)))
+        return;
 
     // extrakt Namelist
     pPos=strchr(&pLine[1],':');
@@ -126,7 +127,8 @@ void hSetModUser(char *pLine) {
         if ((pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
     	    DEBUG("Set the mod for Account %s with nickname %s",pLogin,pNick);
 
-            pChannel=getAccessChannel(pLine);
+            if (!(pChannel=getAccessChannel(pLine)))
+                return;
 
         	// build key for access.dbf
             pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
@@ -241,7 +243,8 @@ void hResetTopic(char *pLine){
     if (strcmp(getNickname(pLine),sSetup.botname)) {
 
         // get the  right topic for this channel
-        pChannel=getAccessChannel(pLine);
+        if (!(pChannel=getAccessChannel(pLine)))
+            return;
 
 
         if ((pChannelSet=get_db(CHANNEL_DB,pChannel))) {
@@ -266,11 +269,10 @@ void hResetTopic(char *pLine){
 void hInitAfterOp(char *pLine) {
     char *pChannel;
 
-    pChannel=getAccessChannel(pLine);
+    if (!(pChannel=getAccessChannel(pLine)))
+        return;
 
     channelInit(pChannel);
-
-    
 }
 
 // #########################################################################

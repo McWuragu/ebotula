@@ -249,9 +249,7 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
     /* extract information form pline*/
     pNetmask=getNetmask(pLine);
     pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
-
-
+    
     // check Accesslevel
     if (cmd_id >= CMD_MASTER) {
         // check the  login status
@@ -270,9 +268,8 @@ static int AccessRight(char *pLine,Cmd_t cmd_id) {
             notice(pNick,getMsgString(ERR_NOT_LOGON));
         } else {
             // check the existe of a channel parameter
-            if (strlen(pChannel)) {
+            if (pChannel=getAccessChannel(pLine)) {
 				if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-					pChannel=getAccessChannel(pLine);
 
 					pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char*));
 					sprintf(pKey,"%s%s",pLogin,pChannel);

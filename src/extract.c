@@ -85,11 +85,11 @@ char *getArgument(char const *pLine) {
 	int i,iLineLen;
 
 
-	if (!pLine) return "";
+	if (!pLine) return NULL;
 	
 	// found  the begining  of Parameter 
 	if ((pStr=strstr(pLine," :!"))==NULL) {
-		return "";
+		return NULL;
 	} else {
 		// set the begin of comand string
 		pStr+=3;
@@ -112,7 +112,7 @@ char *getArgument(char const *pLine) {
 		}
 	}
 	
-	return "";
+	return NULL;
 }
 // ######################################################################### 
 char *getChannel(char const *pLine){
@@ -120,14 +120,14 @@ char *getChannel(char const *pLine){
 	char *pPos;
 	char *pChannel;
 	
-	if (!pLine) return "";
+	if (!pLine) return NULL;
 
 	// extract  the substring
 	pPreamble=getCommand(pLine);
 
 	// look for the channelname
 	if (!(pPos=strchr(pPreamble,'#'))) {
-		return "";
+		return NULL;
 	}
 
 	// market the end  of channelname
@@ -145,17 +145,26 @@ char *getAccessChannel(char const *pLine) {
 	char *pParameter;
 	char *pChannel;
 	char *pPos;
+    boolean isInPreamble;
 
-	if (!pLine) return "";
+	if (!pLine) return NULL;
 
 	pParameter=getArgument(pLine);
 
-	// look channel name  in preamble
-	if (pParameter[0]!='#') {
+	// look for  the  channel name  in preamble
+    if (!pParameter) {
+        isInPreamble=true;
+    }else if (pParameter[0]!='#') {
+        isInPreamble=true;
+    }else {
+        isInPreamble=false;
+    }
 
-		// look for channelname  as preamble
+    /* try to extract the channel name */
+    if (isInPreamble) {
+		// take the channelname  from preamble
 		pChannel=getChannel(pLine);
-		if (!strlen(pChannel)) {
+		if (!pChannel) {
 			if ((pPos=strstr(pLine," :#"))) {
 				// move to '#'
 				pPos+=2;
@@ -165,7 +174,7 @@ char *getAccessChannel(char const *pLine) {
 				pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
 				strcpy(pChannel,pPos);
 			} else {
-				return "";
+				return NULL;
 			}
 		}
 
@@ -178,7 +187,7 @@ char *getAccessChannel(char const *pLine) {
 			pChannel=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
 			strcpy(pChannel,pParameter);
         	} else {
-			return "";
+			return NULL;
 		}
     }
 
@@ -268,14 +277,14 @@ char *getParameters(char const *pLine){
 	char *pArg;
 	char *pPos; 
 
-	if (!pLine) return "";
+	if (!pLine) return NULL;
 	
-	pArg=getArgument(pLine);
+	if (!(pArg=getArgument(pLine))) return NULL;
 
 	if (pArg[0]!='#') {
 		return pArg;
 	} else if(!(pPos=strchr(pArg,' '))) {
-		return "";
+		return NULL;
 	} else {
 		// jump over the space
 		pPos++;

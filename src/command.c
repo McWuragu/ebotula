@@ -52,7 +52,7 @@ void help(char *pLine) {
 
 
     /* check for parameters */
-    if (!strlen(pParameter)) {
+    if (!pParameter) {
         DEBUG("Default information");
 
         /* Header of help message */
@@ -192,7 +192,7 @@ void password(char *pLine) {
         	pPasswd=getParameters(pLine);
 
 	        /* parse the  password  form  parameter list */
-	        if (!strlen(pPasswd)) {
+	        if (!pPasswd) {
         	    notice(pNick,getMsgString(INFO_NOT_PASS));
 	        }
 
@@ -279,7 +279,7 @@ void ident(char *pLine) {
         pParameter=getParameters(pLine);
     
         /* no parameter found */
-        if (strlen(pParameter)) {
+        if (pParameter) {
             /* parse the password */
             if ((pPos=strstr(pParameter," "))==NULL) {
                 /* no Passwd found */
@@ -334,7 +334,7 @@ void ident(char *pLine) {
                 notice(pNick,getMsgString(ERR_NOT_ACCOUNT));
             }    
         } else {
-            notice(pNick,getMsgString(ERR_CMD_IDENT));
+            notice(pNick,getMsgString(ERR_NOT_PARAMETER));
         }
     } else {
         notice(pNick,getMsgString(ERR_ALREADY_LOGON));
@@ -345,17 +345,21 @@ void ident(char *pLine) {
    ######################################################################### */
 void addChannel(char *pLine) {
     char *pChannel;
+    char *pCmdChannel;
     char *pNick;
     char *channelmod;
 
     pNick=getNickname(pLine);
-
     pChannel=getAccessChannel(pLine);
+    pCmdChannel=getChannel(pLine);
 
-
-    if (!strcmp(pChannel,getChannel(pLine))) {
+    if (!(pChannel) || !(pCmdChannel)){
         notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
-        notice(pNick,getMsgString(ERR_CMD_ADDCHANNEL));
+        return;
+    }
+
+    if (!strcmp(pChannel,pCmdChannel)) {
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
@@ -385,7 +389,11 @@ void rmChannel(char *pLine){
     char *pNick;
 
     pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
+    
+    if (!(pChannel=getAccessChannel(pLine))){
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+        return;
+    }
 
     DEBUG("Part and  try to remove the channnel %s",pChannel);
 
@@ -407,16 +415,22 @@ void rmChannel(char *pLine){
    Bot comand: !join #channel
    ######################################################################### */
 void joinChannel(char *pLine) {
+    char *pCmdChannel;
     char *pChannel;
     char *pNick;
 
     pNick=getNickname(pLine);
+    pCmdChannel=getChannel(pLine);
     pChannel=getAccessChannel(pLine);
 
-    /* compare the current channel and  the channel for joining */
-    if (!(strcmp(pChannel,getChannel(pLine)))) {
+    if (!(pChannel) || !(pCmdChannel)){
         notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
-        notice(pNick,getMsgString(ERR_CMD_JOIN));
+        return;
+    }
+
+    /* compare the current channel and  the channel for joining */
+    if (!(strcmp(pChannel,pCmdChannel))) {
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
         return;
     }
 
@@ -434,13 +448,16 @@ void partChannel(char *pLine) {
     char *pChannel;
 
     pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
 
-    DEBUG("Part the channel %s",pChannel);
+    if (!(pChannel=getAccessChannel(pLine))){
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+    } else {
+        DEBUG("Part the channel %s",pChannel);
 
-    /* part the channel */
-    part(pChannel);
-    notice(pNick,getMsgString(OK_PART));
+        /* part the channel */
+        part(pChannel);
+        notice(pNick,getMsgString(OK_PART));
+    }
 }
 /* #########################################################################
    Bot comand: !die
@@ -469,8 +486,8 @@ void setNick(char *pLine){
     pParameter=getParameters(pLine);
 
     /* read parameters */
-    if (!strlen(pParameter)) {
-        notice(pNick,getMsgString(ERR_CMD_NICK));
+    if (!pParameter) {
+        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     } else if (!NickStringCheck(pParameter)) {
         notice(pNick,getMsgString(ERR_NICK_INVALID));
@@ -569,7 +586,11 @@ void setGreeting(char *pLine) {
     ChannelData_t *pChannelData;
 
     pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
+    
+    if (!(pChannel=getAccessChannel(pLine))){
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+        return;
+    }
 
     DEBUG("Greeting seting for %s",pChannel);
 
@@ -579,7 +600,7 @@ void setGreeting(char *pLine) {
 	    pChannelData=StrToChannelData(pChannelSet);
     	free(pChannelSet);
 	    
-		/* remive old greeting */
+		/* remove old greeting */
 		if (pChannelData->pGreeting) {
     	    free(pChannelData->pGreeting);
 	    }
@@ -591,7 +612,7 @@ void setGreeting(char *pLine) {
 
 
     	/* message */
-	    if (pChannelData->pGreeting[0]=='\0') {
+	    if (!pChannelData->pGreeting) {
      	   notice(pNick,getMsgString(OK_RM_GREETING));
 	    } else {
     	    notice(pNick,getMsgString(OK_SET_GREETING));
@@ -612,7 +633,11 @@ void setTopic(char *pLine) {
     ChannelData_t *pChannelData;
 
     pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
+    
+    if (!(pChannel=getAccessChannel(pLine))) {
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+        return;
+    }
 
     DEBUG("Topic seting for %s",pChannel);
     
@@ -633,7 +658,7 @@ void setTopic(char *pLine) {
 
 
 	    /* message */
-    	if (pChannelData->pTopic[0]=='\0') {
+    	if (!pChannelData->pTopic) {
 	        notice(pNick,getMsgString(OK_RM_TOPIC));
     	} else {
         	notice(pNick,getMsgString(OK_SET_TOPIC));
@@ -658,7 +683,10 @@ void greeting(char *pLine) {
 
     /* only greeting  send  to other user */
     if (strcmp(pNick,sSetup.botname)) {
-        pChannel=getAccessChannel(pLine);
+        
+        if (!(pChannel=getAccessChannel(pLine))){
+            return;
+        }
 
         DEBUG("Greeting for %s",pChannel);
 
@@ -678,11 +706,15 @@ void say(char *pLine) {
     char *pNick;
 
     pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
+    
+    if (!(pChannel=getAccessChannel(pLine))) {
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+        return;
+    }
 
     pParameter=getParameters(pLine);
-    if (!strlen(pParameter)) {
-        notice(pNick,getMsgString(ERR_CMD_SAY));
+    if (!pParameter) {
+        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
 
@@ -693,9 +725,16 @@ void say(char *pLine) {
    ######################################################################### */
 void allsay(char *pline) {
     char *pMsgStr;
+    char *pNick;
     PQueue pChannelQueue;
 	QueueData *pChannel;
-    pMsgStr=getParameters(pline);
+    
+    pNick=getNickname(pline);
+
+    if (!(pMsgStr=getParameters(pline))) {
+        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+        return;
+    }
 
 	/* get the channel list */
     pChannelQueue=list_db(CHANNEL_DB);
@@ -719,6 +758,7 @@ void banuser(char *pLine) {
     char *Data;
 
     char **pArgv;
+    char *pParameter;
     char *pNick;
     char *pNetmask;
     char *pChannel;
@@ -727,18 +767,27 @@ void banuser(char *pLine) {
 
     
     // pars line
-    pChannel=getAccessChannel(pLine);
     pNick=getNickname(pLine);
+    
+    if (!(pChannel=getAccessChannel(pLine))){
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+        return;
+    }
+
     pNetmask=getNetmask(pLine);
-    pArgv=splitString(getParameters(pLine),2);
+    if (!(pParameter=getParameters(pLine))) {
+        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+        return;
+    }
+
+    pArgv=splitString(pParameter,2);
     pToBanNick=pArgv[0];
 
     // read the login from the database
     pLogin=get_db(NICKTOUSER_DB,pNetmask);
 
     if (!pToBanNick) {
-    notice(pNick,getMsgString(ERR_CMD_BAN));
-    return;
+        return;
     }
 
 
@@ -772,11 +821,19 @@ void debanuser(char *pLine) {
     char *pParameter;
     char **pArgv;
 
-    pChannel = getAccessChannel(pLine);
     pNick=getNickname(pLine);
+    
+    if (!(pChannel = getAccessChannel(pLine))){
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+        return;
+    }
 
     /* extract parameters */
-    pParameter=getParameters(pLine);
+    if (!(pParameter=getParameters(pLine))){
+        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+        return;
+    }
+
     pArgv=splitString(pParameter,2);
     
 
@@ -784,8 +841,6 @@ void debanuser(char *pLine) {
     if (pArgv) {
         deban(pChannel,pArgv[0]);
         notice(pNick,getMsgString(OK_DEBAN));
-    }else {
-        notice(pNick,getMsgString(ERR_CMD_DEBAN));
     }
     return;
 }
@@ -801,23 +856,30 @@ void kickuser(char *pLine) {
     char *pKicknick;
     char *pChannel;
     char *pReason;
+    char *pParameter;
     char **pArgv;
     char *pPos;
     char *pLogin;
     char *pData;
 
     pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
+    
+    if (!(pChannel=getAccessChannel(pLine))) {
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+        return;
+    }
 
     /* get parameters */
-    pArgv=splitString(getParameters(pLine),2);
+    if (!(pParameter=getParameters(pLine))){
+        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+        return;
+    }
+
+    pArgv=splitString(pParameter,2);
     
     /* parse nick */
     pKicknick=pArgv[0];
-    if (!pKicknick) {
-        notice(pNick,getMsgString(ERR_CMD_KICK));
-        return;
-    }
+    if (!pKicknick) {return;}
     
     if (strcmp(pKicknick,sSetup.botname)==0) {
         notice(pNick,getMsgString(ERR_NOTSELF_KICK));
@@ -871,7 +933,11 @@ void usermode(char *pLine){
     char mod[3];
 
     pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
+    
+    if(!(pChannel=getAccessChannel(pLine))){
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+        return;
+    }
     
     if ((accesslogin=get_db(NICKTOUSER_DB,getNetmask(pLine)))) {
 
@@ -882,14 +948,17 @@ void usermode(char *pLine){
 	    }
 
     	/* get parameters */
-	    pParameter=getParameters(pLine);
+	    if (!(pParameter=getParameters(pLine))) {
+            notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+            return;
+        }
 
     	/* user mod */
 	    DEBUG("Modify user mod");
 
     	/* look for the space and separat the login for the user which want modify */
 	    if (!(pPos=strchr(pParameter,' '))) {
-	        notice(pNick,getMsgString(ERR_CMD_USERMODE));
+            notice(pNick,getMsgString(ERR_NOT_PARAMETER));
         	return;
     	}
 
@@ -935,7 +1004,6 @@ void usermode(char *pLine){
 
 	    /* check for add or remove  mod */
     	if (pPos[0]!='+' && pPos[0]!='-') {
-	        notice(pNick,getMsgString(ERR_CMD_USERMODE));
     	    return;
 	    } else {
     	    mod[0]=pPos[0];
@@ -1050,8 +1118,16 @@ void chanmode(char *pLine) {
 
 
     pNick=getNickname(pLine);
-    pChannel=getAccessChannel(pLine);
-    pParameters=getParameters(pLine);
+    
+    if (!(pChannel=getAccessChannel(pLine))) {
+        notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+        return;
+    }
+    
+    if(!(pParameters=getParameters(pLine))) {
+        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+        return;
+    }
 
 
     /* read the old channel parameters */
@@ -1060,7 +1136,7 @@ void chanmode(char *pLine) {
         pChannelData=StrToChannelData(pChannelSet);
 
 	    /* read the new channel parameters */
-	    pNewMode=StrToChannelMode(getParameters(pLine));
+	    pNewMode=StrToChannelMode(pParameters);
     	DEBUG("Found the new channel modes \"%s\"",ChannelModeToStr(pNewMode));
 
 	    DEBUG("Build the new modes for the channel %s",pChannel);
@@ -1137,7 +1213,10 @@ void rmuser(char *pLine) {
 	QueueData *pChannel;
 	
     pNick=getNickname(pLine);
-    pLogin=getParameters(pLine);
+    if (!(pLogin=getParameters(pLine))) {
+        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+        return;
+    }
 
 	StrToLower(pLogin);
     
@@ -1188,18 +1267,18 @@ void userlist(char *pLine){
 
     pLogin=get_db(NICKTOUSER_DB,getNetmask(pLine));
     pNick=getNickname(pLine);
-    pAccessChannel=getAccessChannel(pLine);
     pArgv=getArgument(pLine);
 
     /* read the list of Logins */
     pLoginQueue=list_db(USER_DB);
 
-    privmsg(pNick,getMsgString(INFO_USERLIST_BEGIN));
 
     /* build the  login list  for output */
-    if (exist_db(ACCESS_DB,pLogin) && !strlen(pArgv)) {
-        DEBUG("Genrate the Userlist for a master");
+    if (exist_db(ACCESS_DB,pLogin) && !pArgv) {
         /* Bot masters */
+        privmsg(pNick,getMsgString(INFO_USERLIST_BEGIN));
+        
+        DEBUG("Genrate the Userlist for a master");
 
         /* get the kist of all channels */
         pChannelQueue=list_db(CHANNEL_DB);
@@ -1280,9 +1359,18 @@ void userlist(char *pLine){
     		free(pLoginItem);    
 		}
 		deleteQueue(pChannelQueue);
+        privmsg(pNick,getMsgString(INFO_USERLIST_END));
     } else {
+        
         DEBUG("Genrate the Userlist for a owner");
 
+        if (!(pAccessChannel=getAccessChannel(pLine))) {
+            notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
+            return;
+        }
+        
+        privmsg(pNick,getMsgString(INFO_USERLIST_BEGIN));
+        
         /* look for  rights of  user for  the channel */
 		iChanLen=strlen(pAccessChannel);
 
@@ -1322,13 +1410,13 @@ void userlist(char *pLine){
 				}
 
 				/* send notice out */
-				notice(pNick,pMsgStr);
+				privmsg(pNick,pMsgStr);
 				free(pMsgStr);
 			}
 			free(pKey);
 
         }
+        privmsg(pNick,getMsgString(INFO_USERLIST_END));
     }
 	deleteQueue(pLoginQueue);
-    privmsg(pNick,getMsgString(INFO_USERLIST_END));
 }
