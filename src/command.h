@@ -10,28 +10,8 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-typedef enum CmdEnum {
-	CMD_NONE,
-	CMD_PING, 
-	CMD_HELP,
-    CMD_VERSION,
-    CMD_HELLO,
-	CMD_PASS,
-    CMD_IDENT,
-	CMD_ADDCHANNEL,
-	CMD_JOIN,
-	CMD_PART,
-	CMD_RMCHANNEL,
-	CMD_LOGOFF,
-	CMD_DIE,
-	CMD_NICK,
-	CMD_CHANNELS,
-	CMD_NAMES,
-	CMD_JOIN_GREATING,
-	CMD_GREATING 
-}CmdType;
-
-
+#define USER_MODS	"Oovm"
+#define CHANNEL_MODS	"tnmaiqpsrkl"
 				  
 // ######################### Bot commands ################################
 
@@ -48,8 +28,14 @@ void part_channel(char *line);
 void die(char *line);
 void change_nick(char *line);
 void channel_list(char *line);
+void setGreating(char *line);
+void setTopic(char *line);
 void greating(char *line);
+void bot_op(char *line);
+void say(char *line);
+void kickuser(char *line);
+void usermode(char *line);
+void chanmode(char *line);
 
-
-
+boolean log_on(char *nick,char *login);
 #endif
