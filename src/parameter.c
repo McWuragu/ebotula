@@ -381,7 +381,7 @@ boolean dialogMaster(void){
 	}
 
 
-	if (!add_db(ACCESS_DB,name,"+ov")) {
+	if (!add_db(ACCESS_DB,name,"")) {
 		del_db(USER_DB,name);
 		fprintf(stderr,MSG_MASTER_ERR);
 		fprintf(stderr,"\n");
