@@ -53,7 +53,7 @@ PQueue pSendingQueue;
 int main(int argc,char * const argv[]) {
     int i;
     int msgid;
-    char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;
+    char buffer[RECV_BUFFER_SIZE],*pStrPos,*pCurrLine,*pCurrString,*pCurrStringPos,*pUnparsed;
     pthread_t *threads;
     pthread_t timeThread;
     pthread_t sendThread;
@@ -308,23 +308,31 @@ int main(int argc,char * const argv[]) {
 	// join the channels
     join_all_channels();
 
-    while (!stop) {
+    // init the  buffer  for unparsed string
+    pUnparsed=(char*)malloc(sizeof(char));
+    *pUnparsed='\0';
 
+    while (!stop) {
+        
         // read line from tcp stack
         recv_line(buffer,RECV_BUFFER_SIZE);
 
+        // added the new string to the  unparsed string
+        pCurrStringPos=(char*)malloc((strlen(buffer)+strlen(pUnparsed)+1)*sizeof(char));
+        sprintf(pCurrStringPos,"%s%s",pUnparsed,buffer);
+        pCurrString=pCurrStringPos;
+
         // parse all substrings of the  receiving line
-        tmp=buffer;
-        while ((pos=strchr(tmp,'\r'))) {
-            *pos='\0';
+        while ((pStrPos=strchr(pCurrStringPos,'\r'))) {
+            *pStrPos='\0';
 
             /* cut out a part of the  complete line */
-            str=(char *)malloc((strlen(tmp)+1)*sizeof(char));
-            strcpy(str,tmp);
+            pCurrLine=(char *)malloc((strlen(pCurrStringPos)+1)*sizeof(char));
+            strcpy(pCurrLine,pCurrStringPos);
 
             /* parse the part line */
-            DEBUG("Parse: \"%s\"\n",str);
-            pMsg=preParser(str);
+            DEBUG("Parse: \"%s\"\n",pCurrLine);
+            pMsg=preParser(pCurrLine);
 
             /* put the identified line  on the  queue */
             if (pMsg->identify!=CMD_NONE) {
@@ -333,24 +341,32 @@ int main(int argc,char * const argv[]) {
 				pushQueue(pCommandQueue,Command);
                 free(pMsg);
             }
-            free(str);
+            free(pCurrLine);
             
             /* 
              * checking the length of the next substring
              * a irc answer line can't are ten charakter 
              * it is to small for a complete line
              */
-            if (strlen(++pos)>0) {
+            if (strlen(++pStrPos)>0) {
                 /* set the begin of new substring of the old end
                  * and plus one for the NL */
-                tmp=pos+1;
+                pCurrStringPos=pStrPos+1;
             }
             
         }
+        
+        // buffer the  unparsed string
+        free(pUnparsed);
+        pUnparsed=(char*)malloc((strlen(pCurrStringPos)+1)*sizeof(char));
+        strcpy(pUnparsed,pCurrStringPos);
+
+        free(pCurrString);
 
         
 
     }
+    free(pUnparsed);
 
     flushQueue(pCommandQueue);
     flushQueue(pSendingQueue);
