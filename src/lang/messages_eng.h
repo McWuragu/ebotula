@@ -11,137 +11,141 @@
 #ifndef MESSAGES_ENG_H
 #define MESSAGES_ENG_H
 
+#include "../messages.h"
+                               
+static MsgStruct_t  Syslog[] = {
 	// syslog
-	#define SYSLOG_READ_CMD			"Command line parameters found and read"
-	#define SYSLOG_READ_CONFFILE		"Configuration file found and read"
-	#define SYSLOG_INIT_DB			"Initialization of the database"
-	#define SYSLOG_TRY_CONNECT		"Trying to connect to %s:%s"
-	#define SYSLOG_IS_CONNECT		"Connected to the server"
-	#define SYSLOG_BOT_RUN			"Running...."
-	#define SYSLOG_BOT_STOP			"Stopped...."
-	#define SYSLOG_THREAD_RUN		"Thread %d is running"
-	#define SYSLOG_BOT_START		"Starting..."
-	#define SYSLOG_UNKNOWN_CMDID		"Unknown command id %d"
-	#define SYSLOG_LOGIN_RM			"The account %s was automatically logged off"
-	#define SYSLOG_ACCOUNT_RM       	"The account %s is removed from the list"
-	#define SYSLOG_FAILED_NETPARA		"The servername or portnumber isn't set."
-	#define SYSLOG_MSG_QUEUE		"Can't create the message queue."
-	#define SYSLOG_RESOLVE_HOSTNAME		"Can't resolve the hostname."
-	#define SYSLOG_RESOLVE_PROTOCOL		"TCP is an unknown protocol."
-	#define SYSLOG_SOCKET			"Can't create a tcp socket."
-	#define SYSLOG_CONNECT			"Connection failed."
-	#define SYSLOG_CONFIG_FILE		"Can't open the config file."
-	#define SYSLOG_SEND			"Can't send a command."
-	#define SYSLOG_RECV			"Can't receive a line."
-	#define SYSLOG_TIMEOUT			"Receiving timeout"
-	#define SYSLOG_CREATE_DIR		"Create the directory for the database."
-	#define SYSLOG_CREAT_DIR_ERR 		"Can't create the directory for the database."
-	#define SYSLOG_DATABASE_ERR		"Can't open the databases."
-	#define SYSLOG_RESTART			"Restart..."
-	#define SYSLOG_STOPPED			"Bot down..."
+	{ SYSLOG_READ_CMD,			"Command line parameters found and read" },
+	{ SYSLOG_READ_CONFFILE,		"Configuration file found and read" },
+	{ SYSLOG_INIT_DB,			"Initialization of the database" },
+	{ SYSLOG_TRY_CONNECT,		"Trying to connect" },
+	{ SYSLOG_IS_CONNECT,		"Connected to the server" },
+	{ SYSLOG_BOT_RUN,			"Running...."  },
+	{ SYSLOG_BOT_STOP,			"Stopped...." },
+	{ SYSLOG_BOT_START,		    "Starting..." },
+	{ SYSLOG_UNKNOWN_CMDID,		"Unknown command id" },
+	{ SYSLOG_ACCOUNT_RM,       	"A account is removed from the list" },
+	{ SYSLOG_FAILED_NETPARA,	"The servername or portnumber isn't set." },
+	{ SYSLOG_MSG_QUEUE,		    "Can't create the message queue." },
+	{ SYSLOG_RESOLVE_HOSTNAME,	"Can't resolve the hostname." },
+	{ SYSLOG_RESOLVE_PROTOCOL,	"TCP is an unknown protocol." },
+	{ SYSLOG_SOCKET,			"Can't create a tcp socket." },
+	{ SYSLOG_CONNECT,			"Connection failed." },
+	{ SYSLOG_CONFIG_FILE,		"Can't open the config file." },
+	{ SYSLOG_SEND,			    "Can't send a command." },
+	{ SYSLOG_RECV,			    "Can't receive a line." },
+	{ SYSLOG_TIMEOUT,			"Receiving timeout" },
+	{ SYSLOG_CREATE_DIR,		"Create the directory for the database." },
+	{ SYSLOG_CREATE_DIR_ERR, 	"Can't create the directory for the database." },
+	{ SYSLOG_DATABASE_ERR,		"Can't open the databases." },
+	{ SYSLOG_RESTART,			"Restart..." },
+	{ SYSLOG_STOPPED,			"Bot down..." }
+};
 	
-	// excute error
-	// output of strerr
-	#define ERR_RESTART			"Can't restart"
-	#define ERR_MISSING_PARAM		"Missing value"
-	#define ERR_PORT_PARAMETER		"The portvalue is out of range."
-	#define ERR_WRONG_SERVERNAME		"The servername is irregular."
-	#define ERR_WRONG_BOTNAME		"The botname is irregular."
-	#define ERR_ALT_RANGE			"The account live time is invalid."
-	#define ERR_PINGTIMEOUT_RANGE		"The ping time is invalid."
-	#define ERR_SENDDELAY_RANGE     	"The send delay time is invalid."
-	#define ERR_SENDLINE_RANGE      "The limit for sending with the first send delay is invalid."
-    #define ERR_LOGOFF_RANGE		"The auto logoff time is invalid."
-	#define ERR_THREAD_RANGE		"The threadlimit is out of range."
-	#define ERR_NICK			"Can't set the nickname."
-	#define ERR_MUTEX			"Can't synchronize the threads."
-	#define ERR_NOT_ALLOW_CHAR		"Not allowed characters used."
+static MsgStruct_t Msg[] = {
+	// Messages for the master dialog
+	{ INFO_MASTER_TITLE,		"Create a master account"},
+	{ INFO_MASTER_LOGIN,		"Type the login: " },
+	{ INFO_MASTER_PASS,			"Enter the password: "},
+	{ INFO_MASTER_REPASS,		"Reenter the password: "},
+
+    // output of strerr
+	{ ERR_RESTART,			"Can't restart"},
+	{ ERR_MISSING_PARAM,	"Missing value"},
+	{ ERR_PORT_PARAMETER,		"The portvalue is out of range."},
+	{ ERR_WRONG_SERVERNAME,		"The servername is irregular."},
+	{ ERR_WRONG_BOTNAME,		"The botname is irregular."},
+	{ ERR_ALT_RANGE,			"The account live time is invalid."},
+	{ ERR_PINGTIMEOUT_RANGE,		"The ping time is invalid."},
+	{ ERR_SENDDELAY_RANGE,     	"The send delay time is invalid."},
+	{ ERR_SENDLINE_RANGE,      "The limit for sending with the first send delay is invalid." },
+    { ERR_LOGOFF_RANGE,		"The auto logoff time is invalid."},
+	{ ERR_THREAD_RANGE,		"The threadlimit is out of range." },
+	{ ERR_NICK,			"Can't set the nickname."},
+	{ ERR_MUTEX,			"Can't synchronize the threads." },
+	{ ERR_NOT_ALLOW_CHAR,		"Not allowed characters used." },
 	
 	
 	// command acknowledgment
-	#define MSG_HELLO			"Nice to meet you."
-	#define MSG_HELLO2			"You have got a new account now."
-	#define MSG_PASSWD			"Password is changed."
-	#define MSG_IDENT_OK			"You're now identified."
-	#define MSG_JOIN_OK			"The bot has joined the channel."
-	#define MSG_PART_OK			"The bot has part the channel."
-	#define MSG_RMCHANNEL_OK		"The channel is removed form the channel list."
-	#define MSG_ADDCHANNEL_OK		"The channel is added to the channel list"
-	#define MSG_NICK_SET			"The bot tries to set the new nickname."
-	#define MSG_LOGOFF			"You're now logged off."
-	#define MSG_SET_GREATING		"The new greeting is set"
-	#define MSG_RM_GREATING			"The greeting is removed"
-	#define MSG_SET_TOPIC			"The new topic is set"
-	#define MSG_RM_TOPIC			"The topic is removed"
-	#define MSG_KICK_OK			"The user is kicked by the bot"
-    #define MSG_BAN_OK			"The user is banned by the bot"
-    #define MSG_DEBAN_OK			"The ban is removed by the bot"
-	#define MSG_USERMODE_OK			"The user mod are changed"
-	#define MSG_RMUSER_OK			"The account is removed"
-	#define MSG_MASTER			"You are a bot master"
-	#define MSG_DIE_OK			"The bot is going  down"
-	#define MSG_RESTART_OK			"The bot is going to restart"
+	{ OK_HELLO,			"Nice to meet you."},
+	{ OK_HELLO2,			"You have got a new account now."},
+	{ OK_PASSWD,			"Password is changed."},
+	{ OK_IDENT,			"You're now identified." },
+	{ OK_JOIN,			"The bot has joined the channel."},
+	{ OK_PART,			"The bot has part the channel."},
+	{ OK_RMCHANNEL,		"The channel is removed form the channel list."},
+	{ OK_ADDCHANNEL,		"The channel is added to the channel list"},
+	{ OK_NICK_SET,			"The bot tries to set the new nickname." },
+	{ OK_LOGOFF,			"You're now logged off."},
+	{ OK_SET_GREETING,		"The new greeting is set" },
+	{ OK_RM_GREETING,			"The greeting is removed"},
+	{ OK_SET_TOPIC,			"The new topic is set"},
+	{ OK_RM_TOPIC,			"The topic is removed"},
+	{ OK_KICK,			"The user is kicked by the bot" },
+    { OK_BAN,			"The user is banned by the bot" },
+    { OK_DEBAN,			"The ban is removed by the bot" },
+	{ OK_USERMODE,			"The user mod are changed" },
+	{ OK_RMUSER,			"The account is removed"},
+	{ OK_MASTER,			"You are a bot master"},
+	{ OK_DIE,			"The bot is going  down"},
+	{ OK_RESTART,			"The bot is going to restart"},
 	
 	// Informations for invalid input or using of the bot
-	#define MSG_NOT_LOGON			"You're not identified."
-	#define MSG_NOT_MASTER			"You're not a irc bot master."
-	#define MSG_NOT_OWNER			"You're not the bot owner of this channel."
-	#define MSG_NOT_CHANNELOPT		"This command need a channel name."
-	#define MSG_NOT_PASS			"You've set a empty password."
-	#define MSG_NOT_COMMAND			"No help found for this command."
-	#define MSG_NOT_ACCOUNT			"Account isn't found."
-	#define MSG_NOT_CHANNEL			"This channel isn't in the channel list."
-	#define MSG_NOT_ACCESS			"Access denied"
-	#define MSG_NOT_SELF			"You can't modify yourself"
-    #define MSG_NOT_KICK            "Can't kick this user"
-    #define MSG_NOT_BAN             "Can't ban this user"
+	{ ERR_NOT_LOGON,			"You're not identified."},
+	{ ERR_NOT_MASTER,			"You're not a irc bot master."},
+	{ ERR_NOT_OWNER,			"You're not the bot owner of this channel."},
+	{ ERR_NOT_CHANNELOPT,		"This command need a channel name."},
+	{ ERR_NOT_COMMAND,			"No help found for this command."},
+	{ ERR_NOT_ACCOUNT,			"Account isn't found." },
+	{ ERR_NOT_CHANNEL,			"This channel isn't in the channel list."},
+	{ ERR_NOT_ACCESS,			"Access denied" },
+	{ ERR_NOT_SELF,			"You can't modify yourself"},
+    { ERR_NOT_KICK,            "Can't kick this user"},
+    { ERR_NOT_BAN,             "Can't ban this user"},
 	
     // Errors
-	#define MSG_ADDCHANNEL_ALREADY	"This channel is already in the channel list."
-	#define MSG_NICK_INVALID		"Nickname is invalid."
-	#define MSG_NICK_EXIST			"A account with this nickname already exists."
-	#define MSG_ALREADY_LOGON		"You're already identified."
-	#define MSG_NEED_OP			"I need operator access rights."
-	#define MSG_UNKNOWN_MODS		"This mod is invalid."
-	#define MSG_MASTER_PASS_ERR		"Typing error..not equal passwords"
-	#define MSG_MASTER_ERR			"Can't set this account as master."
-	#define MSG_USERLIST_EMPTY		"The userlist is empty"
-	#define MSG_UNKNOW_MODE			"Unknown mode parameter"
-    #define MSG_NOTSELF_KICK_ERR    "Can't kick myself"
-    #define MSG_NOTSELF_BAN_ERR    "Can't ban myself" 
+	{ ERR_ADDCHANNEL_ALREADY,	"This channel is already in the channel list." },
+	{ ERR_NICK_INVALID,		"Nickname is invalid."},
+	{ ERR_NICK_EXIST,			"A account with this nickname already exists." },
+	{ ERR_ALREADY_LOGON,		"You're already identified." },
+	{ ERR_UNKNOWN_MODS,		"This mod is invalid."},
+	{ ERR_MASTER_PASS,		"Typing error..not equal passwords" },
+	{ ERR_MASTER,			"Can't set this account as master." },
+	{ ERR_USERLIST_EMPTY,		"The userlist is empty"},
+	{ ERR_UNKNOW_MODE,			"Unknown mode parameter"},
+    { ERR_NOTSELF_KICK,    "Can't kick myself"},
+    { ERR_NOTSELF_BAN,    "Can't ban myself"}, 
     
+    // command  format erros
+	{ ERR_CMD_ADDCHANNEL,		"Invalid command: !addchannel <#channel>"},
+	{ ERR_CMD_JOIN,			"Invalid command: !join <#channel>"},
+	{ ERR_CMD_IDENT,			"Invalid command: !ident <login password>"},
+	{ ERR_CMD_NICK,			"Invalid command: !nick <nickname>"},			
+	{ ERR_CMD_SAY,			"Invalid command: !say [#channel] <message>"},			
+	{ ERR_CMD_KICK,			"Invalid command: !kick [#channel] <nickname> [reason]"},
+    { ERR_CMD_BAN,			"Invalid command: !ban [#channel] <nickname>"},
+    { ERR_CMD_DEBAN,			"Invalid command: !deban [#channel] <banmask>" },
+	{ ERR_CMD_USERMODE,		"Invalid command: !usermode [#channel] <login> <+/-><mod>"},
+	{ ERR_CMD_CHANMODE,		"Invalid command: !chamode [#channel] <+/-><mods>" },
+
+
 	// other informations
-	#define MSG_HELP_END			"End of help."
-	#define MSG_HELP_FOR			"Help for"
-	#define MSG_USERLIST_BEGIN		"User list:"
-	#define MSG_USERLIST_END		"End of user list."
-	#define MSG_CHANNELLIST_BEGIN		"Channel list:"
-	#define MSG_CHANNELLIST_END		"End of channel list."
-	#define MSG_CHANNELLIST_MODE    	"Channel modes:"
-	#define MSG_CHANNELLIST_TOPIC		"Topic:"
-	#define MSG_CHANNELLIST_GREAT		"Greeting:"
-	#define MSG_DEFAULT_REASON		"You are kicked from the bot."
-	#define MSG_INIT_CHANNEL		"I have initialized this channnel"
-	
-	// command  format erros
-	#define MSG_ADDCHANNEL_ERR		"Invalid command: !addchannel <#channel>"
-	#define MSG_JOIN_ERR			"Invalid command: !join <#channel>"
-	#define MSG_IDENT_ERR			"Invalid command: !ident <login password>"
-	#define MSG_NICK_ERR			"Invalid command: !nick <nickname>"			
-	#define MSG_SAY_ERR			"Invalid command: !say [#channel] <message>"			
-	#define MSG_KICK_ERR			"Invalid command: !kick [#channel] <nickname> [reason]"
-    #define MSG_BAN_ERR			"Invalid command: !ban [#channel] <nickname>"
-    #define MSG_DEBAN_ERR			"Invalid command: !deban [#channel] <banmask>"
-	#define MSG_USERMODE_ERR		"Invalid command: !usermode [#channel] <login> <+/-><mod>"
-	#define MSG_CHANMODE_ERR		"Invalid command: !chamode [#channel] <+/-><mods>"
-	
-	// Messages for the master dialog
-	#define MSG_MASTER_TITLE		"Create a master account\n\n"
-	#define MSG_MASTER_LOGIN		"Type the login (max %d): "
-	#define MSG_MASTER_PASS			"\nEnter the password(max. %d): "
-	#define MSG_MASTER_REPASS		"Reenter the password: "
+	{ INFO_HELP_END,			"End of help."},
+	{ INFO_HELP_FOR,			"Help for"},
+	{ INFO_USERLIST_BEGIN,		"User list:"},
+	{ INFO_USERLIST_END,		"End of user list."},
+	{ INFO_CHANNELLIST_BEGIN,		"Channel list:"},
+	{ INFO_CHANNELLIST_END,		"End of channel list."},
+	{ INFO_CHANNELLIST_MODE,    	"Channel modes:"},
+	{ INFO_CHANNELLIST_TOPIC,		"Topic:"},
+	{ INFO_CHANNELLIST_GREET,		"Greeting:"},
+	{ INFO_DEFAULT_REASON,		"You are kicked from the bot."},
+	{ INFO_INIT_CHANNEL,		"I have initialized this channnel"},
+	{ INFO_NEED_OP,			"I need operator access rights." },
+    { INFO_NOT_PASS,			"You've set a empty password."},
 	
 	
+};
 	
 	static  char *const unknow_parameter[]=
 	{
