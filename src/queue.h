@@ -3,6 +3,8 @@
 #ifndef __H_QUEUE
 #define __H_QUEUE
 
+#include <pthread.h>
+
 /** Internal Error defines **/
 #define QUEUE_SUCCESS				0
 #define QUEUE_ERROR 				1 
@@ -28,6 +30,7 @@ typedef struct tag_Queue
 	struct tag_Queue *sentinel; /** pointer to the sentinel; To jump from every elment to the sentinel **/
 	QueueType queuetypeT; /** Type of Queue **/
 	QueueData *queuedataData; /**Data Elements **/
+	pthread_mutex_t *QueueMutex;	
 	long longCount;
 }Queue,*PQueue;
 
