@@ -74,7 +74,6 @@ void *TimingThread(void *argv){
         /* increment the line count */
         if ((newTime-lastLineCount)>=(((sSetup.iSendDelay+nCharSendingCounter*2)*2)/1000)) {
             if (nCharSendingCounter>0) {
-                DEBUG("current character increment count: %d\n",nCharSendingIncrement);
                 nCharSendingCounter=(nCharSendingCounter<nCharSendingIncrement)?0:nCharSendingCounter-nCharSendingIncrement;
             }
             lastLineCount=newTime;
