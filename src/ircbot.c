@@ -123,9 +123,9 @@ int main(int argc,char * const argv[]) {
     sSetup.AutoLoggoff=DEFAULT_LOGOFF;
     
     // send dealy
-    sSetup.iSendDelay=DEFAULT_SEND_DELAY;
-    sSetup.iSendSafeDelay=DEFAULT_SEND_SAFE_DELAY;
-    sSetup.iSendSafeLine=DEFAULT_SEND_SAFE_LINE;
+    sSetup.iSendDelay=DEFAULT_FAST_SEND_DELAY;
+    sSetup.iSendSafeDelay=DEFAULT_SLOW_SEND_DELAY;
+    sSetup.nFastSendingCharLimit=DEFAULT_FAST_SEND_LIMIT;
     
     sSetup.iTimeout=DEFAULT_PING_TIMEOUT;
     sSetup.thread_limit=DEFAULT_THREAD_LIMIT;
@@ -221,9 +221,9 @@ int main(int argc,char * const argv[]) {
     DEBUG("Config file %s\n",sSetup.configfile);
     DEBUG("Database path %s\n",sSetup.pDatabasePath);
     DEBUG("Ping timeout %ds\n",sSetup.iTimeout);
-    DEBUG("Sending delay %dms\n",sSetup.iSendDelay);
-    DEBUG("Sending safe delay %dms\n",sSetup.iSendSafeDelay);
-    DEBUG("Sending  line limit %d\n",sSetup.iSendSafeLine);
+    DEBUG("Fast sending delay %dms\n",sSetup.iSendDelay);
+    DEBUG("Slow sending delay %dms\n",sSetup.iSendSafeDelay);
+    DEBUG("Fast sending limit %d\n",sSetup.nFastSendingCharLimit);
     DEBUG("Account live time %dd\n",sSetup.AccountLiveTime);
     DEBUG("Autolog of after %dd\n",sSetup.AutoLoggoff);
     DEBUG("-----------------------------------------------\n");
@@ -319,7 +319,7 @@ int main(int argc,char * const argv[]) {
             *pos='\0';
 
             /* cut out a part of the  complete line */
-            str=(char *)calloc(strlen(tmp)+1,sizeof(char));
+            str=(char *)malloc((strlen(tmp)+1)*sizeof(char));
             strcpy(str,tmp);
 
             /* parse the part line */
@@ -328,9 +328,10 @@ int main(int argc,char * const argv[]) {
 
             /* put the identified line  on the  queue */
             if (pMsg->identify!=CMD_NONE) {
-				Command.t_size=sizeof(MsgBuf_t)+strlen(pMsg->pMsgLine)+1;
+				Command.t_size=sizeof(MsgBuf_t);
 				Command.data=pMsg;
 				pushQueue(pCommandQueue,Command);
+                free(pMsg);
             }
             free(str);
             
