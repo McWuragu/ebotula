@@ -45,7 +45,7 @@ void *TimingThread(void *argv){
         
         time(&newTime);
 
-        if ((newTime-lastPing)>=(sSetup.iTimeout/2)) {
+        if ((newTime-lastPing)>=(sSetup.iTimeout)) {
             ping(sSetup.server);
             lastPing=newTime;
         }
