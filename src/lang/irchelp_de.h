@@ -15,7 +15,7 @@ static char *pIrcHelp[][15] = {
     // header
 
     {
-        "Das ist  das Onlinehilfesystem für den Bot.",
+        "Das ist das Onlinehilfesystem für den Bot.",
         "Mit !help [Kommando] erhält man mehr Hilfe zu einem Kommando",
         "------------------------------------------------------------------------",
         ".",
@@ -41,14 +41,14 @@ static char *pIrcHelp[][15] = {
     {
         "gibt die Version aus",
         "Damit kann man sich die Version und das Kompilierdatum des Bots",
-        "anezeigen lassen",
+        "anzeigen lassen",
         ".",
     },
     // HELLO
     {
         "legt neuen Account an",
         "Damit wird ein neuer Account beim Bot mit dem aktuellen",
-        "Nicknamen als  Login erzeugt. Dieses ist für das Einloggen von",
+        "Nicknamen als Login erzeugt. Dieses ist für das Einloggen von",
         "Bedeutung. Auch sollte man gleich danach mit !pass sein",
         "Passwort ändern.",
         ".",
@@ -58,7 +58,7 @@ static char *pIrcHelp[][15] = {
         "identifiziert den User gegenüber dem Bot",
         "Durch aufrufen dieses Kommandos loggt man sich beim Bot ein",
         "und kann dann weitere Funktionen nutzen. Desweiteren werden",
-        "die Rechte des Account in allen Channel vom bot gesetzt",
+        "die Rechte des Account in allen Channels vom bot gesetzt",
         ".",
     },
 
@@ -73,7 +73,7 @@ static char *pIrcHelp[][15] = {
     {
         "ändert das Passwort des aktuellen Accounts",
         "Das Kommando ermöglicht das setzen und ändern des Passwortes",
-        "des aktuell identifizieren Accounts.",
+        "des aktuell identifizierten Accounts.",
         ".",
     },
 
@@ -81,7 +81,7 @@ static char *pIrcHelp[][15] = {
     // INVITE
     {
         "lädt den user in einen Channel ein",
-        "Das Kommando ermöglich es sich selbst in einen Channel, der Invite"
+        "Das Kommando ermöglicht es, sich selbst in einen Channel, der Invite"
         "gesetzt ist, einzuladen",
         ".",
     },
@@ -91,7 +91,7 @@ static char *pIrcHelp[][15] = {
     {
         "setzt oder entfernt Modes vom Channel",
         "Hiermit ist es möglich Rechte und Modi des aktuellen",
-        "oder einem angebenen Channnel zu setzen oder zu löschen",
+        "oder eines angebenen Channnels zu setzen oder zu löschen",
         ".",
     },
     // USERLIST
@@ -99,7 +99,7 @@ static char *pIrcHelp[][15] = {
         "gibt die Liste aller Accounts oder für einen Channel",
         "Durch diese Kommando kann man sich eine Liste aller Accounts",
         "anzeigen lassen. Diese Liste gibt Information über die Rechte",
-        "und dem Status der Accounts",
+        "und den Status der Accounts",
         ".",
     },
     // USERMODE
@@ -112,13 +112,13 @@ static char *pIrcHelp[][15] = {
     // SAY
     {
         "gibt eine Nachricht in einem Channel aus",
-        "Damit is es möglich, den Bot anzuweisen eine Nachricht in den",
+        "Damit is es möglich, den Bot anzuweisen, eine Nachricht in den",
         "Channel zu posten",
         ".",
     },
     // KICK
     {
-        "wirft einen User aus einen Channel hinaus",
+        "wirft einen User aus einem Channel hinaus",
         "Das Kommando ermöglicht es, einen  User aus einem Channel zu werfen",
         ".",
     },
@@ -133,12 +133,14 @@ static char *pIrcHelp[][15] = {
     {
         "setzt und löscht die Begrüssung für einen Channel",
         "Dieses Kommando bietet die Möglichkeit eine Begrüssung für einen",
-        "Channel zu setzen oder diese auch zulöschen",
+        "Channel zu setzen oder diese auch zu löschen",
         ".",
     },
     // BAN
     {
-        "bannt einen User aus dem  Channel",
+        "bannt einen User aus dem Channel",
+	"Der User wird nicht nur aus dem Channel geworfen. Es wird auch",
+	"verhindert, daß der User den Channel wieder betritt.",
         ".",
     },
     // DEBAN
@@ -181,7 +183,7 @@ static char *pIrcHelp[][15] = {
     // DIE
     {
         "stopt den bot",
-        "Damit läst sich der Bot beenden und sauber remote herunterfahren.",
+        "Damit läßt sich der Bot beenden und sauber remote herunterfahren.",
         ".",
     },
     // CHANNELS
