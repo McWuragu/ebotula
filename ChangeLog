@@ -3,6 +3,7 @@ ebotula-0.1.17
 - Bugfix: fixed the rejoin-after-kick bug
 - Bugfix: fixed the invalid prefix handling of a irc message
 - added a seperate thread for the joing of the channels
+- modified the global sending mutex to a static mutex
 
 ebotula-0.1.16
 --------------------
