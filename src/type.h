@@ -47,7 +47,8 @@ typedef enum CmdEnum {
 	CMD_SET_TOPIC,
 	CMD_SAY,
 	CMD_KICK,
-	CMD_USERMODE
+	CMD_USERMODE,
+	CMD_NICKCHG
 }CmdType;
 
 			  
