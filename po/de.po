@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-24 20:28+0200\n"
-"PO-Revision-Date: 2004-07-24 20:45+0200\n"
+"POT-Creation-Date: 2004-07-24 21:43+0200\n"
+"PO-Revision-Date: 2004-07-24 21:50+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -96,13 +96,21 @@ msgstr "Callbackroutine für das Bannen eines Benutzers"
 msgid "The user is banned by the bot."
 msgstr "Der Benutzer wurd vom Bot gebannt."
 
+#: src/callback.c:137
+msgid "Couldn't ban this user"
+msgstr "Konnte diesen Benutzer nicht bannen."
+
 #: src/callback.c:161
 msgid "Callback routine for user kicking"
 msgstr "Callbackroutine für das Herrauswerfen eines Benutzers"
 
 #: src/callback.c:182
 msgid "The user is kicked by the bot"
-msgstr "Der Benutzer wurd vom Bot gekickt."
+msgstr "Der Benutzer wurd vom Bot hinausgeworfen.."
+
+#: src/callback.c:186 src/command.c:888
+msgid "Couldn't kick this user"
+msgstr "Konnte diesen Benutzer nicht herauswerfen."
 
 #: src/callbacklist.c:82 src/callbacklist.c:135 src/irc.c:47 src/irc.c:66
 #: src/irc.c:83 src/irc.c:96 src/irc.c:121 src/irc.c:134 src/irc.c:153
@@ -110,7 +118,7 @@ msgstr "Der Benutzer wurd vom Bot gekickt."
 #: src/irc.c:229 src/irc.c:242 src/irc.c:255 src/irc.c:273 src/irc.c:286
 #: src/queue.c:30 src/queue.c:82 src/queue.c:111
 msgid "Couldn't allocate memory!"
-msgstr "Könnte keinen Speicher anfordern."
+msgstr "Konnte keinen Speicher anfordern."
 
 #: src/callbacklist.c:180
 msgid "List is empty!"
@@ -150,6 +158,10 @@ msgstr "Kommando gefunden %d"
 #: src/command.c:110
 msgid "Help for"
 msgstr "Hilfe für"
+
+#: src/command.c:134
+msgid "No help found for this command."
+msgstr "Keine Hilfe für dieses Kommando gefunden."
 
 #: src/command.c:141
 #, c-format
@@ -216,6 +228,20 @@ msgstr "Herstellung der Zugriffsrechte für alle Channels."
 msgid "Invalid password"
 msgstr "Ungültiges Passwort"
 
+#: src/command.c:324 src/command.c:467 src/command.c:712 src/command.c:728
+#: src/command.c:767 src/command.c:774 src/command.c:824 src/command.c:859
+#: src/command.c:937 src/command.c:946 src/command.c:1112 src/command.c:1220
+#: src/command.c:1466
+msgid "Couldn't found regulare parameters."
+msgstr "Konnte keine gültigen Parameter finden."
+
+#: src/command.c:338 src/command.c:345 src/command.c:378 src/command.c:406
+#: src/command.c:413 src/command.c:430 src/command.c:575 src/command.c:623
+#: src/command.c:706 src/command.c:762 src/command.c:818 src/command.c:853
+#: src/command.c:923 src/command.c:1110 src/command.c:1387
+msgid "This command requieres a channel name."
+msgstr "Dieses Kommando benötigt einen Channelname."
+
 #: src/command.c:354
 msgid "This channel is already on the channel list."
 msgstr "Der Channel ist schon zur Liste hinzugefügt."
@@ -223,7 +249,7 @@ msgstr "Der Channel ist schon zur Liste hinzugefügt."
 #: src/command.c:356
 #, c-format
 msgid "Join and add the channnel %s"
-msgstr "Channel %s hinzugefügt und beigetretten"
+msgstr "Den Channel %s hinzugefügt und beigetretten"
 
 #: src/command.c:363
 msgid "The channel is added to the channel list"
@@ -236,7 +262,12 @@ msgstr "Der Bot ist dem Channel beigetretten."
 #: src/command.c:382
 #, c-format
 msgid "Part and  try to remove the channnel %s"
-msgstr "Channel %s verlassen und wird versucht zu entfernen."
+msgstr "Den Channel %s verlassen und wird versucht zu entfernen."
+
+#: src/command.c:387 src/command.c:608 src/command.c:663 src/command.c:931
+#: src/command.c:1204
+msgid "This channel isn't in the channel list."
+msgstr "Dieser Channel ist nicht auf der Channelliste."
 
 #: src/command.c:389
 msgid "The channel is removed from the channel list."
@@ -249,12 +280,12 @@ msgstr "Der Bot hat den Channel verlassen."
 #: src/command.c:418
 #, c-format
 msgid "Join the channel %s"
-msgstr "Channel %s beigetretten."
+msgstr "Dem Channel %s beigetretten."
 
 #: src/command.c:432
 #, c-format
 msgid "Part the channel %s"
-msgstr "Channel %s verlassen."
+msgstr "Den Channel %s verlassen."
 
 #: src/command.c:443
 msgid "The bot is going down."
@@ -270,7 +301,7 @@ msgstr "Der Nickname ist ungültig."
 
 #: src/command.c:474
 msgid "The bot tries to set the new nickname."
-msgstr "Der bot versucht den neuen Nickname zusetzen."
+msgstr "Der Bot versucht den neuen Nickname zusetzen."
 
 #: src/command.c:499
 msgid "Build channel list."
@@ -342,11 +373,23 @@ msgstr "Kann mich nicht selbst herauswerfen."
 
 #: src/command.c:883
 msgid "You are kicked from the bot."
-msgstr "Du wurd vom Bot gekickt."
+msgstr "Du wurd vom Bot hinausgeworfen."
 
 #: src/command.c:942
 msgid "Modify user mod"
 msgstr "Verändere die Modi"
+
+#: src/command.c:962 src/command.c:1253
+msgid "Account wasn't found."
+msgstr "Konto wurde nicht gefunden."
+
+#: src/command.c:965
+msgid "You can't modify yourself"
+msgstr "Du kannst dich nicht selbst ändern."
+
+#: src/command.c:980 src/command.c:1005
+msgid "You're not a bot master."
+msgstr "Du bist kein Master."
 
 #: src/command.c:988
 #, c-format
@@ -453,7 +496,7 @@ msgstr "Änderung der Netzmaske \"%s\" zu \"%s\""
 
 #: src/handles.c:105 src/handles.c:221
 msgid "needs operator access rights."
-msgstr "benötige Operatorrechte."
+msgstr "benötigt Operatorrechte."
 
 #: src/handles.c:142
 #, c-format
@@ -652,7 +695,7 @@ msgstr "Neustart fehlgeschlagen"
 msgid "Stopped..."
 msgstr "Gestoppt..."
 
-#: src/messages.c:24
+#: src/messages.c:13
 #, c-format
 msgid ""
 "\n"
@@ -661,7 +704,7 @@ msgstr ""
 "\n"
 "%s [Optionen]\n"
 
-#: src/messages.c:25
+#: src/messages.c:14
 msgid ""
 "\n"
 "\tOptions:\n"
@@ -669,93 +712,93 @@ msgstr ""
 "\n"
 "\tOptionen:\n"
 
-#: src/messages.c:26
+#: src/messages.c:15
 msgid "\t-a days\t\tSet the time in days for the automatic logoff.\n"
 msgstr "\t-a Tage\t\tSetzt die Zeit in Tage für das automatische Abmelden.\n"
 
-#: src/messages.c:27
+#: src/messages.c:16
 msgid "\t-b name\t\tSet the name of the bot.\n"
 msgstr "\t-b Name\t\tSetzt den Namen des Boots im.\n"
 
-#: src/messages.c:28
+#: src/messages.c:17
 msgid "\t-c sec\t\tSet the ping timeout of the network connection.\n"
 msgstr "\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
 
-#: src/messages.c:29
+#: src/messages.c:18
 msgid "\t-d path\t\tSet the path of the database direcotry\n"
 msgstr "\t-d Pfad\t\tSetzt den Pfad zur Datenbank.\n"
 
-#: src/messages.c:30
+#: src/messages.c:19
 msgid "\t-D Level\tSet the log level (0-7)\n"
 msgstr "\t-D Level\tSetzt das Ausgabelevel (0-7)\n"
 
-#: src/messages.c:31
+#: src/messages.c:20
 msgid "\t-e ms\t\tSet the delay time in millisecond for the slow sending.\n"
 msgstr ""
 "\t-e ms\t\tSetzt die Verzögerung in Millisekunden für das verlangsamte "
 "Senden.\n"
 
-#: src/messages.c:32
+#: src/messages.c:21
 msgid "\t-f file\t\tSet the config file.\n"
 msgstr "\t-f Datei\tSetzt den Pfad zu Konfigurationsdatei.\n"
 
-#: src/messages.c:33
+#: src/messages.c:22
 msgid "\t-g group\tSet the group under wich the bot run (only root).\n"
 msgstr ""
 "\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgeführt wird. (nur "
 "root).\n"
 
-#: src/messages.c:34
+#: src/messages.c:23
 msgid "\t-h\t\tPrint this help information.\n"
 msgstr "\t-h\t\tGibt diese Hilfe aus.\n"
 
-#: src/messages.c:35
+#: src/messages.c:24
 msgid "\t-i sec\t\tSet the delay of the channel initialization.\n"
 msgstr ""
 "\t-i Sek\t\tSetzt die Verzögerung in Sekunden für das Einrichten der "
 "Channels.\n"
 
-#: src/messages.c:36
+#: src/messages.c:25
 msgid "\t-k days\t\tSet the account live time in days.\n"
 msgstr "\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Konto inaktiv sein kann.\n"
 
-#: src/messages.c:37
+#: src/messages.c:26
 msgid "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
 msgstr ""
 "\t-l Char/min\tSetzt das Limit in Zeichen je Minute für das beschleunigte "
 "Senden.\n"
 
-#: src/messages.c:38
+#: src/messages.c:27
 msgid "\t-m\t\tStart the dialog for creating of a new master.\n"
 msgstr "\t-m\t\tStartet den Dialog zum Anlegen eines neuen Masters.\n"
 
-#: src/messages.c:39
+#: src/messages.c:28
 msgid "\t-n ms\t\tSet the delay time in millisecond for the fast sending.\n"
 msgstr ""
 "\t-n ms\t\tSetzt die Verzögerung in Millisekunden für das beschleunigte "
 "Senden\n"
 
-#: src/messages.c:40
+#: src/messages.c:29
 msgid "\t-p port\t\tSet the portnumber of the irc server.\n"
 msgstr "\t-p Port\t\tSetzt die Portnummer des IRC-Servers.\n"
 
-#: src/messages.c:41
+#: src/messages.c:30
 msgid "\t-r string\tSet the output for a request of the real name.\n"
 msgstr "\t-r String\tSetzt die Zeichenkette des Real Name Felds für das IRC.\n"
 
-#: src/messages.c:42
+#: src/messages.c:31
 msgid "\t-s server\tSet the irc server name.\n"
 msgstr "\t-s Server\tSetzt den Namen des IRC-Servers.\n"
 
-#: src/messages.c:43
+#: src/messages.c:32
 msgid "\t-t count\tSet the number of created  threads.\n"
 msgstr "\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n"
 
-#: src/messages.c:44
+#: src/messages.c:33
 msgid "\t-u user\t\tSet the user under which the bot run (root only).\n"
 msgstr "\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
 
-#: src/messages.c:45
+#: src/messages.c:34
 msgid "\t-v\t\tPrint version.\n"
 msgstr "\t-v\t\tGibt die Version aus.\n"
 
@@ -953,6 +996,10 @@ msgstr "Ausführungs Thread läuft (PID%d)"
 #, c-format
 msgid "Unkown command id %d"
 msgstr "Unbekannte Datenbank ID %d"
+
+#: src/parser.c:300
+msgid "Access denied"
+msgstr "Zugriff verweigert."
 
 #: src/parser.c:313
 msgid "Execution thread is stopped"
