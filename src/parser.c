@@ -50,7 +50,14 @@ MsgBuf_t* preParser(char *pLine) {
     // identify events and commands
 
     if (!strncmp(pPreamble,CmdList[CMD_ONPING],strlen(CmdList[CMD_ONPING]))) {
-        pMsg->identify=CMD_ONPING;
+        /*
+         * The ping can't send over the threads. If you have high usage of the
+         * threads then is the execution the pong request to slow. It must send
+         * direct from the parser
+         *
+         * pMsg->identify=CMD_ONPING;
+         */
+        pong();
     } else if (strstr(pPos,CmdList[CMD_ONQUIT])) {
         pMsg->identify=CMD_ONQUIT;
     } else if (strstr(pPos,CmdList[CMD_ONJOIN])) {
