@@ -1,3 +1,4 @@
-- restart not correct work 
+- comamnd !restart call not  the binary with correkt  path
+- don't stop and  restart, bot blocked
 - security bug  in the mode safe routine
 - slow performance
