@@ -31,18 +31,18 @@
 
 #include "parameter.h"
 // #############################################################################                  
-void CommandLineParser(int argc,char *const argv[]) {
+boolean CommandLineParser(int argc,char *const argv[]) {
     extern ConfigSetup_t sSetup;
     int i;
     int tmp;
 
-    logger(LOG_NOTICE,getSyslogString(SYSLOG_READ_CMD));
+    logger(LOG_NOTICE,gettext("Command line parameters found and read"));
     
     for (i=1;i<argc;i++) {
         if (argv[i][0]==PARAMETER_CHAR) {
+            logger(LOG_INFO,gettext("Check option \"%s\"",argv[i]));
             switch  (argv[i][1]) {
             case 's':
-                logger(LOG_INFO,"Found server option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -61,7 +61,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'b':
-                logger(LOG_INFO,"Found botname option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -80,7 +79,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'u':
-                logger(LOG_INFO,"Found execution user option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -93,7 +91,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'g':
-                logger(LOG_INFO,"Found execution group option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -106,7 +103,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'r':
-                logger(LOG_INFO,"Found realname option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -119,7 +115,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 
                 break;
             case 'p':
-                logger(LOG_INFO,"Found port option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -139,7 +134,6 @@ void CommandLineParser(int argc,char *const argv[]) {
     
                 break;
             case 't':
-                logger(LOG_INFO,"Found thread limit option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -157,7 +151,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.thread_limit=tmp;
                 break;
             case 'a':
-                logger(LOG_INFO,"Found auto logoff time option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -175,7 +168,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.AutoLoggoff=tmp;
                 break;
             case 'n':
-                logger(LOG_INFO,"Found first sending delay option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -193,7 +185,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.iSendDelay=tmp;
                 break;
             case 'e':
-                logger(LOG_INFO,"Found secondary sending delay option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -211,7 +202,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.nSlowSendDelay=tmp;
                 break;
             case 'l':
-                logger(LOG_INFO,"Found send line limit option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -228,7 +218,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.nFastSendingCharLimit=tmp;
                 break;
             case 'i':
-                logger(LOG_INFO,"Found startup delay option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -245,7 +234,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.nSettling=tmp;
                 break;
             case 'k':
-                logger(LOG_INFO,"Found account live time option");
                                             
                 if (++i>=argc) {
                     errno=EINVAL;
@@ -263,11 +251,9 @@ void CommandLineParser(int argc,char *const argv[]) {
                 sSetup.AccountLiveTime=tmp;
                 break;
             case 'm':
-                logger(LOG_INFO,"Found bot master option");
                 sSetup.newMaster=true;
                 break;
             case 'd':
-                logger(LOG_INFO,"Found database path option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -278,7 +264,6 @@ void CommandLineParser(int argc,char *const argv[]) {
                 strcpy(sSetup.pDatabasePath,argv[i]);
                 break;
             case 'c':
-                logger(LOG_INFO,"Found ping timeout option");
                 if (++i>=argc) {
                     errno=EINVAL;
                     fprintf(stderr,getMsgString(ERR_MISSING_PARAM));
@@ -300,17 +285,20 @@ void CommandLineParser(int argc,char *const argv[]) {
                 i++;
                 break;
             default:
-                printf("%s ",argv[i]);
-                printMsg(getCmdLineError());
-                exit(-1);
+                fprintf(stderr,gettext("Unkown option \"%s\"\n"),argv[i]);
+                fprintf(stderr,gettext("Type %s -h for more help.\n"),PACKAGE);
+                errno=EINVAL;
+                return false;
                 break;
             }
         } else {
-                printf("%s ",argv[i]);
-                printMsg(getCmdLineError());
-                exit(-1);
+                fprintf(stderr,gettext("Invalid option \"%s\"\n"),argv[i]);
+                fprintf(stderr,gettext("Type %s -h for more help.\n"),PACKAGE);
+                errno=ENOSYS;
+                return false;
         }
     }
+    return true;
 }
 // ############################################################################# 
 void ConfigFileParser(void) {
@@ -320,14 +308,13 @@ void ConfigFileParser(void) {
     char buffer[MAX_READ_BUFFER_SIZE], *c,*value,*key;
     //errno=0;
 
-    logger(LOG_NOTICE,getSyslogString(SYSLOG_READ_CONFFILE));
-    logger(LOG_INFO,"File %s",sSetup.configfile);
+    logger(LOG_NOTICE,gettext("Read configuration file %s"),sSetup.configfile);
 
     if (!(fd=fopen(sSetup.configfile,"r"))) {
 	    // generating basicconfig for ebotula
         write_baseconfig(sSetup.configfile);
     }else {
-        logger(LOG_DEBUG,"Config file is open");
+        logger(LOG_DEBUG,gettext("File is open"),sSetup.configfile);
     
         while((fgets(buffer,MAX_READ_BUFFER_SIZE,fd)!=NULL) && (errno==0)){
             // remove newline and leading spaces
@@ -336,7 +323,7 @@ void ConfigFileParser(void) {
             
             // ignore space lines and comments
             if ((buffer[0]!=COMMENT_CHAR) && (buffer[0]!='\0')) {
-                logger(LOG_INFO,"Found config line %s",buffer);
+                logger(LOG_INFO,gettext("Found config line %s"),buffer);
                 
     
                 c=strchr(buffer,'=');
@@ -497,8 +484,8 @@ boolean dialogMaster(void){
     char  name[LOGIN_LENGTH+1],passwd[PASSWD_LENGTH+1],repasswd[PASSWD_LENGTH+1];
      struct termios stBuf, stBufsave;
     /* insert the login name */
-    printf("%s\n\n",getMsgString(INFO_MASTER_TITLE));
-    printf("%s",getMsgString(INFO_MASTER_LOGIN));
+    printf(gettext("Create a new master account\n\n"));
+    printf(gettext("Type the login: "));
     fgets(name,LOGIN_LENGTH,stdin);
 
     trim(name);
@@ -506,7 +493,7 @@ boolean dialogMaster(void){
 
     /* check loging */
     if (!NickStringCheck(name) || !strlen(name)) {
-        fprintf(stderr,"%s\n",getMsgString(ERR_NOT_ALLOW_CHAR));
+        fprintf(stderr,gettext("Forbidden characters used.\n"));
         return false;
     }
     /**************************************/
@@ -518,14 +505,17 @@ boolean dialogMaster(void){
     stBufsave=stBuf;
     /* disable echo */
     stBuf.c_lflag &= ~(ECHO);
+    
     /* set attributs */
     if (tcsetattr(0, TCSADRAIN, &stBuf) == -1)
         fprintf(stderr,"tcsetattr");
+    
     /* insert the password */
-    printf("%s",getMsgString(INFO_MASTER_PASS));
+    printf(gettext("Enter the password: "));
     fgets(passwd,PASSWD_LENGTH+1,stdin);
-    printf("\n%s",getMsgString(INFO_MASTER_REPASS));
+    printf(gettext("\nReenter the password: "));
     fgets(repasswd,PASSWD_LENGTH+1,stdin);
+    
     /* set save attributs to terminal */
     if (tcsetattr(0, TCSADRAIN, &stBufsave) == -1)
         fprintf(stderr,"tcsetattr");
@@ -535,10 +525,10 @@ boolean dialogMaster(void){
     
     /* check the password */
     if (strcmp(passwd,repasswd)) {
-        fprintf(stderr,"%s\n",getMsgString(ERR_MASTER_PASS));
+        fprintf(stderr,gettext("Typing error... passwords not equal\n"));
         return false;
     } else if (strpbrk(passwd," \t")) {
-        fprintf(stderr,"%s\n",getMsgString(ERR_NOT_ALLOW_CHAR));
+        fprintf(stderr,gettext("Forbidden characters used.\n"));
         return false;
     }
 
@@ -546,14 +536,14 @@ boolean dialogMaster(void){
 
     // create account
     if (!add_db(USER_DB,name,passwd)) {
-        fprintf(stderr,"%s\n",getMsgString(ERR_NICK_EXIST));
+        fprintf(stderr,"%s\n",gettext("A account with this nickname already exists."));
         return false;
     }
 
     // make him to the master
     if (!add_db(ACCESS_DB,name,"+m")) {
         del_db(USER_DB,name);
-        fprintf(stderr,"%s\n",getMsgString(ERR_MASTER));
+        fprintf(stderr,gettext("Couldn't set this account to master."));
         return false;
     }
 

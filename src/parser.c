@@ -293,7 +293,7 @@ void *CommandExecutionThread(void *argv) {
                     ctcptime(&sMsgItem);
                     break;
            		default:
-                    logger(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
+                    logger(LOG_CRIT,gettext("Unkown command id %d"),pMsg->identify);
 		    break;
                 }
             } else {

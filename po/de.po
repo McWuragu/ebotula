@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2004-07-16 11:22+0200\n"
-"PO-Revision-Date: 2004-07-16 11:27+0200\n"
+"POT-Creation-Date: 2004-07-17 17:58+0200\n"
+"PO-Revision-Date: 2004-07-17 18:21+0200\n"
 "Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,58 +19,337 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.0.2\n"
 
+#: src/account.c:236
+#, c-format
+msgid "The account %s is removed"
+msgstr "Der Account %s wurde gelöscht."
+
+#: src/baseconfig.c:120 src/baseconfig.c:123
+#, c-format
+msgid "Couldn't open the configuration file %s."
+msgstr "Könnte die Datenbank %s nicht öffnen."
+
+#: src/command.c:158 src/parameter.c:539
+msgid "A account with this nickname already exists."
+msgstr "Ein Account mit diesem Namen existiert schon."
+
+#: src/dbaccess.c:57
+msgid "Initialization of the database"
+msgstr "Initialisierung der Datenbank"
+
+#: src/dbaccess.c:65 src/dbaccess.c:67
+#, c-format
+msgid "Couldn't create the directory %s for the database."
+msgstr "Konnte das Verzeichnis %s für die Datanbank nicht anlegen."
+
+#: src/dbaccess.c:71
+#, c-format
+msgid "Create the directory %s for the database."
+msgstr "Lege das Verzeichnis %s für die Datenbank an."
+
+#: src/dbaccess.c:86 src/dbaccess.c:88
+#, c-format
+msgid "Couldn't open the databases %s."
+msgstr "Könnte die Datenbank %s nicht öffnen."
+
+#: src/dbaccess.c:118
+#, c-format
+msgid "Unkown database id %d"
+msgstr "Unbekannte Datenbank ID %d"
+
 #: src/ircbot.c:169
 msgid "Found debug level option."
 msgstr "Debug-Level-Option gefunden"
 
-#: src/ircbot.c:172 src/ircbot.c:199
+#: src/ircbot.c:172 src/ircbot.c:197
 #, c-format
-msgid "%s need a parameter value"
-msgstr "%s benötigt einen Parameterwert"
+msgid "\"%s\" need a parameter value.\n"
+msgstr "\"%s\" benötigt einen Parameterwert.\n"
 
-#: src/ircbot.c:181
+#: src/ircbot.c:180
 #, c-format
-msgid "The log level %i is invalid."
-msgstr "Das Log-Level %i ist ungültig"
+msgid "The log level %i is invalid.\n"
+msgstr "Das Log-Level %i ist ungültig.\n"
 
-#: src/ircbot.c:246
+#: src/ircbot.c:244
 #, c-format
 msgid "The group %s couldn't found"
 msgstr "Die Gruppe %s kann nicht gefunden werden."
 
-#: src/ircbot.c:255
+#: src/ircbot.c:253
 #, c-format
-msgid "Th user %s couldn't found"
+msgid "The user %s couldn't found"
 msgstr "Der Benutzer %s konnte nicht gefunden werden."
 
-#: src/ircbot.c:280
+#: src/ircbot.c:278
 msgid "Start..."
 msgstr "Starten..."
 
-#: src/ircbot.c:313 src/ircbot.c:315
+#: src/ircbot.c:311 src/ircbot.c:313
 msgid "Running..."
 msgstr "Läuft..."
 
-#: src/ircbot.c:377
+#: src/ircbot.c:375
 #, c-format
 msgid "Receive: \"%s\""
 msgstr "Empfangen: \"%s\""
 
-#: src/ircbot.c:418
+#: src/ircbot.c:416
 msgid "The bot is stopping."
 msgstr "Der Bot stoppt."
 
-#: src/ircbot.c:443
+#: src/ircbot.c:441
 msgid "Restart..."
 msgstr "Neustart..."
 
-#: src/ircbot.c:451 src/ircbot.c:459
+#: src/ircbot.c:449 src/ircbot.c:456
 msgid "Restart failed"
 msgstr "Neustart fehlgeschlagen"
 
-#: src/ircbot.c:465
+#: src/ircbot.c:462
 msgid "Stopped..."
 msgstr "Gestoppt..."
+
+#: src/irc.c:47 src/irc.c:66 src/irc.c:83 src/irc.c:96 src/irc.c:121
+#: src/irc.c:134 src/irc.c:153 src/irc.c:162 src/irc.c:176 src/irc.c:189
+#: src/irc.c:202 src/irc.c:215 src/irc.c:233 src/irc.c:246 src/irc.c:259
+#: src/irc.c:277 src/irc.c:290
+msgid "Couldn't allocate memory!"
+msgstr "Könnte keinen Speicher allokieren."
+
+#: src/messages.c:24
+#, c-format
+msgid ""
+"\n"
+"%s [Options]\n"
+msgstr ""
+"\n"
+"%s [Options]\n"
+
+#: src/messages.c:25
+msgid ""
+"\n"
+"\tOptions:\n"
+msgstr ""
+"\n"
+"\tOptions:\n"
+
+#: src/messages.c:26
+msgid "\t-a days\t\tSet the time in days for the automatic logoff.\n"
+msgstr "\t-a Tage\t\tSetzt die Zeit in Tage für das automatische Abmelden.\n"
+
+#: src/messages.c:27
+msgid "\t-b name\t\tSet the name of the bot.\n"
+msgstr "\t-b Name\t\tSetzt den Namen des Bots im.\n"
+
+#: src/messages.c:28
+msgid "\t-c sec\t\tSet the ping timeout of the network connection.\n"
+msgstr "\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
+
+#: src/messages.c:29
+msgid "\t-d path\t\tSet the path of the database direcotry\n"
+msgstr "\t-d Pfad\t\tSetzt den Pfad zur Datenbank.\n"
+
+#: src/messages.c:30
+msgid "\t-D Level\tSet the log level (0-7)\n"
+msgstr "\t-D Level\tSetzt das Ausgabelevel (0-7)\n"
+
+#: src/messages.c:31
+msgid "\t-e ms\t\tSet the delay time in millisecond for the slow sending.\n"
+msgstr ""
+"\t-e ms\t\tSetzt die Verzögerung in Millisekunden für das verlangsamte "
+"Senden.\n"
+
+#: src/messages.c:32
+msgid "\t-f file\t\tSet the config file.\n"
+msgstr "\t-f Datei\tSetzt den Pfad zu Konfigurationsdatei.\n"
+
+#: src/messages.c:33
+msgid "\t-g group\tSet the group under wich the bot run (only root).\n"
+msgstr ""
+"\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgeführt wird. (only "
+"root).\n"
+
+#: src/messages.c:34
+msgid "\t-h\t\tPrint this help information.\n"
+msgstr "\t-h\t\tGibt diese Hilfe aus.\n"
+
+#: src/messages.c:35
+msgid "\t-i sec\t\tSet the delay of the channel initialization.\n"
+msgstr "\t-i Sek\t\tSetzt die Verzögerung in Sekunden für das Einrichten der Channels.\n"
+
+#: src/messages.c:36
+msgid "\t-k days\t\tSet the account live time in days.\n"
+msgstr "\t-k Tage\t\tSetzt die Zeit in Tagen, die ein Account inaktiv sein kann.\n"
+
+#: src/messages.c:37
+msgid "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
+msgstr "\t-l Char/min\tSetzt das Limit in Zeichen je Minute für das beschleunigte Senden.\n"
+
+#: src/messages.c:38
+msgid "\t-m\t\tStart the dialog for creating of a new master.\n"
+msgstr "\t-m\t\tStartet den Dialog zum Anlegen eines neuen Masters.\n"
+
+#: src/messages.c:39
+msgid "\t-n ms\t\tSet the delay time in millisecond for the fast sending.\n"
+msgstr ""
+"\t-n ms\t\tSetzt die Verzögerung in Millisekunden für das beschleunigte "
+"Senden\n"
+
+#: src/messages.c:40
+msgid "\t-p port\t\tSet the port of the irc server.\n"
+msgstr "\t-p Port\t\tSetzt den Netzwerkport des IRC-Servers.\n"
+
+#: src/messages.c:41
+msgid "\t-r string\tSet the output for a request of the real name.\n"
+msgstr "\t-r String\tSetzt die Zeichenkette des Real Name Fields für das IRC.\n"
+
+#: src/messages.c:42
+msgid "\t-s server\tSet the irc server name.\n"
+msgstr "\t-s Server\tSetzt den Namen des IRC-Servers.\n"
+
+#: src/messages.c:43
+msgid "\t-t count\tSet the number of created  threads.\n"
+msgstr "\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n"
+
+#: src/messages.c:44
+msgid "\t-u user\t\tSet the user under which the bot run (root only).\n"
+msgstr "\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root only).\n"
+
+#: src/messages.c:45
+msgid "\t-v\t\tPrint version.\n"
+msgstr "\t-v\t\tGibt die Version aus.\n"
+
+#: src/network.c:67 src/network.c:69
+msgid "The servername or portnumber isn't set."
+msgstr "Der Servername oder die Portnummer ist nicht gesetzt."
+
+#: src/network.c:74 src/network.c:76
+#, c-format
+msgid "Try to connect to %s"
+msgstr "Versucht mit %s zu verbinden"
+
+#: src/network.c:90 src/network.c:92
+#, c-format
+msgid "Couldn't resolve the hostname %s."
+msgstr "Könnte Hostname %s nicht auflösen."
+
+#: src/network.c:102 src/network.c:104
+msgid "Couldn't found the tcp protocol."
+msgstr "Kann das TCP-Protokoll nicht finden. "
+
+#: src/network.c:112 src/network.c:114
+msgid "Couldn't create a tcp socket."
+msgstr "Konnte keinen TCP-Socket erzeugen."
+
+#: src/network.c:122 src/network.c:124
+#, c-format
+msgid "Couldn't connect to %s:%s"
+msgstr "Könnte keine Verbindung zu %s:%s aufbauen."
+
+#: src/network.c:129 src/network.c:132
+#, c-format
+msgid "The bot is connect to %s"
+msgstr "Der Bot ist mit %s verbunden."
+
+#: src/network.c:160
+msgid "Couldn't send a command."
+msgstr "Konnt kein Commando senden."
+
+#: src/network.c:163
+#, c-format
+msgid "Send(%d/%d): \"%s\""
+msgstr "Senden(%d/%d): \"%s\""
+
+#: src/network.c:183
+msgid "Can't receive a line."
+msgstr "Könnte keine Zeile empfangen."
+
+#: src/network.c:188
+msgid "Receiving timeout"
+msgstr "Empfangstimeout"
+
+#: src/network.c:290 src/network.c:292
+#, c-format
+msgid "Couldn't set the nickname %s."
+msgstr "Könnte Hostname %s nicht auflösen."
+
+#: src/parameter.c:39
+msgid "Command line parameters found and read"
+msgstr "Kommandozeilenparameter gefunden und werden gelesen."
+
+#: src/parameter.c:43
+#, c-format
+msgid "Check option \"%s\""
+msgstr "Überprüfe Option %s"
+
+#: src/parameter.c:288
+#, c-format
+msgid "Unkown option \"%s\"\n"
+msgstr "Unbekannte Option \"%s\"\n"
+
+#: src/parameter.c:289 src/parameter.c:296
+#, c-format
+msgid "Type %s -h for more help.\n"
+msgstr "Tippe %s -h für mehr Hilfe ein.\n"
+
+#: src/parameter.c:295
+#, c-format
+msgid "Invalid option \"%s\"\n"
+msgstr "Ungültige Option \"%s\"\n"
+
+#: src/parameter.c:311
+#, c-format
+msgid "Read configuration file %s"
+msgstr "Lese die Konfigurationsdatei %s"
+
+#: src/parameter.c:317
+msgid "File is open"
+msgstr "Datei ist offen."
+
+#: src/parameter.c:326
+#, c-format
+msgid "Found config line %s"
+msgstr "Konfigurationszeile %s gefunden"
+
+#: src/parameter.c:487
+msgid ""
+"Create a new master account\n"
+"\n"
+msgstr "Anlegen eines neuen Master Accounts \n\n"
+
+#: src/parameter.c:488
+msgid "Type the login: "
+msgstr "Eingabe des Logins: "
+
+#: src/parameter.c:496 src/parameter.c:531
+msgid "Forbidden characters used.\n"
+msgstr "Untersage Zeichen benutzt.\n"
+
+#: src/parameter.c:514
+msgid "Enter the password: "
+msgstr "Eingabe des Passworts: "
+
+#: src/parameter.c:516
+msgid ""
+"\n"
+"Reenter the password: "
+msgstr ""
+"\n"
+"Wiederholung des Passworts: "
+
+#: src/parameter.c:528
+msgid "Typing error... passwords not equal\n"
+msgstr "Schreibfehler...Passworter ist nicht identisch.\n"
+
+#: src/parameter.c:546
+msgid "Couldn't set this account to master."
+msgstr "konnte den Account nicht auf Master setzen."
+
+#: src/parser.c:296
+#, c-format
+msgid "Unkown command id %d"
+msgstr "Unbekannte Datenbank ID %d"
 
 #: src/timing.c:43
 #, c-format
@@ -89,87 +368,3 @@ msgstr "Entfernt die toten Accounts"
 msgid "The timing thread is stopped"
 msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
 
-#: src/network.c:67 src/network.c:70
-msgid "The servername or portnumber isn't set."
-msgstr "Der Servername oder die Portnummer ist nicht gesetzt."
-
-#: src/network.c:75 src/network.c:78
-#, c-format
-msgid "Try to connect to %s"
-msgstr "Versucht mit %s zu verbinden"
-
-#: src/network.c:92 src/network.c:95
-#, c-format
-msgid "Couldn't resolve the hostname %s."
-msgstr "Könnte Hostname %s nicht auflösen."
-
-#: src/network.c:105 src/network.c:108
-msgid "Couldn't found the tcp protocol."
-msgstr "Kann das TCP-Protokoll nicht finden. "
-
-#: src/network.c:116 src/network.c:119
-msgid "Couldn't create a tcp socket."
-msgstr "Konnte keinen TCP-Socket erzeugen."
-
-#: src/network.c:127 src/network.c:130
-#, c-format
-msgid "Couldn't connect to %s:%s"
-msgstr "Könnte keine Verbindung zu %s:%s aufbauen."
-
-#: src/network.c:135 src/network.c:139
-#, c-format
-msgid "The bot is connect to %s"
-msgstr "Der Bot ist mit %s verbunden."
-
-#: src/network.c:167
-msgid "Couldn't send a command."
-msgstr "Konnt kein Commando senden."
-
-#: src/network.c:170
-#, c-format
-msgid "Send(%d/%d): \"%s\""
-msgstr "Senden(%d/%d): \"%s\""
-
-#: src/network.c:190
-msgid "Can't receive a line."
-msgstr "Könnte keine Zeile empfangen."
-
-#: src/network.c:195
-msgid "Receiving timeout"
-msgstr "Empfangstimeout"
-
-#: src/network.c:297 src/network.c:300
-#, c-format
-msgid "Couldn't set the nickname %s."
-msgstr "Könnte Hostname %s nicht auflösen."
-
-#: src/irc.c:47 src/irc.c:66 src/irc.c:83 src/irc.c:96 src/irc.c:121
-#: src/irc.c:134 src/irc.c:153 src/irc.c:162 src/irc.c:176 src/irc.c:189
-#: src/irc.c:202 src/irc.c:215 src/irc.c:233 src/irc.c:246 src/irc.c:259
-#: src/irc.c:277 src/irc.c:290
-msgid "Couldn't allocate memory!"
-msgstr "Könnte keinen Speicher allokieren."
-
-#: src/dbaccess.c:57
-msgid "Initialization of the database"
-msgstr "Initialisierung der Datenbank"
-
-#: src/dbaccess.c:65 src/dbaccess.c:67
-#, c-format
-msgid "Couldn't create the directory %s for the database."
-msgstr "Konnte  das Verzeichnis %s für die  Datanbank nicht anlegen."
-
-#: src/dbaccess.c:72
-#, c-format
-msgid "Create the directory %s for the database."
-msgstr "Lege das Verzeichnis %s für die Datenbank an."
-
-#: src/dbaccess.c:87 src/dbaccess.c:89
-#, c-format
-msgid "Couldn't open the databases %s."
-msgstr "Könnte die Datenbank %s nicht öffnen."
-
-#: src/dbaccess.c:120
-#, c-format
-msgid "Unkown database id %d"
-msgstr "Unbekannte Datenbank ID %d"

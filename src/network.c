@@ -64,16 +64,14 @@ boolean connectServer(void) {
     if ((sSetup.server==NULL) && (sSetup.port==NULL)) {
         errno=EINVAL;
         #ifdef NDEBUG
-        printf(gettext("The servername or portnumber isn't set."));
-        printf("\n");
+        fprintf(stderr,"%s\n",gettext("The servername or portnumber isn't set."));
         #endif
         logger(LOG_ERR,gettext("The servername or portnumber isn't set."));
         return false;
     }
 
     #ifdef NDEBUG
-    printf(gettext("Try to connect to %s"),sSetup.server);
-    printf("\n");
+    printf("%s\n"gettext("Try to connect to %s"),sSetup.server);
     #endif
     logger(LOG_INFO,gettext("Try to connect to %s"),sSetup.server);
 
@@ -89,8 +87,7 @@ boolean connectServer(void) {
     hostaddr=gethostbyname(sSetup.server);
     if (!hostaddr) {
         #ifdef NDEBUG
-        fprintf(stderr,gettext("Couldn't resolve the hostname %s."),sSetup.server);
-        fprintf(stderr,"\n");
+        fprintf(stderr,"%s\n",gettext("Couldn't resolve the hostname %s."),sSetup.server);
         #endif
         logger(LOG_ERR,gettext("Couldn't resolve the hostname %s."),sSetup.server);
         return false;
@@ -102,8 +99,7 @@ boolean connectServer(void) {
     protocol = getprotobyname("tcp");
     if (!protocol) {
         #ifdef NDEBUG
-        fprintf(stderr,gettext("Couldn't found the tcp protocol."));
-        fprintf(stderr,"\n");
+        fprintf(stderr,"%s\n",gettext("Couldn't found the tcp protocol."));
         #endif
         logger(LOG_CRIT,gettext("Couldn't found the tcp protocol."));
         return false;
@@ -113,8 +109,7 @@ boolean connectServer(void) {
     sockid=socket(PF_INET,SOCK_STREAM,protocol->p_proto);
     if (sockid <= 0) {
         #ifdef NDEBUG
-        fprintf(stderr,gettext("Couldn't create a tcp socket."));
-        fprintf(stderr,"\n");
+        fprintf(stderr,"%s\n",gettext("Couldn't create a tcp socket."));
         #endif
         logger(LOG_CRIT,gettext("Couldn't create a tcp socket."));
         return false;
@@ -124,16 +119,14 @@ boolean connectServer(void) {
     /* connect to server */
     if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
         #ifdef NDEBUG
-        fprintf(stderr,gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
-        fprintf(stderr,"\n");
+        fprintf(stderr,"%s\n",gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
         #endif
         logger(LOG_ERR,gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
         return false;
     }
 
     #ifdef NDEBUG
-    printf(gettext("The bot is connect to %s"),sSetup.server);
-    printf("\n");
+    printf("%s\n"gettext("The bot is connect to %s"),sSetup.server);
     #endif
     
     logger(LOG_NOTICE,gettext("The bot is connect to %s"),sSetup.server);
@@ -294,8 +287,7 @@ boolean ConnectToIrc(void){
         if ( trying>MAX_NICKS) {
             errno=EAGAIN;
             #ifndef NDEBUG
-            fprintf(stderr,gettext("Couldn't set the nickname %s."),sSetup.pBotname);
-            fprintf(stderr,"\n");
+            fprintf(stderr,"%s\n",gettext("Couldn't set the nickname %s."),sSetup.pBotname);
             #endif
             logger(LOG_ERR,gettext("Couldn't set the nickname %s."),sSetup.pBotname);
             return false;

@@ -153,8 +153,8 @@ int main(int argc,char * const argv[]) {
     sSetup.bLogLevelWasSet=0;
 
     // versions ausgabe
-    printf(VERSIONSTR);
-    printf("\n");
+    printf("%s\n",VERSIONSTR);
+    
     #ifdef HAVE_SYSLOG_H
     openlog(PACKAGE,0,LOG_DAEMON);
     #endif
@@ -169,8 +169,7 @@ int main(int argc,char * const argv[]) {
                 logger(LOG_INFO,gettext("Found debug level option."));
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,gettext("%s need a parameter value"),argv[i-1]);
-                    fprintf(stderr,"\n");
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
                 }
 
@@ -178,8 +177,7 @@ int main(int argc,char * const argv[]) {
                 tmp=atoi(argv[i]);
                 if (tmp<0  || tmp > MAX_LOGLEVEL) {
                     errno=EDOM;
-                    fprintf(stderr,gettext("The log level %i is invalid."),tmp);
-                    fprintf(stderr,"\n");
+                    fprintf(stderr,gettext("The log level %i is invalid.\n"),tmp);
                     exit(errno);
                 }
                 sSetup.nLogLevel=tmp;
@@ -196,8 +194,7 @@ int main(int argc,char * const argv[]) {
         		else
         		{	
         			errno=EINVAL;
-                    fprintf(stderr,gettext("%s need a parameter value"),argv[i-1]);
-        			fprintf(stderr,"\n");
+                    fprintf(stderr,gettext("\"%s\" need a parameter value.\n"),argv[i-1]);
                     exit(errno);
         		}
                 break;
@@ -206,7 +203,7 @@ int main(int argc,char * const argv[]) {
                 break;
             case 'h':
             case '?':
-                printMsg(getCmdLineHelp());
+                printCmdLineHelp();
                 exit(0);
                 break;
             default:
@@ -221,7 +218,8 @@ int main(int argc,char * const argv[]) {
     
     // check for parameter
     if (argc>1) {
-        CommandLineParser(argc,argv);
+        if (!CommandLineParser(argc,argv));
+            exit(errno);
     }
 
     // check the automatic times
@@ -252,7 +250,7 @@ int main(int argc,char * const argv[]) {
             if ((User=getpwnam(sSetup.sExeUser)))
                seteuid(User->pw_uid);
             else {
-                logger(LOG_ERR,gettext("Th user %s couldn't found"),sSetup.sExeUser);
+                logger(LOG_ERR,gettext("The user %s couldn't found"),sSetup.sExeUser);
             }
         }
     }
@@ -448,8 +446,7 @@ int main(int argc,char * const argv[]) {
         
         execvp(argv[0],argv);
         #ifdef NDEBUG
-        fprintf(stderr,gettext("Restart failed"));
-        fprintf(stderr,"\n");
+        fprintf(stderr,"%s\n",gettext("Restart failed"));
         #endif
         
         #ifdef HAVE_SYSLOG_H

@@ -116,9 +116,13 @@ void write_baseconfig()
       /* Create & Openfile*/
       if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
       {
-              fprintf(stderr,getSyslogString(SYSLOG_CONFIG_FILE));
-              logger(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE));
-              exit(errno);
+          #ifdef NDEBUG
+          fprintf(stderr,"%s\n",gettext("Couldn't open the configuration file %s."),sSetup.configfile);
+          #endif
+              
+          logger(LOG_ERR,gettext("Couldn't open the configuration file %s."),sSetup.configfile);
+              
+          exit(errno);
       }
 					  
 	

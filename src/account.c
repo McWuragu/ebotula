@@ -233,7 +233,7 @@ void rmDeadAccounts(long lCheckTime) {
         	/* check the time */
     	    if (lCheckTime>atol(pTime)) {
 	            rmAccount((char*)pLogin->data);
-                logger(LOG_INFO,getSyslogString(SYSLOG_ACCOUNT_RM));
+                logger(LOG_INFO,gettext("The account %s is removed"),(char*)pLogin->data);
         	}
         	free(pTime);
 		}

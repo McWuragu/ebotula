@@ -155,7 +155,7 @@ void hello(MsgItem_t *pMsg) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_IDENT));
         
     } else {
-	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NICK_EXIST));
+	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,gettext("A account with this nickname already exists."));
 	} 
 
 }

@@ -17,26 +17,11 @@
 /** container for  message text */
 
 
-typedef enum   {
-     SYSLOG_READ_CMD,		
-	 SYSLOG_READ_CONFFILE,	
-	 SYSLOG_UNKNOWN_CMDID,	
-	 SYSLOG_ACCOUNT_RM,     
-	 SYSLOG_MSG_QUEUE,		 
-	 SYSLOG_CONFIG_FILE,	
-}eSyslogID_t;
 
 // output of strerr
 typedef enum {
-	 INFO_MASTER_TITLE,  
-	 INFO_MASTER_LOGIN,  
-	 INFO_MASTER_PASS,  
-	 INFO_MASTER_REPASS,  
-	 ERR_MASTER_PASS,  
-	 ERR_MASTER,   
 
     // output of strerr
-     ERR_RESTART,  
 	 ERR_MISSING_PARAM,  
 	 ERR_PORT_PARAMETER,  
 	 ERR_WRONG_SERVERNAME,  
@@ -50,7 +35,6 @@ typedef enum {
 	 ERR_LOGOFF_RANGE,	    
 	 ERR_THREAD_RANGE,	    
 	 ERR_MUTEX,			   
-	 ERR_NOT_ALLOW_CHAR,    
     
 
     // command acknowledgment
@@ -95,7 +79,6 @@ typedef enum {
 	// Errors
 	 ERR_ADDCHANNEL_ALREADY,	  
      ERR_NICK_INVALID,	     
-	 ERR_NICK_EXIST,	     
 	 ERR_ALREADY_LOGON,	     
 	 ERR_UNKNOWN_MODS,	      
 	 ERR_USERLIST_EMPTY,      
@@ -127,7 +110,5 @@ typedef struct MsgStruct {
 
 
 char * getMsgString(eMsgID_t const MsgID);
-char * getSyslogString(eSyslogID_t const MsgID);
-char ** getCmdLineHelp();
-char ** getCmdLineError();
+void printCmdLineHelp();
 #endif
