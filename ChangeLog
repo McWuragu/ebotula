@@ -1,3 +1,9 @@
+ebotula-0.1.14
+--------------------
+- fixed the pong return string
+- cleanup the command and event  parser
+- fixed the line parser
+
 ebotula-0.1.13
 --------------------
 - Bugfix: fixed -f option
