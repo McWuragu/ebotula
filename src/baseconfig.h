@@ -58,5 +58,5 @@ typedef struct tag_ValueStruct
  * generates baseconfig string for baseconfigfile and writes it 
  *
  */
-void write_baseconfig();
+int write_baseconfig();
 #endif 

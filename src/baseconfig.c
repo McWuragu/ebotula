@@ -99,7 +99,7 @@ ValueStruct_t vsConfig[VAL_COUNT]={
         KEY_LOGLEVEL,PARAM_INT,MOD_NONE,(void*)&sSetup.nLogLevel}
 };
 
-void write_baseconfig()
+int write_baseconfig()
 {
 	int i,t;
 	char *pC;
@@ -116,14 +116,9 @@ void write_baseconfig()
       /* Create & Openfile*/
       if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
       {
-          #ifdef NDEBUG
-          fprintf(stderr,_("Couldn't open the configuration file %s."),sSetup.configfile);
-          fprintf(stderr,"\n");
-          #endif
-              
           logger(LOG_ERR,_("Couldn't open the configuration file %s."),sSetup.configfile);
               
-          exit(errno);
+          return(errno);
       }
 					  
 	

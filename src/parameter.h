@@ -22,7 +22,7 @@
 #define SERVER_NOT_ALLOW_CHAR           " :;<>*#/\"\'\\{}[]()=?§$"
 
 boolean CommandLineParser(int argc,char *const argv[]);
-void ConfigFileParser(void);
+int ConfigFileParser(void);
 boolean dialogMaster(void);
 
 #endif

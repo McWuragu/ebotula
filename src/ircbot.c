@@ -46,19 +46,53 @@
 #include "ircbot.h"
 
 ConfigSetup_t sSetup;    /* global config structure */
-volatile boolean stop;       /* singal for stop the endless loop*/
-boolean again;
+volatile boolean stop=false;       /* singal for stop the endless loop*/
+volatile boolean again=false;
+static boolean bRunAsRoot=false;
 
 pthread_mutex_t mutexAccount;      /* mutex for synchronize the access of the login db  */
 
 
 CallbackDList CallbackList;
 
+/**
+ * this  function is the main of the bot. This is  called by the ansi
+ * c main. 
+ * 
+ * @param argc   agrument counter
+ * @param argv   agrument vector
+ * 
+ * @return execution state
+ */
+int AppMain(int argc, char * const argv[]);
+
 int main(int argc,char * const argv[]) {
-    int i;
+    int nRet;
+
+    /* versions ausgabe */
+    printf(VERSIONSTR);
+    printf("\n");
+
+    /* nls support */
+    setlocale(LC_ALL, "");
+    bindtextdomain(PACKAGE,PACKAGE_LOCALE_DIR);
+    textdomain(PACKAGE);
+ 
+
+    do {
+        nRet=AppMain(argc,argv);
+    } while (again && !nRet);
+
+    return nRet;
+}
+
+
+int AppMain(int argc, char * const argv[]) {
+    int i,nRet;
     char buffer[RECV_BUFFER_SIZE],*pStrPos,*pCurrLine,*pCurrString,*pCurrStringPos,*pUnparsed;
     pthread_t *threads;
     pthread_t timeThread;
+    
     pthread_t joinThread;
     MsgBuf_t sMsg;
     QueueData Command;	
@@ -71,15 +105,12 @@ int main(int argc,char * const argv[]) {
     struct stat attribut;
     
     uid=geteuid();
+    bRunAsRoot=(uid==0 && !bRunAsRoot)?true:bRunAsRoot;
    
-    /* nls support */
-    setlocale(LC_ALL, "");
-    bindtextdomain(PACKAGE,PACKAGE_LOCALE_DIR);
-    textdomain(PACKAGE);
     
     
     /* init config */
-    if (uid==0) {
+    if (bRunAsRoot) {
         /* database path */
         sSetup.pDatabasePath=(char *)malloc((strlen(DATABASEDIR)+1)*sizeof(char));
         strcpy(sSetup.pDatabasePath,DATABASEDIR);
@@ -150,9 +181,7 @@ int main(int argc,char * const argv[]) {
     #endif
     sSetup.bLogLevelWasSet=0;
 
-    /* versions ausgabe */
-    printf(VERSIONSTR);
-    printf("\n");
+    
     
     #ifdef HAVE_SYSLOG_H
     openlog(PACKAGE,0,LOG_DAEMON);
@@ -162,63 +191,65 @@ int main(int argc,char * const argv[]) {
     for (i=1;i<argc;i++) {
         if (argv[i][0]==PARAMETER_CHAR) {
             switch (argv[i][1]) {
-            case 'D':
+            case 'V':
             {
                 int tmp;
                 logger(LOG_INFO,_("Found debug level option."));
                 if (++i>=argc) {
                     errno=EINVAL;
-                    fprintf(stderr,_("\"%s\" need a parameter value.\n"),argv[i-1]);
-                    exit(errno);
+                    logger(LOG_ERR,_("\"%s\" need a parameter value.\n"),argv[i-1]);
+                    return(errno);
                 }
 
                 /* linie limit  for the first send delay */
                 tmp=atoi(argv[i]);
                 if (tmp<0  || tmp > MAX_LOGLEVEL) {
                     errno=EDOM;
-                    fprintf(stderr,_("The log level %i is invalid.\n"),tmp);
-                    exit(errno);
+                    logger(LOG_ERR,_("The log level %i is invalid.\n"),tmp);
+                    return(errno);
                 }
-                sSetup.nLogLevel=tmp;
+                sSetup.nLogLevel=convertVerboseToLogLevel(tmp);
                 sSetup.bLogLevelWasSet=1;
                 break;
             }
             case 'f':
                 if (argv[++i]!=NULL)
         		{
-				if (stat(argv[i],&attribut))
-				{
-					fprintf(stderr,"Error: %s\n",strerror(errno));
-					exit(errno);
-				}else
-				{
-					if (S_ISREG(attribut.st_mode))
-					{
-				      		free(sSetup.configfile);
-        					sSetup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
-	        	        	        strcpy(sSetup.configfile,argv[i]);
-					}else
-					{
-						fprintf(stderr,"Error: '%s' is not a regulare file\n",argv[i]);
-						errno=EINVAL;
-						exit(errno);
-					}
-				}
+    				if (stat(argv[i],&attribut))
+    				{
+    					logger(LOG_ERR,"Couldn't access to %s - %s\n",argv[i],strerror(errno));
+    					return(errno);
+    				}else
+    				{
+    					if (S_ISREG(attribut.st_mode))
+    					{
+    				      		free(sSetup.configfile);
+            					sSetup.configfile=(char *)malloc((strlen(argv[i])+1)*sizeof(char));
+    	        	        	        strcpy(sSetup.configfile,argv[i]);
+    					}else
+    					{
+    						logger(LOG_ERR,"%s is not a regulare file\n",argv[i]);
+    						errno=EINVAL;
+    						return(errno);
+    					}
+    				}
         		}
         		else
         		{	
         			errno=EINVAL;
-                    fprintf(stderr,_("\"%s\" need a parameter value.\n"),argv[i-1]);
-                    exit(errno);
+                    logger(LOG_ERR,_("\"%s\" need a parameter value.\n"),argv[i-1]);
+                    return(errno);
         		}
                 break;
             case 'v':
-                exit(0);
+                stop=false;
+                return(0);
                 break;
             case 'h':
             case '?':
                 printCmdLineHelp();
-                exit(0);
+                stop=false;
+                return(0);
                 break;
             default:
                 break;
@@ -228,12 +259,13 @@ int main(int argc,char * const argv[]) {
     }
 
     /* read config file*/
-    ConfigFileParser();
+    if (nRet=ConfigFileParser())
+        return nRet;
     
     /* check for parameter */
     if (argc>1) {
         if (!CommandLineParser(argc,argv))
-            exit(errno);
+            return errno;
     }
 
     /* check the automatic times */
@@ -249,7 +281,7 @@ int main(int argc,char * const argv[]) {
     
     
     /* change the uid and the gid for root */
-    if (uid==0) {
+    if (bRunAsRoot) {
         /* group */
         if (sSetup.sExeGroup){
             if ((Group=getgrnam(sSetup.sExeGroup)))
@@ -294,13 +326,13 @@ int main(int argc,char * const argv[]) {
 
     /* init Database and the mutex for  access to the database */
     if (!initDatabases())
-        exit(errno);
+        return(errno);
 
     /* create master dialog */
     if (sSetup.newMaster) {
         if (!dialogMaster()){
             closeDatabase();
-            exit(-1);
+            return(-1);
         }
     }
     
@@ -310,7 +342,7 @@ int main(int argc,char * const argv[]) {
     if (!connectServer()) {
         closeDatabase();
         closelog();
-        exit(errno);
+        return(errno);
     }
     
     /* connect to the irc service */
@@ -318,12 +350,9 @@ int main(int argc,char * const argv[]) {
         disconnectServer();
         closeDatabase();
         closelog();
-        exit(errno);
+        return(errno);
     }
 
-    #ifdef NDEBUG
-    printf("%s\n",_("Running..."));
-    #endif
     logger(LOG_NOTICE,_("Running..."));
 
     /* redefine the signal handler for to stop the bot */
@@ -338,6 +367,7 @@ int main(int argc,char * const argv[]) {
     #ifdef NDEBUG
     /* make a daemon  */
     daemon(true,true);
+    HideLogLinesOnScreen();
     #endif
 	
     pthread_mutex_init(&mutexAccount,NULL);
@@ -455,34 +485,6 @@ int main(int argc,char * const argv[]) {
     disconnectServer();
     closeDatabase();
     
-    
-    /*  check for restart option */
-    if (again) {
-        logger(LOG_NOTICE,_("Restart..."));
-        
-        #ifdef HAVE_SYSLOG_H
-        closelog();
-        #endif
-        
-        execvp(argv[0],argv);
-        #ifdef NDEBUG
-        fprintf(stderr,"%s\n",_("Restart failed"));
-        #endif
-        
-        #ifdef HAVE_SYSLOG_H
-        openlog(PACKAGE,0,LOG_DAEMON);
-        #endif
-        
-        logger(LOG_ERR,_("Restart failed"));
-        
-        #ifdef HAVE_SYSLOG_H
-        closelog();
-        #endif
-    } else {
-        logger(LOG_NOTICE,_("Stopped..."));
-        closelog();
-    }
-
     /* clean up thread */
     free (threads);
 
@@ -495,8 +497,10 @@ int main(int argc,char * const argv[]) {
     free (sSetup.sExeGroup);
     free (sSetup.sExeUser);
 
+
+
+    closelog();
+
     return(0);
-
 }
-
 

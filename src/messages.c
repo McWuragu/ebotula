@@ -17,7 +17,7 @@ void printCmdLineHelp() {
 		printf(_("\t-b name\t\tSet the name of the bot.\n"));
 		printf(_("\t-c sec\t\tSet the ping timeout of the network connection.\n"));
 		printf(_("\t-d path\t\tSet the path of the database direcotry\n"));
-        printf(_("\t-D Level\tSet the log level (0-7)\n"));
+        printf(_("\t-L Level\tSet the logging level (0-3)\n"));
 		printf(_("\t-e ms\t\tSet the delay time in millisecond for the slow sending.\n"));
        	printf(_("\t-f file\t\tSet the config file.\n"));
 	    printf(_("\t-g group\tSet the group under wich the bot run (only root).\n"));

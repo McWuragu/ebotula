@@ -62,11 +62,7 @@ boolean initDatabases(void) {
     if (!(pDir=opendir(sSetup.pDatabasePath))) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
-            logger(LOG_ERR,_("Couldn't create the directory %s for the database."),sSetup.pDatabasePath );
-            #ifdef NDEBUG
-            fprintf(stderr,_("Couldn't create the directory %s for the database."),sSetup.pDatabasePath );
-            fprintf(stderr,"\n");
-            #endif
+            logger(LOG_ERR,_("Couldn't create the directory %s for the database - %s"),sSetup.pDatabasePath,strerror(errno) );
             return false;
         } else {
             logger(LOG_INFO,_("Create the directory %s for the database."),sSetup.pDatabasePath);
@@ -84,13 +80,11 @@ boolean initDatabases(void) {
         
         if (!dbf[i]) {
             /*errno=EBUSY;*/
-            logger(LOG_ERR,_("Couldn't open the databases %s."),pDBPath);
-            #ifdef NDEBUG
-            fprintf(stderr,_("Couldn't open the databases %s."),pDBPath);
-            fprintf(stderr,"\n");
-            #endif
+            logger(LOG_ERR,_("Couldn't open the databases %s - %s"),pDBPath,strerror(errno));
             return false;
         }
+
+
 
         /* init the mutexs*/
         pthread_mutex_init(&dbaccess_mutex[i],NULL);

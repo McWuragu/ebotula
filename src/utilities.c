@@ -27,6 +27,8 @@
 #include "utilities.h"
 
 
+static boolean bHideLogOnScreen=false;
+                          
 
 /* #############################################################################  */
 void trim(char* pStr) {
@@ -287,6 +289,30 @@ boolean NickStringCheck(char *const pStr) {
     }
     return false;
 }
+
+void HideLogLinesOnScreen() {
+    bHideLogOnScreen=true;
+}
+
+/* ############################################################################# */
+
+int convertVerboseToLogLevel(const int nVerbose) {
+    int nLog;
+    switch (nVerbose) {
+    case 0:
+        nLog=LOG_ERR;
+        break;
+    case 1:
+        nLog=LOG_NOTICE;
+        break;
+    case 2:
+        nLog=LOG_INFO;
+    default:
+        nLog=LOG_DEBUG;
+    }
+    return nLog;
+}
+
 /* ############################################################################# */
 int logger(int priority, char *format, ...)
 {
@@ -303,10 +329,15 @@ int logger(int priority, char *format, ...)
 	/* put message in to data*/
 	vsprintf(buf,format,az);
 #ifdef NDEBUG
-    #ifdef HAVE_SYSLOG_H
-	syslog(priority,buf);
-    #endif
-#else
+
+    if (!bHideLogOnScreen) {
+        fprintf(stderr,"%s\n",buf); 
+    } else {
+        #ifdef HAVE_SYSLOG_H
+        syslog(priority,buf);
+        #endif
+    }
+#else   2
     clock_gettime(CLOCK_REALTIME,&stamp);
     td=localtime(&stamp.tv_sec);
     fprintf(stderr,"%02d:%02d:%02d.%03d %s\n",(int)td->tm_hour,(int)td->tm_min,(int)td->tm_sec,(int)(stamp.tv_nsec/1000000),buf); 

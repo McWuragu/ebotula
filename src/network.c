@@ -63,17 +63,9 @@ boolean connectServer(void) {
 
     if ((sSetup.sHostname==NULL) && (sSetup.sPort==NULL)) {
         errno=EINVAL;
-        #ifdef NDEBUG
-        fprintf(stderr,"%s\n",_("The hostname or portnumber isn't set."));
-        #endif
         logger(LOG_ERR,_("The hostname or portnumber isn't set."));
         return false;
     }
-
-    #ifdef NDEBUG
-    printf(_("Try to connect to %s"),sSetup.sHostname);
-    printf("\n");
-    #endif 
     logger(LOG_INFO,_("Try to connect to %s"),sSetup.sHostname);
 
 
@@ -87,10 +79,6 @@ boolean connectServer(void) {
     /* resolve hostname */
     hostaddr=gethostbyname(sSetup.sHostname);
     if (!hostaddr) {
-        #ifdef NDEBUG
-        fprintf(stderr,_("Couldn't resolve the hostname %s."),sSetup.sHostname);
-        fprintf(stderr,"\n");
-        #endif
         logger(LOG_ERR,_("Couldn't resolve the hostname %s."),sSetup.sHostname);
         return false;
     }
@@ -100,9 +88,6 @@ boolean connectServer(void) {
     /* resolve protocol */
     protocol = getprotobyname("tcp");
     if (!protocol) {
-        #ifdef NDEBUG
-        fprintf(stderr,"%s\n",_("Couldn't found the tcp protocol."));
-        #endif
         logger(LOG_CRIT,_("Couldn't found the tcp protocol."));
         return false;
     }
@@ -110,29 +95,16 @@ boolean connectServer(void) {
     /* create the socket */
     sockid=socket(PF_INET,SOCK_STREAM,protocol->p_proto);
     if (sockid <= 0) {
-        #ifdef NDEBUG
-        fprintf(stderr,"%s\n",_("Couldn't create a tcp socket."));
-        #endif
-        logger(LOG_CRIT,_("Couldn't create a tcp socket."));
+        logger(LOG_CRIT,_("Couldn't create a tcp socket.- %s"),strerror(errno));
         return false;
     }
 
 
     /* connect to server */
     if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
-        #ifdef NDEBUG
-        fprintf(stderr,_("Couldn't connect to %s:%s"),sSetup.sHostname,sSetup.sPort);
-        fprintf(stderr,"\n");
-        #endif
-        logger(LOG_ERR,_("Couldn't connect to %s:%s"),sSetup.sHostname,sSetup.sPort);
+        logger(LOG_ERR,_("Couldn't connect to %s:%s - %s"),sSetup.sHostname,sSetup.sPort,strerror(errno));
         return false;
     }
-
-    #ifdef NDEBUG
-    printf(_("The bot is connect to %s"),sSetup.sHostname);
-    printf("\n");
-    #endif
-    
     logger(LOG_NOTICE,_("The bot is connect to %s"),sSetup.sHostname);
 
     return true;
@@ -290,10 +262,6 @@ boolean ConnectToIrc(void){
         /* Try MAX_NICKS times to set */
         if ( trying>MAX_NICKS) {
             errno=EAGAIN;
-            #ifndef NDEBUG
-            fprintf(stderr,_("Couldn't set the nickname %s."),sSetup.pBotname);
-            fprintf(stderr,"\n");
-            #endif
             logger(LOG_ERR,_("Couldn't set the nickname %s."),sSetup.pBotname);
             return false;
         }

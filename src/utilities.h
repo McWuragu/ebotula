@@ -114,5 +114,20 @@ boolean NickStringCheck(char *const pStr);
 * @return -1 if error 
 */
 int logger(int priority, char *format, ...);
+
+
+/**
+ * This function convert the verbose level to the syslog level.
+ * 
+ * @param nVerbose the verbose level
+ * 
+ * @return the syslog level
+ */
+int convertVerboseToLogLevel(const int nVerbose);
+
+/**
+ * This function disable the echo on the  screen
+ */
+void HideLogLinesOnScreen();
 #endif
 
