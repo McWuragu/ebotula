@@ -33,8 +33,8 @@ typedef struct CONFIG_STRUCT {
 	char *port;
 	char *configfile;
 	char *database_path;
- 	int createMaster;
 	unsigned thread_limit;
+	int newMaster;
 } CONFIG_TYPE;
 
 

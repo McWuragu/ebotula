@@ -27,13 +27,17 @@
 #include "irc.h"
 #include "command.h"
 #include "dbaccess.h"
+#include "handles.h"
 #include "config.h"
 
 
+	 
+	 
 
 CONFIG_TYPE setup;	// global config structur
 int key;			// key of the message  queue
 int stop;			// singal for stop the endless loop
+
 
 
 pthread_mutex_t	send_mutex;			// mutex for synchronize of send command
@@ -43,17 +47,15 @@ pthread_mutex_t	dbaccess_mutex;		// mu8tex for synchronize of  database access
 int main(int argc,const char *argv[]) {
 	int i;
 	int msgid;
-	char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;;
+	char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;
 	pthread_t *thread;
 	
+	setup.newMaster=false;
+
 	// container for a message for the queue
 	struct MSGBUF_DS msg;
 	bzero(&msg,sizeof(struct MSGBUF_DS));
-	
-	// init default values
-	setup.createMaster=false;
-
-
+    
 	// check for parameter
 	if (argc>1) {
 		cmd_line(argc,argv);
@@ -70,6 +72,8 @@ int main(int argc,const char *argv[]) {
 
 	// read config file
 	read_config_file();
+
+	
 
 	// check config datums
 	if (!setup.thread_limit) {
@@ -101,12 +105,9 @@ int main(int argc,const char *argv[]) {
 	init_database();
 	pthread_mutex_init(&dbaccess_mutex,NULL);
 
-	// create maste
-	if (setup.createMaster) {
-		DEBUG("Create a master of bot");
-		dialog_master();
+	if (setup.newMaster) {
+		dialogMaster();
 	}
-
 	// create the network connection
 	if ((setup.server!=NULL) && (setup.port!=NULL)) {
 		printf("Try connect to %s:%s\n",setup.server,setup.port);
