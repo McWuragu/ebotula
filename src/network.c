@@ -40,7 +40,7 @@
 
 static int sockid;
 
-int iLineCount=0;
+int nCharSendingCounter=0;
 
 /* #############################################################################  */
 void connectServer(void) {
@@ -104,14 +104,14 @@ void * SendingThread(void *argv){
     QueueData *Data;
     extern PQueue  pSendingQueue;
 
-    DEBUG("Sending thread is running\n");
+    DEBUG("Sending thread is running (%d)\n",getpid());
 
     while (!stop) {
         Data=popQueue(pSendingQueue);
         
         if (Data) {
             /* protect excess flood */
-            if (iLineCount < sSetup.iSendSafeLine) {
+            if (nCharSendingCounter < sSetup.nFastSendingCharLimit) {
                 msleep(sSetup.iSendDelay);
             } else {
                 msleep(sSetup.iSendSafeDelay);
@@ -122,9 +122,9 @@ void * SendingThread(void *argv){
                 syslog(LOG_CRIT,getSyslogString(SYSLOG_SEND));
                 stop=true;
             }
-            DEBUG("send(%d/%d): %s",iLineCount,sSetup.iSendSafeLine,(char*)Data->data);
+            DEBUG("send(%d/%d): %s",nCharSendingCounter,sSetup.nFastSendingCharLimit,(char*)Data->data);
         
-            iLineCount++;                           
+            nCharSendingCounter+=strlen((char*)Data->data);                           
 
             free(Data->data);
             free(Data);
@@ -235,6 +235,7 @@ void join_all_channels(void) {
 	while (isfullQueue(pChannelQueue)) {
         pChannel=popQueue(pChannelQueue);
         join((char*)pChannel->data);
+        free(pChannel->data);
 		free(pChannel);
 	}
 	deleteQueue(pChannelQueue);
