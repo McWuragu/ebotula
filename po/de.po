@@ -1,4 +1,5 @@
 # translation of de.po to 
+# translation of de.po to
 # translation of de.po to Deutsch
 # German translations for ebotula package
 # German messages for ebotula.
@@ -11,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffen@gmx.de\n"
-"POT-Creation-Date: 2005-01-22 18:57+0100\n"
-"PO-Revision-Date: 2005-01-22 18:53+0100\n"
+"POT-Creation-Date: 2005-02-05 23:17+0100\n"
+"PO-Revision-Date: 2005-02-05 23:09+0100\n"
 "Last-Translator: Martin Neumann <mneumann@localhost.localdomain>\n"
 "Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -510,7 +511,7 @@ msgstr "Der Bot hat den Benutzer %s in den Channel %s eingeladen."
 #, c-format
 msgid "The bot need a channel parameter for inviting of the user %s"
 msgstr ""
-"Der Bot benötigt einen Channel als Parameter zum einladen des Benutzers %s."
+"Der Bot benötigt einen Channel als Parameter zum Einladen des Benutzers %s."
 
 #: src/dbaccess.c:57
 msgid "Initialization of the database"
@@ -760,7 +761,7 @@ msgstr "\t-a Tage\t\tSetzt die Zeit in Tage für das automatische Abmelden.\n"
 #: src/messages.c:17
 #, c-format
 msgid "\t-b name\t\tSet the name of the bot.\n"
-msgstr "\t-b Name\t\tSetzt den Namen des Bots im.\n"
+msgstr "\t-b Name\t\tSetzt den Namen des Bots.\n"
 
 #: src/messages.c:18
 #, c-format
@@ -769,14 +770,14 @@ msgstr ""
 "\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
 
 #: src/messages.c:19
-#, c-format
-msgid "\t-d path\t\tSet the path of the database directory\n"
+#, fuzzy, c-format
+msgid "\t-d path\t\tSet the path of the database direcotry\n"
 msgstr "\t-d Pfad\t\tSetzt den Pfad zur Datenbank.\n"
 
 #: src/messages.c:20
-#, c-format
+#, fuzzy, c-format
 msgid "\t-L Level\tSet the logging level (0-3)\n"
-msgstr "\t-L Level\tSetzt das Ausgabelevel (0-3)\n"
+msgstr "\t-L Level\tSetzt das Ausgabelevel (0-7)\n"
 
 #: src/messages.c:21
 #, c-format
@@ -794,8 +795,8 @@ msgstr "\t-f Datei\tSetzt den Pfad zu Konfigurationsdatei.\n"
 #, c-format
 msgid "\t-g group\tSet the group under wich the bot run (only root).\n"
 msgstr ""
-"\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgeführt wird. (nur "
-"root).\n"
+"\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgeführt wird. (Nur "
+"Root).\n"
 
 #: src/messages.c:24
 #, c-format
@@ -859,7 +860,7 @@ msgstr "\t-t Anzahl\tSetzt die Anzahl der zu erzeugenden Threads.\n"
 #, c-format
 msgid "\t-u user\t\tSet the user under which the bot run (root only).\n"
 msgstr ""
-"\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (root nur).\n"
+"\t-u Benutzer\tSetzt den Benutzer, unter dem der Bot lauft. (Nur Root).\n"
 
 #: src/messages.c:35
 #, c-format
