@@ -41,9 +41,7 @@ int key;            // key of the message  queue
 boolean stop;       // singal for stop the endless loop
 boolean again;
 
-pthread_mutex_t send_mutex;         // mutex for synchronize of send command
 pthread_mutex_t account_mutex;      // mutex for synchronize the access of the login db 
-pthread_mutex_t dbaccess_mutex;
 
 
 int main(int argc,char * const argv[]) {
@@ -178,9 +176,7 @@ int main(int argc,char * const argv[]) {
     
 
     // connect to the server and init the mutex  for sending
-    pthread_mutex_init(&send_mutex,NULL);
-    pthread_mutex_init(&account_mutex, NULL);
-    pthread_mutex_init(&dbaccess_mutex,NULL);
+    //pthread_mutex_init(&account_mutex, NULL);
 
     
     ConnectToIrc();
@@ -281,9 +277,7 @@ int main(int argc,char * const argv[]) {
 
 
     // destroy the mutex
-    pthread_mutex_destroy(&send_mutex);
     pthread_mutex_destroy(&account_mutex);
-    pthread_mutex_destroy(&dbaccess_mutex);
 
     // clear the wait queue
     msgctl(msgid,IPC_RMID,NULL);

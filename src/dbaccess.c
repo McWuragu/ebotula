@@ -33,11 +33,13 @@ static GDBM_FILE dbf_nicktouser;
 static GDBM_FILE dbf_banlist;
 static GDBM_FILE dbf_timelog;
 
+static pthread_mutex_t dbaccess_mutex[MAX_DB];
+
 // ############################################################################# 
 void initDatabases(void) {
     extern ConfigSetup_t sSetup;
     DIR *pDir;
-
+	int i;
     char *user,*channel,*access,*nicktouser,*usertonick,*banlist,*timelog;
             
     // generate the filenames
@@ -89,11 +91,23 @@ void initDatabases(void) {
         
     }
 
+	// init the mutexs
+	for (i=0;i<MAX_DB;i++){
+		pthread_mutex_init(&dbaccess_mutex[i],NULL);
+	}
+	
     syslog(LOG_INFO,SYSLOG_INIT_DB);
 }
 // ############################################################################# 
 void closeDatabase(void) {
-    // close the databases
+	int i;
+   
+	// destroy the mutex
+	for (i=0;i<MAX_DB;i++){
+		pthread_mutex_destroy(&dbaccess_mutex[i]);
+	}
+	
+	// close the databases
     gdbm_close(dbf_user);
     gdbm_close(dbf_channel);
     gdbm_close(dbf_usertonick);
@@ -139,7 +153,6 @@ static GDBM_FILE get_dbf(int db) {
 boolean add_db(int db,char *_key, char *_value) {
     datum key,value;
     GDBM_FILE dbf;
-    extern pthread_mutex_t dbaccess_mutex;
     int iErr;
 
     // check of exist  of this key in the database
@@ -159,9 +172,9 @@ boolean add_db(int db,char *_key, char *_value) {
         value.dsize=strlen(value.dptr)+1;
         
         
-        pthread_mutex_lock(&dbaccess_mutex);
+        pthread_mutex_lock(&dbaccess_mutex[db]);
         iErr=gdbm_store(dbf,key,value,GDBM_INSERT);
-        pthread_mutex_unlock(&dbaccess_mutex);
+        pthread_mutex_unlock(&dbaccess_mutex[db]);
         
         if (!iErr) {
             return true;
@@ -173,7 +186,6 @@ boolean add_db(int db,char *_key, char *_value) {
 boolean replace_db(int db,char *_key, char *_value){
     datum key,value;
     GDBM_FILE dbf;
-    extern pthread_mutex_t dbaccess_mutex;
     
     CHECK_NO_EXIST(db,_key);
     
@@ -192,9 +204,9 @@ boolean replace_db(int db,char *_key, char *_value){
 
     	value.dsize=strlen(value.dptr)+1;
 
-	    pthread_mutex_lock(&dbaccess_mutex);
+	    pthread_mutex_lock(&dbaccess_mutex[db]);
     	gdbm_store(dbf,key,value,GDBM_REPLACE);
-	    pthread_mutex_unlock(&dbaccess_mutex);
+	    pthread_mutex_unlock(&dbaccess_mutex[db]);
     
     return true;
 	}
@@ -206,7 +218,6 @@ boolean replace_db(int db,char *_key, char *_value){
 boolean del_db(int db,char *_key){
     datum key;
     GDBM_FILE dbf;
-    extern pthread_mutex_t dbaccess_mutex;
     int iErr;
 
     CHECK_NO_EXIST(db,_key);
@@ -217,9 +228,9 @@ boolean del_db(int db,char *_key){
         key.dsize=strlen(key.dptr)+1;
         
         
-        pthread_mutex_lock(&dbaccess_mutex);
+        pthread_mutex_lock(&dbaccess_mutex[db]);
         iErr=gdbm_delete(dbf,key);
-        pthread_mutex_unlock(&dbaccess_mutex);
+        pthread_mutex_unlock(&dbaccess_mutex[db]);
     
         if (!iErr) {
             return true;
@@ -233,7 +244,6 @@ boolean check_db(int db,char *_key,char* _value){
     datum value;
     char *__value;
     GDBM_FILE dbf;
-    extern pthread_mutex_t dbaccess_mutex;
 
     key.dptr=_key;
     key.dsize=strlen(_key)+1;
@@ -242,9 +252,9 @@ boolean check_db(int db,char *_key,char* _value){
     
     if ((dbf=get_dbf(db)) && _key!=NULL && _value!=NULL) {
         // fetch the entry
-        pthread_mutex_lock(&dbaccess_mutex);
+        pthread_mutex_lock(&dbaccess_mutex[db]);
         value=gdbm_fetch(dbf,key);
-        pthread_mutex_unlock(&dbaccess_mutex);
+        pthread_mutex_unlock(&dbaccess_mutex[db]);
     
         if (db==USER_DB) {
             __value=crypt(_value,"SL"); 
@@ -263,16 +273,15 @@ boolean check_db(int db,char *_key,char* _value){
 boolean exist_db(int db,char *_key){
     datum key;
     GDBM_FILE dbf;
-    extern pthread_mutex_t dbaccess_mutex;
     int iRet;
 
     if ((dbf=get_dbf(db)) && _key!=NULL) {
         key.dptr=_key;
         key.dsize=strlen(key.dptr)+1;
     
-        pthread_mutex_lock(&dbaccess_mutex);
+        pthread_mutex_lock(&dbaccess_mutex[db]);
         iRet=gdbm_exists(dbf,key);
-        pthread_mutex_unlock(&dbaccess_mutex);
+        pthread_mutex_unlock(&dbaccess_mutex[db]);
     
         return iRet;
     }
@@ -283,7 +292,6 @@ char * get_db(int db,char *_key){
     datum key,value;
     GDBM_FILE dbf;
     char *str=NULL;
-    extern pthread_mutex_t dbaccess_mutex;
 
 
     if ((dbf=get_dbf(db)) && _key!=NULL) {
@@ -291,9 +299,9 @@ char * get_db(int db,char *_key){
 	    key.dptr=_key;
 	    key.dsize=strlen(key.dptr)+1;
     
-	    pthread_mutex_lock(&dbaccess_mutex);
+	    pthread_mutex_lock(&dbaccess_mutex[db]);
 	    value=gdbm_fetch(dbf,key);
-    	pthread_mutex_unlock(&dbaccess_mutex);
+    	pthread_mutex_unlock(&dbaccess_mutex[db]);
 
 	    if (value.dptr) {
     		str=(char *)malloc(value.dsize*sizeof(char));
@@ -312,7 +320,6 @@ char ** list_db(int db){
     GDBM_FILE dbf;
     datum key,nextkey,firstkey;
     unsigned int count=0,i;
-    extern pthread_mutex_t dbaccess_mutex;
 
     // get the database handle
     if (!(dbf=get_dbf(db))) {
@@ -321,7 +328,7 @@ char ** list_db(int db){
         return ppList;
     }
     
-    pthread_mutex_lock(&dbaccess_mutex);
+    pthread_mutex_lock(&dbaccess_mutex[db]);
     firstkey=gdbm_firstkey(dbf);
     
     key=firstkey;
@@ -358,7 +365,7 @@ char ** list_db(int db){
 
     }
 
-    pthread_mutex_unlock(&dbaccess_mutex);
+    pthread_mutex_unlock(&dbaccess_mutex[db]);
     return ppList;
 }
 

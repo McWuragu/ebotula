@@ -37,6 +37,7 @@
 #include "network.h"
 
 static int sockid;
+static pthread_mutex_t	send_mutex;
 
 // ############################################################################# 
 void connectServer(void) {
@@ -87,16 +88,18 @@ void connectServer(void) {
         syslog(LOG_CRIT,SYSLOG_CONNECT);
         exit(errno);
     }
+
+    pthread_mutex_init(&send_mutex,NULL);
 }
 // ############################################################################# 
 void disconnectServer(void){
+	pthread_mutex_destroy(&send_mutex);
     shutdown(sockid,0);
 }
 // ############################################################################# 
 void  send_line(char *pLine) {
     extern ConfigSetup_t sSetup;
     extern int stop;
-    extern pthread_mutex_t send_mutex;
 
 
     pthread_mutex_lock(&send_mutex);
