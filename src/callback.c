@@ -1,12 +1,12 @@
-/* -------------------------------------------------------------
-*
-* This is a part of ebotula.
-* It is distributed under the GNU General Public License
-* See the file COPYING for details.
-*
-* (c)2003 Steffen Laube <realebula@gmx.de>
- -------------------------------------------------------------*/
-
+/* #############################################################
+ *
+ * This is a part of ebotula.
+ * It is distributed under the GNU General Public License
+ * See the file COPYING for details.
+ *
+ * (c)2003 Steffen Laube <realebula@gmx.de>
+ * ############################################################# 
+ */
 
 #include"dbaccess.h"
 #include"irc.h"
@@ -136,14 +136,8 @@ void KickCb(char *pNetmask, void *data) {
     pCmdNick=getNickname(get_db(USERTONICK_DB,ppDataPart[0]));
 
     /* extract reason */
-    if (ppDataPart[2]) {
-        pReason=(char*)ppDataPart[2];
-    } else {
-        pReason=(char*)malloc(strlen(MSG_DEFAULT_REASON)*sizeof(char));
-        strcpy(pReason,MSG_DEFAULT_REASON);
-    }
-    
-
+    pReason=(char*)ppDataPart[2];
+   
     doKick=checkUserLevel(pCmdNick,pLogin,ppDataPart[1]);
 
     /* try to kick */

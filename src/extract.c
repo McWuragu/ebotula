@@ -1,11 +1,12 @@
-/* -------------------------------------------------------------
-*
-* This is a part of ebotula.
-* It is distributed under the GNU General Public License
-* See the file COPYING for details.
-*
-* (c)2003 Steffen Laube <realebula@gmx.de>
- -------------------------------------------------------------*/
+/* #############################################################
+ *
+ * This is a part of ebotula.
+ * It is distributed under the GNU General Public License
+ * See the file COPYING for details.
+ *
+ * (c)2003 Steffen Laube <realebula@gmx.de>
+ * ############################################################# 
+ */
 
 #include <stdlib.h>
 #include <string.h>
@@ -304,13 +305,16 @@ char ** splitString(char const * pString,int nRetArraySize) {
             pSpacePos=strchr(pPos,' ');
 
             if (pSpacePos) {
-                pSpacePos[0]='\0';
+                if  (pSpacePos[0]!='\0') {
+                    pSpacePos[0]='\0';
+                    pSpacePos++;
+                }
                 
                 // put the string in the array
                 ppStrings[i]=(char*)malloc((strlen(pPos)+1)*sizeof(char));
                 strcpy(ppStrings[i],pPos);
 
-                pPos=++pSpacePos;
+                pPos=pSpacePos;
 
             } else {
                 break;
@@ -323,7 +327,7 @@ char ** splitString(char const * pString,int nRetArraySize) {
             ppStrings[i]=(char*)malloc((strlen(pPos)+1)*sizeof(char));
             strcpy(ppStrings[i],pPos);
         } else {
-            ppStrings[i+1]=NULL;
+            ppStrings[i]=NULL;
         }
 
     }
