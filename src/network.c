@@ -71,8 +71,9 @@ boolean connectServer(void) {
     }
 
     #ifdef NDEBUG
-    printf("%s\n",gettext("Try to connect to %s"),sSetup.server);
-    #endif
+    printf(gettext("Try to connect to %s"),sSetup.server);
+    printf("\n");
+    #endif 
     logger(LOG_INFO,gettext("Try to connect to %s"),sSetup.server);
 
 
@@ -87,7 +88,8 @@ boolean connectServer(void) {
     hostaddr=gethostbyname(sSetup.server);
     if (!hostaddr) {
         #ifdef NDEBUG
-        fprintf(stderr,"%s\n",gettext("Couldn't resolve the hostname %s."),sSetup.server);
+        fprintf(stderr,gettext("Couldn't resolve the hostname %s."),sSetup.server);
+        fprintf(stderr,"\n");
         #endif
         logger(LOG_ERR,gettext("Couldn't resolve the hostname %s."),sSetup.server);
         return false;
@@ -119,14 +121,16 @@ boolean connectServer(void) {
     /* connect to server */
     if(connect(sockid,(struct sockaddr *)&socketaddr,sizeof(socketaddr))<0) {
         #ifdef NDEBUG
-        fprintf(stderr,"%s\n",gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
+        fprintf(stderr,gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
+        fprintf(stderr,"\n");
         #endif
         logger(LOG_ERR,gettext("Couldn't connect to %s:%s"),sSetup.server,sSetup.port);
         return false;
     }
 
     #ifdef NDEBUG
-    printf("%s\n",gettext("The bot is connect to %s"),sSetup.server);
+    printf(gettext("The bot is connect to %s"),sSetup.server);
+    printf("\n");
     #endif
     
     logger(LOG_NOTICE,gettext("The bot is connect to %s"),sSetup.server);
@@ -287,7 +291,8 @@ boolean ConnectToIrc(void){
         if ( trying>MAX_NICKS) {
             errno=EAGAIN;
             #ifndef NDEBUG
-            fprintf(stderr,"%s\n",gettext("Couldn't set the nickname %s."),sSetup.pBotname);
+            fprintf(stderr,gettext("Couldn't set the nickname %s."),sSetup.pBotname);
+            fprintf(stderr,"\n");
             #endif
             logger(LOG_ERR,gettext("Couldn't set the nickname %s."),sSetup.pBotname);
             return false;

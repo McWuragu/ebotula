@@ -536,7 +536,8 @@ boolean dialogMaster(void){
 
     // create account
     if (!add_db(USER_DB,name,passwd)) {
-        fprintf(stderr,"%s\n",gettext("A account with this nickname already exists."));
+        fprintf(stderr,gettext("A account %s already exists."),name);
+        fprintf(stderr,"\n");
         return false;
     }
 

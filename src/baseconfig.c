@@ -117,7 +117,8 @@ void write_baseconfig()
       if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
       {
           #ifdef NDEBUG
-          fprintf(stderr,"%s\n",gettext("Couldn't open the configuration file %s."),sSetup.configfile);
+          fprintf(stderr,gettext("Couldn't open the configuration file %s."),sSetup.configfile);
+          fprintf(stderr,"\n");
           #endif
               
           logger(LOG_ERR,gettext("Couldn't open the configuration file %s."),sSetup.configfile);

@@ -153,7 +153,8 @@ int main(int argc,char * const argv[]) {
     sSetup.bLogLevelWasSet=0;
 
     // versions ausgabe
-    printf("%s\n",VERSIONSTR);
+    printf(VERSIONSTR);
+    printf("\n");
     
     #ifdef HAVE_SYSLOG_H
     openlog(PACKAGE,0,LOG_DAEMON);
@@ -218,7 +219,7 @@ int main(int argc,char * const argv[]) {
     
     // check for parameter
     if (argc>1) {
-        if (!CommandLineParser(argc,argv));
+        if (!CommandLineParser(argc,argv))
             exit(errno);
     }
 
