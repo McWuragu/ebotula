@@ -36,7 +36,7 @@ boolean check_db(int db,char *_key,char *_value);
 boolean exist_db(int db,char *_key);
 char * get_db(int db,char *_key);
 char ** list_db(int db);
-GDBM_FILE get_dbf(int db);
+static  GDBM_FILE get_dbf(int db);
 
 
 

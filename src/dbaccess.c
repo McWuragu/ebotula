@@ -23,13 +23,13 @@
 #include "messages.h"
 #include "dbaccess.h"
 
-GDBM_FILE dbf_user;
-GDBM_FILE dbf_channel;
-GDBM_FILE dbf_access;
-GDBM_FILE dbf_usertonick;
-GDBM_FILE dbf_nicktouser;
-GDBM_FILE dbf_banlist;
-GDBM_FILE dbf_timelog;
+static GDBM_FILE dbf_user;
+static GDBM_FILE dbf_channel;
+static GDBM_FILE dbf_access;
+static GDBM_FILE dbf_usertonick;
+static GDBM_FILE dbf_nicktouser;
+static GDBM_FILE dbf_banlist;
+static GDBM_FILE dbf_timelog;
 
 // ############################################################################# 
 void initDatabases(void) {
@@ -87,7 +87,7 @@ void closeDatabase(void) {
 }
 
 //######################### database access ##############################
-GDBM_FILE get_dbf(int db) {
+static GDBM_FILE get_dbf(int db) {
 
 	switch (db) {
 	case USER_DB:
