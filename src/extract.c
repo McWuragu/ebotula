@@ -190,7 +190,7 @@ char  *getTopic(char const *pChannelSet) {
 	char *pPos,*pPos2;
 	char *pStr;
 	
-	if (!pChannelSet) return "";
+	if (!pChannelSet) return NULL;
 
 	pStr=(char *)malloc((strlen(pChannelSet)+1)*sizeof(char));
 	strcpy(pStr,pChannelSet);
