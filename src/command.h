@@ -15,7 +15,7 @@
 #include "network.h"
 #include "account.h"
 
-#define ACCOUNT_LIST_TAB    20
+#define ACCOUNT_LIST_TAB    16
 #define HELP_TAB        12
 
 #define CHANNEL_MODES   "kltnmsprqi"

@@ -1254,7 +1254,7 @@ void accountlist(MsgItem_t *pMsg){
     char *pMsgStr;
     boolean bIsOther;
 
-    unsigned int j,iChanLen,iLoginLen;
+    unsigned int j,iChanLen,iLoginLen,iLoginTab;
 
     pArgv=getArgument(pMsg->pRawLine);
 
@@ -1274,26 +1274,28 @@ void accountlist(MsgItem_t *pMsg){
         while (isfullQueue(pLoginQueue)) {
             pLoginItem=popQueue(pLoginQueue);
             iLoginLen=pLoginItem->t_size;
+            iLoginTab=(iLoginLen<ACCOUNT_LIST_TAB)?ACCOUNT_LIST_TAB:iLoginLen;
 
             /* check for master or normal user */
             if (exist_db(ACCESS_DB,(char*)pLoginItem->data)) {
                 /* user is master */
-                pMsgStr=(char*)malloc((ACCOUNT_LIST_TAB+strlen("Master   Status:")+5)*sizeof(char));
+                /* iLoginTab + " Master   Status:" + " OFF" */
+                pMsgStr=(char*)malloc((iLoginTab+22)*sizeof(char));
                 strcpy(pMsgStr,(char*)pLoginItem->data);
 
                 /* fill */
-                for (j=0;j<(ACCOUNT_LIST_TAB-iLoginLen);j++) {
+                for (j=0;j<(iLoginTab-iLoginLen);j++) {
                     strcat(pMsgStr," ");
                 }
 
-                strcat(pMsgStr,"Master   Status: ");
+                strcat(pMsgStr," Master   Status:");
 
                 /* insert  online status */
                 /* set  online Status */
                 if (exist_db(USERTONICK_DB,(char*)pLoginItem->data)) {
-                    strcat(pMsgStr,"ON ");
+                    strcat(pMsgStr," ON ");
                 } else {
-                    strcat(pMsgStr,"OFF");
+                    strcat(pMsgStr," OFF");
                 }
 
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
@@ -1311,12 +1313,12 @@ void accountlist(MsgItem_t *pMsg){
         			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
         			sprintf(pKey,"%s%s",(char*)pLoginItem->data,(char*)pChannel->data);
         
-                    /* "Status:" + ACCOUNT_LIST_TAB + "Friend from " + strlen(pChannel->data) + "   Status: "+ "OFF" */
-                    pMsgStr=(char*)malloc((ACCOUNT_LIST_TAB+iChanLen+50)*sizeof(char));
+                    /* iLoginTab + " Friend of " + strlen(pChannel->data) + "   Status: "+ "OFF" */
+                    pMsgStr=(char*)malloc((iLoginTab+iChanLen+26)*sizeof(char));
                     strcpy(pMsgStr,(char*)pLoginItem->data);
         
                     /* fill */
-                    for (j=0;j<(ACCOUNT_LIST_TAB-iLoginLen);j++) {
+                    for (j=0;j<(iLoginTab-iLoginLen);j++) {
                         strcat(pMsgStr," ");
                     }
     
@@ -1324,11 +1326,11 @@ void accountlist(MsgItem_t *pMsg){
         			if ((pMod=get_db(ACCESS_DB,pKey))) {
         				/* set access rights */       
         				if (pMod[1]=='o') {
-        					strcat(pMsgStr,"Owner of ");
+        					strcat(pMsgStr," Owner of ");
                             strcat(pMsgStr,(char*)pChannel->data);
                             bIsOther=false;
         				} else if (pMod[1]=='v') {
-        					strcat(pMsgStr,"Friend from ");
+        					strcat(pMsgStr," Friend of ");
                             strcat(pMsgStr,(char*)pChannel->data);
                             bIsOther=false;
         				} else {
