@@ -15,17 +15,7 @@
 
 
 static MsgStruct_t Msg[] = {
-  
-	// command acknowledgment
-    { OK_BAN,			"The user is banned by the bot" },
-    	{ OK_DEBAN,			"The ban is removed by the bot" },
-	{ OK_USERMODE,			"The user mod are changed" },
-	{ OK_RMUSER,			"The account is removed"},
-	{ OK_MASTER,			"You are a bot master"},
-	{ OK_DIE,			"The bot is going  down"},
-	{ OK_RESTART,			"The bot is going to restart"},
-
-	// Informations for invalid input or using of the bot
+    // Informations for invalid input or using of the bot
 	{ ERR_NOT_MASTER,			"You're not a irc bot master."},
 	{ ERR_NOT_CHANNELOPT,		"This command requieres a channel name."},
     	{ ERR_NOT_PARAMETER,       	"I couldn't found regulare parameters."},
@@ -55,7 +45,6 @@ static MsgStruct_t Msg[] = {
 	{ INFO_CHANNELLIST_END,		"End of channel list."},
 	{ INFO_CHANNELLIST_TOPIC,	"Topic:"},
 	{ INFO_CHANNELLIST_GREET,	"Greeting:"},
-	{ INFO_DEFAULT_REASON,		"You are kicked from the bot."},
     
 };
 

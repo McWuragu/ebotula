@@ -19,15 +19,6 @@
 // excute error
 static MsgStruct_t Msg[] ={
 
-    // command acknowledgment
-	{ OK_BAN,		"Der Benutzer wurde vom Bot gebannt" },
-    { OK_DEBAN,			"Der Ban wurde vom Bot aufgehoben" },
-    { OK_USERMODE,		"Die Benutzermodus wurde geändert" },
-	{ OK_RMUSER,		"Der Account wurde entfernt" },
-	{ OK_MASTER,		"Du bist ein Bot Master" },
-	{ OK_DIE,		"Der Bot beendet sich" },
-	{ OK_RESTART,		"Der Bot startet neu" },
-
 	// Informations for invalid input or using of the bot
 	{ ERR_NOT_MASTER,	"Du bist kein Botmaster" },
 	{ ERR_NOT_CHANNELOPT,	"Dieses Kommando benötigt einen Channel" },
@@ -58,7 +49,6 @@ static MsgStruct_t Msg[] ={
 	{ INFO_CHANNELLIST_END,		"Ende der Channelliste." },
 	{ INFO_CHANNELLIST_TOPIC,	"Topic:"  },
 	{ INFO_CHANNELLIST_GREET,	"Begrüssung:" },
-	{ INFO_DEFAULT_REASON,	"Du wurdest vom bot gekickt" },
 };
 
 
