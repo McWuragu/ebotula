@@ -2,7 +2,9 @@ ebotula-0.1.13
 --------------------
 - Bugfix: fixed -f option
 - Bugfix: fixed the command !userlist
+- Bugfix: fixed the command !help
 - renamed the version
+- modified the  irc help struction
 
 -ebotula-devel-0.1.12
 --------------------
