@@ -137,7 +137,7 @@ void help(char *pLine) {
 			
 			// look for  the command 
 			if (!strcmp((char*)irchelp_msg[i],pParameter)) {
-				DEBUG("Commando found");
+				DEBUG("Command found");
 				
 				// the head	for help
 				pTmp=(char*)malloc((strlen(MSG_HELP_FOR)+strlen((char *)irchelp_msg[i])+3)*sizeof(char));
@@ -170,10 +170,13 @@ void hello(char *pLine) {
 	char *pNick;
 	char *pLogin;
 	
+    
 	pNetmask=getNetmask(pLine);
 	pNick=getNickname(pLine);
 	pLogin=(char*)malloc((strlen(pNick)+1)*sizeof(char));
 	
+	DEBUG("Try to create an new account for %s",pNick);
+
 	strcpy(pLogin,pNick);
 	
 	StrToLower(pLogin);
@@ -209,6 +212,8 @@ void password(char *pLine) {
 	pNetmask=getNetmask(pLine);
 	pNick=getNickname(pLine);
 	pLogin=get_db(NICKTOUSER_DB,pNetmask);
+   
+	DEBUG("Check the  password for the account %s",pLogin);
 
 	// get  the  login name 
 	if (!strlen(pLogin)) {
@@ -274,6 +279,8 @@ void ident(char *pLine) {
 	pNetmask=getNetmask(pLine);
 	pNick=getNickname(pLine);
 	
+	DEBUG("try to identify %s",pNick);
+
 	if (exist_db(NICKTOUSER_DB,pNetmask)) {
 		notice(pNick,MSG_ALREADY_LOGON);
 		return;
@@ -305,6 +312,8 @@ void ident(char *pLine) {
 	strcpy(pLogin,pParameter);
 	StrToLower(pLogin);
 
+	DEBUG("Look for the account %s",pLogin);
+
 	// check the account 
 	if(check_db(USER_DB,pLogin,pPasswd)) {
 		log_on(pNetmask,pLogin);
@@ -334,9 +343,6 @@ void ident(char *pLine) {
 		return;
 	}
 	notice(pNick,MSG_NOT_ACCOUNT);
-
-
-
 }
 // ######################################################################### 
 // Bot comand: !addchannel #channel
@@ -350,11 +356,14 @@ void addChannel(char *pLine) {
 	
 	pChannel=getAccessChannel(pLine);
 
+
 	if (!strcmp(pChannel,getChannel(pLine))) {
 		notice(pNick,MSG_NOT_CHANNELOPT);
 		notice(pNick,MSG_ADDCHANNEL_ERR);
 		return;
 	}
+
+	DEBUG("Join and  try to add the channnel %s",pChannel);
 
 	// checking of channel exist 
 	if (exist_db(CHANNEL_DB,pChannel)) {
@@ -366,14 +375,9 @@ void addChannel(char *pLine) {
 		add_db(CHANNEL_DB,pChannel,channelmod);
 		notice(pNick,MSG_ADDCHANNEL_OK);
 	}
-
-
-	
 	// join the channel 
 	join(pChannel);
 	notice(pNick,MSG_JOIN_OK);
-	
-    
 
 }
 // ######################################################################### 
@@ -386,6 +390,8 @@ void rmChannel(char *pLine){
 	pNick=getNickname(pLine);
 	pChannel=getAccessChannel(pLine);
 	
+	DEBUG("Part and  try to remove the channnel %s",pChannel);
+
 	// checking of channel exists 
 	if (!del_db(CHANNEL_DB,pChannel)) {
 		notice(pNick,MSG_NOT_CHANNEL);
@@ -408,13 +414,14 @@ void joinChannel(char *pLine) {
 	pNick=getNickname(pLine);
 	pChannel=getAccessChannel(pLine);
 
-	// compare the current channel and  the channel for joining
+    // compare the current channel and  the channel for joining
 	if (!(strcmp(pChannel,getChannel(pLine)))) {
 		notice(pNick,MSG_NOT_CHANNELOPT);
 		notice(pNick,MSG_JOIN_ERR);
 		return;
 	}
 
+	DEBUG("Join the channel %s",pChannel);
 	// join the channel 
 	join(pChannel);
 	notice(pNick,MSG_JOIN_OK);
@@ -430,6 +437,8 @@ void partChannel(char *pLine) {
 	pNick=getNickname(pLine);
 	pChannel=getAccessChannel(pLine);
 
+	DEBUG("Part the channel %s",pChannel);
+
 	// part the channel
 	part(pChannel);
 	notice(pNick,MSG_PART_OK);
@@ -439,6 +448,15 @@ void partChannel(char *pLine) {
 // ######################################################################### 
 void die(char *pLine) {
 	notice(getNickname(pLine),MSG_DIE_OK);
+	stopParser(0);
+}
+// ######################################################################### 
+// Bot comand: !restart
+// ######################################################################### 
+void restart(char *pLine) {
+	extern boolean again;
+	notice(getNickname(pLine),MSG_RESTART_OK);
+	again=true;
 	stopParser(0);
 }
 // ######################################################################### 
