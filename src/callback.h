@@ -16,76 +16,40 @@ typedef struct CallbackStruct {
     void *data;
  } CallbackItem_t;
 
-/* destroxCallbackItem
- *
- * Description:	Destroys Dataelement und sub-item of it
+/**
+ * Destroys Dataelement und sub-item of it
+ * @author Steffen Laube
  * 
- * Parameter: 	CallbackItem_t
- * 		-Pointer to CallbackItem_t
- *
- * Return:	void
- *
+ * @param data Pointer to CallbackItem_t
  */
 void destroyCallbackItem(CallbackItem_t *data);
 
-/* ModerResetCb
- * 
- * Description: Callback routine for the  reset of user
- *              access rigths. It is a part of  mode 
- *              protection  featuer
+/**
+ * Callback routine for the  reset of user
+ * access rigths. It is a part of  mode 
+ * protection  featuer
+ * @author Steffen Laube
  *
- * Parameter:   
- *      pNetmask
- *      - Pointer to a string of netmask
- *      data
- *      - a pointer to a container of data
- * Return: void
- *
+ * @param pNetmask pointer to a string of netmask
+ * @param data a pointer to a container of data
  */
 void ModeResetCb(char *pNetmask,void *data);
 
-/* SetBanCb
- * 
- * Description: Callback routine for the activation
- *              of a ban. 
+/**
+ * Callback routine for the activation of a ban.
+ * @author Steffen Laube 
  *
- * Parameter:   
- *      pNetmask
- *      - Pointer to a string of netmask
- *      data
- *      - a pointer to a container of data
- * Return: void
- *
+ * @param pNetmask Pointer to a string of netmask
+ * @param data a pointer to a container of data
  */
 void SetBanCb(char *pNetmask,void *data);
 
-/* RemoveBanCb
- * 
- * Description: Callback routine for the removing
- *              of a ban.
+/**
+ * Callback routine for the kicking of a user.
+ * @author Steffen Laube
  *
- * Parameter:   
- *      pNetmask
- *      - Pointer to a string of netmask
- *      data
- *      - a pointer to a container of data
- * Return: void
- *
- */
-void RemoveBanCb(char *pNetmask,void *data);
-
-/* KickCb
- * 
- * Description: Callback routine for the kicking of
- *              a user.
- *
- * Parameter:   
- *      pNetmask
- *      - Pointer to a string of netmask
- *      data
- *      - a pointer to a container of data
- * Return: void
- *
+ * @param pNetmask pointer to a string of netmask
+ * @param data a pointer to a container of data
  */
 void KickCb(char *pNetmask, void *data);
 

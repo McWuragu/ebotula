@@ -15,17 +15,8 @@
 #include"messages.h"
 #include"type.h"
 #include"callback.h"
-
-/* destroxCallbackItem
-* 
-* Description: Destroys Dataelement und sub-item of it
-*
-* Parameter:   CallbackItem_t
-*              -Pointer to CallbackItem_t
-*
-* Return:      void
-*
-*/
+                                                                                
+// #############################################################################
 void destroyCallbackItem(CallbackItem_t *data)
 {
       /** destroy all sub-element of CallbackIten_t **/
@@ -34,8 +25,7 @@ void destroyCallbackItem(CallbackItem_t *data)
         free(data);
         return;
 }
-
-
+// #############################################################################
 void ModeResetCb(char *pNetmask,void* data){
     extern ConfigSetup_t sSetup;
     char **ppDataPart;
@@ -90,7 +80,7 @@ void ModeResetCb(char *pNetmask,void* data){
         mode(ppDataPart[0],ppDataPart[1],pNick);
     }
 }
-
+// #############################################################################
 void SetBanCb(char *pNetmask,void * data){
     boolean doBan;
 	char **pDataVec;
@@ -111,34 +101,7 @@ void SetBanCb(char *pNetmask,void * data){
     pLogin=get_db(NICKTOUSER_DB,pNetmask);
     pCmdNick=getNickname(get_db(USERTONICK_DB,pDataVec[0]));
 
-    /* read mods */
-    if (pLogin){
-        /* built db access key */
-        pAccessKey=(char*)malloc((strlen(pLogin)+strlen(pDataVec[1])+1)*sizeof(char));
-        sprintf(pAccessKey,"%s%s",pLogin,pDataVec[1]);
-    
-        /* read the access level of  the  user wiche want baning user */
-        if ((pMod=get_db(ACCESS_DB,pAccessKey))) {}
-        else if ((pMod=get_db(ACCESS_DB,pLogin))) {
-                
-        }
-        else pMod=NULL;
-    }
-
-    /* look for ban */
-    if (pMod==NULL) {
-        doBan=true;
-    } else if (pMod[1]=='m') {
-        doBan=false;
-    } else if (exist_db(ACCESS_DB,pDataVec[0])) {
-        /* kick by master */
-        doBan=true;
-    } else if (pMod[1]!='o'){
-        /* ban by owner */
-        doBan=true;
-    } else {
-        doBan=false;
-    }
+    doBan=checkUserLevel(pCmdNick,pLogin,pDataVec[1]);
 
     /* try to ban */
     if (doBan) {
@@ -150,12 +113,7 @@ void SetBanCb(char *pNetmask,void * data){
 
 }
 
-
-void RemoveBanCb(char *pNetmask,void * data){
-	DEBUG("RemoveBan");
-
-}
-
+// #############################################################################    
 void KickCb(char *pNetmask, void *data) {
     boolean doKick;
     char **ppDataPart;
@@ -164,7 +122,6 @@ void KickCb(char *pNetmask, void *data) {
     char *pNick;
     char *pMod=NULL;
     char *pLogin;
-    //char *pPos;
     char *pCmdNick;
     
     DEBUG("Callback for user kicking");
@@ -187,34 +144,7 @@ void KickCb(char *pNetmask, void *data) {
     }
     
 
-    /* read mods */
-    if (pLogin){
-        /* built db access key */
-        pAccessKey=(char*)malloc((strlen(pLogin)+strlen(ppDataPart[1])+1)*sizeof(char));
-        sprintf(pAccessKey,"%s%s",pLogin,ppDataPart[1]);
-    
-        /* read the access level of  the  user wiche want kicking user */
-        if ((pMod=get_db(ACCESS_DB,pAccessKey))) {}
-        else if ((pMod=get_db(ACCESS_DB,pLogin))) {
-                
-        }
-        else pMod=NULL;
-    }
-
-    /* look for kick */
-    if (pMod==NULL) {
-        doKick=true;
-    } else if (pMod[1]=='m') {
-        doKick=false;
-    } else if (exist_db(ACCESS_DB,ppDataPart[0])) {
-        /* kick by master */
-        doKick=true;
-    } else if (pMod[1]!='o'){
-        /* kick by owner */
-        doKick=true;
-    } else {
-        doKick=false;
-    }
+    doKick=checkUserLevel(pCmdNick,pLogin,ppDataPart[1]);
 
     /* try to kick */
     if (doKick) {
