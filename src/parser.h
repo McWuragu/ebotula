@@ -27,7 +27,7 @@ MsgBufType preParser(char *pLine);
 */
 void *ComandExecutionThread(void *argv);
 
-int AccessRight(char *pLine,CmdType cmd_id);
+static int AccessRight(char *pLine,CmdType cmd_id);
 void stopParser(int sig);
 
 #endif

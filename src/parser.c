@@ -142,6 +142,9 @@ MsgBufType preParser(char *pLine) {
 			} else if (!strncmp(pStr,"chanmode",strlen("chanmode"))) {
 				sMsg.mtype=1;
 				sMsg.identify=CMD_CHANMODE;
+			} else if (!strncmp(pStr,"restart",strlen("restart"))) {
+				sMsg.mtype=1;
+				sMsg.identify=CMD_RESTART;
 			}
 		}
 	}
@@ -245,7 +248,7 @@ void *ComandExecutionThread(void *argv) {
 				userlist(sMsg.pMsgLine);
 				break;
 			case CMD_ONMODE:
-				hResetModUser(sMsg.pMsgLine);
+				hResetModes(sMsg.pMsgLine);
 				break;
 			case CMD_ALLSAY:
 				allsay(sMsg.pMsgLine);
@@ -255,6 +258,9 @@ void *ComandExecutionThread(void *argv) {
 				break;
 			case CMD_CHANMODE:
 				chanmode(sMsg.pMsgLine);
+				break;
+			case CMD_RESTART:
+				restart(sMsg.pMsgLine);
 				break;
 			default:
 				syslog(LOG_CRIT,SYSLOG_UNKNOWN_CMDID,sMsg.identify);
@@ -270,7 +276,7 @@ void *ComandExecutionThread(void *argv) {
 }
 
 // ############################################################################# 
-int AccessRight(char *pLine,CmdType cmd_id) {
+static int AccessRight(char *pLine,CmdType cmd_id) {
 	char *pChannel;
 	char *pLogin;
 	char *pNick;
@@ -355,6 +361,7 @@ int AccessRight(char *pLine,CmdType cmd_id) {
 	case CMD_NICK:
 	case CMD_CHANNELS:
 	case CMD_DIE:
+	case CMD_RESTART:
 		if (!exist_db(NICKTOUSER_DB,pNetmask)) {
 			notice(pNick,MSG_NOT_LOGON);	
 			return false;
