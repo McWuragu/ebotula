@@ -32,6 +32,39 @@
 #include "messages.h"
 #include "utilities.h"
 #include "account.h"
+
+/* ############################################################################# */
+UserLevel_t getUserLevel(char *const pChannel, char *const pNetmask) {
+    char *pAccessLevelKey;
+    char *pLogin;
+    char *pLevel;
+    UserLevel_t UserLevel=NoneLevel;
+
+    // lock for the  login of this netmask
+    if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
+        UserLevel=LoggedLevel;
+        
+        // check the  other level
+        if (pChannel) {
+            // built the  key
+            pAccessLevelKey=(char*)malloc((strlen(pChannel)+strlen(pLogin)+1)*sizeof(char));
+            sprintf(pAccessLevelKey,"%s%s",pLogin,pChannel);
+
+            if ((pLevel=get_db(ACCESS_DB,pAccessLevelKey))) {
+                if (strchr(pLevel,'o')) {
+                    UserLevel=OwnerLevel;
+                } else if (strchr(pLevel,'v')) {
+                    UserLevel=FriendLevel;
+                }
+            } else if ((pLevel=get_db(ACCESS_DB,pLogin))) {
+                UserLevel=MasterLevel;
+            }
+        } else if ((pLevel=get_db(ACCESS_DB,pLogin))) {
+                UserLevel=MasterLevel;
+        }
+    }
+    return UserLevel;
+}
 /* ############################################################################# */
 void rmDeadLogins(long lCheckTime) {
    	PQueue pLoginQueue;

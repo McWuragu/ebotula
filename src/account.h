@@ -11,6 +11,17 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
+typedef enum _UserLevel {
+    NoneLevel,
+    LoggedLevel,
+    FriendLevel,
+    OwnerLevel,
+    MasterLevel
+} UserLevel_t;
+                                    
+
+UserLevel_t getUserLevel(char *const pChannel, char *const pNetmask);
+
 /**
 * This function log on a user. She put the net mask in the  databases usertonick.dbf and
 * nicktouser.dbf. If a user in both files then is he status "log on"

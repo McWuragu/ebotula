@@ -13,6 +13,7 @@
 
 
 #include "network.h"
+#include "account.h"
 
 #define USERLIST_TAB    20
 #define HELP_TAB        12
@@ -114,6 +115,18 @@ typedef struct MsgBufStruct {
     char   *pMsgLine;
 } MsgBuf_t;
 
+/** This is a container for the parameter of the command handler */
+typedef struct MsgItem_s {
+    /** user access level of the  calling user */
+    UserLevel_t UserLevel;
+    /** channel of the  command target */
+    char *pAccessChannel;
+    /** nick name of the comamnd  caller */
+    char *pCallingNick;
+    /** the complete string which receive from the irc server */
+    char *pRawLine;
+} MsgItem_t;  
+
 /* ######################### Bot commands ################################ */
 
 void help(char *pLine);
@@ -141,5 +154,7 @@ void usermode(char *pLine);
 void chanmode(char *pLine);
 void rmuser(char *pLine);
 void userlist(char *pLine);
-void inviteuser(char *pLine);
+
+// new command format
+void inviteuser(MsgItem_t *pMsg);
 #endif

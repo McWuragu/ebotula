@@ -30,7 +30,7 @@ MsgBuf_t *preParser(char *pLine);
 */
 void *ComandExecutionThread(void *argv);
 
-static int AccessRight(char *pLine,Cmd_t cmd_id);
+static int AccessRight(UserLevel_t Level,Cmd_t cmd_id);
 void stopParser(int sig);
 
 #endif

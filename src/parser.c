@@ -98,6 +98,12 @@ void *ComandExecutionThread(void *argv) {
 	extern boolean stop;
     QueueData *pCommand;
 	MsgBuf_t *pMsg;
+    MsgItem_t *pMsgItem;
+    
+    char *pNetmask;
+    char *pChannel;
+    char *pNick;
+    UserLevel_t Level;
 	
 	PQueue pCommandQueue=(PQueue)argv;	
 
@@ -114,9 +120,26 @@ void *ComandExecutionThread(void *argv) {
         if (pCommand) {
             pMsg=(MsgBuf_t*)pCommand->data;
 
+
+
+            // extract the needed values
+            pNetmask=getNetmask(pMsg->pMsgLine);
+            pChannel=getAccessChannel(pMsg->pMsgLine);
+            pNick=getNickname(pMsg->pMsgLine);
+
+            Level=getUserLevel(pChannel,pNetmask);
+
             // check the access level
-            if (AccessRight(pMsg->pMsgLine,pMsg->identify)) {
+            if (AccessRight(Level,pMsg->identify)) {
                 
+                // fill the parameter
+                pMsgItem=(MsgItem_t *)malloc(sizeof(MsgItem_t));
+                pMsgItem->pAccessChannel=pChannel;
+                pMsgItem->pCallingNick=pNick;
+                pMsgItem->UserLevel=Level;
+                pMsgItem->pRawLine=pMsg->pMsgLine;
+                
+
                 // command router 
                 switch (pMsg->identify) {
                 case CMD_ONPING:
@@ -223,7 +246,7 @@ void *ComandExecutionThread(void *argv) {
                     debanuser(pMsg->pMsgLine);
                     break;
                 case CMD_INVITE:
-                    inviteuser(pMsg->pMsgLine);
+                    inviteuser(pMsgItem);
                     break;
                 default:
                     syslog(LOG_CRIT,getSyslogString(SYSLOG_UNKNOWN_CMDID));
@@ -233,9 +256,16 @@ void *ComandExecutionThread(void *argv) {
                 // remove  destroy the last popped Command
                 free(pMsg->pMsgLine);
                 free(pMsg);
+                free(pMsgItem);
                 free(pCommand);
             
+            } else {
+                notice(pNick,getMsgString(ERR_NOT_ACCESS));
             }
+
+            if (pChannel) {free(pChannel);}
+            if (strlen(pNetmask)) {free(pNetmask);}
+            if (strlen(pNick)) {free(pNick);}
         }
     }
     DEBUG("Execution thread is stopped\n");
@@ -243,106 +273,28 @@ void *ComandExecutionThread(void *argv) {
 }
 
 // #############################################################################
-static int AccessRight(char *pLine,Cmd_t cmd_id) {
-    char *pChannel;
-    char *pLogin;
-    char *pNick;
-    char *pNetmask;
-    char *pKey;
-    char *pMod;
+static int AccessRight(UserLevel_t Level,Cmd_t cmd_id) {
+    boolean ret=false;  
 
-    /* extract information form pline*/
-    pNetmask=getNetmask(pLine);
-    pNick=getNickname(pLine);
-    
     // check Accesslevel
-    if (cmd_id >= CMD_MASTER) {
-        // check the  login status
-        if (!exist_db(NICKTOUSER_DB,pNetmask)) {
-            notice(pNick,getMsgString(ERR_NOT_LOGON));
-        } else {
-            if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-	            if (exist_db(ACCESS_DB,pLogin)) {
-        	        return true;
-	            }
-			}
-        }
-    }  else if (cmd_id >= CMD_OWNER) {
-        // check the  login status
-        if (!exist_db(NICKTOUSER_DB,pNetmask)) {
-            notice(pNick,getMsgString(ERR_NOT_LOGON));
-        } else {
-            // check the existe of a channel parameter
-            if (pChannel=getAccessChannel(pLine)) {
-				if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-
-					pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char*));
-					sprintf(pKey,"%s%s",pLogin,pChannel);
-
-					if ((pMod=get_db(ACCESS_DB,pKey))) {
-						if (strchr(pMod,'o')) {	return true;}
-					} else if (exist_db(ACCESS_DB,pLogin)) {
-						notice(pNick,getMsgString(OK_MASTER));
-						return true;
-					}
-
-				}
-            } else {
-				notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
-			}
-        }
-
-        notice(pNick,getMsgString(ERR_NOT_OWNER));
-    } else if (cmd_id >= CMD_FRIEND) {
-        // check the  login status
-        if (!exist_db(NICKTOUSER_DB,pNetmask)) {
-            notice(pNick,getMsgString(ERR_NOT_LOGON));
-        } else {
-            // check the existe of a channel parameter
-            if (pChannel=getAccessChannel(pLine)) {
-				if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
-
-					pKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char*));
-					sprintf(pKey,"%s%s",pLogin,pChannel);
-
-					if ((pMod=get_db(ACCESS_DB,pKey))) {
-						if (strchr(pMod,'v')) {	return true;}
-                        if (strchr(pMod,'o')) {	return true;}
-					} else if (exist_db(ACCESS_DB,pLogin)) {
-						notice(pNick,getMsgString(OK_MASTER));
-						return true;
-					}
-
-				}
-            } else {
-				notice(pNick,getMsgString(ERR_NOT_CHANNELOPT));
-			}
-        }
-
-        notice(pNick,getMsgString(ERR_NOT_FRIEND)); 
-    }  else if (cmd_id >= CMD_LOGGED) {
-        // check  login status
-        if (!exist_db(NICKTOUSER_DB,pNetmask)) {
-            notice(pNick,getMsgString(ERR_NOT_LOGON));
-        } else {
-            return true;
-        }
+    if (cmd_id >= CMD_MASTER && Level==MasterLevel) {
+        ret=true;
+    }  else if (cmd_id >= CMD_OWNER && Level>= OwnerLevel) {
+        ret=true;
+    } else if (cmd_id >= CMD_FRIEND && Level>= FriendLevel) {
+        ret=true;
+    }  else if (cmd_id >= CMD_LOGGED && Level>= LoggedLevel) {
+        ret=true;
     }  else if (cmd_id >= CMD_OTHERS) {
-        return true;
+        ret=true;
     }  else if (cmd_id >= CMD_EVENT) {
-       if ((cmd_id == CMD_ONNICKCHG) || (cmd_id==CMD_ONQUIT)) {
-           // check  login status
-            if (exist_db(NICKTOUSER_DB,pNetmask)) {
-                return true;
-            }
-       } else {
-           return true;
+       if (((cmd_id == CMD_ONNICKCHG) || (cmd_id==CMD_ONQUIT)) && Level>=LoggedLevel) {
+          ret=true;;
+       } else if ((cmd_id != CMD_ONNICKCHG) && (cmd_id!=CMD_ONQUIT)) {
+           ret=true;
        }
-       return false;
     }
-
-    notice(pNick,getMsgString(ERR_NOT_ACCESS));
-    return false;
+    return ret;
 }
 // #############################################################################
 void stopParser(int sig) {

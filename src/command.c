@@ -1424,34 +1424,32 @@ void userlist(char *pLine){
 /* #########################################################################
    Bot comand: !invite <#channel> [Nick]
    ######################################################################### */
-void inviteuser(char *pLine){
-    char *pChannel;
-    char *pNick; 
+void inviteuser(MsgItem_t *pMsg){
     char *pParameter;
     char **pParts;
     char *pInviteNick;
 
-    pChannel=getAccessChannel(pLine);
-    pNick=getNickname(pLine);
     
     // extract and select the nick name  for inviting
-    if (!(pParameter=getArgument(pLine))) {
-        notice(pNick,getMsgString(ERR_NOT_PARAMETER));
+    if (!(pParameter=getArgument(pMsg->pRawLine))) {
+        notice(pMsg->pCallingNick,getMsgString(ERR_NOT_PARAMETER));
         return;
     }
     
     // extract the parameters
     pParts=splitString(pParameter,3);
 
-
-    // TODO: checke the access level. Friend can invite only himself
     // select the nickname
     if (pParts[1]== NULL) {
-            pInviteNick=pNick;
+        pInviteNick=pMsg->pCallingNick;
     } else {
-            pInviteNick=pParts[1];
+            if (pMsg->UserLevel==FriendLevel) {
+                pInviteNick=pMsg->pCallingNick;
+            } else {
+                pInviteNick=pParts[1];
+            }
     }
 
     // invite
-    invite(pChannel,pInviteNick);
+    invite(pMsg->pAccessChannel,pInviteNick);
 }
