@@ -638,7 +638,13 @@ void setTopic(MsgItem_t *pMsg) {
     	replace_db(CHANNEL_DB,pMsg->pAccessChannel,pChannelSet);
 
 
-	    topic(pMsg->pAccessChannel,sChannelData.pTopic);
+        /* set or remove the topic on the  irc server */
+        if (sChannelData.pTopic) {
+            topic(pMsg->pAccessChannel,sChannelData.pTopic);
+        } else {
+            topic(pMsg->pAccessChannel,"");
+        }
+	    
 
 	    /* message */
     	if (!sChannelData.pTopic) {

@@ -20,4 +20,4 @@ ToDo List
 - NLS Support
 - checking of all commands
 - ask for inviting in a invitei mode channel
-- fixe memory leaks
+- remove memory leaks

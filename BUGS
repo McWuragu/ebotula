@@ -3,4 +3,3 @@
 - The bot don't join a channel after the  inviting from a other user
 - restart at  root not  realy work
 - memory leaks
-- command !topic with no parameter crashed
