@@ -101,8 +101,9 @@ void help(MsgItem_t *pMsg) {
         /* Help for a command */
         for (i=CMD_OTHERS+1;i<CMDCOUNT;i++) {
             if (!strcmp((char*)CmdList[i],&pParameter[1])) {
+                int nCmdHelpID;
                 DEBUG("Command found %d\n",i);
-                int nCmdHelpID=CmdIdToHelpId(i);
+                nCmdHelpID=CmdIdToHelpId(i);
 
                 /* the headi for help */
                 pMsgPart=getMsgString(INFO_HELP_FOR);
@@ -337,30 +338,34 @@ void addChannel(MsgItem_t *pMsg) {
         return;
     }
 
+    /* check that the command channel and  access channel are diffrence	*/
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
          if (!strcmp(pMsg->pAccessChannel,pCmdChannel)) {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
-        } else {
-            DEBUG("Join and  try to add the channnel %s\n",pMsg->pAccessChannel);
-
-            /* checking of channel exist */
-            if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
-            } else {
-                /* add channel */
-                channelmod=(char *)malloc(3*sizeof(char));
-                strcpy(channelmod,"\t\t");
-                add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
-                sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
-            }
-        
-            /* join the channel */
-            join(pMsg->pAccessChannel);
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
-        }
-        free(pCmdChannel);
+			return;
+		}
+		free(pCmdChannel);
     }
+            
+    DEBUG("Join and  try to add the channnel %s\n",pMsg->pAccessChannel);
+
+    /* checking of channel exist */
+    if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
+		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_ADDCHANNEL_ALREADY));
+		return;
+    } else {
+		/* add channel */
+		channelmod=(char *)malloc(3*sizeof(char));
+		strcpy(channelmod,"\t\t");
+		add_db(CHANNEL_DB,pMsg->pAccessChannel,channelmod);
+		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_ADDCHANNEL));
+    }
+
+    /* join the channel */
+    join(pMsg->pAccessChannel);
+    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
 }
+
 /* #########################################################################
    Bot comand: !rmchannel <#channel>
    ######################################################################### */
@@ -404,14 +409,15 @@ void joinChannel(MsgItem_t *pMsg) {
         /* compare the current channel and  the channel for joining */
         if (!(strcmp(pMsg->pAccessChannel,pCmdChannel))) {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(ERR_NOT_CHANNELOPT));
-        } else {
-            DEBUG("Join the channel %s\n",pMsg->pAccessChannel);
-            /* join the channel */
-            join(pMsg->pAccessChannel);
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
-        }
-        free(pCmdChannel);
-    }
+			return;
+		}
+		free(pCmdChannel);
+	}
+	DEBUG("Join the channel %s\n",pMsg->pAccessChannel);
+	
+	/* join the channel */
+	join(pMsg->pAccessChannel);
+	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,getMsgString(OK_JOIN));
 }
 /* #########################################################################
    Bot comand: !part <#channel>
