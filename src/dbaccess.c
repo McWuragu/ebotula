@@ -62,11 +62,13 @@ void initDatabases(void) {
     if (!(pDir=opendir(sSetup.pDatabasePath))) {
         errno=0;
         if (mkdir(sSetup.pDatabasePath,0700)) {
-            syslog(LOG_ERR,getSyslogString(SYSLOG_CREATE_DIR_ERR));
+            /* syslog(LOG_ERR,getSyslogString(SYSLOG_CREATE_DIR_ERR));*/
+            logger(LOG_ERR,getSyslogString(SYSLOG_CREATE_DIR_ERR));
             perror(getSyslogString(SYSLOG_CREATE_DIR_ERR));
             exit(errno);
         } else {
-            syslog(LOG_INFO,getSyslogString(SYSLOG_CREATE_DIR));
+            /*syslog(LOG_INFO,getSyslogString(SYSLOG_CREATE_DIR));*/
+	    logger(LOG_INFO,getSyslogString(SYSLOG_CREATE_DIR));
         }
     }
     closedir(pDir);
@@ -81,8 +83,9 @@ void initDatabases(void) {
         
         if (!dbf[i]) {
             //errno=EBUSY;
-            syslog(LOG_ERR,getSyslogString(SYSLOG_DATABASE_ERR));
-            perror(getSyslogString(SYSLOG_DATABASE_ERR));
+            /*syslog(LOG_ERR,getSyslogString(SYSLOG_DATABASE_ERR));*/
+            logger(LOG_ERR,getSyslogString(SYSLOG_DATABASE_ERR));
+	    perror(getSyslogString(SYSLOG_DATABASE_ERR));
             exit(errno);
         }
 
@@ -91,7 +94,8 @@ void initDatabases(void) {
 
         free(pDBPath);
     }
-    syslog(LOG_INFO,getSyslogString(SYSLOG_INIT_DB));
+    /*syslog(LOG_INFO,getSyslogString(SYSLOG_INIT_DB));*/
+    logger(LOG_INFO,getSyslogString(SYSLOG_INIT_DB));
 }
 // ############################################################################# 
 void closeDatabase(void) {

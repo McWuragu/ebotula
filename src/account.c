@@ -222,7 +222,8 @@ void rmDeadAccounts(long lCheckTime) {
         	/* check the time */
     	    if (lCheckTime>atol(pTime)) {
 	            rmAccount((char*)pLogin->data);
-            	syslog(LOG_NOTICE,getSyslogString(SYSLOG_ACCOUNT_RM));
+            	/* syslog(LOG_NOTICE,getSyslogString(SYSLOG_ACCOUNT_RM));*/
+		logger(LOG_NOTICE,getSyslogString(SYSLOG_ACCOUNT_RM));
         	}
         	free(pTime);
 		}

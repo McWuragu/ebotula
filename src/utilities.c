@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <unistd.h>
 #include <errno.h>
 #include <ctype.h>
@@ -282,3 +283,30 @@ boolean NickStringCheck(char *const pStr) {
     }
     return false;
 }
+// ############################################################################# 
+int logger(int priority, char *format, ...)
+{
+	char *buf;
+	va_list az;
+	
+	/* alocating tempory buffer*/
+	if ((buf=(char *)malloc(4096*sizeof(char)))==NULL)
+	{
+		fprintf(stderr,"Error: while allocating memory\n");
+		return -1;
+	}
+	/**/
+	va_start(az,format);
+	/* put message in to data*/
+	vsprintf(buf,format,az);
+#ifndef NDEBUG
+	syslog(priority,buf);
+#else
+	DEBUG(buf);
+#endif
+	/**/
+	va_end(az);
+	free(buf);
+	return 0;
+}
+

@@ -76,9 +76,10 @@ void write_baseconfig()
     /* Create & Openfile*/
 	if ((fd=fopen(sSetup.configfile,"wb"))==NULL)
 	{
-        perror(getSyslogString(SYSLOG_CONFIG_FILE));
-        syslog(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE));
-        exit(errno);
+        	perror(getSyslogString(SYSLOG_CONFIG_FILE));
+		/* syslog(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE));**/
+		logger(LOG_ERR,getSyslogString(SYSLOG_CONFIG_FILE)); 
+		exit(errno);
 	}
 		/* writingd data to file */
 		/* Version string */

@@ -103,6 +103,14 @@ void clearspace(char *pStr);
 
 boolean ChannelStringCheck(char *const pStr);
 boolean NickStringCheck(char *const pStr);
-
+/**
+* logging all data to syslog or debug
+*
+* @param syslog-prirorty code
+* 	 format string
+* 	 ....
+* @return -1 if error 
+*/
+int logger(int priority, char *format, ...);
 #endif
 
