@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include <time.h>
+#include <sys/utsname.h>
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -1392,9 +1393,12 @@ void ctcpping(MsgItem_t *pMsg) {
 void ctcpversion(MsgItem_t *pMsg) {
     char pMsgStr[256];
     char pVerStr[256];
+    struct utsname env;
+
+    uname(&env);
     /* creat Versions String */
-    sprintf(pVerStr,VERSIONSTR);
-    sprintf(pMsgStr,"\001VERSION %s\001",pVerStr);
+    /* sprintf(pVerStr,VERSIONSTR); */
+    sprintf(pMsgStr,"\001VERSION %s:v%s:%s %s %s\001",PACKAGE,VERSION,env.sysname,env.release,env.machine);
     notice(pMsg->pCallingNick,pMsgStr);
     return;
 }
