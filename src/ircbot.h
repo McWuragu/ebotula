@@ -19,6 +19,10 @@
 #define DEFAULT_BOTNAME			"Ebotula"
 #define DEFAULT_PING_TIMEOUT	90
 
+#define DEFAULT_SEND_SAFE_DELAY 1500
+#define DEFAULT_SEND_DELAY      750
+#define DEFAULT_SEND_SAFE_LINE  25
+
 #define MIN_LOGOFF				1
 #define MIN_ALT					1
 #define MIN_PINGTIME			60
@@ -39,10 +43,11 @@
 #define KEY_THREADLIMIT		"threadlimit"
 #define	KEY_DATABASEPATH	"databasepath"
 #define KEY_AUTOLOGOFF		"autologoff"
-#define KEY_SENDDELAY		"senddelay"
+#define KEY_SENDDELAY		"firstsenddelay"
 #define KEY_ALT				"accountlivetime"
 #define KEY_PINGTIMEOUT		"pingtimeout"
-
+#define KEY_SENDSAFEDELAY   "secsenddelay"
+#define KEY_SENDSAFELINE    "firstsendline"
 
 
 #endif												
