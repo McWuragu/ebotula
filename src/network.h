@@ -11,7 +11,7 @@
 #define NETWORK_H
 
 
-void irc_connect(void);
+void ConnectToIrc(void);
 void join_all_channels(void);
 
 /// connect to the server
