@@ -55,6 +55,7 @@ int main(int argc,const char *argv[]) {
 	char buffer[RECV_BUFFER_SIZE],*pos,*str,*tmp;
 	pthread_t *threads;
 	pthread_t timeThread;
+	MsgBufType sMsg;
 	
 	// init config
 	sSetup.botname=(char *)malloc((strlen(DEFAULT_BOTNAME)+1)*sizeof(char));
@@ -75,7 +76,6 @@ int main(int argc,const char *argv[]) {
 	
 
 	// container for a message for the queue
-	MsgBufType sMsg;
 	bzero(&sMsg,sizeof(MsgBufType));
     
 	// versions ausgabe
