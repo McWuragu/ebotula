@@ -53,9 +53,9 @@ void help(char *pLine) {
 		
 		// Header of help message 
 
-		for (i=0;irchelp_msg[0][i]!=NULL;i++) {
+		for (i=0;pIrcHelp[0][i]!=NULL;i++) {
 			// look for the end  of msg 
-			notice(pNick,irchelp_msg[0][i]);
+			notice(pNick,pIrcHelp[0][i]);
 		}	 
 	
 		// checking  login and  master status 
@@ -73,7 +73,7 @@ void help(char *pLine) {
 			}
 
 			// calculat the length of buffer 
-			pMsgStr=(char *)calloc(HELP_TAB+1+strlen((char*)irchelp_msg[CmdIdToHelpId(i)][0]),sizeof(char));
+			pMsgStr=(char *)calloc(HELP_TAB+1+strlen((char*)pIrcHelp[CmdIdToHelpId(i)][0]),sizeof(char));
 						
 			// build string 
 			strcpy(pMsgStr,CmdList[i]);
@@ -82,9 +82,8 @@ void help(char *pLine) {
 			for (j=0;j<iLength;j++) {
 				strcat(pMsgStr," ");
 			}
-			strcat(pMsgStr,(char*)irchelp_msg[CmdIdToHelpId(i)][0]);
-			
-			// send notice 
+			strcat(pMsgStr,(char*)pIrcHelp[CmdIdToHelpId(i)][0]);
+            // send notice 
 			notice(pNick,pMsgStr);
 		}
 		// the tail
@@ -110,13 +109,20 @@ void help(char *pLine) {
 			if (!strcmp((char*)CmdList[i],&pParameter[1])) {
 				DEBUG("Command found %d",i);
 
-				// the head	for help
+				// the headi for help
 				pTmp=(char*)malloc((strlen(MSG_HELP_FOR)+strlen((char *)CmdList[i])+3)*sizeof(char));
 				sprintf(pTmp,"%s %s:",MSG_HELP_FOR,pParameter);
 				notice(pNick,pTmp);
+				
+				// print  the  help text 
+				for (j=1;pIrcHelp[CmdIdToHelpId(i)][j]!=NULL;j++) {
+					notice(pNick,(char*)pIrcHelp[CmdIdToHelpId(i)][j]);
+				}
 
-				for (j=0;irchelp_msg[CmdIdToHelpId(i)][j]!=NULL;j++) {
-					notice(pNick,(char*)irchelp_msg[CmdIdToHelpId(i)][j]);
+				// syntax from the command
+				notice(pNick,pIrcSyntax[0][0]);
+				for (j=0;pIrcSyntax[CmdIdToHelpId(i)][j]!=NULL;j++) {
+					notice(pNick,(char*)pIrcSyntax[CmdIdToHelpId(i)][j]);
 				}
 				notice(pNick,MSG_HELP_END);
 				return;
