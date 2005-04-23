@@ -188,6 +188,9 @@ void hSetModUser(char *pLine) {
 void hResetModes(char *pLine) {
     extern ConfigSetup_t sSetup;
     char *pPos;
+    char *pModeFirst=NULL;
+    char *pModeSec=NULL;
+    char *pModeCurr;
     char *pChannel;
     char *pChannelStr;
     char *pData;
@@ -199,6 +202,8 @@ void hResetModes(char *pLine) {
     ChannelData_t ChannelSet;
     extern CallbackDList CallbackList;
     CallbackItem_t *Callback;
+    boolean bSet,bContains;
+    unsigned int nStrSize,i;
     
     
 
@@ -208,9 +213,6 @@ void hResetModes(char *pLine) {
   
     pChannel=getFirstPart(pRest,&pRest);
     pMode=getFirstPart(pRest,&pRest);
-    pNick=getFirstPart(pRest,&pRest);
-    StrToLower(pNick);
-    free(pRest);
     
     /* extract  the nick */
     pAccessNick=getNickname(pNetmask);
@@ -222,59 +224,78 @@ void hResetModes(char *pLine) {
         strcpy(pTmpBotName,sSetup.pBotname);
         StrToLower(pTmpBotName);
 
+
         if (strcmp(pAccessNick,pTmpBotName)!=0) {
-            if (pMode[1]=='o' || pMode[1]=='v') {
-              
-                /* check of bot new mods or  other user */
-                if (strcmp(pNick,pTmpBotName)==0) {
-                    logger(LOG_DEBUG,_("Bot get a new account mode"));
-                    /* mode set for the bot from other user of operator */
-                    /* then initiallize this  channel */
-                    if (strcmp(pMode,"+o")==0) {
-                        channelInit(pChannel);
-                    } else {
-                        action(pChannel,_("needs operator access rights."));
-                    }
-                } else {
-                    /* add callback for reset the modes for a user    */
-                    logger(LOG_DEBUG,_("Added callback routine for the reset of the account modes"));
-                    
-                    /* built the data for callback */
-                    pData=(char*)malloc((strlen(pChannel)+strlen(pMode)+1)*sizeof(char));
-                    sprintf(pData,"%s %s",pChannel,pMode);
-                    
-                    /* build  the  element*/
-                    StrToLower(pNick);
-                    Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
-                    Callback->nickname=(char*)malloc((strlen(pNick)+1)*sizeof(char));
-                    strcpy(Callback->nickname,pNick);
-                    Callback->CallbackFkt=ModeResetCb;
-                    Callback->data=pData;
-                    
-                    /* put  the  element  in the  callback list  before tail */
-                    insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
-        
-                    /* send the who*/
-                    whois(pNick);
-                }
-            } else if (pMode[1]=='b') {
-                logger(LOG_INFO,_("Ban reset not implemented jet"));
-            } else {
-                if ((pChannelStr=get_db(CHANNEL_DB,pChannel))) {
-                    StrToChannelData(pChannelStr,&ChannelSet);
-
-
-                    free(pChannelStr);
-                }
-                /* reset other mods */
-                /*
-                pPos=strstr(pLine,pMode);
-                pPos[0]=(pPos[0]=='-')?'+':'-';
-                mode(pChannel,pPos,NULL);
-                logger(LOG_DEBUG,_("Reset the channelmodes of the channel %s"),pChannel);
-                */
-            }
-        } 
+            
+//            /* splitt the mode in set and remove */
+//            pPos=strchr(pMode,pMode[0]=='+'?'-':'+');
+//            
+//            
+//            nStrSize=(pPos)?pPos-pMode:strlen(pMode);
+//            pModeFirst=(char*)malloc((nStrSize+1)+sizeof(char));
+//
+//            /* copy the first part */
+//            strncpy(pModeFirst,pMode,nStrSize);
+//            pModeFirst[nStrSize]='\0';
+//
+//            /* copy the second part if the exist */ 
+//            if (pPos) {
+//                pModeSec=(char*)malloc((strlen(pPos)+1)*sizeof(char));
+//                strcpy(pModeSec,pPos);
+//            }
+//
+//            /* set the  first part of the mode string to the current mode */
+//            pModeCurr=pModeFirst;
+//
+//            for (i=0;i<2;i++) {
+//                for (pPos=pModeCurr;*pPos!='\0';pPos++) {
+//                    /* user */
+//                    if (pPos=='o' || pPos=='v') {
+//                        /* check of bot new mods or  other user */
+//                        if (strcmp(pNick,pTmpBotName)==0) {
+//                            logger(LOG_DEBUG,_("Bot get a new account mode"));
+//                            /* mode set for the bot from other user of operator */
+//                            /* then initiallize this  channel */
+//                            if (bSet) {
+//                                channelInit(pChannel);
+//                            } else {
+//                                action(pChannel,_("needs operator access rights."));
+//                            }
+//                        } else {
+//                            /* add callback for reset the modes for a user    */
+//                            logger(LOG_DEBUG,_("Added callback routine for the reset of the account modes"));
+//                            
+//                            /* built the data for callback */
+//                            pData=(char*)malloc((strlen(pChannel)+3)*sizeof(char));
+//                            sprintf(pData,"%s %c%c",pChannel,pModeCurr[0],*pPos);
+//                            
+//                            /* build  the  element*/
+//                            Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
+//                            Callback->nickname=(char*)malloc((strlen(pNick)+1)*sizeof(char));
+//                            strcpy(Callback->nickname,pNick);
+//                            Callback->CallbackFkt=ModeResetCb;
+//                            Callback->data=pData;
+//                            
+//                            /* put  the  element  in the  callback list  before tail */
+//                            insert_prev_CallbackDList(&CallbackList,CallbackList.tail,Callback);
+//                
+//                            /* send the who*/
+//                            whois(pNick);
+//                        }
+//                    } else if (pPos=='b') {
+//                        logger(LOG_INFO,_("Ban reset not implemented jet"));
+//                    } else {
+//                        if ((pChannelStr=get_db(CHANNEL_DB,pChannel))) {
+//                            StrToChannelData(pChannelStr,&ChannelSet);
+//                               free(pChannelStr);
+//                        }
+//                    }
+//                }
+//                
+//                /* switch to the second part */
+//                if (pModeSec) {pModeCurr=pModeSec;} 
+//            }
+        }     
         free(pTmpBotName);
         free(pAccessNick);
     }
