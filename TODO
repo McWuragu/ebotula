@@ -7,6 +7,11 @@ ToDo List
 	- !state
 - implementation of the banlist (set and execute)
 - global bot master message (is like global greeting)
+- user level half op
+	- kick
+	- topic
+	- greeting
+	- userlist
 - emphasize per bold the messages
 - complete the  documentation
 - joining of a channel with keyword
