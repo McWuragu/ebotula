@@ -143,7 +143,13 @@ int ConfigFileParser(void){
     char **retString;
     char buffer[MAX_READ_BUFFER_SIZE], *c,*value,*key;
     /*errno=0; */
-
+     char *pChar;
+     short *pShort;
+     int *pInt;
+	long *pLong;
+	float *pFloat;
+	double *pDouble;	
+     
     logger(LOG_NOTICE,_("Read configuration file %s"),sSetup.configfile);
 
     if (!(fd=fopen(sSetup.configfile,"r"))) {
@@ -210,22 +216,37 @@ int ConfigFileParser(void){
 				switch(vsInputConfig[counter].iParamType)
 				{
 					case PARAM_CHAR:
-						(char)(*(char *)vsInputConfig[counter].pParam)=(char)value[0];
+						  
+/*						(char)(*(char *)vsInputConfig[counter].pParam)=(char)value[0];*/
+						pChar=((char *)vsInputConfig[counter].pParam);
+					  	*pChar=(char)value[0];
 						break;
 					case PARAM_SHORT:
-						(short)(*(short *)vsInputConfig[counter].pParam)=(short)atoi(value);
-						 break;
+					/*	(short)(*(short *)vsInputConfig[counter].pParam)=(short)atoi(value);*/
+						pShort=((short *)vsInputConfig[counter].pParam);
+						*pShort=(short)atoi(value);
+						
+					 break;
 					case PARAM_INT:
-						(int)(*(int *)vsInputConfig[counter].pParam)=(int)atoi(value);
-						break;
+						/*(int)(*(int *)vsInputConfig[counter].pParam)=(int)atoi(value);
+*/
+						pInt=((int *)vsInputConfig[counter].pParam);
+						*pInt=(int)atoi(value);
+					break;
 					case PARAM_LONG:
-						(long)(*(long *)vsInputConfig[counter].pParam)=(long)atol(value);
+/*						(long)(*(long *)vsInputConfig[counter].pParam)=(long)atol(value);*/
+						pLong=((long *)vsInputConfig[counter].pParam);
+						*pLong=(long)atol(value);
 						break;
 					case PARAM_FLOAT:
-						(float)(*(float *)vsInputConfig[counter].pParam)=(float)atof(value);
+						/*(float)(*(float *)vsInputConfig[counter].pParam)=(float)atof(value);*/
+						pFloat=((float *)vsInputConfig[counter].pParam);
+						*pFloat=(float)atof(value);
 						break;
 					case PARAM_DOUBLE:
-						(double)(*(double *)vsInputConfig[counter].pParam)=(double)atof(value);
+						/*(double)(*(double *)vsInputConfig[counter].pParam)=(double)atof(value);*/
+						pDouble=((double *)vsInputConfig[counter].pParam);
+						*pDouble=(double)atof(value);
 						break;
 					case PARAM_HEX:
 					case PARAM_STRING:
