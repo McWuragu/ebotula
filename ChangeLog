@@ -1,21 +1,25 @@
 ebotula-0.1.18
 --------------------
-- fixed the restart as root bug
+- fixed the restart as root bug (bug 28)
+- fixed the multi user modes in one line (bug 29)
 - fixed the crash of the command accountlist 
 - modified the error logging
+- modified the domain of the command line parameter -V
 - renamed the command line parameter -D to -V
-- changed the domain of the command line parameter -V
 - reimplementation of the configuration file loader
+- reimplementation the checking of self modification 
+- removed the case sensitivity of the callback list
+- removed the case sensitivity of keys for data base 
 - removed the copyright item from the version string
 
 ebotula-0.1.17
 --------------------
-- Bugfix: fixed the rejoin-after-kick bug
-- Bugfix: fixed the invalid prefix handling of a irc message
-- Bugfix: fixed the compilation without the header file syslog.h
-- Bugfix: fixed the SIGSEGV on the using of the command accountlist
-- Bugfix: fixed the SIGSEGV on the command invite (bug 17,16)
-- Bugfix: fixed the SIGSEGV on the command line parameter -f (bug 19)
+- fixed the rejoin-after-kick bug
+- fixed the invalid prefix handling of a irc message
+- fixed the compilation without the header file syslog.h
+- fixed the SIGSEGV on the using of the command accountlist
+- fixed the SIGSEGV on the command invite (bug 17,16)
+- fixed the SIGSEGV on the command line parameter -f (bug 19)
 - added the nls for the command line and log strings
 - added the nls for all error or information strings of the bot
 - added a seperate thread for the joing of the channels
@@ -32,14 +36,14 @@ ebotula-0.1.17
 
 ebotula-0.1.16
 --------------------
-- Bugfix: fixed the crash of the bot by the command topic with empty parameter
+- fixed the crash of the bot by the command topic with empty parameter
 - fixed memory leaks
 
 ebotula-0.1.15
 --------------------
-- Bugfix: fixed the command !logoff
-- Bugfix: fixed a lot of memory leaks
-- Bugfix: fixed the identification of a unkown option at the command line
+- fixed the command !logoff
+- fixed a lot of memory leaks
+- fixed the identification of a unkown option at the command line
 - removed the sending thread
 - maked the reaction time of commands shorter
 - added the cleanup of the zombies in the callback list
@@ -48,83 +52,83 @@ ebotula-0.1.15
 
 ebotula-0.1.14
 --------------------
-- Bugfix: fixed the line parser
+- fixed the line parser
 - fixed the pong return string
-- cleanup the command and event  parser
+- cleanup the command and event parser
 
 ebotula-0.1.13
 --------------------
-- Bugfix: fixed -f option
-- Bugfix: fixed -s  option
-- Bugfix: fixed the command !userlist
-- Bugfix: fixed the command !help
-- Bugfix: fixed the output of the comand !chanlist
+- fixed -f option
+- fixed -s option
+- fixed the command !userlist
+- fixed the command !help
+- fixed the output of the comand !chanlist
 - renamed the version
-- modified the  irc help struction
+- modified the irc help struction
 - added support for ctcp: ping,version,time
 - modified the sending of a response
 - maked the sending type of a response depending from the request
-- modified the  fast and slow sending  system (excess floodinf protection)
+- modified the fast and slow sending system (excess floodinf protection)
 - changed the default sending delay
-- added new error message for  wrong password
+- added new error message for wrong password
 - modified the configuration.in
 - fixed manpages
 
 ebotula-devel-0.1.12
 --------------------
-- Bugfix: fixed the bug by the access level controlling
-- Bugfix: fixed the command !hello
+- fixed the bug by the access level controlling
+- fixed the command !hello
 - modified the dialog for the creation of a master
 
 ebotula-devel-0.1.11
 --------------------
-- Bugfix: fixed SIGSEGV from the commands !addchannel and !join
-- Bugfix: fixed mode event handle
-- Bugfix: fixed online help message
-- Bugfix: fixed the crash after mode change from other user as the bot
-- Bugfix: fixed the command online help for !ban
+- fixed SIGSEGV from the commands !addchannel and !join
+- fixed mode event handle
+- fixed online help message
+- fixed the crash after mode change from other user as the bot
+- fixed the command online help for !ban
 - added the parameter user and group
 - added the option -u and -g
-- added the creating of the  direction ~/.ebotula for the user mode
+- added the creating of the direction ~/.ebotula for the user mode
 - added the changing of the uid and gid for the root mode
-- added the configuration file generator for the users and  root
+- added the configuration file generator for the users and root
 - completed the default values
 
 ebotula-devel-0.1.10
 --------------------
 - renamed the version
-- added the  rejoining after kicking
-- added the  command !invite
-- added  ebotula.spec file
+- added the rejoining after kicking
+- added the command !invite
+- added ebotula.spec file
 - added more information about the using of the bot 
-- maked better performance by seperate outgoing  thread
-- maked the  first rpm release of this version
-- modified the access level checking  implementation
+- maked better performance by seperate outgoing thread
+- maked the first rpm release of this version
+- modified the access level checking implementation
 - modified the command handler parameter and used cached information
 
 ebotula-0.1.9-dev
 -----------------
-- Bugfix: fixed segmentation fault caused by ident command
-- Bugfix: fixed joining of wrong channels at start up
-- Bugfix: fixed segmentation fault caused by logoff command
-- Bugfix: fixed kicking because of excess flooding at the initialization of
-          the channels
-- Bugfix: fixed the blocking around the logoff feature
+- fixed segmentation fault caused by ident command
+- fixed joining of wrong channels at start up
+- fixed segmentation fault caused by logoff command
+- fixed kicking because of excess flooding at the initialization of
+     the channels
+- fixed the blocking around the logoff feature
 - added simple ban command
 - added simple deban command
 
 ebotula-0.1.8-dev
 -----------------
-- Bugfix:  fixed the high cpu using
-- Bugfix:  fixed the crash after a little execution time
+- fixed the high cpu using
+- fixed the crash after a little execution time
 - a little bit of modification of the default parameters
 
 ebotula-0.1.7-dev
 -----------------
-- Bugfix: fixed the security bug in the user mode protect system
-- Bugfix: fixed the restart problem
-- Bugfix: fixed the stopping problem
-- Bugfix: better protection for kick by excess flooding added
+- fixed the security bug in the user mode protect system
+- fixed the restart problem
+- fixed the stopping problem
+- better protection for kick by excess flooding added
 - modified the output of the commands help, userlist and chanlist
 - added two new configuration parameters for excess flooding protection
 - made speed up
@@ -132,14 +136,14 @@ ebotula-0.1.7-dev
 
 ebotula-0.1.6-dev
 -----------------
-- Bugfix: fixed wrong parameter handling at !rmuser command
-- Bugfix: fixed the status loss by nick changing
+- fixed wrong parameter handling at !rmuser command
+- fixed the status loss by nick changing
 
 ebotula-0.1.5-dev
 -----------------
-- Bugfix: fixed the blocking after the command !pass
-- Bugfix: fixed the blocking after start the autologoff
-- Bugfix: fixed the SIGSEGV caused by the calling of the command !rmuser
+- fixed the blocking after the command !pass
+- fixed the blocking after start the autologoff
+- fixed the SIGSEGV caused by the calling of the command !rmuser
 
 ebotula-0.1.4-dev
 -----------------
