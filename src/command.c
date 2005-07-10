@@ -121,7 +121,7 @@ void help(MsgItem_t *pMsg) {
 
         /* Help for a command */
         for (i=CMD_FIRST;i<CMD_COUNT;i++) {
-            if (!strcmp((char*)CmdList[i],&pParameter[1])) {
+            if (strcmp((char*)CmdList[i],&pParameter[1])==0) {
                 logger(LOG_DEBUG,_("Command found %d"),i);
 
                 /* the head for help */
@@ -206,7 +206,7 @@ void password(MsgItem_t *pMsg) {
 /* #########################################################################
    Bot comand: !logoff
    ######################################################################### */
-void logoff(MsgItem_t *pMsg,int nRemoveMode) {
+void logoff(MsgItem_t *pMsg) {
     char *pLogin;
 	char *pKey;
 	char *pMode;
@@ -222,7 +222,7 @@ void logoff(MsgItem_t *pMsg,int nRemoveMode) {
 
    
 		/* only by manuel logoff then remove  the modes */
-		if (nRemoveMode) { 
+		if (pMsg->bInteractiveMode) { 
             
 			/* get channel list */
 			pChannelQueue=list_db(CHANNEL_DB);
@@ -294,7 +294,6 @@ void ident(MsgItem_t *pMsg) {
             strtok(pParameter," ");
             pLogin=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
             strcpy(pLogin,pParameter);
-            StrToLower(pLogin);
         
             logger(LOG_DEBUG,_("Look for the account %s"),pLogin);
         
@@ -357,7 +356,7 @@ void addChannel(MsgItem_t *pMsg) {
 
     /* check that the command channel and  access channel are diffrence	*/
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
-         if (!strcmp(pMsg->pAccessChannel,pCmdChannel)) {
+         if (strcmp(pMsg->pAccessChannel,pCmdChannel)==0) {
 			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
 			return;
 		}
@@ -425,7 +424,7 @@ void joinChannel(MsgItem_t *pMsg) {
 
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
         /* compare the current channel and  the channel for joining */
-        if (!(strcmp(pMsg->pAccessChannel,pCmdChannel))) {
+        if (strcmp(pMsg->pAccessChannel,pCmdChannel)==0) {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
 			return;
 		}
@@ -670,16 +669,10 @@ void greeting(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
     char *pChannelSet;
     char *greeting;
-    char *pTmpBotName;
     
     if (pMsg->pCallingNick) {
-        /* make  a bot name with small letters */
-        pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
-        strcpy(pTmpBotName,sSetup.pBotname);
-        StrToLower(pTmpBotName);
-
         /* only greeting  send  to other user */
-        if (strcmp(pMsg->pCallingNick,pTmpBotName)) {
+        if (strcasecmp(pMsg->pCallingNick,sSetup.pBotname)) {
             if (pMsg->pAccessChannel){
                 logger(LOG_DEBUG,_("Greeting for %s"),pMsg->pAccessChannel);
         
@@ -692,7 +685,6 @@ void greeting(MsgItem_t *pMsg) {
                 }
             }
         }
-        free (pTmpBotName);
     }
 }
 /* #########################################################################
@@ -753,7 +745,6 @@ void banuser(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
     CallbackItem_t *Callback;
     char *Data;
-    char *pTmpBotName;
     char *pParameter;
     char *pToBanNick;
     char *pLogin;
@@ -776,17 +767,11 @@ void banuser(MsgItem_t *pMsg) {
         return;
     }
 
-    /* make  a bot name with small letters */
-    pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
-    strcpy(pTmpBotName,sSetup.pBotname);
-    StrToLower(pTmpBotName);
-
-    if (strcmp(pToBanNick,pTmpBotName)==0) {
+    /* check the identity of target nick name */
+    if (strcasecmp(pToBanNick,sSetup.pBotname)==0) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Can't ban myself"));
-        free(pTmpBotName);
         return;
     }
-    free (pTmpBotName);
 
     /* read the login from the database */
     pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask);
@@ -795,8 +780,6 @@ void banuser(MsgItem_t *pMsg) {
     sprintf(Data,"%s %s",pLogin,pMsg->pAccessChannel);
 
     Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
-
-    StrToLower(pToBanNick);
 
     /* fill callback item */
     Callback->nickname=pToBanNick;
@@ -866,20 +849,15 @@ void kickuser(MsgItem_t *pMsg) {
     if (!pKicknick) {return;}
 
 
-    /* make  a bot name with small letters */
-    pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
-    strcpy(pTmpBotName,sSetup.pBotname);
-    StrToLower(pTmpBotName);
-
-    if (strcmp(pKicknick,pTmpBotName)==0) {
+    /* check the identity of the target nick */
+    if (strcasecmp(pKicknick,sSetup.pBotname)==0) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Can't kick myself"));
-        free(pTmpBotName);
         return;
     }
 
     /* check reason */
-    if (!pReason) {
-        /* empty reason */
+    if (!pReason) { 
+        /* default reason */
         pReason=_("You are kicked from the bot.");
     }
 
@@ -893,7 +871,6 @@ void kickuser(MsgItem_t *pMsg) {
         
                               
         /* built  and add to callback list */
-        StrToLower(pKicknick);
         Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
         Callback->CallbackFkt=KickCb;
         Callback->nickname=pKicknick;
@@ -903,7 +880,6 @@ void kickuser(MsgItem_t *pMsg) {
     
         whois(pKicknick);
     }
-    free (pTmpBotName);
 }
 /* #########################################################################
    Bot comand: !accountmode [#channel] <login> <mod>
@@ -954,14 +930,12 @@ void accountmode(MsgItem_t *pMsg){
     	/* extract the  login */
 	    pLogin=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
     	strcpy(pLogin,pParameter);
-	    StrToLower(pLogin);
-
 
     	/* check login in the user db */
 	    if (!(exist_db(USER_DB,pLogin))) {
 	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Coudn't found the account %s."),pLogin);
         	return;
-    	} else if (!strcmp(pLogin,accesslogin)) {
+    	} else if (strcmp(pLogin,accesslogin)==0) {
         	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You can't modify yourself"));
     	    return;
 	    }
@@ -1221,8 +1195,6 @@ void rmaccount(MsgItem_t *pMsg) {
         return;
     }
 
-	StrToLower(pLogin);
-    
     /* extract the first parameter */
     strtok(pLogin," ");
 
@@ -1460,7 +1432,6 @@ void inviteuser(MsgItem_t *pMsg){
     char *pParameter=NULL;
     char *pRest=NULL;
     char *pInviteNick=NULL;
-    char *pTmp=NULL;
     extern ConfigSetup_t sSetup;
     
     /* extract and select the nick name  for inviting */
@@ -1486,33 +1457,20 @@ void inviteuser(MsgItem_t *pMsg){
         }
     }
     
-    pTmp=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
-    if (!pTmp) {
-        logger(LOG_ERR,_("Couldn't allocate memory!"));
-    }else {
-        strcpy(pTmp,sSetup.pBotname);
-    
-        /* norming the strings */
-        StrToLower(pTmp);
-        StrToLower(pInviteNick);
-        
-    
-        /* check the identity */
-        /* bot can't invite himself */
-        if (!strcmp(pInviteNick,pTmp)) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Can't invite myself."));
-        } else {
-            /* invite */
-		if (pMsg->pAccessChannel)
-		{
-	            invite(pMsg->pAccessChannel,pInviteNick);
-        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user %s to the channel %s."),pInviteNick,pMsg->pAccessChannel);
-		}else
-		{
-        	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot need a channel parameter for inviting of the user %s"),pInviteNick);
-		}
-        }
-        free(pTmp);
+
+    /* check the identity */
+    /* bot can't invite himself */
+    if (strcasecmp(pInviteNick,sSetup.pBotname)==0) {
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Can't invite myself."));
+    } else {
+        /* invite */
+        if (pMsg->pAccessChannel)
+        {
+            invite(pMsg->pAccessChannel,pInviteNick);
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot has invite the user %s to the channel %s."),pInviteNick,pMsg->pAccessChannel);
+        }else {
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The bot need a channel parameter for inviting of the user %s"),pInviteNick);
+        }   
     }
     
     free(pInviteNick);

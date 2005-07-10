@@ -66,19 +66,19 @@ void closeDatabase(void);
  * 
  * @see DatabaseID_t
  */
-boolean add_db(int db,char *_key, char *_value);
+boolean add_db(const int db,const char *_key,const char *_value);
 
-boolean replace_db(int db,char *_key, char *_value);
+boolean replace_db(const int db,const char *_key,const char *_value);
 
-boolean del_db(int db,char *_key);
+boolean del_db(const int db,const char *_key);
 
-boolean check_db(int db,char *_key,char *_value);
+boolean check_db(const int db,const char *_key,const char *_value);
 
-boolean exist_db(int db,char *_key);
+boolean exist_db(const int db,const char *_key);
 
-char * get_db(int db,char *_key);
+char * get_db(const int db,const char *_key);
 
-PQueue list_db(int db);
+PQueue list_db(const int db);
 
 /**
  * convert DatabaseID_t to file descripter

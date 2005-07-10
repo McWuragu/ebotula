@@ -73,7 +73,7 @@ void trim(char *pStr);
 *
 * @param pStr is the string  for modification
 */
-void StrToLower(char *pStr);
+char * StrToLower(const char *pStr);
 
 /**
 * This convert the structure for the mode to a string

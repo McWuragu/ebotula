@@ -24,6 +24,8 @@
 #ifndef HANDLES_H
 #define HANDLES_H
 
+#include "command.h"
+
 /**
  * This  fiunction is a  helper for the initialization of a channel
  *
@@ -35,16 +37,14 @@ static void channelInit(char *pChannel);
 *	This is  the handle  for setting  a new nickname by the user.
 *   The function change the netmask inclusive  the nickname in the login databases.
 *   This is necessary for holding the login consistent
-*	@param pLine is the complete line which was received from the  irc server
 */
-void hNickChange(char *pLine);
+void hNickChange(MsgItem_t *pMsg);
 /** 
 *	This is a handle function for JOIN.
 *   This check whether the bot have  operater access rigths. If  the bot havn't operator rights
 *   then send this function a message  to the channel.
-*   @param pLine is the complete line which was received from the irc server
 */
-void hBotNeedOp(char *pLine);
+void hBotNeedOp(MsgItem_t *pMsg);
 /**
 *	This is a handle function for JOIN.
 *   This set the mod for the joined user. This function can call manuel to set or reset the
@@ -63,15 +63,13 @@ void hResetModes(char *pLine);
  * This is the handle for rest the topic. he is call by chang the topic
  * by other user as the bot self.
  *
- * @param pline the  pointer of the  receiving line  from the server
  */
-void hResetTopic(char *pLine);
+void hResetTopic(MsgItem_t *pMsg);
 
 /**
  * This is the handle for  the rejoining after  the  kick out the channel
- * @param pLine a pointer  of the receiving line from the smerver
  */
-void hRejoinAfterKick(char *pLine);
+void hRejoinAfterKick(MsgItem_t *pMsg);
 
 /**
  * This is the handle for  initialize of a channel after get

@@ -94,19 +94,22 @@ void clearspace(char *pStr) {
     }
 }
 /* #############################################################################  */
-void StrToLower(char *pStr) {
+char * StrToLower(const char *pStr) {
      unsigned int str_length,i;
+     char *pResultStr;
 
      if (!pStr) {return;}
 
      str_length=strlen(pStr);
-
-     for (i=0;i<str_length;i++) {
+     pResultStr=(char *) malloc((str_length+1)*sizeof(char));
+     if (!pResultStr) {return NULL;}
+     strcpy(pResultStr,pStr);
+     for (i=0;i<=str_length;i++) {
          if (isalpha(pStr[i])) {
-            pStr[i]=tolower(pStr[i]);
+            pResultStr[i]=tolower(pStr[i]);
          }
-    
      }
+     return pResultStr;
 }
 /* ############################################################################# */
 char *ChannelModeToStr(ChannelMode_t *pMode){

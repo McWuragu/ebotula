@@ -159,6 +159,10 @@ typedef struct MsgItem_s {
     char *pNetmask;
     /** the complete string which receive from the irc server */
     char *pRawLine;
+    /** interactive mode **/
+    boolean  bInteractiveMode;
+    /** parameter string **/
+    char *pParameter;
 } MsgItem_t;  
 
 /* ######################### Bot commands ################################ */
@@ -170,7 +174,7 @@ typedef struct MsgItem_s {
 void help(MsgItem_t *pMsg);
 void password(MsgItem_t *pMsg);
 void ident(MsgItem_t *pMsg);
-void logoff(MsgItem_t *pMsg,int iRemoveMode);
+void logoff(MsgItem_t *pMsg);
 void version(MsgItem_t *pMsg);
 void hello(MsgItem_t *pMsg);
 void addChannel(MsgItem_t *pMsg);

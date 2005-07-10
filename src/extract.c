@@ -72,7 +72,6 @@ char *getNetmask(char const *pLine){
         		pNetmask=(char *)malloc((strlen(pStr)+1)*sizeof(char));
         		strcpy(pNetmask,pStr);
         	}
-            StrToLower(pNetmask);
         }
         free(pStr);
     }
@@ -158,8 +157,6 @@ char *getChannel(char const *pLine){
         	/* extract the channelname */
         	pChannel=(char *)malloc((strlen(pPos)+1)*sizeof(char));
         	strcpy(pChannel,pPos);
-        
-        	StrToLower(pChannel);
         }
     	
         free(pPreamble);
@@ -217,7 +214,6 @@ char *getAccessChannel(char const *pLine) {
     }
     free(pParameter);
 
-	StrToLower(pChannel);
 	return pChannel;
 }
 /* ######################################################################### */

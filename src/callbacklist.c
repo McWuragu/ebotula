@@ -260,7 +260,7 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
 	temp=element;
 	if (isheadCallbackDList(element))
 	{
-		while(strcmp(temp->data->nickname,nickname)!=0 && temp->next!=NULL)
+		while(strcasecmp(temp->data->nickname,nickname)!=0 && temp->next!=NULL)
 		{
 			temp=temp->next;
 		}
@@ -268,7 +268,7 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
 	}
 	else if (istailCallbackDList(element))
 	{
-		while(strcmp(temp->data->nickname,nickname))
+		while(strcasecmp(temp->data->nickname,nickname)!=0)
 		{
             if (temp->prev) {
                 temp=temp->prev;
@@ -279,7 +279,7 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
 	}
 	else
 	{
-		while(strcmp(temp->data->nickname,nickname))
+		while(strcasecmp(temp->data->nickname,nickname)!=0)
 		{
             if (temp->next) {
                 temp=temp->next;
@@ -290,7 +290,7 @@ CallbackDListItem * searchNicknameFromCallbackDList(CallbackDList *list, Callbac
 	}
 	
     
-    if (strcmp(temp->data->nickname,nickname)==0) {
+    if (strcasecmp(temp->data->nickname,nickname)==0) {
         pthread_mutex_unlock(list->callbacklist_mutex);
         return temp;
     }

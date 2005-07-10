@@ -183,7 +183,7 @@ int ConfigFileParser(void){
 		    for(counter=0;counter<VAL_COUNT;counter++)
 		    {
 				/* search for param */
-				if (!strcmp(vsInputConfig[counter].sParamName,key))
+				if (strcmp(vsInputConfig[counter].sParamName,key)==0)
 				{
 					  /* param was already set */
 					  if (vsInputConfig[counter].isFound)

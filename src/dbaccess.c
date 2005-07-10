@@ -132,157 +132,218 @@ static GDBM_FILE get_dbf(int db) {
 
 }
 /* ############################################################################# */
-boolean add_db(int db,char *_key, char *_value) {
+boolean add_db(const int db,const char *_key,const  char *_value) {
     datum key,value;
+    boolean bResult=false;
     GDBM_FILE dbf;
     int iErr;
+    char *pKey;
+
+    /* parameters */
+    if (!_key || !_value) {return false;}
+    
+    /* copy key */
+    pKey=StrToLower(_key);
+    if (!pKey) {return false;}
 
     /* check of exist  of this key in the database */
-    CHECK_EXIST(db,_key);
+    CHECK_EXIST(db,pKey);
 
     /* get the datebase handle */
-    if ((dbf=get_dbf(db)) && _key!=NULL && _value!=NULL) {
-        key.dptr=_key;
-        key.dsize=strlen(key.dptr)+1;
+    if ((dbf=get_dbf(db))) {
+        key.dptr=pKey;
+        key.dsize=strlen(pKey)+1;
     
         /* if try to use  the  user database then make  a crypt value */
         if (db==USER_DB) {
-            value.dptr=crypt(_value,"SL");
+            char *pCrypt=crypt(_value,"SL");
+            value.dptr=(char*)malloc((strlen(pCrypt)+1)*sizeof(char));
+            strcpy(value.dptr,pCrypt);
+
         } else {
-            value.dptr=_value;
+            value.dptr=malloc((strlen(_value)+1)*sizeof(char));
+            strcpy(value.dptr,_value);
         }
+        
         value.dsize=strlen(value.dptr)+1;
         
-        
+        /* database access */
         pthread_mutex_lock(&dbaccess_mutex[db]);
-        iErr=gdbm_store(dbf,key,value,GDBM_INSERT);
+        if (!gdbm_store(dbf,key,value,GDBM_INSERT))
+            bResult=true;
         pthread_mutex_unlock(&dbaccess_mutex[db]);
         
-        if (!iErr) {
-            return true;
-        }
+        free(value.dptr);
     }
-    return false;
+
+    free(pKey);
+    return bResult;
 }
 /* ############################################################################# */
-boolean replace_db(int db,char *_key, char *_value){
+boolean replace_db(const int db,const char *_key,const char *_value){
     datum key,value;
     GDBM_FILE dbf;
+    char *pKey;
+    boolean bResult=false;
+
+    /* parameters */
+    if (!_key || !_value) {return false;}
     
+    /* copy key */
+    pKey=StrToLower(_key);
+    if (!pKey) {return false;}
+
     CHECK_NO_EXIST(db,_key);
     
     /* get the datebase handle */
-    if ((dbf=get_dbf(db)) && _key!=NULL && _value!=NULL) {
+    if ((dbf=get_dbf(db))) {
     	/* build key */
-	   	key.dptr=_key;
-	    key.dsize=strlen(key.dptr)+1;
+	   	key.dptr=pKey;
+	    key.dsize=strlen(pKey)+1;
 
     	/* distinction of user database */
 	    if (db==USER_DB) {
-    	    value.dptr=crypt(_value,"SL");
+    	    char * pCrypt=crypt(_value,"SL");
+            value.dptr=(char*)malloc((strlen(pCrypt)+1)*sizeof(char));
+            strcpy(value.dptr,pCrypt);
 	    } else {
-    	    value.dptr=_value;
-	    }
+            value.dptr=(char*)malloc((strlen(_value)+1)*sizeof(char));
+            strcpy(value.dptr,_value);
+        }
 
     	value.dsize=strlen(value.dptr)+1;
 
 	    pthread_mutex_lock(&dbaccess_mutex[db]);
-    	gdbm_store(dbf,key,value,GDBM_REPLACE);
+    	if (!gdbm_store(dbf,key,value,GDBM_REPLACE))
+            bResult=true;
 	    pthread_mutex_unlock(&dbaccess_mutex[db]);
-    
-    return true;
+
+        free (value.dptr);
 	}
 
-    return false;
+    free(pKey);
+    return bResult;
 
 }
 /* ############################################################################# */
-boolean del_db(int db,char *_key){
+boolean del_db(const int db,const char *_key){
     datum key;
     GDBM_FILE dbf;
-    int iErr;
+    char *pKey;
+    boolean bResult=false;
+
+    /* parameters */
+    if (!_key) {return false;}
+    
+    /* copy key */
+    pKey=StrToLower(_key);
+    if (!pKey) {return false;}
 
     CHECK_NO_EXIST(db,_key);
 
-    if ((dbf=get_dbf(db)) && _key!=NULL) {
+    if ((dbf=get_dbf(db))) {
         /* build the  key */
-        key.dptr=_key;
-        key.dsize=strlen(key.dptr)+1;
+        key.dptr=pKey;
+        key.dsize=strlen(pKey)+1;
         
         
         pthread_mutex_lock(&dbaccess_mutex[db]);
-        iErr=gdbm_delete(dbf,key);
+        if (!gdbm_delete(dbf,key))
+            bResult=true;
         pthread_mutex_unlock(&dbaccess_mutex[db]);
-    
-        if (!iErr) {
-            return true;
-        }
     }
-    return false;
+    free(pKey);
+    return bResult;;
 }
 /* ############################################################################# */
-boolean check_db(int db,char *_key,char* _value){
+boolean check_db(const int db,const char *_key,const char* _value){
     datum key;
     datum value;
     char *__value;
+    char *pKey;
     GDBM_FILE dbf;
     boolean bRet=false;
 
-    key.dptr=_key;
-    key.dsize=strlen(_key)+1;
+    if (!_key || !_value) { return false;}
+
+    /* normalize the key */
+    pKey=StrToLower(_key);
+    if (!pKey) {return false;}
+
+    CHECK_NO_EXIST(db,pKey);
     
-    CHECK_NO_EXIST(db,_key);
-    
-    if ((dbf=get_dbf(db)) && _key!=NULL && _value!=NULL) {
+    key.dptr=pKey;
+    key.dsize=strlen(pKey)+1;
+
+    if ((dbf=get_dbf(db))) {
         /* fetch the entry */
         pthread_mutex_lock(&dbaccess_mutex[db]);
         value=gdbm_fetch(dbf,key);
         pthread_mutex_unlock(&dbaccess_mutex[db]);
     
         if (db==USER_DB) {
-            __value=crypt(_value,"SL"); 
+            char *pCrypt=crypt(_value,"SL");
+            __value=(char*)malloc((strlen(pCrypt)+1)*sizeof(char));
+            strcpy(__value,pCrypt);
         } else {
-            __value=_value;
+            __value=(char*)malloc((strlen(_value)+1)*sizeof(char));
+            strcpy(__value,_value);
         }
     
         /* checke  the values */
-        if (!strcmp(value.dptr,__value)) {
+        if (strcmp(value.dptr,__value)==0) {
             bRet=true;
         }
 
         free(value.dptr);
+        free(__value);
     }
+
+    free(pKey);
     return bRet;
 }
 /* ############################################################################# */
-boolean exist_db(int db,char *_key){
+boolean exist_db(const int db,const char *_key){
     datum key;
     GDBM_FILE dbf;
-    int iRet;
+    int iRet=0;
+    char *pKey;
 
-    if ((dbf=get_dbf(db)) && _key!=NULL) {
-        key.dptr=_key;
-        key.dsize=strlen(key.dptr)+1;
+    if (!_key) { return false;}
+
+    /* normalize the key */
+    pKey=StrToLower(_key);
+    if (!pKey) {return false;}
+
+    if ((dbf=get_dbf(db))) {
+        key.dptr=pKey;
+        key.dsize=strlen(pKey)+1;
     
         pthread_mutex_lock(&dbaccess_mutex[db]);
         iRet=gdbm_exists(dbf,key);
         pthread_mutex_unlock(&dbaccess_mutex[db]);
-    
-        return iRet;
     }
-    return false;
+    free(pKey);
+
+    return iRet;
 }
 /* ############################################################################# */
-char * get_db(int db,char *_key){
+char * get_db(const int db,const char *_key){
     datum key,value;
     GDBM_FILE dbf;
     char *str=NULL;
+    char *pKey;
 
+    if (!_key) { return NULL;}
 
-    if ((dbf=get_dbf(db)) && _key!=NULL) {
+    /* normalize the key */
+    pKey=StrToLower(_key);
+    if (!pKey) {return NULL;}
+
+    if ((dbf=get_dbf(db))) {
     
-	    key.dptr=_key;
-	    key.dsize=strlen(key.dptr)+1;
+	    key.dptr=pKey;
+	    key.dsize=strlen(pKey)+1;
     
 	    pthread_mutex_lock(&dbaccess_mutex[db]);
 	    value=gdbm_fetch(dbf,key);
@@ -293,13 +354,14 @@ char * get_db(int db,char *_key){
 	    	strcpy(str,value.dptr);
     		free(value.dptr);
 	    }
-    	return str;
 	}
+
+    free(pKey);
     
-    return NULL;
+    return str;
 }
 /* ############################################################################# */
-PQueue list_db(int db){
+PQueue list_db(const int db){
     PQueue pList;
 	QueueData QueueItem;
 	GDBM_FILE dbf;

@@ -49,7 +49,6 @@ void ModeResetCb(char *pNetmask,void* data){
     char *pLogin=NULL;
     char *pNick=NULL;
     char *pMod=NULL;
-    char *pTmpBotName=NULL;
 
 	logger(LOG_DEBUG,_("Callback routine for the reset of the modes"));
 
@@ -58,13 +57,6 @@ void ModeResetCb(char *pNetmask,void* data){
     pNick=getNickname(pNetmask);
 
     if (pNick) {
-        StrToLower(pNetmask);
-        
-        /* make  a bot name with small letters */
-        pTmpBotName=(char*)malloc((strlen(sSetup.pBotname)+1)*sizeof(char));
-        strcpy(pTmpBotName,sSetup.pBotname);
-        StrToLower(pTmpBotName);
-
         if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
             logger(LOG_DEBUG,_("Reset the account modes for the identified account %s"),pLogin);
     
@@ -100,14 +92,13 @@ void ModeResetCb(char *pNetmask,void* data){
             }
             free(pAccessKey);
             free(pLogin);
-        } else if (pOldMode[0]=='+' && strcmp(pNick,pTmpBotName)) {
+        } else if (pOldMode[0]=='+' && strcasecmp(pNick,sSetup.pBotname)) {
             logger(LOG_DEBUG,_("Reset the account mode for user %s"),pNick);
             /* reset the mode for not identify user */
             pOldMode[0]='-';
             mode(pChannel,pOldMode,pNick);
         }
 
-        free(pTmpBotName);
 	free(pNick);
     }
     free(pChannel);
@@ -134,7 +125,6 @@ void SetBanCb(char *pNetmask,void * data){
     pChannel=getFirstPart(pRest,NULL);
     free(pRest);
 
-    StrToLower(pNetmask);
     pBanmask=getBanmask(pNetmask);
     pDestLogin=get_db(NICKTOUSER_DB,pNetmask);
     pCmdNick=getNickname(get_db(USERTONICK_DB,pLogin));
@@ -180,7 +170,6 @@ void KickCb(char *pNetmask, void *data) {
     pChannel=getFirstPart(pReason,&pReason);
 
     /* get user information */
-    StrToLower(pNetmask);
     pLogin=get_db(NICKTOUSER_DB,pNetmask);
     pCmdNetmask=get_db(USERTONICK_DB,pCmdLogin);
     pCmdNick=getNickname(pCmdNetmask);

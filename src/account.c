@@ -110,10 +110,6 @@ void log_on(char *pNetmask,char *pLogin) {
     char pTime[32];
     char *pOldNetmask;
 
-    StrToLower(pLogin);
-    StrToLower(pNetmask);
-
-
     pthread_mutex_lock(&mutexAccount);
     if (exist_db(USERTONICK_DB,pLogin)) {
         /* relog on */
@@ -159,7 +155,6 @@ void log_out(char *pLogin) {
 /* ############################################################################# */
 void __log_out(char *pLogin) {
     char *pNetmask;
-    StrToLower(pLogin);
     if ((pNetmask=get_db(USERTONICK_DB,pLogin))){
         /* Log off */
 	    del_db(NICKTOUSER_DB,pNetmask);

@@ -179,6 +179,8 @@ void *CommandExecutionThread(void *argv) {
             sMsgItem.AnswerMode=getAnswerMode(pMsg->pMsgLine);
             sMsgItem.UserLevel=getUserLevel(sMsgItem.pAccessChannel,sMsgItem.pNetmask);
             sMsgItem.pRawLine=pMsg->pMsgLine;
+            sMsgItem.bInteractiveMode=true;
+            sMsgItem.pParameter=getParameters(pMsg->pMsgLine);
             
             /* check the access level */
             if (AccessRight(sMsgItem.UserLevel,pMsg->identify)) {
@@ -187,19 +189,19 @@ void *CommandExecutionThread(void *argv) {
                 switch (pMsg->identify) {
                 /* Event handler */
                 case CMD_ONPING:
-					pong(NULL);
+                    pong(NULL);
                     break;
                 case CMD_ONNICKCHG:
-                    hNickChange(sMsgItem.pRawLine);
+                    hNickChange(&sMsgItem);
                     break;
                 case CMD_ONMODE:
                     hResetModes(sMsgItem.pRawLine);
                     break;
                 case CMD_ONKICK:
-                    hRejoinAfterKick(sMsgItem.pRawLine);
+                    hRejoinAfterKick(&sMsgItem);
                     break;
                 case CMD_ONTOPIC:
-                    hResetTopic(sMsgItem.pRawLine);
+                    hResetTopic(&sMsgItem);
                     break;
                 case CMD_ONWHOIS:
                     hCallback(sMsgItem.pRawLine);
@@ -208,7 +210,7 @@ void *CommandExecutionThread(void *argv) {
                     hWhoisFailed(sMsgItem.pRawLine);
                     break;
                 case CMD_ONNAMES:
-                    hBotNeedOp(sMsgItem.pRawLine);
+                    hBotNeedOp(&sMsgItem);
                     break;
                 case CMD_ONJOIN:
                     hSetModUser(sMsgItem.pRawLine);
@@ -218,9 +220,11 @@ void *CommandExecutionThread(void *argv) {
                     greeting(&sMsgItem);
                     break;
                 case CMD_ONQUIT:
-                    logoff(&sMsgItem,false);
+                    sMsgItem.bInteractiveMode=false;
+                    logoff(&sMsgItem);
+                    break;
                 case CMD_LOGOFF:
-                    logoff(&sMsgItem,true);
+                    logoff(&sMsgItem);
                     break;
                 case CMD_HELP:
                     help(&sMsgItem);

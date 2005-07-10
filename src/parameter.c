@@ -324,7 +324,6 @@ boolean dialogMaster(void){
     fgets(name,LOGIN_LENGTH,stdin);
 
     trim(name);
-    StrToLower(name);
 
     /* check loging */
     if (!NickStringCheck(name) || !strlen(name)) {
@@ -359,7 +358,7 @@ boolean dialogMaster(void){
 		      
     
     /* check the password */
-    if (strcmp(passwd,repasswd)) {
+    if (strcmp(passwd,repasswd)!=0) {
         logger(LOG_ERR,_("Typing error... passwords not equal\n"));
         return false;
     } else if (strpbrk(passwd," \t")) {
