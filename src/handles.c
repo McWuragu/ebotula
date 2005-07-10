@@ -269,7 +269,7 @@ void hResetModes(char *pLine) {
                         /* channel modes   */
                     } else {
                         /* unknown Mode */
-                        logger(LOG_DEBUG,"Ignore mode switch \"%s%s\"",cModeChr,pMode[i]);
+                        logger(LOG_DEBUG,"Ignore mode switch \"%c%c\"",cModeChr,pMode[i]);
                     }
 
                 }
