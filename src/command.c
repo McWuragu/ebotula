@@ -45,6 +45,7 @@
 #include "callbacklist.h"
 #include "callback.h"
 #include "command.h"
+#include "cmdlist.h"
 
 
 /* #########################################################################
@@ -87,8 +88,8 @@ void help(MsgItem_t *pMsg) {
             pMsgStr=(char *)calloc(HELP_TAB+1+strlen(IRCHelp->pShort),sizeof(char));
 
             /* build string */
-            strcpy(pMsgStr,CmdList[i]);
-            iLength=HELP_TAB-strlen(CmdList[i]);
+            strcpy(pMsgStr,CmdHandleField[i].pCmdString);
+            iLength=HELP_TAB-strlen(CmdHandleField[i].pCmdString);
             
             /* fill */
             for (j=0;j<iLength;j++) {
@@ -121,12 +122,12 @@ void help(MsgItem_t *pMsg) {
 
         /* Help for a command */
         for (i=CMD_FIRST;i<CMD_COUNT;i++) {
-            if (strcmp((char*)CmdList[i],&pParameter[1])==0) {
+            if (strcmp((char*)CmdHandleField[i].pCmdString,&pParameter[1])==0) {
                 logger(LOG_DEBUG,_("Command found %d"),i);
 
                 /* the head for help */
                 pMsgPart=_("Help for");
-                pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdList[i])+4)*sizeof(char));
+                pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdHandleField[i].pCmdString)+4)*sizeof(char));
                 sprintf(pTmp,"%s %s:",pMsgPart,pParameter);
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pTmp);
                 free(pTmp);
@@ -1475,49 +1476,5 @@ void inviteuser(MsgItem_t *pMsg){
     
     free(pInviteNick);
 }
-/* #########################################################################
-   Bot comand: \001PING <ID>\001
-   ######################################################################### */
-void ctcpping(MsgItem_t *pMsg) {
-    char *pPing;
-    char pPong[64];
-   if ((pPing=strstr(pMsg->pRawLine," :\001"))==NULL) {
- 	/* ignoring errors */
-        return;
-    }
-   pPing+=2;
-   sprintf(pPong,"%s",pPing);
-   notice(pMsg->pCallingNick,pPong);
-}
-/* #########################################################################
-   Bot comand: \001VERSION\001
-   ######################################################################### */
-void ctcpversion(MsgItem_t *pMsg) {
-    char pMsgStr[256];
-    /*char pVerStr[256];*/
-    struct utsname env;
 
-    uname(&env);
-    /* creat Versions String */
-    /* sprintf(pVerStr,VERSIONSTR); */
-    sprintf(pMsgStr,"\001VERSION %s:v%s:%s %s %s\001",PACKAGE,PACKAGE_VERSION,env.sysname,env.release,env.machine);
-    notice(pMsg->pCallingNick,pMsgStr);
-    return;
-}
-/* #########################################################################
-   Bot comand: \001TIME\001
-   ######################################################################### */
-void ctcptime(MsgItem_t *pMsg) {
-	char pMsgStr[64];
-	time_t t;
-	struct tm *pTm;
-	time(&t);
-	/* UTC-TIME */
-	/* pTm=gmtime(&t);*/
-	/* localtime */
-	pTm=localtime(&t);
-	strftime(pMsgStr,63,"\001TIME %a %b %d %H:%M:%S\001",pTm);
-	notice(pMsg->pCallingNick,pMsgStr);
-	return;
-}
 

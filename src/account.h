@@ -24,6 +24,8 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
+#include "type.h"
+
 /**
  * the definition of the userlevel
  * 

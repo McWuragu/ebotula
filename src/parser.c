@@ -27,6 +27,7 @@
 #include <string.h>
 #include <errno.h>
 #include <pthread.h>
+#include <assert.h>
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -35,9 +36,8 @@
 #include "extract.h"
 #include "irc.h"
 #include "dbaccess.h"
-#include "command.h"
+#include "cmdlist.h"
 #include "queue.h"
-#include "handles.h"
 #include "utilities.h"
 #include "messages.h"
 #include "parser.h"
@@ -71,7 +71,7 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
 
     /* preparse the line */
     /* identify events and commands */
-    if (!strncmp(pPos,CmdList[CMD_ONPING],strlen(CmdList[CMD_ONPING]))) {
+    if (!strncmp(pPos,CmdHandleField[CMD_ONPING].pCmdString,strlen(CmdHandleField[CMD_ONPING].pCmdString))) {
         /*
          * The ping can't send over the threads. If you have high usage of the
          * threads then is the execution the pong request to slow. It must send
@@ -85,35 +85,40 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
 			pStr++; /* get next symbol */
 			pong(pStr);
 		}
-	} else if (!strncmp(pPos,CmdList[CMD_ONQUIT],strlen(CmdList[CMD_ONQUIT]))) {
+	} else if (!strncmp(pPos,CmdHandleField[CMD_ONQUIT].pCmdString,strlen(CmdHandleField[CMD_ONQUIT].pCmdString))) {
         pMsg->identify=CMD_ONQUIT;
-    } else if (!strncmp(pPos,CmdList[CMD_ONJOIN],strlen(CmdList[CMD_ONJOIN]))) {
+    } else if (!strncmp(pPos,CmdHandleField[CMD_ONJOIN].pCmdString,strlen(CmdHandleField[CMD_ONJOIN].pCmdString))) {
         pMsg->identify=CMD_ONJOIN;
-    } else if (!strncmp(pPos,CmdList[CMD_ONNICKCHG],strlen(CmdList[CMD_ONNICKCHG]))) {
+    } else if (!strncmp(pPos,CmdHandleField[CMD_ONNICKCHG].pCmdString,strlen(CmdHandleField[CMD_ONNICKCHG].pCmdString))) {
         pMsg->identify= CMD_ONNICKCHG;
-    } else if (!strncmp(pPos,CmdList[CMD_ONMODE],strlen(CmdList[CMD_ONMODE]))) {
+    } else if (!strncmp(pPos,CmdHandleField[CMD_ONMODE].pCmdString,strlen(CmdHandleField[CMD_ONMODE].pCmdString))) {
         pMsg->identify= CMD_ONMODE;
-    } else if (!strncmp(pPos,CmdList[CMD_ONKICK],strlen(CmdList[CMD_ONKICK]))) {
+    } else if (!strncmp(pPos,CmdHandleField[CMD_ONKICK].pCmdString,strlen(CmdHandleField[CMD_ONKICK].pCmdString))) {
         pMsg->identify= CMD_ONKICK;
-    } else if (!strncmp(pPos,CmdList[CMD_ONTOPIC],strlen(CmdList[CMD_ONTOPIC]))) {
+    } else if (!strncmp(pPos,CmdHandleField[CMD_ONTOPIC].pCmdString,strlen(CmdHandleField[CMD_ONTOPIC].pCmdString))) {
         pMsg->identify= CMD_ONTOPIC;
-    } else if (!strncmp(pPos,CmdList[CMD_ONNAMES],strlen(CmdList[CMD_ONNAMES]))) {
+    } else if (!strncmp(pPos,CmdHandleField[CMD_ONNAMES].pCmdString,strlen(CmdHandleField[CMD_ONNAMES].pCmdString))) {
         pMsg->identify=CMD_ONNAMES;
-    } else if (!strncmp(pPos,CmdList[CMD_ONWHOIS],strlen(CmdList[CMD_ONWHOIS]))) {
+    } else if (!strncmp(pPos,CmdHandleField[CMD_ONWHOIS].pCmdString,strlen(CmdHandleField[CMD_ONWHOIS].pCmdString))) {
         pMsg->identify=CMD_ONWHOIS;
-    } else if (!strncmp(pPos,CmdList[CMD_ONNONICK],strlen(CmdList[CMD_ONNONICK]))) {
+    } else if (!strncmp(pPos,CmdHandleField[CMD_ONNONICK].pCmdString,strlen(CmdHandleField[CMD_ONNONICK].pCmdString))) {
         pMsg->identify=CMD_ONNONICK;
-    } else if (!strncmp(pPos,CmdList[CMD_ONPRIVMSG],strlen(CmdList[CMD_ONPRIVMSG])) ||
-               !strncmp(pPos,CmdList[CMD_ONNOTICE],strlen(CmdList[CMD_ONNOTICE]))) {
+    } else if (!strncmp(pPos,"PRIVMSG",strlen("PRIVMSG")) ||
+               !strncmp(pPos,"NOTICE",strlen("NOTICE"))) {
         if ((pStr=strstr(pLine," :!"))!=NULL) {
             /* bot command parser */
             if (strlen(pStr)>=3) {
                 pStr+=3;
                 
                 for (i=CMD_FIRST;i<CMD_COUNT;i++) {
-                    if (!strncmp(pStr,CmdList[i],strlen(CmdList[i]))){
+                    
+                    /* check the correctness of the command  array */
+                    assert(i==CmdHandleField[i].CmdId);
+
+
+                    if (!strncmp(pStr,CmdHandleField[i].pCmdString,strlen(CmdHandleField[i].pCmdString))){
                         pMsg->identify=i;
-                        logger(LOG_DEBUG,_("Found command %s"),CmdList[i]);
+                        logger(LOG_DEBUG,_("Found command %s"),CmdHandleField[i].pCmdString);
                         i=CMD_COUNT;
                     }
                 }
@@ -124,15 +129,15 @@ void preParser(char *pLine,MsgBuf_t *pMsg) {
 		if (strlen(pStr)>=3) {
                 pStr+=2;
                 /* command parser */
-               if (!strncmp(pStr,CmdList[CMD_CTCPPING],strlen(CmdList[CMD_CTCPPING]))){
+               if (!strncmp(pStr,CmdHandleField[CMD_CTCPPING].pCmdString,strlen(CmdHandleField[CMD_CTCPPING].pCmdString))){
                          pMsg->identify=CMD_CTCPPING;
-                     logger(LOG_DEBUG,_("Found ctcp command %s"),CmdList[CMD_CTCPPING]);
-                } else if (!strncmp(pStr,CmdList[CMD_CTCPVERSION],strlen(CmdList[CMD_CTCPVERSION]))){
+                     logger(LOG_DEBUG,_("Found ctcp command %s"),CmdHandleField[CMD_CTCPPING].pCmdString);
+                } else if (!strncmp(pStr,CmdHandleField[CMD_CTCPVERSION].pCmdString,strlen(CmdHandleField[CMD_CTCPVERSION].pCmdString))){
                          pMsg->identify=CMD_CTCPVERSION;
-                     logger(LOG_DEBUG,_("Found ctcp command %s"),CmdList[CMD_CTCPVERSION]);
-                } else if (!strncmp(pStr,CmdList[CMD_CTCPTIME],strlen(CmdList[CMD_CTCPTIME]))){
+                     logger(LOG_DEBUG,_("Found ctcp command %s"),CmdHandleField[CMD_CTCPVERSION].pCmdString);
+                } else if (!strncmp(pStr,CmdHandleField[CMD_CTCPTIME].pCmdString,strlen(CmdHandleField[CMD_CTCPTIME].pCmdString))){
                             pMsg->identify=CMD_CTCPTIME;
-                     logger(LOG_DEBUG,_("Found ctcp command %s"),CmdList[CMD_CTCPTIME]);
+                     logger(LOG_DEBUG,_("Found ctcp command %s"),CmdHandleField[CMD_CTCPTIME].pCmdString);
                 }
             }
         }
@@ -186,133 +191,14 @@ void *CommandExecutionThread(void *argv) {
             if (AccessRight(sMsgItem.UserLevel,pMsg->identify)) {
             
                 /* command router  */
-                switch (pMsg->identify) {
-                /* Event handler */
-                case CMD_ONPING:
-                    pong(NULL);
-                    break;
-                case CMD_ONNICKCHG:
-                    hNickChange(&sMsgItem);
-                    break;
-                case CMD_ONMODE:
-                    hResetModes(sMsgItem.pRawLine);
-                    break;
-                case CMD_ONKICK:
-                    hRejoinAfterKick(&sMsgItem);
-                    break;
-                case CMD_ONTOPIC:
-                    hResetTopic(&sMsgItem);
-                    break;
-                case CMD_ONWHOIS:
-                    hCallback(sMsgItem.pRawLine);
-                    break;
-                case CMD_ONNONICK:
-                    hWhoisFailed(sMsgItem.pRawLine);
-                    break;
-                case CMD_ONNAMES:
-                    hBotNeedOp(&sMsgItem);
-                    break;
-                case CMD_ONJOIN:
-                    hSetModUser(sMsgItem.pRawLine);
-                
-                /* Command handler */
-                case CMD_VIEWGREAT:
-                    greeting(&sMsgItem);
-                    break;
-                case CMD_ONQUIT:
-                    sMsgItem.bInteractiveMode=false;
-                    logoff(&sMsgItem);
-                    break;
-                case CMD_LOGOFF:
-                    logoff(&sMsgItem);
-                    break;
-                case CMD_HELP:
-                    help(&sMsgItem);
-                    break;
-                case CMD_VERSION:
-                    version(&sMsgItem);
-                    break;
-                case CMD_HELLO:
-                    hello(&sMsgItem);
-                    break;
-                case CMD_PASS:
-                    password(&sMsgItem);
-                    break;
-                case CMD_IDENT:
-                    ident(&sMsgItem);
-                    break;
-                case CMD_ADDCHANNEL:
-                    addChannel(&sMsgItem);
-                    break;
-                case CMD_RMCHANNEL:
-                    rmChannel(&sMsgItem);
-                    break;
-                case CMD_JOIN:
-                    joinChannel(&sMsgItem);
-                    break;
-                case CMD_PART:
-                    partChannel(&sMsgItem);
-                    break;
-                case CMD_DIE:
-                    die(&sMsgItem);
-                    break;
-                case CMD_NICK:
-                    setNick(&sMsgItem);
-                    break;
-                case CMD_CHANNELS:
-                    chanlist(&sMsgItem);
-                    break;
-                case CMD_SET_GREATING:
-                    setGreeting(&sMsgItem);
-                    break;
-                case CMD_SET_TOPIC:
-                    setTopic(&sMsgItem);
-                    break;
-                case CMD_SAY:
-                    say(&sMsgItem);
-                    break;
-                case CMD_KICK:
-                    kickuser(&sMsgItem);
-                    break;
-                case CMD_ACCOUNTMODE:
-                    accountmode(&sMsgItem);
-                    break;
-                case CMD_RMUSER:
-                    rmaccount(&sMsgItem);
-                    break;
-                case CMD_ACCOUNTLIST:
-                    accountlist(&sMsgItem);
-                    break;
-                case CMD_ALLSAY:
-                    allsay(&sMsgItem);
-                    break;
-                case CMD_CHANMODE:
-                    chanmode(&sMsgItem);
-                    break;
-                case CMD_RESTART:
-                    restart(&sMsgItem);
-                    break;
-                case CMD_BAN:
-                    banuser(&sMsgItem);
-                    break;
-                case CMD_DEBAN:
-                    debanuser(&sMsgItem);
-                    break;
-                case CMD_INVITE:
-                    inviteuser(&sMsgItem);
-                    break;
-                case CMD_CTCPPING:
-        		    ctcpping(&sMsgItem);
-        		    break;
-           		case CMD_CTCPVERSION:
-                    ctcpversion(&sMsgItem);
-                    break;
-           		case CMD_CTCPTIME:
-                    ctcptime(&sMsgItem);
-                    break;
-           		default:
+                if (pMsg->identify> CMD_NONE && pMsg->identify<CMD_COUNT) {
+                    /* check the  correctness of  command id */
+                    assert(pMsg->identify==CmdHandleField[pMsg->identify].CmdId);
+
+                    sMsgItem.bInteractiveMode=CmdHandleField[pMsg->identify].bIsCommand;
+                    CmdHandleField[pMsg->identify].CommandHandler(&sMsgItem);
+                }else{
                     logger(LOG_CRIT,_("Unkown command id %d"),pMsg->identify);
-		    break;
                 }
             } else {
                 notice(sMsgItem.pCallingNick,_("Access denied"));

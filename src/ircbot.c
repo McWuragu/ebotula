@@ -51,6 +51,7 @@
 #include "callbacklist.h"
 #include "utilities.h"
 #include "parameter.h"
+#include "cmdlist.h"
 #include "network.h"
 #include "parser.h"
 #include "timing.h"
@@ -429,13 +430,12 @@ int AppMain(int argc, char * const argv[]) {
             strcpy(pCurrLine,pCurrStringPos);
 
             /* parse the part line */
-	    if ((strstr(pCurrLine,CmdList[CMD_IDENT]))!=NULL)
-	    {
-	            logger(LOG_DEBUG,_("Receive: \"%s\""),"!ident <nickname> <password>\0");
-	    }else{
-		    
-		logger(LOG_DEBUG,_("Receive: \"%s\""),pCurrLine);
-	    }
+            if ((strstr(pCurrLine,CmdHandleField[CMD_IDENT].pCmdString))!=NULL)
+            {
+                logger(LOG_DEBUG,_("Receive: \"%s\""),"!ident <nickname> <password>\0");
+            }else{                       
+                logger(LOG_DEBUG,_("Receive: \"%s\""),pCurrLine);
+            }
             preParser(pCurrLine,&sMsg);
 
             /* put the identified line  on the  queue */

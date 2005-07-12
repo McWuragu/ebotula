@@ -24,7 +24,7 @@
 #ifndef HANDLES_H
 #define HANDLES_H
 
-#include "command.h"
+#include "cmdtypes.h"
 
 /**
  * This  fiunction is a  helper for the initialization of a channel
@@ -32,6 +32,11 @@
  * @param pChannel the name  of the channel
  */
 static void channelInit(char *pChannel);
+
+/**
+ * This function handle the echo request per ping and send the answer pong
+ */
+void hPong(MsgItem_t *pMsg);
 
 /**	
 *	This is  the handle  for setting  a new nickname by the user.
@@ -49,14 +54,13 @@ void hBotNeedOp(MsgItem_t *pMsg);
 *	This is a handle function for JOIN.
 *   This set the mod for the joined user. This function can call manuel to set or reset the
 *   mod after modify of this by other user in the channel or by the bot in the database.
-*   @param pLine is the complete line which was received from the irc server
 */
-void hSetModUser(char *pLine);
+void hSetModUser(MsgItem_t *pMsg);
 /**
  * This is a handle function for MODE
  * This reset the user mod if this  change not from the bot self
  */
-void hResetModes(char *pLine);
+void hResetModes(MsgItem_t *pMsg);
 
 
 /**
@@ -85,9 +89,9 @@ void hInitAfterOp(char *pLine);
  * list of  callback function and search the right  item. Then excute the
  * function form this item.
  */
-void hCallback(char *pLine);
+void hCallback(MsgItem_t *pMsg);
 
 
-void hWhoisFailed(char *pLine);
+void hWhoisFailed(MsgItem_t *pMsg);
 
 #endif

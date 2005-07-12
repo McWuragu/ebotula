@@ -2,10 +2,12 @@ bin_PROGRAMS = ebotula
 ebotula_SOURCES= \
 	messages.c \
 	account.c \
+	cmdlist.c \
 	command.c \
+	ctcp.c \
+	handles.c \
 	dbaccess.c \
 	extract.c \
-	handles.c \
 	irchelp.c \
 	ircbot.c \
 	irc.c \
@@ -18,13 +20,16 @@ ebotula_SOURCES= \
 	callback.c \
 	callbacklist.c\
 	type.h \
+	cmdtypes.h \
+	cmdlist.h \
 	irchelp.h \
 	messages.h \
 	account.h \
 	command.h \
+	ctcp.h \
+	handles.h \
 	dbaccess.h \
 	extract.h \
-	handles.h \
 	ircbot.h \
 	irc.h \
 	network.h \

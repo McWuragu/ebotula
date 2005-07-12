@@ -47,8 +47,6 @@ static IrcHelp_t   sIrcHelp[CMD_COUNT]={
     {CMD_ONTOPIC,{NULL},"",""},
     {CMD_ONWHOIS,{NULL},"",""},
     {CMD_ONNONICK,{NULL},"",""},
-    {CMD_ONPRIVMSG,{NULL},"",""},
-    {CMD_ONNOTICE,{NULL},"",""},
     {CMD_CTCPPING,{NULL},"",""},
     {CMD_CTCPVERSION,{NULL},"",""},
     {CMD_CTCPTIME,{NULL},"",""},

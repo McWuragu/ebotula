@@ -41,6 +41,12 @@
 #include "account.h"
 #include "handles.h"
 
+/* #########################################################################
+   Event handler: PING
+  #########################################################################*/
+void hPong(MsgItem_t *pMsg){
+    pong(NULL);
+}
 
 /* #########################################################################
    Event handler: NICK
@@ -125,7 +131,7 @@ void hBotNeedOp(MsgItem_t *pMsg){
    Event handler: JOIN
    Action: set the mod  for the user
    ######################################################################### */
-void hSetModUser(char *pLine) {
+void hSetModUser(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
     char *pLogin;
     char *pNick;
@@ -135,17 +141,17 @@ void hSetModUser(char *pLine) {
     char *pMod;
 
     
-    pNick=getNickname(pLine);
+    pNick=pMsg->pCallingNick;
 
     if (pNick) {
         if (strcasecmp(pNick,sSetup.pBotname)) {
-            pNetmask=getNetmask(pLine);
+            pNetmask=pMsg->pNetmask;
             if (pNetmask) {
                 
                 if ((pLogin=get_db(NICKTOUSER_DB,pNetmask))) {
             	    logger(LOG_DEBUG,_("Set the account modes for the account %s with nickname %s"),pLogin,pNick);
         
-                    if ((pChannel=getAccessChannel(pLine))) {
+                    if ((pChannel=pMsg->pAccessChannel)) {
                     	/* build key for access.dbf */
                         pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
             	        sprintf(pKey,"%s%s",pLogin,pChannel);
@@ -159,15 +165,12 @@ void hSetModUser(char *pLine) {
                		        mode(pChannel,"+o",pNick);
                    		}
             
-                       	free(pChannel);
                         free(pKey);
                     }
                     free (pLogin);
                 }
-                free(pNetmask);
             }
         }
-        free(pNick);
     }
 }
 /* #########################################################################
@@ -175,7 +178,7 @@ void hSetModUser(char *pLine) {
    Action:  added the callback item in the list for the user if this change
             not by bot self
    ######################################################################### */
-void hResetModes(char *pLine) {
+void hResetModes(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
     char *pChannel;
     char *pData;
@@ -193,7 +196,7 @@ void hResetModes(char *pLine) {
     
 
     /*split the string*/
-    pNetmask=getFirstPart(pLine,&pRest);
+    pNetmask=getFirstPart(pMsg->pRawLine,&pRest);
     /* extract  the nick */
     pAccessNick=getNickname(pNetmask);
     free(pNetmask);
@@ -225,7 +228,7 @@ void hResetModes(char *pLine) {
                     if (pMode[i]=='o' || pMode[i]=='v') {
                         pNick=getFirstPart(pRest,&pRest);
                         if (!pNick) {
-                            logger(LOG_CRIT,_("Invalid server message \"%s\""),pLine);
+                            logger(LOG_CRIT,_("Invalid server message \"%s\""),pMsg->pRawLine);
                             break;
                         }
                         /* check of bot new mods or  other user */
@@ -275,7 +278,7 @@ void hResetModes(char *pLine) {
                 }
             
             } else {
-                logger(LOG_CRIT,_("No mode entries found in \"%s\""),pLine);
+                logger(LOG_CRIT,_("No mode entries found in \"%s\""),pMsg->pRawLine);
             }  
         }     
         free(pAccessNick);
@@ -393,7 +396,7 @@ static void channelInit(char *pChannel) {
    Event handler: 352
    Action: call the callback function for a nickname
    #########################################################################*/
-void hCallback(char *pLine) {
+void hCallback(MsgItem_t *pMsg) {
     extern CallbackDList CallbackList;
     CallbackItem_t *CB_Data;
     CallbackDListItem *pCallbackItemReturn;
@@ -403,7 +406,7 @@ void hCallback(char *pLine) {
     char *pLogin;
     char *pDomain;
 
-    rmFirstPart(pLine,&pRest); /* 0 */
+    rmFirstPart(pMsg->pRawLine,&pRest); /* 0 */
     rmFirstPart(pRest,&pRest); /* 1 */
     rmFirstPart(pRest,&pRest); /* 2 */
     
@@ -441,14 +444,14 @@ void hCallback(char *pLine) {
    Event handler: 401
    Action: handle a whois failed
    #########################################################################*/
-void hWhoisFailed(char *pLine) {
+void hWhoisFailed(MsgItem_t *pMsg) {
     extern CallbackDList CallbackList;
     CallbackItem_t *CB_Data;
     CallbackDListItem *pCallbackItemReturn;
     char *pRest=NULL;
     char *pNick;
 
-    rmFirstPart(pLine,&pRest); /* 0 */
+    rmFirstPart(pMsg->pRawLine,&pRest); /* 0 */
     rmFirstPart(pRest,&pRest); /* 1 */
     rmFirstPart(pRest,&pRest); /* 2 */
     

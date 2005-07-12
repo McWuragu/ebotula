@@ -21,32 +21,16 @@
  * ############################################################# 
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef CTCP_H
+#define CTCP_H
 
+#include "cmdtypes.h"
+ 
+ 
+/* CTCP command functions */
+void ctcpping(MsgItem_t *pMsg);
+void ctcpversion(MsgItem_t *pMsg);
+void ctcptime(MsgItem_t *pMsg);
 
-#include "config.h"
-#include "cmdlist.h"
-
-
-/**
-* This parse a line whiche was receive by the  client
-* @param pLine  a pointer of a string
-* @param pMsg a struct withe the command id, the type of 
-* message and a string as  argument for the  command
-*/
-void preParser(char *pLine,MsgBuf_t *pMsg);
-
-/**
-* the function for  the  thread
-* @param argv a pointer  of arguements for  the
-* starting of  this thread
-*/
-void *CommandExecutionThread(void *argv);
-
-static int AccessRight(UserLevel_t Level,Cmd_t cmd_id);
-
-
-RETSIGTYPE stopParser(int sig);
 
 #endif
