@@ -8,6 +8,7 @@ ebotula-0.1.18
 - renamed the command line parameter -D to -V
 - reimplementation of the configuration file loader
 - reimplementation the checking of self modification 
+- reimplementation of the command router
 - removed the case sensitivity of the callback list
 - removed the case sensitivity of keys for data base 
 - removed the copyright item from the version string
