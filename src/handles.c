@@ -204,8 +204,6 @@ void hResetModes(MsgItem_t *pMsg) {
     rmFirstPart(pRest,&pRest);
     pChannel=getFirstPart(pRest,&pRest);
     pMode=getFirstPart(pRest,&pRest);
-    
-
 
     if (pAccessNick) {
         if (strcasecmp(pAccessNick,sSetup.pBotname)!=0) {
