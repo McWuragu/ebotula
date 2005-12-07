@@ -98,7 +98,7 @@ char * StrToLower(const char *pStr) {
      unsigned int str_length,i;
      char *pResultStr;
 
-     if (!pStr) {return;}
+     if (!pStr) {return NULL;}
 
      str_length=strlen(pStr);
      pResultStr=(char *) malloc((str_length+1)*sizeof(char));
