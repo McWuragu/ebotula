@@ -273,7 +273,7 @@ int AppMain(int argc, char * const argv[]) {
     }
 
     /* read config file*/
-    if (nRet=ConfigFileParser())
+    if ((nRet=ConfigFileParser())!=0)
         return nRet;
     
     /* check for parameter */

@@ -186,4 +186,5 @@ int write_baseconfig()
 		}
 	}
 	fclose(fd);
+	return 0;
 }

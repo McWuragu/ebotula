@@ -30,7 +30,7 @@
 #include <pthread.h>
 #include <dirent.h>
 #include <sys/types.h>
-
+#include <sys/stat.h>
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -136,7 +136,7 @@ boolean add_db(const int db,const char *_key,const  char *_value) {
     datum key,value;
     boolean bResult=false;
     GDBM_FILE dbf;
-    int iErr;
+/*    int iErr;*/
     char *pKey;
 
     /* parameters */

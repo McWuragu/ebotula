@@ -41,7 +41,7 @@
 #include "utilities.h"
 #include "messages.h"
 #include "parser.h"
-
+#include "network.h"
 extern boolean stop;
 
 void preParser(char *pLine,MsgBuf_t *pMsg) {

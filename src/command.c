@@ -29,7 +29,7 @@
 #include <pthread.h>
 #include <time.h>
 #include <sys/utsname.h>
-
+#include "parser.h"
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -831,7 +831,7 @@ void kickuser(MsgItem_t *pMsg) {
     char *pParameter;
     char *pLogin;
     char *pData;
-    char *pTmpBotName;
+/*    char *pTmpBotName;*/
 
     if (!pMsg->pAccessChannel) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));

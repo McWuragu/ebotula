@@ -251,7 +251,7 @@ void hResetModes(MsgItem_t *pMsg) {
                             Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
                             Callback->nickname=(char*)malloc((strlen(pNick)+1)*sizeof(char));
                             strcpy(Callback->nickname,pNick);
-                            Callback->nickname;
+                            /* Callback->nickname; *HÄÄÄ?? */
                             Callback->CallbackFkt=ModeResetCb;
                             Callback->data=pData;
                             

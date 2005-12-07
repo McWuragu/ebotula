@@ -42,7 +42,7 @@ char *getNickname(char const *pLine){
         if (pStr) {
         	if (strtok(pStr,"!")) {
         		if (NickStringCheck(pStr)) {
-        			if (pNick=(char *)malloc((strlen(pStr)+1)*sizeof(char))) {
+        			if ((pNick=(char *)malloc((strlen(pStr)+1)*sizeof(char)))!=NULL) {
                         strcpy(pNick,pStr);
                     }
         		}

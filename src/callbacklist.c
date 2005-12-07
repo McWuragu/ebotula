@@ -26,11 +26,11 @@
 #include <stdio.h>
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
 #include "callback.h"
 #include "callbacklist.h"
 #include "utilities.h"
 #include "type.h"
-
 /*
  *  init_extendedCallbackDList
  */

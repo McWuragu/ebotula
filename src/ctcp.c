@@ -23,12 +23,14 @@
 
 #include <time.h>
 #include <sys/utsname.h>
-
+#include <string.h>
+#include <stdio.h>
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 
 #include "ctcp.h"
+#include "irc.h"
 
 /* #########################################################################
    Bot comand: \001PING <ID>\001

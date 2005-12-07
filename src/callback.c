@@ -23,14 +23,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include"dbaccess.h"
-#include"irc.h"
-#include"extract.h"
-#include"utilities.h"
-#include"messages.h"
-#include"type.h"
-#include"callback.h"
-                                                                                
+#include <string.h>                                                                                
+#include "dbaccess.h"
+#include "irc.h"
+#include "extract.h"
+#include "utilities.h"
+#include "messages.h"
+#include "type.h"
+#include "callback.h"
+#include "account.h"
 /* ############################################################################# */
 void destroyCallbackItem(CallbackItem_t *data)
 {
