@@ -29,8 +29,7 @@ AC_PROG_RANLIB
 #AC_PROG_YACC
 AM_PROG_CC_C_O
 
-
-CFLAGS=`echo $CFLAGS | sed 's/-O2//'`
+CFLAGS=`echo $CFLAGS | sed 's/-O4//'`
 CFLAGS=`echo $CFLAGS | sed 's/-g//'`
 
 dnl ===========================
