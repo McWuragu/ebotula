@@ -138,12 +138,12 @@ AC_SUBST(PFLAGS)
 dnl ===========================
 dnl end 
 dnl ===========================
-AC_CONFIG_FILES([Makefile po/Makefile.in intl/Makefile
+AC_CONFIG_FILES([Makefile 
                  ebotula.spec
+		 po/Makefile.in 
 		 doc/ebotula.1
 		 doc/ebotula.conf.5
                  doc/Makefile
-		 po/Makefile
                  etc/Makefile
                  src/Makefile])
 AC_OUTPUT
