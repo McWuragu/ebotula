@@ -1,3 +1,14 @@
+2007-08-28  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Remove intl.
+
+2007-08-28  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Remove intl.
+	(ACLOCAL_AMFLAGS): New variable.
+	(EXTRA_DIST): Add m4/ChangeLog.
+	* configure.in (AC_CONFIG_FILES): Add po/Makefile.in.
+
 ebotula-0.1.18
 --------------------
 - fixed the restart as root bug (bug 28)
