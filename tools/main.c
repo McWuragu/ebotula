@@ -14,6 +14,9 @@
 #include "delete.h"
 #include "fetch.h"
 #include "exists.h"
+
+static unsigned int GDBM_BLOCKSIZE=512;
+
 void usage(char *sProgName)
 {
 	fprintf(stderr,"usage: %s <blocksize> <dbfile> <command> [<cmd-parameter>]\n",sProgName);
@@ -59,15 +62,9 @@ char *strtolower(const char* sIn)
 }
 int main(int argc,char *argv[])
 {
-	if (argc<4)
+	if (argc<3)
 	{
 		usage(argv[0]);
-		exit(2);
-	}
-	int nBlockSize=atoi(argv[1]);
-	if (nBlockSize==0)
-	{
-		fprintf(stderr,"Error: Invalid blocksize\n");
 		exit(2);
 	}
 	char *sDBFileName=argv[2];
@@ -89,7 +86,7 @@ int main(int argc,char *argv[])
 		exit(2);
 	}
 	GDBM_FILE qDbF;
-	qDbF=gdbm_open(sDBFileName,nBlockSize,GDBM_WRCREAT,S_IREAD|S_IWRITE,0);
+	qDbF=gdbm_open(sDBFileName,GDBM_BLOCKSIZE,GDBM_WRCREAT,S_IREAD|S_IWRITE,0);
 	if (qDbF==NULL)
 	{
 		fprintf(stderr,"Error: gdbm_open error \"%s\"\n",gdbm_strerror(errno));
