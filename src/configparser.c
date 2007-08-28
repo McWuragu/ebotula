@@ -132,7 +132,10 @@ InputValueStruct_t vsInputConfig[VAL_COUNT]={
 	{KEY_ALT,PARAM_INT,(void *) (&sSetup.AccountLiveTime),false,key_int_checker,(void*)0,NULL},
 	{KEY_AUTOLOGOFF,PARAM_INT,(void *) (&sSetup.AutoLoggoff),false,key_int_checker,(void *)1,NULL},
 	{KEY_PINGTIMEOUT,PARAM_INT,(void *) (&sSetup.iTimeout),false,key_int_checker,(void*)1,NULL},
-	{KEY_LOGLEVEL,PARAM_INT,(void *) (&sSetup.nLogLevel),false,key_int_checker,(void *)0,(void*)(MAX_LOGLEVEL)}
+	{KEY_LOGLEVEL,PARAM_INT,(void *) (&sSetup.nLogLevel),false,key_int_checker,(void *)0,(void*)(MAX_LOGLEVEL)},
+	{KEY_NICKSERV_IDENT,PARAM_STRING,(void *) (&sSetup.sNickServIdent),false,NULL,NULL,NULL},
+	{KEY_ENABLE_NICKSERV_IDENT,PARAM_INT,(void *) (&sSetup.nEnableNickServIdent),false,key_int_checker,(void *)0,(void*)(1)},
+	{KEY_NICKSERV_IDENT_TIMEOUT,PARAM_INT,(void *) (&sSetup.nNickServIdentTimeout),false,key_int_checker,(void *)0,NULL}
 };
 /*############################################################################# */
 int ConfigFileParser(void){

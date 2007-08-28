@@ -79,4 +79,7 @@
 #define KEY_EXEUSER         "user"
 #define KEY_EXEGROUP        "group"
 #define KEY_LOGLEVEL        "loglevel"
+#define KEY_NICKSERV_IDENT	"nickserv_ident"
+#define KEY_ENABLE_NICKSERV_IDENT "enable_nickserv_ident"
+#define KEY_NICKSERV_IDENT_TIMEOUT	"nickserv_ident_timeout"
 #endif												

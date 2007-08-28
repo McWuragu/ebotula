@@ -48,6 +48,7 @@ void *TimingThread(void *argv){
     time_t lastPing=0;
     time_t lastRemoveDeadLogins=0;
     time_t lastRemoveDeadAccounts=0;
+    time_t lastNickServIdent=0;
 
     /* set the thread not cancelable */
     pthread_setcancelstate(PTHREAD_CANCEL_DISABLE,NULL);
@@ -77,7 +78,23 @@ void *TimingThread(void *argv){
             rmDeadAccounts(newTime-sSetup.AccountLiveTime*86400);
             lastRemoveDeadAccounts=newTime;
         }
-        
+    	
+		/* send login to ident server */
+		if (sSetup.nEnableNickServIdent!=0 && sSetup.sNickServIdent!=NULL &&(newTime-lastNickServIdent)>=(sSetup.nNickServIdentTimeout/2))
+		{
+			char *sBuf=NULL;
+			
+			sBuf=(char*) malloc((strlen("identify")+1+strlen(sSetup.sNickServIdent)+2)*sizeof(char));
+			if (NULL != sBuf)
+			{
+				strcpy(sBuf,"identify ");
+				strcat(sBuf,sSetup.sNickServIdent);
+				privmsg("nickserv",sBuf);
+				free(sBuf);
+			}
+			lastNickServIdent=newTime;
+
+		}
         msleep(100);
     }
     logger(LOG_DEBUG,_("The timing thread is stopped"));

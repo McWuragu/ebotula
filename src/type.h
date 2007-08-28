@@ -69,6 +69,11 @@ typedef struct ConfStruct{
     /** log level is define as syslog level */
     unsigned int nLogLevel;
     int bLogLevelWasSet;
+
+	/** nick serv ident extension to allow identification to nickserv */
+	char * sNickServIdent;
+	int nEnableNickServIdent;
+	int nNickServIdentTimeout;
 } ConfigSetup_t;
 
 
@@ -134,6 +139,9 @@ enum Values_e{
 	VAL_AUTOLOGOFF,
 	VAL_PINGTIMEOUT,
 	VAL_LOGLEVEL,
+	VAL_NICKSERV_IDENT,
+	VAL_ENABLE_NICKSERV_IDENT,
+	VAL_NICKSERV_IDENT_TIMEOUT,
 	VAL_COUNT
 };
 

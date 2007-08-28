@@ -1,5 +1,5 @@
 SHELL=/bin/sh
-SUBDIRS=src etc doc po intl
+SUBDIRS=src tools etc doc po intl
 
 EXTRA_DIST= config.rpath ebotula.spec.in README.de BUGS
 dist-hook: ebotula.spec
