@@ -143,6 +143,7 @@ AC_CONFIG_FILES([Makefile
 		 po/Makefile.in
                  ebotula.spec
 		 doc/ebotula.1
+		 doc/ebotula_db.1
 		 doc/ebotula.conf.5
                  doc/Makefile
                  etc/Makefile
