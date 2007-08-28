@@ -15,18 +15,18 @@ dnl *************************************************************
 
 AC_PREREQ(2.61)
 AC_INIT(ebotula,0.1.18,Laube.Steffe@gmx.de)
-AC_CONFIG_SRCDIR([src/ircbot.c])
-AC_CONFIG_HEADER([src/config.h])
 AM_INIT_AUTOMAKE(ebotula,0.1.18)
 
-AM_SANITY_CHECK
 AC_GNU_SOURCE
+
+AC_CONFIG_SRCDIR([src/ircbot.c])
+AC_CONFIG_HEADER([src/config.h])
+
 
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_RANLIB
-#AC_PROG_YACC
 AM_PROG_CC_C_O
 
 CFLAGS=`echo $CFLAGS | sed 's/-O4//'`
@@ -143,7 +143,7 @@ AC_CONFIG_FILES([Makefile
 		 doc/ebotula.1
 		 doc/ebotula.conf.5
                  doc/Makefile
-		 po/Makefile.in
+		 po/Makefile
 		 intl/Makefile
                  etc/Makefile
                  src/Makefile])
