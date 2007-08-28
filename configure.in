@@ -22,7 +22,6 @@ AM_INIT_AUTOMAKE(ebotula,0.1.18)
 AM_SANITY_CHECK
 AC_GNU_SOURCE
 
-
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
