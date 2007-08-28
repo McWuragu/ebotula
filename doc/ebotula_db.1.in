@@ -2,9 +2,26 @@
 .SH "NAME"
 @PACKAGE@_db \- Database tool for the IRC bot @PACKAGE@
 .SH "SYNOPSIS"
-\fBebotula_db\fP [ options ]
+\fB@PACKAGE@_db\fP <blocksize> <gdbm-file> <command>[ command-options ]
 .SH "DESCRIBTION"
 @PACKAGE@_db is a tool for the maintenance  for the database of the IRC bot @PACKAGE@.
+.SS Commands
+There are several commands available for database manipulation.
+.TP 
+\fBdump\fP
+Dump whole database to stdout.
+.TP
+\fBstore\fP key value
+Store (replace) dataset (key,value) in database.
+.TP
+\fBdel\fP key
+Delete dataset referenced by key in database.
+.TP
+\fBfetch\fP key
+fetch dataset referenced by key from database
+.TP
+\fBexits\fP key
+Check if dataset exisits referenced by key in database. If it exists exit code is 1 and value from data set is dumped.
 .SH "FILES"
 @PACKAGE@, @PACKAGE@.conf, @PACKAGE@_db
 .SH "SEE ALSO"
