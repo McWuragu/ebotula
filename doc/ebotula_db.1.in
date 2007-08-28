@@ -1,0 +1,20 @@
+.TH @PACKAGE@_db 1 "Aug 2007" "v@VERSION@" 
+.SH "NAME"
+@PACKAGE@_db \- Database tool for the IRC bot @PACKAGE@
+.SH "SYNOPSIS"
+\fBebotula_db\fP [ options ]
+.SH "DESCRIBTION"
+@PACKAGE@_db is a tool for the maintenance  for the database of the IRC bot @PACKAGE@.
+.SH "FILES"
+@PACKAGE@, @PACKAGE@.conf, @PACKAGE@_db
+.SH "SEE ALSO"
+RFC1459, RFC2810, RFC2811, RFC2812, @PACKAGE@.conf(5), @PACKAGE@_db(1)
+.SH "AUTHORS"
+Steffen Laube <Laube.Steffen@gmx.de>,
+Thomas Stein <linux@tstein.net>,
+Uwe Strempel <u.strempel@gmx.de>
+Martin Neumann <mn250@freenet.de>
+.SH "VERSION"
+v@VERSION@
+.SH "BUGS"
+He isn't finished and not completely stable.
