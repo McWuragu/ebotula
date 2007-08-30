@@ -127,6 +127,17 @@ void hBotNeedOp(MsgItem_t *pMsg){
     free(pSearchStr);
     free(pNickList);
 }
+
+/* ######################################################################### 
+   Event handler: JOIN
+   Action: scalll the action handler for the join event of user
+   ######################################################################### */
+   
+void hUserJoinn(MsgItem_t *pMsg) {
+    hSetModUser(pMsg);
+    hSeUserGreetining(pMsg);
+
+}
 /* ######################################################################### 
    Event handler: JOIN
    Action: set the mod  for the user
@@ -173,6 +184,9 @@ void hSetModUser(MsgItem_t *pMsg) {
         }
     }
 }
+void hSeUserGreetining(MsgItem_t *pMsg) {
+}
+
 /* #########################################################################
    Event handler: MODE
    Action:  added the callback item in the list for the user if this change

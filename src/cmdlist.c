@@ -8,7 +8,7 @@ CmdHandleRef_t CmdHandleField[CMD_COUNT] = {
     {CMD_ONNICKCHG      ,hNickChange        ,"NICK"             ,false},
     {CMD_ONMODE         ,hResetModes        ,"MODE"             ,false},
     {CMD_ONKICK         ,hRejoinAfterKick   ,"KICK"             ,false},
-    {CMD_ONJOIN         ,hSetModUser        ,"JOIN"             ,false},
+    {CMD_ONJOIN         ,hUserJoin          ,"JOIN"             ,false},
     {CMD_ONNAMES        ,hBotNeedOp         ,"353"              ,false},
     {CMD_ONTOPIC        ,hResetTopic        ,"TOPIC"            ,false},
     {CMD_ONWHOIS        ,hCallback          ,"311"              ,false},
