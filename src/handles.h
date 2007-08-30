@@ -50,14 +50,22 @@ void hNickChange(MsgItem_t *pMsg);
 *   then send this function a message  to the channel.
 */
 void hBotNeedOp(MsgItem_t *pMsg);
-void hUserJoinn(MsgItem_t *pMsg);
+/**
+*	This is a handle function for JOIN.
+*   It calls a lot of handler for the joining event
+*/
+void hUserJoin(MsgItem_t *pMsg);
 /**
 *	This is a handle function for JOIN.
 *   This set the mod for the joined user. This function can call manuel to set or reset the
 *   mod after modify of this by other user in the channel or by the bot in the database.
 */
 void hSetModUser(MsgItem_t *pMsg);
-void hSeUserGreetining(MsgItem_t *pMsg);
+/**
+*	This is a handle function for JOIN.
+*   It sends  the greeting as notice to the new user on the channel
+*/
+void hSendGreeting(MsgItem_t *pMsg);
 /**
  * This is a handle function for MODE
  * This reset the user mod if this  change not from the bot self

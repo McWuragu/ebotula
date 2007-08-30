@@ -149,8 +149,9 @@ void SendLine(char* pMsg){
             logger(LOG_CRIT,_("Couldn't send a command."));
 	     stop=true;
         }
-        /*logger(LOG_DEBUG,_("Send(%d/%d): \"%s\""),nCharPerMinute,sSetup.nFastSendingCharLimit,pMsg);
-    */
+        logger(LOG_DEBUG,_("Send(%d/%d): \"%s\""),
+			nCharPerMinute,
+			sSetup.nFastSendingCharLimit,pMsg);
         
         nCharPerMinute=GetCharPerMin(nSendLength);
         pthread_mutex_unlock(&mutexSend);

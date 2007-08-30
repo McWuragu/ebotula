@@ -132,15 +132,14 @@ void hBotNeedOp(MsgItem_t *pMsg){
    Event handler: JOIN
    Action: scalll the action handler for the join event of user
    ######################################################################### */
-   
-void hUserJoinn(MsgItem_t *pMsg) {
+void hUserJoin(MsgItem_t *pMsg) {
     hSetModUser(pMsg);
-    hSeUserGreetining(pMsg);
+    hSendGreeting(pMsg);
 
 }
 /* ######################################################################### 
    Event handler: JOIN
-   Action: set the mod  for the user
+   Action: set the mode  for a new user on the channel
    ######################################################################### */
 void hSetModUser(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
@@ -184,7 +183,11 @@ void hSetModUser(MsgItem_t *pMsg) {
         }
     }
 }
-void hSeUserGreetining(MsgItem_t *pMsg) {
+/* #########################################################################
+   Event handler: JOIN
+   Action:  send the greeting as notice to the new user on the channel
+   ######################################################################### */
+void hSendGreeting(MsgItem_t *pMsg) {
 }
 
 /* #########################################################################
