@@ -247,10 +247,8 @@ void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData) {
         pMode=getChannelMode(pChannelSet);
         StrToChannelMode(pMode,&(pChannelData->sModes));
         
-        free(pMode);
     }
 
-    return;
 }
 /* ############################################################################# */
 char *ChannelDataToStr(ChannelData_t *pChannelData) {
