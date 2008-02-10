@@ -55,8 +55,10 @@ void help(MsgItem_t *pMsg) {
     char *pParameter;
     char *pTmp;
     char *pMsgStr;
+    size_t nMsgStrLen;
     char *pMsgPart;
     unsigned int i,j,iLength;
+	size_t nTmp;
     IrcHelp_t *IRCHelp;
 
     pParameter=getParameters(pMsg->pRawLine);
@@ -85,10 +87,11 @@ void help(MsgItem_t *pMsg) {
             IRCHelp = GetIrcHelp(i);
 
             /* calculat the length of buffer */
-            pMsgStr=(char *)calloc(HELP_TAB+1+strlen(IRCHelp->pShort),sizeof(char));
+			nMsgStrLen = (HELP_TAB+1+strlen(IRCHelp->pShort)) * sizeof(char);
+			pMsgStr=(char *)calloc(HELP_TAB+1+strlen(IRCHelp->pShort),sizeof(char));
 
             /* build string */
-            strcpy(pMsgStr,CmdHandleField[i].pCmdString);
+            strncpy(pMsgStr,CmdHandleField[i].pCmdString,nMsgStrLen);
             iLength=HELP_TAB-strlen(CmdHandleField[i].pCmdString);
             
             /* fill */
@@ -112,8 +115,9 @@ void help(MsgItem_t *pMsg) {
 
         /* checking  of a leading '!' */
         if (pParameter[0]!='!') {
-            pTmp=(char*)malloc((strlen(pParameter)+2)*sizeof(char));
-            sprintf(pTmp,"!%s",pParameter);
+			nTmp = (strlen(pParameter)+2)*sizeof(char);
+            pTmp=(char*)malloc(nTmp);
+            snprintf(pTmp,nTmp,"!%s",pParameter);
             free(pParameter);
             pParameter=pTmp;
         }
@@ -127,8 +131,9 @@ void help(MsgItem_t *pMsg) {
 
                 /* the head for help */
                 pMsgPart=_("Help for");
-                pTmp=(char*)malloc((strlen(pMsgPart)+strlen((char *)CmdHandleField[i].pCmdString)+4)*sizeof(char));
-                sprintf(pTmp,"%s %s:",pMsgPart,pParameter);
+				nTmp = (strlen(pMsgPart)+strlen((char *)CmdHandleField[i].pCmdString)+4)*sizeof(char);
+                pTmp=(char*)malloc(nTmp);
+                snprintf(pTmp,nTmp,"%s %s:",pMsgPart,pParameter);
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pTmp);
                 free(pTmp);
 
@@ -211,6 +216,7 @@ void logoff(MsgItem_t *pMsg) {
     char *pLogin;
 	char *pKey;
 	char *pMode;
+	size_t nKeySize;
 
 	QueueData *pChannel;
     PQueue pChannelQueue;
@@ -231,8 +237,9 @@ void logoff(MsgItem_t *pMsg) {
 			/* remove the mod  for  this account */
 			while (isfullQueue(pChannelQueue)){
                 pChannel=popQueue(pChannelQueue);
-				pKey=(char *)malloc((pChannel->t_size+nLength)*sizeof(char));
-				sprintf(pKey,"%s%s",pLogin,(char *)pChannel->data);
+				nKeySize = (pChannel->t_size+nLength)*sizeof(char);
+				pKey=(char *)malloc(nKeySize);
+				snprintf(pKey,nKeySize,"%s%s",pLogin,(char *)pChannel->data);
 				
 				/* look for the  access rights and  remove this */
 				if ((pMode=get_db(ACCESS_DB,pKey))){
@@ -259,12 +266,15 @@ void logoff(MsgItem_t *pMsg) {
    ######################################################################### */
 void ident(MsgItem_t *pMsg) {
     char *pLogin;
+    size_t nLoginLen;
     char *pPasswd;
+    size_t nPasswdLen;
     char *pPos;
     char *pParameter;
     PQueue pChannelQueue;
 	QueueData *pChannel;
     char *pKey;
+	size_t nKeyLen;
     char *pMod;
     boolean isMaster;
 
@@ -286,15 +296,17 @@ void ident(MsgItem_t *pMsg) {
                 sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You've set a empty password."));
                 pPasswd=NULL;
             } else {
-                pPasswd=(char *)malloc(strlen(pPos)*sizeof(char));
-                strcpy(pPasswd,&pPos[1]);
+				nPasswdLen = strlen(pPos)*sizeof(char);
+                pPasswd=(char *)malloc(nPasswdLen);
+                strncpy(pPasswd,&pPos[1],nPasswdLen);
             }
         
         
             /* parse the login */
             strtok(pParameter," ");
-            pLogin=(char *)malloc((strlen(pParameter)+1)*sizeof(char));
-            strcpy(pLogin,pParameter);
+			nLoginLen = (strlen(pParameter)+1)*sizeof(char);
+            pLogin=(char *)malloc(nLoginLen);
+            strncpy(pLogin,pParameter,nLoginLen);
         
             logger(LOG_DEBUG,_("Look for the account %s"),pLogin);
         
@@ -318,8 +330,9 @@ void ident(MsgItem_t *pMsg) {
                     if (isMaster) {
                         mode((char*)pChannel->data,"+o",pMsg->pCallingNick);
                     } else {
-                        pKey=(char*)malloc((pChannel->t_size+login_len+1)*sizeof(char));
-                        sprintf(pKey,"%s%s",pLogin,(char*)pChannel->data);
+                        nKeyLen = (pChannel->t_size+login_len+1)*sizeof(char);
+						pKey=(char*)malloc(nKeyLen);
+                        snprintf(pKey,nKeyLen,"%s%s",pLogin,(char*)pChannel->data);
                         if ((pMod=get_db(ACCESS_DB,pKey))) {
    	                        mode((char*)pChannel->data,pMod,pMsg->pCallingNick);
       	                    free(pMod);
@@ -557,9 +570,9 @@ void chanlist(MsgItem_t *pMsg){
    Bot comand: !version
    ######################################################################### */
 void version(MsgItem_t *pMsg) {
-    char pMsgStr[256];
+	char pMsgStr[256];
     /* creat Versions String */
-    sprintf(pMsgStr,VERSIONSTR);
+    snprintf(pMsgStr,256,VERSIONSTR);
     strcat(pMsgStr,"\r\n");
     sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,pMsgStr);
 }
@@ -746,6 +759,7 @@ void banuser(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
     CallbackItem_t *Callback;
     char *Data;
+	size_t nDataLen;
     char *pParameter;
     char *pToBanNick;
     char *pLogin;
@@ -777,8 +791,9 @@ void banuser(MsgItem_t *pMsg) {
     /* read the login from the database */
     pLogin=get_db(NICKTOUSER_DB,pMsg->pNetmask);
 
-    Data=(char*)malloc((strlen(pLogin)+strlen(pMsg->pAccessChannel)+2)*sizeof(char));
-    sprintf(Data,"%s %s",pLogin,pMsg->pAccessChannel);
+	nDataLen = (strlen(pLogin)+strlen(pMsg->pAccessChannel)+2)*sizeof(char);
+    Data=(char*)malloc(nDataLen);
+    snprintf(Data,nDataLen,"%s %s",pLogin,pMsg->pAccessChannel);
 
     Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
 
@@ -831,6 +846,7 @@ void kickuser(MsgItem_t *pMsg) {
     char *pParameter;
     char *pLogin;
     char *pData;
+	size_t nDataLen;
 /*    char *pTmpBotName;*/
 
     if (!pMsg->pAccessChannel) {
@@ -867,8 +883,9 @@ void kickuser(MsgItem_t *pMsg) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't found you account."));
     } else {
         /* built data for the callback */
-        pData=(char*)malloc((strlen(pLogin)+strlen(pMsg->pAccessChannel)+strlen(pReason)+5)*sizeof(char));
-        sprintf(pData,"%s %s %s",pLogin,pMsg->pAccessChannel,pReason);
+		nDataLen = (strlen(pLogin)+strlen(pMsg->pAccessChannel)+strlen(pReason)+5)*sizeof(char);
+		pData=(char*)malloc(nDataLen);
+        snprintf(pData,nDataLen,"%s %s %s",pLogin,pMsg->pAccessChannel,pReason);
         
                               
         /* built  and add to callback list */
@@ -892,6 +909,7 @@ void accountmode(MsgItem_t *pMsg){
     char *usernick;
     char *pNetmask;
     char *pKey;
+	size_t nKeyLen;
     char *oldmod;
     char *pParameter;
     char mod[3];
@@ -942,8 +960,9 @@ void accountmode(MsgItem_t *pMsg){
 	    }
 
     	/* build the key  for access rights  db */
-	    pKey=(char*)malloc((strlen(pLogin)+strlen(pMsg->pAccessChannel)+1)*sizeof(char));
-	    sprintf(pKey,"%s%s",pLogin,pMsg->pAccessChannel);
+	    nKeyLen = (strlen(pLogin)+strlen(pMsg->pAccessChannel)+1)*sizeof(char);
+		pKey=(char*)malloc(nKeyLen);
+	    snprintf(pKey,nKeyLen,"%s%s",pLogin,pMsg->pAccessChannel);
 
     
 	    /* get the  old mod for  a  user from the  access db */
@@ -1232,6 +1251,7 @@ void rmaccount(MsgItem_t *pMsg) {
 void accountlist(MsgItem_t *pMsg){
     char *pArgv;
     char *pKey;
+	size_t nKeyLen;
     PQueue pLoginQueue;
 	QueueData *pLoginItem;
     PQueue pChannelQueue;
@@ -1296,8 +1316,9 @@ void accountlist(MsgItem_t *pMsg){
     
 
         		    /* build the key  for  access.dbf */
-        			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
-        			sprintf(pKey,"%s%s",(char*)pLoginItem->data,(char*)pChannel->data);
+        			nKeyLen =  (iChanLen+1+iLoginLen)*sizeof(char);
+					pKey=(char*)malloc(nKeyLen);
+        			snprintf(pKey,nKeyLen,"%s%s",(char*)pLoginItem->data,(char*)pChannel->data);
         
                     /* iLoginTab + " Friend of " + strlen(pChannel->data) + "   Status: "+ "OFF" */
                     pMsgStr=(char*)malloc((iLoginTab+iChanLen+26)*sizeof(char));
@@ -1373,8 +1394,9 @@ void accountlist(MsgItem_t *pMsg){
             bIsOther=true;
 
 			/* build the key  for  access.dbf */
-			pKey=(char*)malloc((iChanLen+1+iLoginLen)*sizeof(char));
-			sprintf(pKey,"%s%s",(char*)pLoginItem->data,pMsg->pAccessChannel);
+			nKeyLen = (iChanLen+1+iLoginLen)*sizeof(char);
+			pKey=(char*)malloc(nKeyLen);
+			snprintf(pKey,nKeyLen,"%s%s",(char*)pLoginItem->data,pMsg->pAccessChannel);
 			iLoginTab=(iLoginLen<ACCOUNT_LIST_TAB)?ACCOUNT_LIST_TAB:iLoginLen;
             /* "Status:" + ACCOUNT_LIST_TAB + "Owner "+ "   Status: "+"ON " */
             pMsgStr=(char*)malloc((iLoginTab+30)*sizeof(char));

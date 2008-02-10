@@ -54,6 +54,7 @@ void hPong(MsgItem_t *pMsg){
 void hNickChange(MsgItem_t *pMsg) {
     char *pLogin;
     char *pNewNetmask;
+	size_t nNetmaskLen;
     char *pNewNick;
 	char *pNetmaskCopy;
     char *pTmp;
@@ -76,8 +77,9 @@ void hNickChange(MsgItem_t *pMsg) {
     			strtok(pTmp," ");
     
     			/* build new netmask	*/
-    			pNewNetmask=(char*)malloc((strlen(pNewNick)+strlen(pTmp)+1)*sizeof(char));
-    			sprintf(pNewNetmask,"%s%s",pNewNick,pTmp);
+				nNetmaskLen = (strlen(pNewNick)+strlen(pTmp)+1)*sizeof(char);
+   				pNewNetmask=(char*)malloc(nNetmaskLen);
+    			snprintf(pNewNetmask,nNetmaskLen,"%s%s",pNewNick,pTmp);
 
     			/* reset Login Status*/
     			log_out(pLogin);
@@ -104,7 +106,7 @@ void hBotNeedOp(MsgItem_t *pMsg){
     char *pNickList;
     char *pPos;
     char *pSearchStr;
-
+	size_t nSearchStrLen;
     
     pChannel=pMsg->pAccessChannel;
     if (!pChannel) return;
@@ -114,8 +116,9 @@ void hBotNeedOp(MsgItem_t *pMsg){
     pNickList=(char*)malloc((strlen(pPos)+1)*sizeof(char));
     strcpy(pNickList,pPos);
 
-    pSearchStr=(char *) malloc((strlen(sSetup.pBotname)+2)*sizeof(char));
-    sprintf(pSearchStr,"@%s",sSetup.pBotname);
+	nSearchStrLen = (strlen(sSetup.pBotname)+2)*sizeof(char);
+    pSearchStr=(char *) malloc(nSearchStrLen);
+    snprintf(pSearchStr,nSearchStrLen,"@%s",sSetup.pBotname);
 
     if (!strstr(pNickList,pSearchStr)) {
         action(pChannel,_("needs operator access rights."));
@@ -146,6 +149,7 @@ void hSetModUser(MsgItem_t *pMsg) {
     char *pLogin;
     char *pNick;
     char *pKey;
+	size_t nKeyLen;
     char *pChannel;
     char *pNetmask;
     char *pMod;
@@ -163,8 +167,9 @@ void hSetModUser(MsgItem_t *pMsg) {
         
                     if ((pChannel=pMsg->pAccessChannel)) {
                     	/* build key for access.dbf */
-                        pKey=(char *)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
-            	        sprintf(pKey,"%s%s",pLogin,pChannel);
+			           nKeyLen = (strlen(pLogin)+strlen(pChannel)+1)*sizeof(char);
+		   				pKey=(char *)malloc(nKeyLen);
+            	        snprintf(pKey,nKeyLen,"%s%s",pLogin,pChannel);
                	        
             			/* read  the  mod */
                    	    if ((pMod=get_db(ACCESS_DB,pKey))) {
@@ -199,6 +204,7 @@ void hResetModes(MsgItem_t *pMsg) {
     extern ConfigSetup_t sSetup;
     char *pChannel;
     char *pData;
+	size_t nDataLen;
     char *pNick;
     char *pNetmask;
     char *pAccessNick;
@@ -261,8 +267,9 @@ void hResetModes(MsgItem_t *pMsg) {
                             logger(LOG_DEBUG,_("Added callback routine for the reset of the account modes"));
                             
                             /* built the data for callback */
-                            pData=(char*)malloc((strlen(pChannel)+3)*sizeof(char));
-                            sprintf(pData,"%s %c%c",pChannel,cModeChr,pMode[i]);
+							nDataLen = (strlen(pChannel)+3)*sizeof(char);
+                            pData=(char*)malloc(nDataLen);
+                            snprintf(pData,nDataLen,"%s %c%c",pChannel,cModeChr,pMode[i]);
                             
                             /* build  the  element*/
                             Callback=(CallbackItem_t*)malloc(sizeof(CallbackItem_t));
@@ -416,6 +423,7 @@ void hCallback(MsgItem_t *pMsg) {
     CallbackItem_t *CB_Data;
     CallbackDListItem *pCallbackItemReturn;
     char *pNetmask;
+    size_t nNetmaskLen;
     char *pRest=NULL;
     char *pNick;
     char *pLogin;
@@ -438,8 +446,9 @@ void hCallback(MsgItem_t *pMsg) {
          */
         if (!removeCallbackDList(&CallbackList,pCallbackItemReturn,&CB_Data)) {
             /* built netmask */
-            pNetmask=(char*)malloc((strlen(pNick)+strlen(pLogin)+strlen(pDomain)+3)*sizeof(char));
-            sprintf(pNetmask,"%s!%s@%s",pNick,pLogin,pDomain);
+		  	nNetmaskLen = (strlen(pNick)+strlen(pLogin)+strlen(pDomain)+3)*sizeof(char);
+   			pNetmask=(char*)malloc(nNetmaskLen);
+            snprintf(pNetmask,nNetmaskLen,"%s!%s@%s",pNick,pLogin,pDomain);
     
             /* execute the callback */
             CB_Data->CallbackFkt(pNetmask,CB_Data->data);

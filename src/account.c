@@ -39,6 +39,7 @@
 /* ############################################################################# */
 UserLevel_t getUserLevel(char *const pChannel, char *const pNetmask) {
     char *pAccessLevelKey;
+	size_t nAccessLevelKeySize;
     char *pLogin;
     char *pLevel;
     UserLevel_t UserLevel=NoneLevel;
@@ -50,8 +51,9 @@ UserLevel_t getUserLevel(char *const pChannel, char *const pNetmask) {
         /* check the  other level */
         if (pChannel) {
             /* built the  key */
-            pAccessLevelKey=(char*)malloc((strlen(pChannel)+strlen(pLogin)+1)*sizeof(char));
-            sprintf(pAccessLevelKey,"%s%s",pLogin,pChannel);
+           nAccessLevelKeySize = (strlen(pChannel)+strlen(pLogin)+1)*sizeof(char);
+		   pAccessLevelKey = (char*)malloc(nAccessLevelKeySize);
+            snprintf(pAccessLevelKey,nAccessLevelKeySize,"%s%s",pLogin,pChannel);
 
             if ((pLevel=get_db(ACCESS_DB,pAccessLevelKey))) {
                 if (strchr(pLevel,'o')) {
@@ -188,6 +190,7 @@ void rmAccessRights(char *pLogin){
     PQueue pChannelQueue;
 	QueueData *pChannel;
     char *pKey;
+	size_t nKeySize;
     int iLoginLen;
 
     logger(LOG_DEBUG,_("Remove the access rights for the account %s"),pLogin);
@@ -203,8 +206,9 @@ void rmAccessRights(char *pLogin){
         pChannel=popQueue(pChannelQueue);
 
         /* build  the key for access.dbf */
-        pKey=(char *)malloc((pChannel->t_size+iLoginLen+1)*sizeof(char));
-        sprintf(pKey,"%s%s",pLogin,(char*)pChannel->data);
+		nKeySize = (pChannel->t_size+iLoginLen+1)*sizeof(char);
+        pKey=(char *)malloc(nKeySize);
+        snprintf(pKey,nKeySize,"%s%s",pLogin,(char*)pChannel->data);
 
         del_db(ACCESS_DB,pKey);
 
@@ -245,13 +249,15 @@ void rmDeadAccounts(long lCheckTime) {
 boolean checkUserLevel(char *pCmdLogin, char *pLogin, char const *pChannel) {
     char *pMod;
     char *pAccessKey;
+    size_t nAccessKeyLen;
     boolean bStatus;
 
     /* read mods */
     if (pLogin){
         /* built db access key */
-        pAccessKey=(char*)malloc((strlen(pLogin)+strlen(pChannel)+1)*sizeof(char));
-        sprintf(pAccessKey,"%s%s",pLogin,pChannel);
+		nAccessKeyLen = (strlen(pLogin)+strlen(pChannel)+1)*sizeof(char);
+        pAccessKey=(char*)malloc(nAccessKeyLen);
+        snprintf(pAccessKey,nAccessKeyLen,"%s%s",pLogin,pChannel);
     
         /* read the access level of  the  user wiche want baning user */
         if ((pMod=get_db(ACCESS_DB,pAccessKey))) {}

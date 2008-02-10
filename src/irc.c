@@ -62,7 +62,7 @@ void user(void) {
 	   return;
    	}	   
     /* create the  commando string */
-    sprintf(buffer,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.sHostname,sSetup.realname);
+    snprintf(buffer,buffer_size,"USER %s %s %s :%s\r\n",pw->pw_name,hostname,sSetup.sHostname,sSetup.realname);
 
     /* send commando */
     SendLine(buffer);
@@ -73,16 +73,30 @@ void action(char *pTarget, char *pMsgStr){
     int nStrSize;
     char *buffer;
 
-    nStrSize=strlen("ACTION ")+strlen(pMsgStr)+3;
+	// check if message is valid
+	if ( NULL == pTarget)
+	{
+	   logger(LOG_ERR,_("Invalid target. Null pointer."));
+	   return;
+	}
 
-    if ((buffer=(char *)malloc(nStrSize*sizeof(char)))==NULL)
+	// check if message is valid
+	if ( NULL == pMsgStr)
+	{
+	   logger(LOG_ERR,_("Invalid message. Null pointer."));
+	   return;
+	}
+
+    nStrSize=(strlen("ACTION ")+strlen(pMsgStr)+3)*sizeof(char);
+
+    if ((buffer=(char *)malloc(nStrSize))==NULL)
 	{
 	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
     buffer[0]=1;
-    sprintf(&buffer[1],"ACTION %s",pMsgStr);
+    snprintf(&buffer[1],nStrSize-2,"ACTION %s",pMsgStr);
     buffer[nStrSize-2]=1;
     buffer[nStrSize-1]='\0';
 
@@ -92,26 +106,55 @@ void action(char *pTarget, char *pMsgStr){
 /* ############################################################################# */
 void privmsg(char *pTarget, char *pMsgStr){
     char *buffer;
-    if ((buffer=(char *)malloc((strlen("PRIVMSG ")+strlen(pTarget)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
+   	size_t buffer_size; 
+	// check if target or message is valid
+	if ( NULL == pTarget)
+	{
+	   logger(LOG_ERR,_("Invalid target. Null pointer."));
+	   return;
+	}
+   	if ( NULL == pMsgStr)
+	{
+	   logger(LOG_ERR,_("Invalid msg str. Null pointer."));
+	   return;
+	}
+
+	buffer_size = (strlen("PRIVMSG ")+strlen(pTarget)+strlen(pMsgStr)+5)*sizeof(char);
+	if ((buffer=(char *)malloc(buffer_size))==NULL)
 	{
 	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
-    sprintf(buffer,"PRIVMSG %s :%s\r\n",pTarget,pMsgStr);
+    snprintf(buffer,buffer_size,"PRIVMSG %s :%s\r\n",pTarget,pMsgStr);
     SendLine(buffer);
     free(buffer);
 }
 /* ############################################################################# */
 void notice(char * pNick,char *pMsgStr) {
     char *buffer;
-    if ((buffer=(char *)malloc((strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
+   	size_t buffer_size; 
+
+	// check if nickname or message is valid
+	if ( NULL == pNick)
+	{
+	   logger(LOG_ERR,_("Invalid nick name. Null pointer."));
+	   return;
+	}
+   	if ( NULL == pMsgStr)
+	{
+	   logger(LOG_ERR,_("Invalid msg str. Null pointer."));
+	   return;
+	}
+    
+	buffer_size = (strlen("NOTICE ")+strlen(pNick)+strlen(pMsgStr)+5)*sizeof(char);	
+	if ((buffer=(char *)malloc(buffer_size))==NULL)
 	{
 	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
-    sprintf(buffer,"NOTICE %s :%s\r\n",pNick,pMsgStr);
+    snprintf(buffer,buffer_size,"NOTICE %s :%s\r\n",pNick,pMsgStr);
     SendLine(buffer);
     free (buffer);
 }
@@ -138,54 +181,78 @@ void sendMsg(AnswerMode_t AnswerMode,char * pNick,char * pMsgStr,...){
 /* ############################################################################# */
 void join(char *pChannel) {
     char *buffer;
-    if ((buffer=(char *)malloc((strlen("JOIN ")+strlen(pChannel)+3)*sizeof(char)))==NULL)
+   	size_t buffer_size; 
+
+	// check if channel is valid
+	if ( NULL == pChannel)
+	{
+	   logger(LOG_ERR,_("Invalid channel. Null pointer."));
+	   return;
+	}
+	
+	buffer_size = (strlen("JOIN ")+strlen(pChannel)+3)*sizeof(char);
+	if ((buffer=(char *)malloc(buffer_size))==NULL)
 	{
 	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
-    sprintf(buffer,"JOIN %s\r\n",pChannel);
+    snprintf(buffer,buffer_size,"JOIN %s\r\n",pChannel);
     SendLine(buffer);
     free (buffer);
 }
 /* ############################################################################# */
 void part(char *pChannel) {
     char *buffer;
-    if ((buffer=(char *)malloc((strlen("PART ")+strlen(pChannel)+3)*sizeof(char)))==NULL)
+   	size_t buffer_size; 
+
+   	// check if channel is valid
+	if ( NULL == pChannel)
+	{
+	   logger(LOG_ERR,_("Invalid channel. Null pointer."));
+	   return;
+	} 
+	
+	buffer_size = (strlen("PART ")+strlen(pChannel)+3)*sizeof(char);
+	if ((buffer=(char *)malloc(buffer_size))==NULL)
 	{
 	   logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   return;
     }	   
 
-    sprintf(buffer,"PART %s\r\n",pChannel);
+    snprintf(buffer,buffer_size,"PART %s\r\n",pChannel);
     SendLine(buffer);
     free (buffer);
 }
 /* ############################################################################# */
 void pong(char *pPong) {
-    char *buffer,hostname[HOSTNAME_BUFFER_SIZE];
+    char *buffer;
+	char hostname[HOSTNAME_BUFFER_SIZE];
+   	size_t buffer_size; 
 
 /*    gethostname(hostname,HOSTNAME_BUFFER_SIZE); */
-	if (pPong==NULL)
+	if (pPong == NULL)
 	{
 		/* I have no parameter for pong */
+		buffer_size = (strlen("PONG ")+strlen(hostname)+3)*sizeof(char);
 	    gethostname(hostname,HOSTNAME_BUFFER_SIZE);
-		if ((buffer=(char *)malloc((strlen("PONG ")+strlen(hostname)+3)*sizeof(char)))==NULL)
+		if ((buffer=(char *)malloc(buffer_size))==NULL)
 		{
 		   	logger(LOG_ERR,_("Couldn't allocate memory!"));
 		 	return;
     	}	   
 
-		sprintf(buffer,"PONG %s\r\n",hostname);
+		snprintf(buffer,buffer_size,"PONG %s\r\n",hostname);
 	}else
 	{
-		if ((buffer=(char *)malloc((strlen("PONG ")+strlen(pPong)+3)*sizeof(char)))==NULL)
+		buffer_size = (strlen("PONG ")+strlen(pPong)+3)*sizeof(char);
+		if ((buffer=(char *)malloc(buffer_size))==NULL)
 		{
 	   		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   		return;
     	}	   
 
-	    sprintf(buffer,"PONG %s\r\n",pPong);
+	    snprintf(buffer,buffer_size,"PONG %s\r\n",pPong);
 	}
     SendLine(buffer);
     free (buffer);
@@ -193,13 +260,23 @@ void pong(char *pPong) {
 /* ############################################################################# */
 void ping(char *pTarget) {
     char *buffer;
-    if ((buffer=(char *)malloc((strlen("PING ")+strlen(pTarget)+3)*sizeof(char)))==NULL)
+   	size_t buffer_size; 
+
+	// check if channel is valid
+	if ( NULL == pTarget)
+	{
+	   logger(LOG_ERR,_("Invalid target. Null pointer."));
+	   return;
+	}    
+	
+	buffer_size = (strlen("PING ")+strlen(pTarget)+3)*sizeof(char);
+	if ((buffer=(char *)malloc(buffer_size))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
-    sprintf(buffer,"PING %s\r\n",pTarget);
+    snprintf(buffer,buffer_size,"PING %s\r\n",pTarget);
     SendLine(buffer);
     free (buffer);
 }
@@ -207,19 +284,30 @@ void ping(char *pTarget) {
 void invite(char *pChannel,char *pNick) {
     char *buffer;
     int aloc=0;
-    if (!pChannel)
+   	size_t buffer_size; 
+
+	// check if nickname valid
+	if ( NULL == pNick)
+	{
+	   logger(LOG_ERR,_("Invalid nick name. Null pointer."));
+	   return;
+	}    
+	
+	if (!pChannel)
     {
 	    aloc=1;
 	    pChannel=malloc(sizeof(char));
 	    strcpy(pChannel,"");
     }		    
-    if ((buffer=(char*)malloc((strlen("INVITE")+strlen(pNick)+strlen(pChannel)+5)*sizeof(char)))==NULL)
+
+	buffer_size = (strlen("INVITE")+strlen(pNick)+strlen(pChannel)+5)*sizeof(char);
+    if ((buffer=(char*)malloc(buffer_size))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
-    sprintf(buffer,"INVITE %s %s\r\n",pNick,pChannel);
+    snprintf(buffer,buffer_size,"INVITE %s %s\r\n",pNick,pChannel);
     SendLine(buffer);
     free(buffer);
     if (aloc)
@@ -228,26 +316,51 @@ void invite(char *pChannel,char *pNick) {
 /* ############################################################################# */
 void nick(char *pNick) {
     char *buffer;
-    if ((buffer=(char *)malloc((strlen("NICK ")+strlen(pNick)+3)*sizeof(char)))==NULL)
+	size_t buffer_size;
+
+	// check if nickname is valid
+	if ( NULL == pNick)
+	{
+	   logger(LOG_ERR,_("Invalid nick name. Null pointer."));
+	   return;
+	}
+
+	buffer_size = (strlen("NICK ")+strlen(pNick)+3)*sizeof(char);
+	if ((buffer=(char *)malloc(buffer_size))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
-    sprintf(buffer,"NICK %s\r\n",pNick);
+    snprintf(buffer,buffer_size,"NICK %s\r\n",pNick);
     SendLine(buffer);
     free (buffer);
 }
 /* ############################################################################# */
 void topic(char *pChannel, char* pMsgStr) {
     char *buffer;
-    if ((buffer=(char*)malloc((strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5)*sizeof(char)))==NULL)
+   	size_t buffer_size;
+
+	// check if channel or message is valid
+	if ( NULL == pChannel)
+	{
+	   logger(LOG_ERR,_("Invalid channel. Null pointer."));
+	   return;
+	}
+	if ( NULL == pMsgStr)
+	{
+	   logger(LOG_ERR,_("Invalid message. Null pointer."));
+	   return;
+	}
+	
+	buffer_size = (strlen("TOPIC ")+strlen(pChannel)+strlen(pMsgStr)+5)*sizeof(char);
+	if ((buffer=(char*)malloc(buffer_size))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
     }	   
 
-    sprintf(buffer,"TOPIC %s :%s\r\n",pChannel,pMsgStr);
+    snprintf(buffer,buffer_size,"TOPIC %s :%s\r\n",pChannel,pMsgStr);
     SendLine(buffer);
     free (buffer);
 }
@@ -255,7 +368,24 @@ void topic(char *pChannel, char* pMsgStr) {
 void kick(char *pChannel, char *pNick, char *pMsgStr) {
     char *buffer;
 
-    if ((buffer=(char*)malloc((strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6)*sizeof(char)))==NULL)
+	 // check if channel or message is valid
+	if ( NULL == pChannel)
+	{
+	   logger(LOG_ERR,_("Invalid channel. Null pointer."));
+	   return;
+	}
+	if ( NULL == pNick)
+	{
+	   logger(LOG_ERR,_("Invalid nick name. Null pointer."));
+	   return;
+	}
+	if ( NULL == pMsgStr)
+	{
+	   logger(LOG_ERR,_("Invalid message. Null pointer."));
+	   return;
+	}
+	
+	if ((buffer=(char*)malloc((strlen("KICK ")+strlen(pChannel)+strlen(pNick)+strlen(pMsgStr)+6)*sizeof(char)))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
@@ -268,7 +398,20 @@ void kick(char *pChannel, char *pNick, char *pMsgStr) {
 /* ############################################################################# */
 void ban(char *pChannel,char *pMask){
     char *buffer;
-    if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
+    
+	// check if channel or mask is valid
+	if ( NULL == pChannel)
+	{
+	   logger(LOG_ERR,_("Invalid channel. Null pointer."));
+	   return;
+	}
+	if ( NULL == pMask)
+	{
+	   logger(LOG_ERR,_("Invalid mask. Null pointer."));
+	   return;
+	}
+
+	if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
@@ -281,7 +424,19 @@ void ban(char *pChannel,char *pMask){
 /* ############################################################################# */
 void deban(char *pChannel,char *pMask){
     char *buffer;
-    if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
+   	// check if channel or mask is valid
+	if ( NULL == pChannel)
+	{
+	   logger(LOG_ERR,_("Invalid channel. Null pointer."));
+	   return;
+	}
+	if ( NULL == pMask)
+	{
+	   logger(LOG_ERR,_("Invalid mask. Null pointer."));
+	   return;
+	} 
+	
+	if ((buffer=(char*)malloc((strlen("MODE ")+strlen(pChannel)+strlen(pMask)+6)*sizeof(char)))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;
@@ -295,7 +450,19 @@ void deban(char *pChannel,char *pMask){
 void mode(char *pChannel, char *pMod, char *pModParameter) {
     char *buffer;
 
-    /* check  optional parameters and  set  it of default values */
+	// check if channel or mask is valid
+	if ( NULL == pChannel)
+	{
+	   logger(LOG_ERR,_("Invalid channel. Null pointer."));
+	   return;
+	}
+	if ( NULL == pMod)
+	{
+	   logger(LOG_ERR,_("Invalid mod. Null pointer."));
+	   return;
+	}    
+	
+	/* check  optional parameters and  set  it of default values */
     if (pModParameter==NULL) {
         pModParameter="";
     }
@@ -312,7 +479,14 @@ void mode(char *pChannel, char *pMod, char *pModParameter) {
 /* ############################################################################# */
 void whois(char *pNickname) {
     char *buffer;
-    if ((buffer=(char*)malloc((strlen("WHOIS ")+strlen(pNickname)+3)*sizeof(char)))==NULL)
+   	// check if channel or mask is valid
+	if ( NULL == pNickname)
+	{
+	   logger(LOG_ERR,_("Invalid nick name. Null pointer."));
+	   return;
+	} 
+	
+	if ((buffer=(char*)malloc((strlen("WHOIS ")+strlen(pNickname)+3)*sizeof(char)))==NULL)
 	{
 		logger(LOG_ERR,_("Couldn't allocate memory!"));
 	   	return;

@@ -66,7 +66,7 @@ boolean initDatabases(void) {
     DIR *pDir;
 	int i;
     char *pDBPath;
-
+	size_t nDBPathLen;
     logger(LOG_NOTICE,_("Initialization of the database" ));
     
     /* check directory
@@ -86,9 +86,9 @@ boolean initDatabases(void) {
     /* open the databases*/
     for (i=0;i<MAX_DB;i++) {
         assert(i==pDB[i].id);
-        
-        pDBPath=(char *)malloc((strlen(sSetup.pDatabasePath)+strlen(pDB[i].pName)+2)*sizeof(char));
-        sprintf(pDBPath,"%s/%s",sSetup.pDatabasePath,pDB[i].pName);
+        nDBPathLen = (strlen(sSetup.pDatabasePath)+strlen(pDB[i].pName)+2)*sizeof(char);
+        pDBPath=(char *)malloc(nDBPathLen);
+        snprintf(pDBPath,nDBPathLen,"%s/%s",sSetup.pDatabasePath,pDB[i].pName);
         dbf[i]=gdbm_open(pDBPath,512,pDB[i].Access,0600,NULL);
         
         if (!dbf[i]) {
@@ -96,8 +96,6 @@ boolean initDatabases(void) {
             logger(LOG_ERR,_("Couldn't open the databases %s - %s"),pDBPath,strerror(errno));
             return false;
         }
-
-
 
         /* init the mutexs*/
         pthread_mutex_init(&dbaccess_mutex[i],NULL);

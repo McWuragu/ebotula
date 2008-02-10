@@ -47,6 +47,7 @@ void ModeResetCb(char *pNetmask,void* data){
     char *pChannel=NULL;
     char *pOldMode=NULL;
     char *pAccessKey=NULL;
+    size_t nAccessKeySize=0;
     char *pLogin=NULL;
     char *pNick=NULL;
     char *pMod=NULL;
@@ -62,8 +63,9 @@ void ModeResetCb(char *pNetmask,void* data){
             logger(LOG_DEBUG,_("Reset the account modes for the identified account %s"),pLogin);
     
             /* built the  key for the access_db */
-            pAccessKey=(char*)malloc((strlen(pChannel)+strlen(pLogin)+1)*sizeof(char));
-            sprintf(pAccessKey,"%s%s",pLogin,pChannel);
+			nAccessKeySize = (strlen(pChannel)+strlen(pLogin)+1)*sizeof(char);
+			pAccessKey=(char*)malloc(nAccessKeySize);
+            snprintf(pAccessKey,nAccessKeySize,"%s%s",pLogin,pChannel);
     
     
             /* read user rights */

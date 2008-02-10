@@ -252,12 +252,15 @@ void StrToChannelData(char *pChannelSet,ChannelData_t * pChannelData) {
 }
 /* ############################################################################# */
 char *ChannelDataToStr(ChannelData_t *pChannelData) {
-    char *pChannelSet;
-    char *pMode;
-    int iLenght;
+    char *pChannelSet=NULL;
+    char *pMode=NULL;
+    int iLenght=0;
 
     pMode=ChannelModeToStr(&(pChannelData->sModes));
-    iLenght=strlen(pMode);
+    if (NULL != pMode)
+	{
+		iLenght=strlen(pMode);
+	}
 
     if (pChannelData->pGreeting) {
         iLenght+=strlen(pChannelData->pGreeting);

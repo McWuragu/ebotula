@@ -43,7 +43,8 @@ void ctcpping(MsgItem_t *pMsg) {
         return;
     }
    pPing+=2;
-   sprintf(pPong,"%s",pPing);
+   // copy ping info,but max 64 byte
+   snprintf(pPong,64,"%s",pPing);
    notice(pMsg->pCallingNick,pPong);
 }
 /* #########################################################################
@@ -57,7 +58,7 @@ void ctcpversion(MsgItem_t *pMsg) {
     uname(&env);
     /* creat Versions String */
     /* sprintf(pVerStr,VERSIONSTR); */
-    sprintf(pMsgStr,"\001VERSION %s:v%s:%s %s %s\001",PACKAGE,PACKAGE_VERSION,env.sysname,env.release,env.machine);
+    snprintf(pMsgStr,256,"\001VERSION %s:v%s:%s %s %s\001",PACKAGE,PACKAGE_VERSION,env.sysname,env.release,env.machine);
     notice(pMsg->pCallingNick,pMsgStr);
     return;
 }
