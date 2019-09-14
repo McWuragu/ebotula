@@ -15,7 +15,7 @@ dnl *************************************************************
 
 AC_PREREQ(2.61)
 AC_INIT(ebotula,0.1.18,Laube.Steffe@gmx.de)
-AM_INIT_AUTOMAKE(ebotula,0.1.18)
+AM_INIT_AUTOMAKE([ebotula],[0.1.18])
 
 AC_GNU_SOURCE
 
