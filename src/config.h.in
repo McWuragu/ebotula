@@ -152,6 +152,9 @@
 /* Define if your <locale.h> file defines LC_MESSAGES. */
 #undef HAVE_LC_MESSAGES
 
+/* Define to 1 if you have the `cunit' library (-lcunit). */
+#undef HAVE_LIBCUNIT
+
 /* Define to 1 if you have the `gdbm' library (-lgdbm). */
 #undef HAVE_LIBGDBM
 

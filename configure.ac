@@ -48,6 +48,13 @@ AC_ARG_WITH(gdbmlib,
 )
 AC_SUBST(GDBM_LIB)
 
+# cunit test
+AC_CHECK_LIB(cunit,CU_initialize_registry,
+	[CUNIT_LIB="-lcunit"],
+	AC_MSG_ERROR("cunit library not found.")
+)
+AC_SUBST(CUNIT_LIB)
+
 AC_CHECK_LIB(crypt,crypt,
   [CRYPT_LIB="-lcrypt"],
   AC_MSG_ERROR("crypt library not found.")
