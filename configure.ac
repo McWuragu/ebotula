@@ -148,5 +148,6 @@ AC_CONFIG_FILES([Makefile
                  doc/Makefile
                  etc/Makefile
                  src/Makefile
+                 testsuit/Makefile
 		 tools/Makefile])
 AC_OUTPUT
