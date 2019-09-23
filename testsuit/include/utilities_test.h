@@ -6,4 +6,7 @@
 int init_utilities(void);
 int clean_utilities(void); 
 
-void testTrim(void);
+void testTrim_no_space(void);
+void testTrim_leading_space(void);
+void testTrim_newline(void);
+void testTrim_double_space(void);
