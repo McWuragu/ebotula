@@ -39,3 +39,10 @@ void testTrim_newline (void) {
 	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo");
 }
 
+void testTrim_sentence(void) {
+	char pTestStr[] = " hallo mein Freund, wie  geht es dir?\n\r";
+
+	trim(pTestStr);
+	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo mein Freund, wie geht es dir?");
+}
+
