@@ -4,6 +4,7 @@
 
 int main () {
 	CU_pSuite pSuite = NULL;
+	unsigned int nIndex=0;
 
 	/* initialize the CUnit test registry */
 	if (CUE_SUCCESS != CU_initialize_registry())
@@ -17,30 +18,12 @@ int main () {
    	}		
 
 
-  	if (NULL == CU_add_test(pSuite, "test of trim() with no space", testTrim_no_space)){
-      		CU_cleanup_registry();
-      		return CU_get_error();
-   	}	
-
-  	if (NULL == CU_add_test(pSuite, "test of trim() with leading space", testTrim_leading_space)){
-      		CU_cleanup_registry();
-      		return CU_get_error();
-   	}	
-
-  	if (NULL == CU_add_test(pSuite, "test of trim() with double space", testTrim_double_space)){
-      		CU_cleanup_registry();
-      		return CU_get_error();
-   	}	
-
-  	if (NULL == CU_add_test(pSuite, "test of trim() with newline return", testTrim_newline)){
-      		CU_cleanup_registry();
-      		return CU_get_error();
-   	}	
-
-  	if (NULL == CU_add_test(pSuite, "test of trim() with sentence", testTrim_sentence)){
-      		CU_cleanup_registry();
-      		return CU_get_error();
-   	}	
+	for (nIndex=0; nIndex<NUMBER_OF_UTILITIES_TESTS; nIndex++ ) {
+	  	if (NULL == CU_add_test(pSuite, pstrUtilitiesTestSet[nIndex].pDesc, pstrUtilitiesTestSet[nIndex].TestFkt)){
+    	  		CU_cleanup_registry();
+      			return CU_get_error();
+	   	}		
+	}
 
    	/* Run all tests using the CUnit Basic interface */
    	CU_basic_set_mode(CU_BRM_NORMAL);
