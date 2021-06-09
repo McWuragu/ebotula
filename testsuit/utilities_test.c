@@ -46,8 +46,17 @@ void testTrim_sentence(void) {
 	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo mein Freund, wie geht es dir?");
 }
 
-void testStrToLower(void) {
+void testStrToLower_UpToLow(void) {
 	char pTestStr[]="HALLO";
+	char *pCheckStr;
+	
+	pCheckStr=StrToLower(pTestStr);
+	
+	CU_ASSERT_STRING_EQUAL(pCheckStr,"hallo");
+}
+
+void testStrToLower_LowToLow(void) {
+	char pTestStr[]="hallo";
 	char *pCheckStr;
 	
 	pCheckStr=StrToLower(pTestStr);

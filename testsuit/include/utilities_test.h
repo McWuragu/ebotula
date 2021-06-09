@@ -14,9 +14,10 @@ void testTrim_leading_space(void);
 void testTrim_newline(void);
 void testTrim_double_space(void);
 void testTrim_sentence(void);
-void testStrToLower(void);
+void testStrToLower_UpToLow(void);
+void testStrToLower_LowToLow(void);
 
-#define NUMBER_OF_UTILITIES_TESTS	6
+#define NUMBER_OF_UTILITIES_TESTS	7
 
 /* collection of all test für the utilities function */
 static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= { 
@@ -25,7 +26,8 @@ static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= {
 	{testTrim_newline,		"Trim(): newline and carage return"}, 
 	{testTrim_double_space,	"Trim(): double spaces"},
 	{testTrim_sentence,		"Trim(): sentence"},
-	{testStrToLower,	    "StrToLower(): full upper  to lower" }
+	{testStrToLower_UpToLow,"StrToLower(): full upper to lower"},
+	{testStrToLower_LowToLow,"StrToLower(): full lower to lower"},
 };
 
 #endif
