@@ -13,14 +13,14 @@ dnl
 dnl to build the configure script
 dnl *************************************************************
 
-AC_PREREQ(2.61)
-AC_INIT(ebotula,0.1.18,Laube.Steffe@gmx.de)
+AC_PREREQ([2.71])
+AC_INIT([ebotula],[0.1.18],[Laube.Steffe@gmx.de])
 AM_INIT_AUTOMAKE
 
-AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
 
 AC_CONFIG_SRCDIR([src/ircbot.c])
-AC_CONFIG_HEADER([src/config.h])
+AC_CONFIG_HEADERS([src/config.h])
 
 
 # Checks for programs.
@@ -71,8 +71,14 @@ AC_SUBST(PTHREAD_LIB)
 # Checks for header files.
 AC_FUNC_ALLOCA
 AC_HEADER_DIRENT
-AC_HEADER_STDC
-AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h inttypes.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h strings.h sys/param.h sys/socket.h syslog.h termios.h unistd.h])
+
+# Autoupdate added the next two lines to ensure that your configure
+# script's behavior did not change.  They are probably safe to remove.
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
+
+#AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h inttypes.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h strings.h sys/param.h sys/socket.h syslog.h termios.h unistd.h])
+AC_INCLUDES_DEFAULT
 
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -85,13 +91,13 @@ AC_TYPE_UID_T
 AC_C_VOLATILE
 
 # Checks for library functions.
-AM_GNU_GETTEXT
-AM_GNU_GETTEXT_VERSION
+AM_GNU_GETTEXT([external], [need-ngettext])
+AM_GNU_GETTEXT_VERSION([0.20])
 AC_FUNC_CLOSEDIR_VOID
 AC_FUNC_MALLOC
 AC_FUNC_MMAP
 AC_FUNC_REALLOC
-AC_TYPE_SIGNAL
+AC_CACHE_CHECK([for the type of signal handlers], ac_cv_type_retsigtype, [ ac_cv_type_retsigtype=yes])
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify bzero clock_gettime getcwd gethostbyname gethostname mempcpy memset mkdir munmap nl_langinfo setlocale socket stpcpy strcasecmp strchr strcspn strdup strpbrk strrchr strstr strtoul uname])
