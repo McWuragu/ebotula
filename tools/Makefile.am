@@ -1,22 +1,24 @@
 bin_PROGRAMS = ebotula_db
 ebotula_db_SOURCES=\
 	delete.c \
-	delete.h \
 	dump.c \
-	dump.h \
 	exists.c \
-	exists.h \
 	fetch.c \
-	fetch.h \
-	main.h \
 	quote.c \
-	quote.h \
 	store.c \
-	store.h \
 	main.c
+
+noinst_HEADERS = \
+	include/store.h \
+	include/quote.h \
+	include/fetch.h \
+	include/main.h \
+	include/dump.h \
+	include/exists.h \
+	include/delete.h 
 
 ebotula_db_LDADD= $(GDBM_LIB)
 ebotula_db_LDFLAGS=$(DFLAGS) $(PFLAGS)
-ebotula_db_CFLAGS= $(DFLAGS) $(PFLAGS)
+ebotula_db_CFLAGS= $(DFLAGS) $(PFLAGS) -I./include
 
 
