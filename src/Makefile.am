@@ -22,7 +22,8 @@ ebotula_SOURCES= \
 	configparser.c \
 	baseconfig.c 
 
-noinst_HEADERS = config.h \
+noinst_HEADERS = \
+	include/config.h \
 	include/type.h \
 	include/cmdtypes.h \
 	include/cmdlist.h \
