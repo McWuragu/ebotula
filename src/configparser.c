@@ -22,6 +22,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
@@ -36,12 +37,12 @@ extern ConfigSetup_t sSetup;
 int key_uint_checker(const void * value,const void* range1,const void *range2,const char *param_name)
 {
 	unsigned int tmp=atoi((char*)value);
-	unsigned int low_range;
-	unsigned int high_range;
+	uintptr_t  low_range;
+	uintptr_t  high_range;
 /*	NULL ==0 at x86 Architecture!!
  *	if (range1!=NULL)*/
 	{
-		low_range=(unsigned int)range1;
+		low_range=(uintptr_t )range1;
 		if (tmp<low_range)
 		{
 	            fprintf(stderr,_("Parameter '%s' is invalid: %d\n"),param_name,tmp);
@@ -52,7 +53,7 @@ int key_uint_checker(const void * value,const void* range1,const void *range2,co
 	}
 	if (range2!=NULL)
 	{
-		high_range=(unsigned int)range2;
+		high_range=(uintptr_t )range2;
 		if (tmp>high_range)
 		{
 	            fprintf(stderr,_("Parameter '%s' is invalid: %d\n"),param_name,tmp);
@@ -67,11 +68,11 @@ int key_uint_checker(const void * value,const void* range1,const void *range2,co
 int key_int_checker(const void * value,const void* range1,const void *range2,const char *param_name)
 {
 	int tmp=atoi((char*)value);
-	int low_range;
-	int high_range;
+	intptr_t  low_range;
+	intptr_t  high_range;
 /*	NULL ==0 at x86 Architecture!!
  *	if (range1!=NULL)*/
-	low_range=(int)range1;
+	low_range=(intptr_t )range1;
 
 	{
 		if (tmp<low_range)
@@ -84,7 +85,7 @@ int key_int_checker(const void * value,const void* range1,const void *range2,con
 	}
 	if (range2!=NULL)
 	{
-		high_range=(int)range2;
+		high_range=(intptr_t )range2;
 		if (tmp>high_range)
 		{
 	            fprintf(stderr,_("Parameter '%s' is invalid: %d\n"),param_name,tmp);
