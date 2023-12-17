@@ -77,9 +77,8 @@ AC_HEADER_DIRENT
 AC_CHECK_INCLUDES_DEFAULT
 AC_PROG_EGREP
 
-#AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h inttypes.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h strings.h sys/param.h sys/socket.h syslog.h termios.h unistd.h])
+#AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h inttypes.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h strings.h sys/param.h sys/socket.h termios.h unistd.h syslog.h])
 AC_INCLUDES_DEFAULT
-
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -100,7 +99,7 @@ AC_FUNC_REALLOC
 AC_CACHE_CHECK([for the type of signal handlers], ac_cv_type_retsigtype, [ ac_cv_type_retsigtype=yes])
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify bzero clock_gettime getcwd gethostbyname gethostname mempcpy memset mkdir munmap nl_langinfo setlocale socket stpcpy strcasecmp strchr strcspn strdup strpbrk strrchr strstr strtoul uname])
+AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify bzero clock_gettime getcwd gethostbyname gethostname mempcpy memset mkdir munmap nl_langinfo setlocale socket stpcpy strcasecmp strchr strcspn strdup strpbrk strrchr strstr strtoul syslog uname])
 
 
 
