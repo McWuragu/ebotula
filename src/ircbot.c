@@ -43,7 +43,7 @@
     #include "config.h"
 #endif
 
-#ifdef HAVE_SYSLOG_H
+#ifdef HAVE_SYSLOG
     #include <syslog.h>
 #endif
 
@@ -197,7 +197,7 @@ int AppMain(int argc, char * const argv[]) {
 
     
     
-    #ifdef HAVE_SYSLOG_H
+    #ifdef HAVE_SYSLOG
     openlog(PACKAGE,0,LOG_DAEMON);
     #endif
     
@@ -355,7 +355,9 @@ int AppMain(int argc, char * const argv[]) {
     /* create the network connection */
     if (!connectServer()) {
         closeDatabase();
+        #ifdef HAVE_SYSLOG
         closelog();
+		#endif
         return(errno);
     }
     
@@ -363,7 +365,9 @@ int AppMain(int argc, char * const argv[]) {
     if (!ConnectToIrc()) {
         disconnectServer();
         closeDatabase();
+		#ifdef HAVE_SYSLOG
         closelog();
+		#endif
         return(errno);
     }
 
@@ -511,8 +515,9 @@ int AppMain(int argc, char * const argv[]) {
     free (sSetup.sExeUser);
 
 
-
+	#ifdef HAVE_SYSLOG
     closelog();
+	#endif
 
     return(0);
 }

@@ -28,7 +28,7 @@
     #include "config.h"
 #endif
 
-#ifdef HAVE_SYSLOG_H
+#ifdef HAVE_SYSLOG
     #include <syslog.h>
 #else
     /* fixed the missing header file syslog.h*/

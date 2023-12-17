@@ -326,6 +326,7 @@ int convertVerboseToLogLevel(const int nVerbose) {
         break;
     case 2:
         nLog=LOG_INFO;
+        break;
     default:
         nLog=LOG_DEBUG;
     }
@@ -352,7 +353,7 @@ int logger(int priority, char *format, ...)
     if (!bHideLogOnScreen) {
         fprintf(stderr,"%s\n",buf); 
     } else {
-        #ifdef HAVE_SYSLOG_H
+        #ifdef HAVE_SYSLOG
         syslog(priority,buf);
         #endif
     }
