@@ -20,7 +20,7 @@ AM_INIT_AUTOMAKE
 AC_USE_SYSTEM_EXTENSIONS
 
 AC_CONFIG_SRCDIR([src/ircbot.c])
-AC_CONFIG_HEADERS([src/config.h])
+AC_CONFIG_HEADERS([src/include/config.h])
 
 
 # Checks for programs.
