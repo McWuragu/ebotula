@@ -64,3 +64,68 @@ void testStrToLower_LowToLow(void) {
 	CU_ASSERT_STRING_EQUAL(pCheckStr,"hallo");
 }
 
+void testclearspace_NOP(void) {
+
+	char pTestStr[]="Teststring";
+	clearspace(pTestStr);
+
+	CU_ASSERT_STRING_EQUAL(pTestStr,"Teststring");
+}
+
+void testclearspace_space_only(void) {
+
+	char pTestStr[]="      ";
+	clearspace(pTestStr);
+
+	CU_ASSERT_STRING_EQUAL(pTestStr,"");
+}
+
+void testclearspace_space_only_and_quotes(void) {
+
+	char pTestStr[]=" \"  \"   ";
+	clearspace(pTestStr);
+
+	CU_ASSERT_STRING_EQUAL(pTestStr,"  ");
+}
+
+void testclearspace_space_at_the_begin_and_end(void) {
+
+	char pTestStr[]=" Teststring ";
+	clearspace(pTestStr);
+
+	CU_ASSERT_STRING_EQUAL(pTestStr,"Teststring");
+}
+
+void testclearspace_space_between(void) {
+
+	char pTestStr[]="Hallo Teststring";
+	clearspace(pTestStr);
+
+	CU_ASSERT_STRING_EQUAL(pTestStr,"HalloTeststring");
+}
+
+void testclearspace_multi_space_between(void) {
+
+	char pTestStr[]="  Hallo  Teststring  ";
+	clearspace(pTestStr);
+	
+	CU_ASSERT_STRING_EQUAL(pTestStr,"HalloTeststring");
+}
+
+void testclearspace_space_quote_between(void) {
+
+	char pTestStr[]="\"Hallo Teststring\"";
+	clearspace(pTestStr);
+
+	
+	CU_ASSERT_STRING_EQUAL(pTestStr,"Hallo Teststring");
+}
+
+void testclearspace_space_quotes_mix(void) {
+
+	char pTestStr[]="\"Hallo Teststring \" more Teststring  and more";
+	clearspace(pTestStr);
+
+	
+	CU_ASSERT_STRING_EQUAL(pTestStr,"Hallo Teststring moreTeststringandmore");
+}
