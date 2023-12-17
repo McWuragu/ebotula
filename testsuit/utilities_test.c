@@ -11,6 +11,13 @@ int clean_utilities(void) {
 }
 
 
+void testTrim_empty_string(void) {
+	char pTestStr[] = "";
+
+	trim(pTestStr);
+	CU_ASSERT_STRING_EQUAL(pTestStr,"");
+}
+
 void testTrim_no_space(void) {
 	char pTestStr[] = "hallo";
 
@@ -25,8 +32,8 @@ void testTrim_leading_space(void) {
 	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo");
 }
 
-void testTrim_double_space(void) {
-	char pTestStr[] = "  hallo";
+void testTrim_multi_leading_space(void) {
+	char pTestStr[] = "     hallo";
 
 	trim(pTestStr);
 	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo");
