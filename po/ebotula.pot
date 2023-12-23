@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
-"POT-Creation-Date: 2019-09-14 17:56+0200\n"
+"POT-Creation-Date: 2023-12-23 14:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,11 +110,11 @@ msgstr ""
 msgid "Couldn't kick this user"
 msgstr ""
 
-#: src/callbacklist.c:95 src/callbacklist.c:148 src/command.c:1476
-#: src/irc.c:61 src/irc.c:94 src/irc.c:125 src/irc.c:153 src/irc.c:196
-#: src/irc.c:219 src/irc.c:241 src/irc.c:251 src/irc.c:275 src/irc.c:306
-#: src/irc.c:331 src/irc.c:359 src/irc.c:390 src/irc.c:416 src/irc.c:441
-#: src/irc.c:471 src/irc.c:491 src/queue.c:43 src/queue.c:95 src/queue.c:124
+#: src/callbacklist.c:95 src/callbacklist.c:148 src/command.c:1476 src/irc.c:61
+#: src/irc.c:94 src/irc.c:125 src/irc.c:153 src/irc.c:196 src/irc.c:219
+#: src/irc.c:241 src/irc.c:251 src/irc.c:275 src/irc.c:306 src/irc.c:331
+#: src/irc.c:359 src/irc.c:390 src/irc.c:416 src/irc.c:441 src/irc.c:471
+#: src/irc.c:491 src/queue.c:43 src/queue.c:95 src/queue.c:124
 msgid "Couldn't allocate memory!"
 msgstr ""
 
@@ -720,16 +720,16 @@ msgstr ""
 msgid "Start..."
 msgstr ""
 
-#: src/ircbot.c:370
+#: src/ircbot.c:374
 msgid "Running..."
 msgstr ""
 
-#: src/ircbot.c:435 src/ircbot.c:437 src/parser.c:128
+#: src/ircbot.c:439 src/ircbot.c:441 src/parser.c:128
 #, c-format
 msgid "Receive: \"%s\""
 msgstr ""
 
-#: src/ircbot.c:479
+#: src/ircbot.c:483
 msgid "The bot is stopping."
 msgstr ""
 
