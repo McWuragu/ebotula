@@ -3,7 +3,7 @@ src/baseconfig.c
 src/callback.c
 src/callbacklist.c
 src/command.c
-src/config.h
+src/include/config.h
 src/dbaccess.c
 src/handles.c
 src/ircbot.c
