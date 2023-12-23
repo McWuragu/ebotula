@@ -56,9 +56,9 @@ void test_isemptyQueue_after_push_delete(void) {
 
 	QueueData testItem;
 
-	pushQueue(Queue,testItem);
-	pushQueue(Queue,testItem);
-	deleteQueue(Queue);
+	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
+	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
+	CU_ASSERT_EQUAL(deleteQueue(Queue), QUEUE_SUCCESS);
 
 	CU_ASSERT_TRUE(isemptyQueue(Queue));
 }
@@ -68,7 +68,20 @@ void test_isfullQueue(void) {
 
 	QueueData testItem;
 
-	pushQueue(Queue,testItem);
+	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
 
 	CU_ASSERT_TRUE(isfullQueue(Queue));
 }
+
+void test_popQueue_after_push_not_null(void) {
+	PQueue Queue;
+	Queue = initQueue();
+
+	QueueData testItem;
+
+	pushQueue(Queue,testItem);
+	
+	CU_ASSERT_PTR_NOT_NULL(popQueue(Queue));
+}
+
+

@@ -21,8 +21,9 @@ void test_isemptyQueue_not(void);
 void test_isemptyQueue_after_push_pop(void);
 void test_isemptyQueue_after_push_delete(void);
 void test_isfullQueue(void);
+void test_popQueue_after_push_not_null(void);
 
-#define NUMBER_OF_QUEUE_TESTS	6
+#define NUMBER_OF_QUEUE_TESTS	7
 
 static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_initQueue,			"initQueue(): testing the initalisation"},
@@ -31,6 +32,7 @@ static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_isemptyQueue_after_push_pop,	"isemptyQueue(): testing of empty queue after push and pop"},
 		{test_isemptyQueue_after_push_delete,	"isemptyQueue(): testing of empty queue after push and delete"},
 		{test_isfullQueue,			"isfullQueue(): testing  of a not empty queue"},
+		{test_popQueue_after_push_not_null,	"popQueue(): testing of popping a queue after push"},
 };
 
 #endif /* TESTSUIT_INCLUDE_QUEUE_TEST_H_ */
