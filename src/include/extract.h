@@ -2,7 +2,7 @@
  *
  *  This file is a part of ebotula. 
  *
- *  Coypright (C)2003-2005 Steffen Laube <Laube.Steffen@gmx.de>
+ *  Coypright (C)2003-2023 Steffen Laube <Laube.Steffen@gmx.de>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
