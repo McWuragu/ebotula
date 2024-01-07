@@ -1,9 +1,26 @@
-/*
- * queue_test.h
+/* #############################################################
  *
- *  Created on: 17.12.2023
- *      Author: slaube
+ *  This file is a part of ebotula testsuit.
+ *
+ *  Coypright (C)2023-2024 Steffen Laube <Laube.Steffen@gmx.de>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public
+ *  License along with this library; if not, write to the Free
+ *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ *
+ * #############################################################
  */
+
 #include "testsuit.h"
 #include "queue.h"
 #include <CUnit/CUnit.h>
@@ -22,17 +39,21 @@ void test_isemptyQueue_after_push_pop(void);
 void test_isemptyQueue_after_push_delete(void);
 void test_isfullQueue(void);
 void test_popQueue_after_push_not_null(void);
+void test_flushQueue_flush_empty_queue(void);
+void test_flushQueue_flush_not_empty_queue(void);
 
-#define NUMBER_OF_QUEUE_TESTS	7
+#define NUMBER_OF_QUEUE_TESTS	9
 
 static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
-		{test_initQueue,			"initQueue(): testing the initalisation"},
-		{test_isemptyQueue, 			"isemptyQueue(): testing  of empty queue"},
-		{test_isemptyQueue_not, 		"isemptyQueue(): testing  of none empty queue"},
+		{test_initQueue,					"initQueue(): testing the initalisation"},
+		{test_isemptyQueue, 				"isemptyQueue(): testing  of empty queue"},
+		{test_isemptyQueue_not, 			"isemptyQueue(): testing  of none empty queue"},
 		{test_isemptyQueue_after_push_pop,	"isemptyQueue(): testing of empty queue after push and pop"},
 		{test_isemptyQueue_after_push_delete,	"isemptyQueue(): testing of empty queue after push and delete"},
-		{test_isfullQueue,			"isfullQueue(): testing  of a not empty queue"},
+		{test_isfullQueue,					"isfullQueue(): testing  of a not empty queue"},
 		{test_popQueue_after_push_not_null,	"popQueue(): testing of popping a queue after push"},
+		{test_flushQueue_flush_empty_queue,	"flushQueue(): testing of flushing  of a empty queue"},
+		{test_flushQueue_flush_not_empty_queue,	"flushQueue(): testing of flushing  of a not empty queue"},
 };
 
 #endif /* TESTSUIT_INCLUDE_QUEUE_TEST_H_ */
