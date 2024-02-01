@@ -39,21 +39,31 @@ void test_isemptyQueue_after_push_pop(void);
 void test_isemptyQueue_after_push_delete(void);
 void test_isfullQueue(void);
 void test_popQueue_after_push_not_null(void);
+void test_popQueue_blocking(void);
+void test_popQueue_multiple_push_pop(void);
 void test_flushQueue_flush_empty_queue(void);
 void test_flushQueue_flush_not_empty_queue(void);
+void test_pushQueue(void);
+void test_deleteQueue(void);
+void test_getNextitrQueue(void);
 
-#define NUMBER_OF_QUEUE_TESTS	9
+#define NUMBER_OF_QUEUE_TESTS	14
 
 static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
-		{test_initQueue,					"initQueue(): testing the initalisation"},
-		{test_isemptyQueue, 				"isemptyQueue(): testing  of empty queue"},
-		{test_isemptyQueue_not, 			"isemptyQueue(): testing  of none empty queue"},
-		{test_isemptyQueue_after_push_pop,	"isemptyQueue(): testing of empty queue after push and pop"},
+		{test_initQueue,						"initQueue(): testing the initalisation"},
+		{test_isemptyQueue, 					"isemptyQueue(): testing  of empty queue"},
+		{test_isemptyQueue_not, 				"isemptyQueue(): testing  of none empty queue"},
+		{test_isemptyQueue_after_push_pop,		"isemptyQueue(): testing of empty queue after push and pop"},
 		{test_isemptyQueue_after_push_delete,	"isemptyQueue(): testing of empty queue after push and delete"},
-		{test_isfullQueue,					"isfullQueue(): testing  of a not empty queue"},
-		{test_popQueue_after_push_not_null,	"popQueue(): testing of popping a queue after push"},
-		{test_flushQueue_flush_empty_queue,	"flushQueue(): testing of flushing  of a empty queue"},
+		{test_isfullQueue,						"isfullQueue(): testing  of a not empty queue"},
+		{test_pushQueue,						"pushQueue(): testing of  pushing of the queue"},
+		{test_popQueue_after_push_not_null,		"popQueue(): testing of popping a queue after push"},
+		{test_popQueue_blocking,				"popQueue(): testing of blocking pop operation"},
+		{test_popQueue_multiple_push_pop,		"popQueue(): testing of  multiple popping of a  queue"},
+		{test_flushQueue_flush_empty_queue,		"flushQueue(): testing of flushing  of a empty queue"},
 		{test_flushQueue_flush_not_empty_queue,	"flushQueue(): testing of flushing  of a not empty queue"},
+		{test_deleteQueue,						"deleteQueue(): testing of deleting of a non empty queue"},
+		{test_getNextitrQueue,					"getnextitrQueue(): testing  of getting the  nex iterator of the Queue"}
 };
 
 #endif /* TESTSUIT_INCLUDE_QUEUE_TEST_H_ */

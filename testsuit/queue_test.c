@@ -21,6 +21,7 @@
  * #############################################################
  */
 
+#include <unistd.h>
 #include "queue_test.h"
 
 int init_queue(void) {
@@ -126,6 +127,88 @@ void test_flushQueue_flush_not_empty_queue(void) {
 	CU_ASSERT_EQUAL(flushQueue(Queue), QUEUE_SUCCESS);
 
 	CU_ASSERT_TRUE(isemptyQueue(Queue));
+}
+
+void test_pushQueue(void) {
+    PQueue Queue;
+    Queue = initQueue();
+
+    QueueData testItem;
+
+    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
+
+    CU_ASSERT_FALSE(isemptyQueue(Queue));
+}
+
+void* pushThreadFunction(void* arg) {
+    PQueue Queue = (PQueue)arg;
+
+    // Warte kurz, um sicherzustellen, dass der Hauptthread blockiert ist
+    sleep(3);
+
+    QueueData testItem;
+    pushQueue(Queue, testItem);
+
+    return NULL;
+}
+
+void test_popQueue_blocking(void) {
+    PQueue Queue;
+    Queue = initQueue();
+
+    // Starte einen Hintergrund-Thread, um ein Element in die Queue zu pushen
+    pthread_t pushThread;
+    pthread_create(&pushThread, NULL, pushThreadFunction, (void*)Queue);
+
+    // Pop sollte jetzt nicht mehr NULL sein, da der Hintergrund-Thread ein Element hinzugefügt hat
+    CU_ASSERT_PTR_NOT_NULL(popQueue(Queue));
+
+    // Warte auf den Hintergrund-Thread, um Ressourcen freizugeben
+    pthread_join(pushThread, NULL);
+}
+
+void test_popQueue_multiple_push_pop(void) {
+    PQueue Queue;
+    Queue = initQueue();
+
+    QueueData testItem;
+
+    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
+
+    CU_ASSERT_PTR_NOT_NULL(popQueue(Queue));
+    CU_ASSERT_PTR_NOT_NULL(popQueue(Queue));
+
+    CU_ASSERT_TRUE(isemptyQueue(Queue));
+}
+
+void test_deleteQueue(void) {
+    PQueue Queue;
+    Queue = initQueue();
+
+    QueueData testItem;
+
+    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
+
+    CU_ASSERT_EQUAL(deleteQueue(Queue), QUEUE_SUCCESS);
+
+    //CU_ASSERT_PTR_NULL(popQueue(Queue));
+}
+
+void test_getNextitrQueue(void) {
+    PQueue Queue;
+    Queue = initQueue();
+
+    QueueData testItem;
+
+    CU_ASSERT_PTR_NULL(getNextitrQueue(Queue));
+
+    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
+
+    CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(Queue));
 }
 
 
