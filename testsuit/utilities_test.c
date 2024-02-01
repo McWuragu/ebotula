@@ -159,3 +159,27 @@ void testclearspace_space_quotes_mix(void) {
 	
 	CU_ASSERT_STRING_EQUAL(pTestStr,"Hallo Teststring moreTeststringandmore");
 }
+
+void testNickStringCheck_valid(void) {
+    char nickName[] = "test_nick";
+
+    CU_ASSERT_TRUE(NickStringCheck(nickName));
+}
+
+void testNickStringCheck_invalid(void) {
+    char invalidNickName[] = "test_nick!";
+
+    CU_ASSERT_FALSE(NickStringCheck(invalidNickName));
+}
+
+void testChannelStringCheck_valid(void) {
+    char channelName[] = "#test_channel";
+
+    CU_ASSERT_TRUE(ChannelStringCheck(channelName));
+}
+
+void testChannelStringCheck_invalid(void) {
+    char invalidChannelName[] = "!test_channel";
+
+    CU_ASSERT_FALSE(ChannelStringCheck(invalidChannelName));
+}

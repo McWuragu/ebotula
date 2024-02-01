@@ -48,8 +48,13 @@ void testclearspace_space_quote_between(void);
 void testclearspace_space_quotes_mix(void);
 void testclearspace_space_only(void);
 void testclearspace_space_only_and_quotes(void);
+void testNickStringCheck_valid(void);
+void testNickStringCheck_invalid(void);
+void testChannelStringCheck_valid(void);
+void testChannelStringCheck_invalid(void);
 
-#define NUMBER_OF_UTILITIES_TESTS	16
+
+#define NUMBER_OF_UTILITIES_TESTS	20
 
 /* collection of all test für the utilities function */
 static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= { 
@@ -68,7 +73,11 @@ static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= {
 	{testclearspace_space_quote_between,		"clearspace(): quoted spaces"},
 	{testclearspace_space_quotes_mix,			"clearspace(): mx of quotes and none quotes"},
 	{testclearspace_space_only,					"clearspace(): string with only spaces"},
-	{testclearspace_space_only_and_quotes,		"clearspace(): Space wirh and without quotes"},
+	{testclearspace_space_only_and_quotes,		"clearspace(): Space with and without quotes"},
+	{testNickStringCheck_valid,					"NickStringCheck(): valid nick string"},
+	{testNickStringCheck_invalid,				"NickStringCheck(): invalid nick string"},
+	{testChannelStringCheck_valid,				"ChannelStringCheck(): check validate channel string"},
+	{testChannelStringCheck_invalid,			"ChannelStringCheck(): check invalidate channel string"},
 };
 
 #endif
