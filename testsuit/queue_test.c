@@ -145,7 +145,7 @@ void* pushThreadFunction(void* arg) {
     PQueue Queue = (PQueue)arg;
 
     // Warte kurz, um sicherzustellen, dass der Hauptthread blockiert ist
-    sleep(3);
+    sleep(1);
 
     QueueData testItem;
     pushQueue(Queue, testItem);
