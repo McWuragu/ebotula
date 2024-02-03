@@ -189,14 +189,14 @@ void testChannelDataToStr(void) {
     ChannelData_t channelData;
     memset(&channelData, 0, sizeof(ChannelData_t));
 
-    strcpy(channelData.sModes.pModeStr,"+ntk");
+    strcpy(channelData.sModes.pModeStr,"+k tn       ");
     channelData.sModes.pKeyword="test";
     channelData.pTopic = "Test Topic";
     channelData.pGreeting = "Welcome to the channel!";
 
     char *result = ChannelDataToStr(&channelData);
 
-    CU_ASSERT_STRING_EQUAL(result, "+ntk test\tTest Topic\tWelcome to the channel!");
+    CU_ASSERT_STRING_EQUAL(result, "+ktn test\tTest Topic\tWelcome to the channel!");
 
     free(result);
 }
