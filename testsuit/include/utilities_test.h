@@ -55,7 +55,7 @@ void testChannelStringCheck_invalid(void);
 void testChannelDataToStr(void);
 void testStrToChannelData(void);
 
-#define NUMBER_OF_UTILITIES_TESTS	21
+#define NUMBER_OF_UTILITIES_TESTS	22
 
 /* collection of all test für the utilities function */
 static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= { 
