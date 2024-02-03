@@ -40,7 +40,7 @@ typedef enum {
 /* ##################### types ######################### */
 /**
  * Setting QueueType 
- * Sentinel ist the beginning and the and of the queue 
+ * Sentinel is the beginning and the and of the queue
  */
 typedef enum {QUEUENONE=0,QUEUESENTINEL=1} QueueType;
 
