@@ -52,9 +52,10 @@ void testNickStringCheck_valid(void);
 void testNickStringCheck_invalid(void);
 void testChannelStringCheck_valid(void);
 void testChannelStringCheck_invalid(void);
+void testChannelDataToStr(void);
+void testStrToChannelData(void);
 
-
-#define NUMBER_OF_UTILITIES_TESTS	20
+#define NUMBER_OF_UTILITIES_TESTS	21
 
 /* collection of all test für the utilities function */
 static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= { 
@@ -78,6 +79,8 @@ static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= {
 	{testNickStringCheck_invalid,				"NickStringCheck(): invalid nick string"},
 	{testChannelStringCheck_valid,				"ChannelStringCheck(): check validate channel string"},
 	{testChannelStringCheck_invalid,			"ChannelStringCheck(): check invalidate channel string"},
+	{testChannelDataToStr,						"ChannelDataToStr(): convert data of a channel to a string"},
+	{testStrToChannelData,						"StrToChannelData(): convert string to  channel data"},
 };
 
 #endif

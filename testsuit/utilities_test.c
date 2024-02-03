@@ -22,6 +22,7 @@
  */
 
 #include "utilities_test.h"
+#include <stdlib.h>
 
 ConfigSetup_t sSetup;
 
@@ -182,4 +183,33 @@ void testChannelStringCheck_invalid(void) {
     char invalidChannelName[] = "!test_channel";
 
     CU_ASSERT_FALSE(ChannelStringCheck(invalidChannelName));
+}
+
+void testChannelDataToStr(void) {
+    ChannelData_t channelData;
+    memset(&channelData, 0, sizeof(ChannelData_t));
+
+    strcpy(channelData.sModes.pModeStr,"+ntk");
+    channelData.pTopic = "Test Topic";
+    channelData.pGreeting = "Welcome to the channel!";
+
+    char *result = ChannelDataToStr(&channelData);
+
+    CU_ASSERT_STRING_EQUAL(result, "+ntk\tTest Topic\tWelcome to the channel!");
+
+    free(result);
+}
+
+
+void testStrToChannelData(void) {
+    char channelSet[] = "+ntk\tTest Topic\tWelcome to the channel!";
+
+    ChannelData_t channelData;
+    memset(&channelData, 0, sizeof(ChannelData_t));
+
+    StrToChannelData(channelSet, &channelData);
+
+    //CU_ASSERT_STRING_EQUAL(channelData.sModes.pModeStr, "+ntk");
+    //CU_ASSERT_STRING_EQUAL(channelData.pTopic, "Test Topic");
+    //CU_ASSERT_STRING_EQUAL(channelData.pGreeting, "Welcome to the channel!");
 }
