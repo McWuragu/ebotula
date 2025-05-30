@@ -24,4 +24,4 @@ noinst_HEADERS =  \
 
 testsuit_LDADD = $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB) $(RT_LIB) $(CUNIT_LIB)
 testsuit_LDFLAGS =$(DFLAGS) $(PFLAGS)
-testsuit_CFLAGS = $(DFLAGS) $(PFLAGS) -I./include -I../src/include
+testsuit_CFLAGS = $(DFLAGS) $(PFLAGS) -I$(top_srcdir)/testsuit/include -I$(top_srcdir)/src/include

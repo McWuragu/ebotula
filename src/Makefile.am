@@ -51,5 +51,5 @@ noinst_HEADERS = \
 
 ebotula_LDADD= $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB) $(RT_LIB)
 ebotula_LDFLAGS=$(DFLAGS) $(PFLAGS)
-ebotula_CFLAGS= $(DFLAGS) $(PFLAGS) -I./include
+ebotula_CFLAGS= $(DFLAGS) $(PFLAGS) -I$(top_srcdir)/src/include
 

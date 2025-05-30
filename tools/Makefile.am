@@ -19,6 +19,6 @@ noinst_HEADERS = \
 
 ebotula_db_LDADD= $(GDBM_LIB)
 ebotula_db_LDFLAGS=$(DFLAGS) $(PFLAGS)
-ebotula_db_CFLAGS= $(DFLAGS) $(PFLAGS) -I./include
+ebotula_db_CFLAGS= $(DFLAGS) $(PFLAGS) -I$(top_srcdir)/tools/include
 
 
