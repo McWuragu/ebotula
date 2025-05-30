@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Optional: zusätzlicher Pfad, wenn autotools oder gcc manuell installiert sind
-        // PATH = "/usr/local/bin:$PATH"
+        PATH = "/usr/local/bin:$PATH"
     }
 
     stages {
