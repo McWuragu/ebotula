@@ -54,6 +54,14 @@ pipeline {
                 sh 'make install DESTDIR=$WORKSPACE/install'
             }
         }
+
+	stage('Distcheck') {
+	    steps {
+        	echo '📦 Führe make distcheck aus...'
+	        sh 'make distcheck'
+    		}	
+	}	
+
     }
 
     post {
