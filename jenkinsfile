@@ -17,7 +17,12 @@ pipeline {
         stage('Bootstrap') {
             steps {
                 echo '⚙️ Autotools vorbereiten...'
-                sh 'autoreconf -i'
+                sh '''
+			set -e
+			aclocal
+			autoconf
+			automake --add-missing --foreign
+		'''
             }
         }
 
