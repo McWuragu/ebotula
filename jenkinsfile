@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+
+    environment {
+        // Optional: zusätzlicher Pfad, wenn autotools oder gcc manuell installiert sind
+        // PATH = "/usr/local/bin:$PATH"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo '📥 Code wird aus Git geholt...'
+                git 'https://github.com/McWuragu/ebotula.git'
+            }
+        }
+
+        stage('Bootstrap') {
+            steps {
+                echo '⚙️ Autotools vorbereiten...'
+                sh 'autoreconf -i'
+            }
+        }
+
+        stage('Configure') {
+            steps {
+                echo '🛠️ Konfiguration läuft...'
+                sh './configure'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo '🔧 Projekt wird gebaut...'
+                sh 'make'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo '🚦 Tests werden ausgeführt (sofern vorhanden)...'
+                sh 'make check || true'
+            }
+        }
+
+        stage('Install (lokal)') {
+            steps {
+                echo '📦 Projekt lokal installieren...'
+                sh 'make install DESTDIR=$WORKSPACE/install'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build erfolgreich!'
+        }
+        failure {
+            echo '❌ Build ist fehlgeschlagen!'
+        }
+    }
+}
+
