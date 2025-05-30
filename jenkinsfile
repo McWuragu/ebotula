@@ -44,7 +44,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo '🚦 Tests werden ausgeführt (sofern vorhanden)...'
-                sh 'make check || true'
+                sh './testsuit/testsuit || true'
             }
         }
 
