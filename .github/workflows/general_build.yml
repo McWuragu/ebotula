@@ -1,42 +1,56 @@
-name: C Autotools Build
+name: Build & CUnit on master
 
 on:
   push:
-    branches: [ master, main ]    # falls dein Default "master" ist, bleibt das so
-  pull_request:
-    branches: [ master, main ]
-  workflow_dispatch: {}            # manueller Start möglich
+    branches: [ master ]          # prüft jeden Push auf master
+    paths-ignore:
+      - "**.md"
+      - ".github/**"
+  schedule:
+    - cron: "17 2 * * *"          # täglicher Check um 02:17 UTC (~04:17 Berlin Sommerzeit)
+  workflow_dispatch: {}            # manueller Start (nur für Nutzer mit Write-Rechten)
 
 permissions:
-  contents: read
+  contents: write                  # nur nötig, falls wir später Logs in einen Branch schieben
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     env:
-      # für "make install" wie in Jenkins
+      REPO: ${{ github.repository }}
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DESTDIR: ${{ github.workspace }}/install
 
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+      # 🔽 Self-Checkout ohne actions/checkout
+      - name: Checkout via git
+        run: |
+          set -euxo pipefail
+          git init .
+          git config user.email "actions@users.noreply.github.com"
+          git config user.name  "github-actions"
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+          # master referenz holen
+          git fetch --depth=1 origin master
+          git checkout -B master FETCH_HEAD
+          git submodule update --init --recursive || true
 
-      - name: 🧰 Build-Dependencies installieren
+      # 🧰 Compiler/Autotools + CUnit installieren
+      - name: Install build deps + CUnit
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            build-essential gcc make \
             autoconf automake libtool pkg-config \
-            build-essential gcc make
+            libcunit1 libcunit1-dev
 
-      - name: ⚙️ Autotools Bootstrap
-        shell: bash
+      # ⚙️ Autotools Bootstrap
+      - name: Bootstrap
         run: |
           set -e
           aclocal
@@ -44,42 +58,54 @@ jobs:
           autoconf
           automake --add-missing --foreign
 
-      - name: 🛠️ ./configure
-        run: ./configure
-
-      - name: 🔧 make (Build)
-        run: make -j"$(nproc)"
-
-      - name: 🚦 Tests (nicht-failend)
-        # entspricht deinem "|| true"
-        continue-on-error: true
+      # 🛠️ Configure
+      - name: Configure
         run: |
-          if [ -x ./testsuit/testsuit ]; then
-            ./testsuit/testsuit
+          set -e
+          ./configure
+
+      # 🔧 Build
+      - name: Build
+        run: |
+          make -j"$(nproc)"
+
+      # ✅ CUnit-Tests — schlägt fehl, wenn Tests fehlschlagen
+      - name: Run CUnit tests
+        run: |
+          set -e
+          # Erstmal "make check" – falls im Autotools-Setup verdrahtet
+          if make -q check >/dev/null 2>&1; then
+            echo "Running 'make check'..."
+            make check
           else
-            echo "Kein testsuit gefunden – überspringe Tests."
+            echo "'make check' nicht definiert – suche Test-Binaries…"
+            # Fallback: bekannte Pfade/Dateien probieren
+            ran=0
+            if [ -x ./testsuit/testsuit ]; then
+              echo "Starte ./testsuit/testsuit"
+              ./testsuit/testsuit
+              ran=1
+            fi
+            # Findet Dateien mit test_ oder *_tests ausführbar
+            mapfile -t bins < <(find . -type f \( -name "test_*" -o -name "*_tests" \) -perm -111 | sort || true)
+            if [ "${#bins[@]}" -gt 0 ]; then
+              for b in "${bins[@]}"; do
+                echo "Starte $b"
+                "$b"
+                ran=1
+              done
+            fi
+            if [ "$ran" -eq 0 ]; then
+              echo "Keine Testbefehle gefunden. Brich ab, weil Tests gefordert sind."
+              exit 2
+            fi
           fi
 
-      - name: 📦 make install (lokal in DESTDIR)
-        run: make install
-
-      - name: 🧪 make distcheck
+      # 🧪 Optional: distcheck (falls du den Check mitprüfen willst; sonst auskommentieren)
+      - name: make distcheck
         run: make distcheck
 
-      - name: 📎 Artefakte hochladen (Installationsbaum)
-        uses: actions/upload-artifact@v4
-        with:
-          name: install-tree
-          path: ${{ env.DESTDIR }}
-          if-no-files-found: warn
-          retention-days: 7
+      # 📦 Optional: Installationsprobe (nur zum Verifizieren)
+      - name: make install (DESTDIR)
+        run: make install DESTDIR="$DESTDIR"
 
-      - name: 📎 Artefakte hochladen (Tarballs/Dist)
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist-files
-          path: |
-            **/*.tar.gz
-            **/*.zip
-          if-no-files-found: warn
-          retention-days: 7
