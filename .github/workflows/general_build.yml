@@ -1,13 +1,11 @@
 name: Build & CUnit on master
 
 on:
+  pull_request:
+    branches: [ master ]  
+    types: [ closed ]  
   push:
-    branches: [ master ]          # prüft jeden Push auf master
-    paths-ignore:
-      - "**.md"
-      - ".github/**"
-  schedule:
-    - cron: "17 2 * * *"          # täglicher Check um 02:17 UTC (~04:17 Berlin Sommerzeit)
+    branches: [ master ]
   workflow_dispatch: {}            # manueller Start (nur für Nutzer mit Write-Rechten)
 
 permissions:
