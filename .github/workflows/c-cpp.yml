@@ -1,0 +1,85 @@
+name: C Autotools Build
+
+on:
+  push:
+    branches: [ master, main ]    # falls dein Default "master" ist, bleibt das so
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch: {}            # manueller Start möglich
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      # für "make install" wie in Jenkins
+      DESTDIR: ${{ github.workspace }}/install
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: 🧰 Build-Dependencies installieren
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            autoconf automake libtool pkg-config \
+            build-essential gcc make
+
+      - name: ⚙️ Autotools Bootstrap
+        shell: bash
+        run: |
+          set -e
+          aclocal
+          autoheader
+          autoconf
+          automake --add-missing --foreign
+
+      - name: 🛠️ ./configure
+        run: ./configure
+
+      - name: 🔧 make (Build)
+        run: make -j"$(nproc)"
+
+      - name: 🚦 Tests (nicht-failend)
+        # entspricht deinem "|| true"
+        continue-on-error: true
+        run: |
+          if [ -x ./testsuit/testsuit ]; then
+            ./testsuit/testsuit
+          else
+            echo "Kein testsuit gefunden – überspringe Tests."
+          fi
+
+      - name: 📦 make install (lokal in DESTDIR)
+        run: make install
+
+      - name: 🧪 make distcheck
+        run: make distcheck
+
+      - name: 📎 Artefakte hochladen (Installationsbaum)
+        uses: actions/upload-artifact@v4
+        with:
+          name: install-tree
+          path: ${{ env.DESTDIR }}
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: 📎 Artefakte hochladen (Tarballs/Dist)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: |
+            **/*.tar.gz
+            **/*.zip
+          if-no-files-found: warn
+          retention-days: 7
