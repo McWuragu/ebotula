@@ -49,19 +49,17 @@ jobs:
           sudo apt-get install -y \
             build-essential gcc make \
             autoconf automake libtool pkg-config \
-            gettext \
+            gettext autopoint \
             libcunit1 libcunit1-dev
           # Sanity-Checks
           autopoint --version
           libtoolize --version
-
+      
       - name: Bootstrap (gettextize + autoreconf)
         run: |
           set -euxo pipefail
           mkdir -p m4
-          # Falls du AM_GNU_GETTEXT in configure.ac verwendest:
           if grep -q 'AM_GNU_GETTEXT' configure.ac; then
-            # initialisiert po/ sauber, wenn noch nicht vorhanden
             test -d po || gettextize --force --copy --no-changelog
           fi
           autoreconf --install --force --verbose
