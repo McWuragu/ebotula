@@ -21,7 +21,7 @@ AC_USE_SYSTEM_EXTENSIONS
 
 AC_CONFIG_SRCDIR([src/ircbot.c])
 AC_CONFIG_HEADERS([src/include/config.h])
-AC_CONFIG_TESTDIR([testsuit])
+# AC_CONFIG_TESTDIR([testsuit])
 
 
 # Checks for programs.
