@@ -49,14 +49,22 @@ jobs:
             autoconf automake libtool pkg-config \
             libcunit1 libcunit1-dev
 
-      # ⚙️ Autotools Bootstrap
-      - name: Bootstrap
+      # ⚙️ Autotools Bootstra
+      - name: Install build deps  CUnit
         run: |
-          set -e
-          aclocal
-          autoheader
-          autoconf
-          automake --add-missing --foreign
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential gcc make \
+            autoconf automake libtool pkg-config \
+            gettext \
+            libcunit1 libcunit1-dev
+    
+      - name: Bootstrap (autoreconf)
+        run: |
+          set -euxo pipefail
+          mkdir -p m4
+          autoreconf --install --force --verbose
+
 
       # 🛠️ Configure
       - name: Configure
