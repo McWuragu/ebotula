@@ -1,8 +1,11 @@
 bin_PROGRAMS = testsuit
-
+check_PROGRAMS = testsuit
+testsuit_SOURCES = testsuit.c
 
 AUTOMAKE_OPTIONS = subdir-objects
 
+# testsuit/Makefile.am
+AM_CPPFLAGS = -I$(top_srcdir)/src/include
 
 testsuit_SOURCES = \
 	testsuit.c \
@@ -25,3 +28,5 @@ noinst_HEADERS =  \
 testsuit_LDADD = $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB) $(RT_LIB) $(CUNIT_LIB)
 testsuit_LDFLAGS =$(DFLAGS) $(PFLAGS)
 testsuit_CFLAGS = $(DFLAGS) $(PFLAGS) -I$(top_srcdir)/testsuit/include -I$(top_srcdir)/src/include
+
+TESTS = testsuit
