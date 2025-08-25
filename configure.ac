@@ -50,29 +50,33 @@ AC_ARG_WITH(gdbmlib,
 AC_SUBST(GDBM_LIB)
 
 dnl --- CUnit finden (Linker-Teil) ---
-AC_SEARCH_LIBS([CU_initialize_registry], [cunit],
-  [CUNIT_LIB="$ac_cv_search_CU_initialize_registry"],
+AC_CHECK_LIB([cunit],[CU_initialize_registry], 
+  [CUNIT_LIB="-lcunit"],
   [AC_MSG_ERROR([cunit library not found. please install libcunit1-dev])]
 )
-AC_SUBST([CUNIT_LIB])
 
 dnl --- (optional) Header-Check, je nach Distros heißen sie so/so ---
 AC_CHECK_HEADERS([CUnit/CUnit.h], [],
   [AC_MSG_ERROR([CUnit headers not found. please install libcunit1-dev])]
 )
 
-AC_CHECK_LIB(crypt,crypt,
-  [CRYPT_LIB="-lcrypt"],
-  AC_MSG_ERROR("crypt library not found.")
-)
-AC_SUBST(CRYPT_LIB)
+AC_SUBST([CUNIT_LIB])
 
-AC_CHECK_LIB(pthread,pthread_create,
+dnl --- crypt ---
+AC_SEARCH_LIBS([crypt], [crypt xcrypt],
+  [CRYPT_LIB="$ac_cv_search_crypt"],
+  [AC_MSG_ERROR([crypt library not found. please install libcrypt-dev or libxcrypt-dev])]
+)
+AC_SUBST([CRYPT_LIB])
+AC_DEFINE([HAVE_CRYPT],[1],[Define if crypt() is available])
+
+
+dnl --- pthread ---
+AC_CHECK_LIB([pthread],[pthread_create],
   [PTHREAD_LIB="-lpthread"],
-  AC_MSG_ERROR("pthread library not fount.")
+  [AC_MSG_ERROR([pthread library not found. please install pthreads])]
 )
-AC_SUBST(PTHREAD_LIB)
-
+AC_SUBST([PTHREAD_LIB])
 
 # Checks for header files.
 AC_FUNC_ALLOCA
@@ -83,8 +87,7 @@ AC_HEADER_DIRENT
 AC_CHECK_INCLUDES_DEFAULT
 AC_PROG_GREP
 
-#AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h inttypes.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h strings.h sys/param.h sys/socket.h termios.h unistd.h syslog.h])
-AC_INCLUDES_DEFAULT
+AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h inttypes.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h strings.h sys/param.h sys/socket.h termios.h unistd.h syslog.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
