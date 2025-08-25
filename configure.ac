@@ -49,12 +49,17 @@ AC_ARG_WITH(gdbmlib,
 )
 AC_SUBST(GDBM_LIB)
 
-# cunit test
-AC_CHECK_LIB(cunit,CU_initialize_registry,
-	[CUNIT_LIB="-lcunit"],
-	AC_MSG_ERROR("cunit library not found.")
+dnl --- CUnit finden (Linker-Teil) ---
+AC_SEARCH_LIBS([CU_initialize_registry], [cunit],
+  [CUNIT_LIB="$ac_cv_search_CU_initialize_registry"],
+  [AC_MSG_ERROR([cunit library not found. please install libcunit1-dev])]
 )
-AC_SUBST(CUNIT_LIB)
+AC_SUBST([CUNIT_LIB])
+
+dnl --- (optional) Header-Check, je nach Distros heißen sie so/so ---
+AC_CHECK_HEADERS([CUnit/CUnit.h], [],
+  [AC_MSG_ERROR([CUnit headers not found. please install libcunit1-dev])]
+)
 
 AC_CHECK_LIB(crypt,crypt,
   [CRYPT_LIB="-lcrypt"],
@@ -76,7 +81,7 @@ AC_HEADER_DIRENT
 # Autoupdate added the next two lines to ensure that your configure
 # script's behavior did not change.  They are probably safe to remove.
 AC_CHECK_INCLUDES_DEFAULT
-AC_PROG_EGREP
+AC_PROG_GREP
 
 #AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h inttypes.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdint.h stdio_ext.h stdlib.h string.h strings.h sys/param.h sys/socket.h termios.h unistd.h syslog.h])
 AC_INCLUDES_DEFAULT
@@ -137,7 +142,7 @@ else
     DFLAGS=-g
     AC_CHECK_LIB(rt,clock_gettime,
       [RT_LIB="-lrt"],
-      AC_MSG_ERROR("rt library not fount.")
+      AC_MSG_ERROR("rt library not found.")
     )
     AC_SUBST(RT_LIB)
 fi
