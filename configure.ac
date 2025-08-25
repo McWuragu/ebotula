@@ -93,6 +93,8 @@ AC_C_VOLATILE
 # Checks for library functions.
 AM_GNU_GETTEXT([external], [need-ngettext])
 AM_GNU_GETTEXT_VERSION([0.20])
+AC_CHECK_HEADERS([gdbm.h],[],
+		 [AC_MSG_ERROR([gdbm.h not found.  please isntall libgdbm-dev])])
 AC_FUNC_CLOSEDIR_VOID
 AC_FUNC_MALLOC
 AC_FUNC_MMAP
