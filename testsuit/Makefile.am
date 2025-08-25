@@ -1,6 +1,5 @@
 bin_PROGRAMS = testsuit
 check_PROGRAMS = testsuit
-testsuit_SOURCES = testsuit.c
 
 AUTOMAKE_OPTIONS = subdir-objects
 
