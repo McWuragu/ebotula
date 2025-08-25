@@ -2,8 +2,7 @@ name: Build & CUnit on master
 
 on:
   pull_request:
-    branches: [ master ]  
-    types: [ closed ]  
+    branches: [ master ]      
   push:
     branches: [ master ]
   workflow_dispatch: {}            # manueller Start (nur für Nutzer mit Write-Rechten)
