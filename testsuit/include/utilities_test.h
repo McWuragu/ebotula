@@ -40,9 +40,15 @@ void testTrim_newline(void);
 void testTrim_only_whitespace(void);
 void testTrim_idempotent(void);
 void testTrim_sentence(void);
+
+void testStrToLower_empty(void);
 void testStrToLower_UpToLow(void);
 void testStrToLower_LowToLow(void);
+void testStrToLower_ascii_basic(void);
+void testStrToLower_punctuation_digits_unchanged(void);
 void testStrToLower_specials_and_umlauts(void);
+void testStrToLower_idempotent(void) ;
+
 void testclearspace_NOP(void);
 void testclearspace_space_at_the_begin_and_end(void);
 void testclearspace_space_between(void);
@@ -51,14 +57,17 @@ void testclearspace_space_quote_between(void);
 void testclearspace_space_quotes_mix(void);
 void testclearspace_space_only(void);
 void testclearspace_space_only_and_quotes(void);
+
 void testNickStringCheck_valid(void);
 void testNickStringCheck_invalid(void);
+
 void testChannelStringCheck_valid(void);
 void testChannelStringCheck_invalid(void);
+
 void testChannelDataToStr(void);
 void testStrToChannelData(void);
 
-#define NUMBER_OF_UTILITIES_TESTS	25
+#define NUMBER_OF_UTILITIES_TESTS	29
 
 /* collection of all test für the utilities function */
 static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= { 
@@ -70,9 +79,13 @@ static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= {
 	{testTrim_only_whitespace, 					"Trim(): only whitespace"},
 	{testTrim_idempotent,						"Trim(): idempotent"},
 	{testTrim_sentence,							"Trim(): sentence"},
+	{testStrToLower_empty,						"StrToLower(): empty string"},
 	{testStrToLower_UpToLow,					"StrToLower(): full upper to lower"},
 	{testStrToLower_LowToLow,					"StrToLower(): full lower to lower"},
+	{testStrToLower_ascii_basic,				"StrToLower(): ascii basic string"},
+	{testStrToLower_punctuation_digits_unchanged,"strToLower(): punctation digitis"},
 	{testStrToLower_specials_and_umlauts,		"StrToLower(): special and umlauts"},
+	{testStrToLower_idempotent,					"StrToLower(): idempotent"},
 	{testclearspace_NOP,						"clearspace(): no spaces and nop"},
 	{testclearspace_space_at_the_begin_and_end,	"clearspace(): Space at the begin and end"},
 	{testclearspace_space_between,				"clearspace(): Space between"},

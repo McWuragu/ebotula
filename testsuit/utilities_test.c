@@ -89,6 +89,15 @@ void testTrim_sentence(void) {
 	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo mein Freund, wie geht es dir?");
 }
 
+void testStrToLower_empty(void) {
+    const char in[] = "";
+    char* r = StrToLower(in);
+    CU_ASSERT_PTR_NOT_NULL(r);
+    CU_ASSERT_STRING_EQUAL(r, "");
+    CU_ASSERT_PTR_NOT_EQUAL(r, in);
+    free(r);
+}
+
 void testStrToLower_UpToLow(void) {
 	char pTestStr[]="HALLO";
 	char *pCheckStr;
@@ -97,6 +106,7 @@ void testStrToLower_UpToLow(void) {
 	
 	CU_ASSERT_PTR_NOT_NULL(pCheckStr);
 	CU_ASSERT_STRING_EQUAL(pCheckStr,"hallo");
+	free(pCheckStr);
 }
 
 void testStrToLower_LowToLow(void) {
@@ -107,6 +117,23 @@ void testStrToLower_LowToLow(void) {
 	
 	CU_ASSERT_PTR_NOT_NULL(pCheckStr);
 	CU_ASSERT_STRING_EQUAL(pCheckStr,"hallo");
+	free(pCheckStr);
+}
+
+
+void testStrToLower_ascii_basic(void) {
+    const char in[] = "HALLO_abc-XYZ123";
+    char* r = StrToLower(in);
+    CU_ASSERT_PTR_NOT_NULL(r);
+    CU_ASSERT_STRING_EQUAL(r, "hallo_abc-xyz123");
+    free(r);
+}
+
+void testStrToLower_punctuation_digits_unchanged(void) {
+    const char in[] = "A!B?C#1_2-3";
+    char* r = StrToLower(in);
+    CU_ASSERT_STRING_EQUAL(r, "a!b?c#1_2-3");
+    free(r);
 }
 
 void testStrToLower_specials_and_umlauts(void){
@@ -116,6 +143,16 @@ void testStrToLower_specials_and_umlauts(void){
 	CU_ASSERT_PTR_NOT_NULL(pCheckStr);
     CU_ASSERT_PTR_NOT_EQUAL(pCheckStr, pTestStr);        
     CU_ASSERT_STRING_EQUAL(pCheckStr, "ÄÖÜß_abc-xyz123"); // nur ASCII runter, Umlaute bleiben
+	free(pCheckStr);
+}
+
+void testStrToLower_idempotent(void) {
+    const char in[] = "MiXeD_123";
+    char* r1 = StrToLower(in);
+    char* r2 = StrToLower(r1);
+    CU_ASSERT_STRING_EQUAL(r1, r2);
+    free(r1);
+    free(r2);
 }
 
 void testclearspace_NOP(void) {
