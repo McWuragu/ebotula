@@ -35,6 +35,7 @@ int clean_utilities(void) {
 }
 
 
+
 void testTrim_empty_string(void) {
 	char pTestStr[] = "";
 
@@ -155,6 +156,13 @@ void testStrToLower_idempotent(void) {
     free(r2);
 }
 
+void testStrToLower_returns_new_buffer(void){
+    const char in[] = "ABC";
+    char* r = StrToLower(in);
+    CU_ASSERT_PTR_NOT_EQUAL(r, in);
+    free(r);
+}
+
 void testclearspace_NOP(void) {
 
 	char pTestStr[]="Teststring";
@@ -233,6 +241,14 @@ void testNickStringCheck_invalid(void) {
     CU_ASSERT_FALSE(NickStringCheck(invalidNickName));
 }
 
+static void fill_sample_channel(ChannelData_t* c){
+    memset(c, 0, sizeof(*c));
+    strcpy(c->sModes.pModeStr, "+k tn       ");
+    c->sModes.pKeyword = "secret";
+    c->pTopic    = "T1";
+    c->pGreeting = "Hi";
+}
+
 void testChannelStringCheck_valid(void) {
     char channelName[] = "#test_channel";
 
@@ -274,4 +290,21 @@ void testStrToChannelData(void) {
     CU_ASSERT_STRING_EQUAL(channelData.sModes.pKeyword, "test");
     CU_ASSERT_STRING_EQUAL(channelData.pTopic, "Test Topic");
     CU_ASSERT_STRING_EQUAL(channelData.pGreeting, "Welcome to the channel!");
+}
+
+
+void testChannel_roundtrip(void){
+    ChannelData_t in, out;
+    fill_sample_channel(&in);
+    char* s = ChannelDataToStr(&in);
+    CU_ASSERT_PTR_NOT_NULL(s);
+
+    memset(&out, 0, sizeof(out));
+    StrToChannelData(s, &out);
+
+    CU_ASSERT_STRING_EQUAL(out.sModes.pModeStr, "+k tn       ");
+    CU_ASSERT_STRING_EQUAL(out.sModes.pKeyword, "secret");
+    CU_ASSERT_STRING_EQUAL(out.pTopic, "T1");
+    CU_ASSERT_STRING_EQUAL(out.pGreeting, "Hi");
+    free(s);
 }

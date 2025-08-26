@@ -48,6 +48,7 @@ void testStrToLower_ascii_basic(void);
 void testStrToLower_punctuation_digits_unchanged(void);
 void testStrToLower_specials_and_umlauts(void);
 void testStrToLower_idempotent(void) ;
+void testStrToLower_returns_new_buffer(void);
 
 void testclearspace_NOP(void);
 void testclearspace_space_at_the_begin_and_end(void);
@@ -67,7 +68,9 @@ void testChannelStringCheck_invalid(void);
 void testChannelDataToStr(void);
 void testStrToChannelData(void);
 
-#define NUMBER_OF_UTILITIES_TESTS	29
+void testChannel_roundtrip(void);
+
+#define NUMBER_OF_UTILITIES_TESTS	31
 
 /* collection of all test für the utilities function */
 static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= { 
@@ -86,6 +89,7 @@ static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= {
 	{testStrToLower_punctuation_digits_unchanged,"strToLower(): punctation digitis"},
 	{testStrToLower_specials_and_umlauts,		"StrToLower(): special and umlauts"},
 	{testStrToLower_idempotent,					"StrToLower(): idempotent"},
+	{testStrToLower_returns_new_buffer,			"StrToLower(): new buffer"},
 	{testclearspace_NOP,						"clearspace(): no spaces and nop"},
 	{testclearspace_space_at_the_begin_and_end,	"clearspace(): Space at the begin and end"},
 	{testclearspace_space_between,				"clearspace(): Space between"},
@@ -100,6 +104,7 @@ static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= {
 	{testChannelStringCheck_invalid,			"ChannelStringCheck(): check invalidate channel string"},
 	{testChannelDataToStr,						"ChannelDataToStr(): convert data of a channel to a string"},
 	{testStrToChannelData,						"StrToChannelData(): convert string to  channel data"},
+	{testChannel_roundtrip,						"Channeldata: roundtrip channel data"},
 };
 
 #endif
