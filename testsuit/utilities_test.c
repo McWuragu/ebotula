@@ -70,6 +70,18 @@ void testTrim_newline (void) {
 	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo");
 }
 
+void testTrim_only_whitespace(void){
+    char pTestStr[] = " \t \n\r  ";
+    trim(pTestStr);
+    CU_ASSERT_STRING_EQUAL(pTestStr, "");
+}
+void testTrim_idempotent(void){
+    char pTestStr[] = "  hallo  ";
+    trim(pTestStr); 
+	trim(pTestStr);
+    CU_ASSERT_STRING_EQUAL(pTestStr, "hallo");
+}
+
 void testTrim_sentence(void) {
 	char pTestStr[] = " hallo mein Freund, wie  geht es dir?\n\r";
 
@@ -83,6 +95,7 @@ void testStrToLower_UpToLow(void) {
 	
 	pCheckStr=StrToLower(pTestStr);
 	
+	CU_ASSERT_PTR_NOT_NULL(pCheckStr);
 	CU_ASSERT_STRING_EQUAL(pCheckStr,"hallo");
 }
 
@@ -92,7 +105,17 @@ void testStrToLower_LowToLow(void) {
 	
 	pCheckStr=StrToLower(pTestStr);
 	
+	CU_ASSERT_PTR_NOT_NULL(pCheckStr);
 	CU_ASSERT_STRING_EQUAL(pCheckStr,"hallo");
+}
+
+void testStrToLower_specials_and_umlauts(void){
+    char pTestStr[] = "ÄÖÜß_ABC-xyz123";
+    char* pCheckStr = StrToLower(pTestStr);
+	
+	CU_ASSERT_PTR_NOT_NULL(pCheckStr);
+    CU_ASSERT_PTR_NOT_EQUAL(pCheckStr, pTestStr);        
+    CU_ASSERT_STRING_EQUAL(pCheckStr, "ÄÖÜß_abc-xyz123"); // nur ASCII runter, Umlaute bleiben
 }
 
 void testclearspace_NOP(void) {
