@@ -43,15 +43,15 @@ jobs:
       - name: Install build & packaging deps
         run: |
           set -eux
-          sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends \
             build-essential gcc make \
             autoconf automake libtool pkg-config \
             gettext autopoint \
             libcunit1 libcunit1-dev \
             libgdbm-dev libgdbm-compat-dev \
-            # Debian-Package-Tools:
-            debhelper dpkg-dev fakeroot devscripts
+            debhelper dpkg-dev fakeroot devscripts dh-make
+
 
       - name: Bootstrap (gettextize + autoreconf)
         run: |
