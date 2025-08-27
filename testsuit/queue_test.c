@@ -239,3 +239,19 @@ void test_fifo_order(void) {
     CU_ASSERT_TRUE(isemptyQueue(q));
 }
 
+/* Datenkopie-Integrität: Original nach push ändern darf Pop nicht beeinflussen */
+void test_data_integrity_copy(void) {
+    PQueue q = initQueue();
+    char buf[] = "hallo";
+    QueueData qd = make_qd(buf, sizeof buf);
+    CU_ASSERT_EQUAL(pushQueue(q, qd), QUEUE_SUCCESS);
+
+    /* Original mutieren */
+    buf[0] = 'x';
+
+    QueueData* out = popQueue(q);
+    CU_ASSERT_PTR_NOT_NULL(out);
+    CU_ASSERT_STRING_EQUAL((char*)out->data, "hallo"); /* unverändert */
+
+    free(out->data); free(out);
+}
