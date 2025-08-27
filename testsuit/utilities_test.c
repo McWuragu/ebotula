@@ -35,6 +35,7 @@ int clean_utilities(void) {
 }
 
 
+
 void testTrim_empty_string(void) {
 	char pTestStr[] = "";
 
@@ -70,11 +71,32 @@ void testTrim_newline (void) {
 	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo");
 }
 
+void testTrim_only_whitespace(void){
+    char pTestStr[] = " \t \n\r  ";
+    trim(pTestStr);
+    CU_ASSERT_STRING_EQUAL(pTestStr, "");
+}
+void testTrim_idempotent(void){
+    char pTestStr[] = "  hallo  ";
+    trim(pTestStr); 
+	trim(pTestStr);
+    CU_ASSERT_STRING_EQUAL(pTestStr, "hallo");
+}
+
 void testTrim_sentence(void) {
 	char pTestStr[] = " hallo mein Freund, wie  geht es dir?\n\r";
 
 	trim(pTestStr);
 	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo mein Freund, wie geht es dir?");
+}
+
+void testStrToLower_empty(void) {
+    const char in[] = "";
+    char* r = StrToLower(in);
+    CU_ASSERT_PTR_NOT_NULL(r);
+    CU_ASSERT_STRING_EQUAL(r, "");
+    CU_ASSERT_PTR_NOT_EQUAL(r, in);
+    free(r);
 }
 
 void testStrToLower_UpToLow(void) {
@@ -83,7 +105,9 @@ void testStrToLower_UpToLow(void) {
 	
 	pCheckStr=StrToLower(pTestStr);
 	
+	CU_ASSERT_PTR_NOT_NULL(pCheckStr);
 	CU_ASSERT_STRING_EQUAL(pCheckStr,"hallo");
+	free(pCheckStr);
 }
 
 void testStrToLower_LowToLow(void) {
@@ -92,7 +116,51 @@ void testStrToLower_LowToLow(void) {
 	
 	pCheckStr=StrToLower(pTestStr);
 	
+	CU_ASSERT_PTR_NOT_NULL(pCheckStr);
 	CU_ASSERT_STRING_EQUAL(pCheckStr,"hallo");
+	free(pCheckStr);
+}
+
+
+void testStrToLower_ascii_basic(void) {
+    const char in[] = "HALLO_abc-XYZ123";
+    char* r = StrToLower(in);
+    CU_ASSERT_PTR_NOT_NULL(r);
+    CU_ASSERT_STRING_EQUAL(r, "hallo_abc-xyz123");
+    free(r);
+}
+
+void testStrToLower_punctuation_digits_unchanged(void) {
+    const char in[] = "A!B?C#1_2-3";
+    char* r = StrToLower(in);
+    CU_ASSERT_STRING_EQUAL(r, "a!b?c#1_2-3");
+    free(r);
+}
+
+void testStrToLower_specials_and_umlauts(void){
+    char pTestStr[] = "ÄÖÜß_ABC-xyz123";
+    char* pCheckStr = StrToLower(pTestStr);
+	
+	CU_ASSERT_PTR_NOT_NULL(pCheckStr);
+    CU_ASSERT_PTR_NOT_EQUAL(pCheckStr, pTestStr);        
+    CU_ASSERT_STRING_EQUAL(pCheckStr, "ÄÖÜß_abc-xyz123"); // nur ASCII runter, Umlaute bleiben
+	free(pCheckStr);
+}
+
+void testStrToLower_idempotent(void) {
+    const char in[] = "MiXeD_123";
+    char* r1 = StrToLower(in);
+    char* r2 = StrToLower(r1);
+    CU_ASSERT_STRING_EQUAL(r1, r2);
+    free(r1);
+    free(r2);
+}
+
+void testStrToLower_returns_new_buffer(void){
+    const char in[] = "ABC";
+    char* r = StrToLower(in);
+    CU_ASSERT_PTR_NOT_EQUAL(r, in);
+    free(r);
 }
 
 void testclearspace_NOP(void) {
@@ -173,6 +241,14 @@ void testNickStringCheck_invalid(void) {
     CU_ASSERT_FALSE(NickStringCheck(invalidNickName));
 }
 
+static void fill_sample_channel(ChannelData_t* c){
+    memset(c, 0, sizeof(*c));
+    strcpy(c->sModes.pModeStr, "+k tn       ");
+    c->sModes.pKeyword = "secret";
+    c->pTopic    = "T1";
+    c->pGreeting = "Hi";
+}
+
 void testChannelStringCheck_valid(void) {
     char channelName[] = "#test_channel";
 
@@ -214,4 +290,21 @@ void testStrToChannelData(void) {
     CU_ASSERT_STRING_EQUAL(channelData.sModes.pKeyword, "test");
     CU_ASSERT_STRING_EQUAL(channelData.pTopic, "Test Topic");
     CU_ASSERT_STRING_EQUAL(channelData.pGreeting, "Welcome to the channel!");
+}
+
+
+void testChannel_roundtrip(void){
+    ChannelData_t in, out;
+    fill_sample_channel(&in);
+    char* s = ChannelDataToStr(&in);
+    CU_ASSERT_PTR_NOT_NULL(s);
+
+    memset(&out, 0, sizeof(out));
+    StrToChannelData(s, &out);
+
+    CU_ASSERT_STRING_EQUAL(out.sModes.pModeStr, "+k tn       ");
+    CU_ASSERT_STRING_EQUAL(out.sModes.pKeyword, "secret");
+    CU_ASSERT_STRING_EQUAL(out.pTopic, "T1");
+    CU_ASSERT_STRING_EQUAL(out.pGreeting, "Hi");
+    free(s);
 }

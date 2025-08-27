@@ -37,9 +37,19 @@ void testTrim_no_space(void);
 void testTrim_leading_space(void);
 void testTrim_multi_leading_space(void);
 void testTrim_newline(void);
+void testTrim_only_whitespace(void);
+void testTrim_idempotent(void);
 void testTrim_sentence(void);
+
+void testStrToLower_empty(void);
 void testStrToLower_UpToLow(void);
 void testStrToLower_LowToLow(void);
+void testStrToLower_ascii_basic(void);
+void testStrToLower_punctuation_digits_unchanged(void);
+void testStrToLower_specials_and_umlauts(void);
+void testStrToLower_idempotent(void) ;
+void testStrToLower_returns_new_buffer(void);
+
 void testclearspace_NOP(void);
 void testclearspace_space_at_the_begin_and_end(void);
 void testclearspace_space_between(void);
@@ -48,25 +58,38 @@ void testclearspace_space_quote_between(void);
 void testclearspace_space_quotes_mix(void);
 void testclearspace_space_only(void);
 void testclearspace_space_only_and_quotes(void);
+
 void testNickStringCheck_valid(void);
 void testNickStringCheck_invalid(void);
+
 void testChannelStringCheck_valid(void);
 void testChannelStringCheck_invalid(void);
+
 void testChannelDataToStr(void);
 void testStrToChannelData(void);
 
-#define NUMBER_OF_UTILITIES_TESTS	22
+void testChannel_roundtrip(void);
+
+#define NUMBER_OF_UTILITIES_TESTS	31
 
 /* collection of all test für the utilities function */
 static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= { 
-	{testTrim_empty_string,	"Trim(): empty string"},
-	{testTrim_no_space,		"Trim(): null spaces"}, 
-	{testTrim_leading_space,"Trim(): leading space"},
-	{testTrim_multi_leading_space,"Trim(): multi leading space"},
-	{testTrim_newline,		"Trim(): newline and carage return"}, 
-	{testTrim_sentence,		"Trim(): sentence"},
-	{testStrToLower_UpToLow,	"StrToLower(): full upper to lower"},
-	{testStrToLower_LowToLow,	"StrToLower(): full lower to lower"},
+	{testTrim_empty_string,						"Trim(): empty string"},
+	{testTrim_no_space,							"Trim(): null spaces"}, 
+	{testTrim_leading_space,					"Trim(): leading space"},
+	{testTrim_multi_leading_space,				"Trim(): multi leading space"},
+	{testTrim_newline,							"Trim(): newline and carage return"}, 
+	{testTrim_only_whitespace, 					"Trim(): only whitespace"},
+	{testTrim_idempotent,						"Trim(): idempotent"},
+	{testTrim_sentence,							"Trim(): sentence"},
+	{testStrToLower_empty,						"StrToLower(): empty string"},
+	{testStrToLower_UpToLow,					"StrToLower(): full upper to lower"},
+	{testStrToLower_LowToLow,					"StrToLower(): full lower to lower"},
+	{testStrToLower_ascii_basic,				"StrToLower(): ascii basic string"},
+	{testStrToLower_punctuation_digits_unchanged,"strToLower(): punctation digitis"},
+	{testStrToLower_specials_and_umlauts,		"StrToLower(): special and umlauts"},
+	{testStrToLower_idempotent,					"StrToLower(): idempotent"},
+	{testStrToLower_returns_new_buffer,			"StrToLower(): new buffer"},
 	{testclearspace_NOP,						"clearspace(): no spaces and nop"},
 	{testclearspace_space_at_the_begin_and_end,	"clearspace(): Space at the begin and end"},
 	{testclearspace_space_between,				"clearspace(): Space between"},
@@ -81,6 +104,7 @@ static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= {
 	{testChannelStringCheck_invalid,			"ChannelStringCheck(): check invalidate channel string"},
 	{testChannelDataToStr,						"ChannelDataToStr(): convert data of a channel to a string"},
 	{testStrToChannelData,						"StrToChannelData(): convert string to  channel data"},
+	{testChannel_roundtrip,						"Channeldata: roundtrip channel data"},
 };
 
 #endif

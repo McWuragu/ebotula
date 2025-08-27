@@ -36,12 +36,12 @@ msgstr "Das Konto %s ist angmeldet."
 #: src/account.c:140
 #, c-format
 msgid "Update the timestamp %s for the account %s"
-msgstr "Aktualisierung des Zeitstempels %s für das Konto %s"
+msgstr "Aktualisierung des Zeitstempels %s fÃ¼r das Konto %s"
 
 #: src/account.c:143
 #, c-format
 msgid "Add the timepstamp %s for the account %s"
-msgstr "Zeitstempel %s für das Konto %s hinzugefügt."
+msgstr "Zeitstempel %s fÃ¼r das Konto %s hinzugefÃ¼gt."
 
 #: src/account.c:164
 #, c-format
@@ -61,7 +61,7 @@ msgstr "Zugriffsrechte des Kontos %s entfernt"
 #: src/account.c:239
 #, c-format
 msgid "The account %s is removed"
-msgstr "Das Konto %s wurde gelöscht."
+msgstr "Das Konto %s wurde gelÃ¶scht."
 
 #: src/baseconfig.c:128
 #, c-format
@@ -71,30 +71,30 @@ msgstr "Erzeuge die Konfigurationsdatei %s"
 #: src/baseconfig.c:133
 #, c-format
 msgid "Couldn't open the configuration file %s."
-msgstr "Konnte das Konfigurationsfile %s nicht öffnen."
+msgstr "Konnte das Konfigurationsfile %s nicht Ã¶ffnen."
 
 #: src/callback.c:55
 msgid "Callback routine for the reset of the modes"
-msgstr "Callbackroutine für das Zurücksetzen der Modi"
+msgstr "Callbackroutine fÃ¼r das ZurÃ¼cksetzen der Modi"
 
 #: src/callback.c:63
 #, c-format
 msgid "Reset the account modes for the identified account %s"
-msgstr "Modies des Kontos %s zurückgesetzt."
+msgstr "Modies des Kontos %s zurÃ¼ckgesetzt."
 
 #: src/callback.c:87
 #, c-format
 msgid "Reset the account modes of the master %s"
-msgstr "Zurücksetzen des Modies des Masters-Kontos %s"
+msgstr "ZurÃ¼cksetzen des Modies des Masters-Kontos %s"
 
 #: src/callback.c:99
 #, c-format
 msgid "Reset the account mode for user %s"
-msgstr "Zurücksetzen der Modies für das Konto %s"
+msgstr "ZurÃ¼cksetzen der Modies fÃ¼r das Konto %s"
 
 #: src/callback.c:124
 msgid "Callback routine for user banning"
-msgstr "Callbackroutine für das Bannen eines Benutzers"
+msgstr "Callbackroutine fÃ¼r das Bannen eines Benutzers"
 
 #: src/callback.c:142
 msgid "The user is banned by the bot."
@@ -106,7 +106,7 @@ msgstr "Konnte diesen Benutzer nicht bannen."
 
 #: src/callback.c:168
 msgid "Callback routine for user kicking"
-msgstr "Callbackroutine für das Herrauswerfen eines Benutzers"
+msgstr "Callbackroutine fÃ¼r das Herrauswerfen eines Benutzers"
 
 #: src/callback.c:188
 msgid "The user is kicked by the bot"
@@ -147,12 +147,12 @@ msgstr "Ende der Hilfe"
 
 #: src/command.c:111
 msgid "Spezial help text for a command"
-msgstr "Spezialer Hilfetext für ein Kommando"
+msgstr "Spezialer Hilfetext fÃ¼r ein Kommando"
 
 #: src/command.c:125
 #, c-format
 msgid "Looking for the information about \"%s\""
-msgstr "Suche die Information über \"%s\""
+msgstr "Suche die Information Ã¼ber \"%s\""
 
 #: src/command.c:130
 #, c-format
@@ -161,17 +161,17 @@ msgstr "Kommando gefunden %d"
 
 #: src/command.c:133
 msgid "Help for"
-msgstr "Hilfe für"
+msgstr "Hilfe fÃ¼r"
 
 #: src/command.c:155
 #, c-format
 msgid "No help found for the command %s."
-msgstr "Keine Hilfe für dieses Kommando %s gefunden."
+msgstr "Keine Hilfe fÃ¼r dieses Kommando %s gefunden."
 
 #: src/command.c:163
 #, c-format
 msgid "Try to create an new account for %s"
-msgstr "Versucht einen neues Konto für %s anzulegen"
+msgstr "Versucht einen neues Konto fÃ¼r %s anzulegen"
 
 #: src/command.c:166 src/command.c:356
 msgid "You're already identified."
@@ -179,7 +179,7 @@ msgstr "Du bist schon identifiziert."
 
 #: src/command.c:175
 msgid "Nice to meet you."
-msgstr "Schön dich zu treffen."
+msgstr "SchÃ¶n dich zu treffen."
 
 #: src/command.c:176
 #, c-format
@@ -198,7 +198,7 @@ msgstr "Das Konto %s existiert schon."
 #: src/command.c:193
 #, c-format
 msgid "Check the  password for the account %s"
-msgstr "Überprüfe das Passwort für das Konto %s"
+msgstr "ÃœberprÃ¼fe das Passwort fÃ¼r das Konto %s"
 
 #: src/command.c:201 src/command.c:296
 msgid "You've set a empty password."
@@ -206,7 +206,7 @@ msgstr "Du hast ein leeres Passwort gesetzt."
 
 #: src/command.c:206
 msgid "Password is changed."
-msgstr "Passwort wurde geändert."
+msgstr "Passwort wurde geÃ¤ndert."
 
 #: src/command.c:259
 msgid "You're now logged off."
@@ -229,40 +229,40 @@ msgstr "Der Benutzer %s wurde gefunden."
 
 #: src/command.c:325
 msgid "Reconstruct the access rights for the channels"
-msgstr "Herstellung der Zugriffsrechte für alle Channels."
+msgstr "Herstellung der Zugriffsrechte fÃ¼r alle Channels."
 
 #: src/command.c:347
 msgid "Invalid password"
-msgstr "Ungültiges Passwort"
+msgstr "UngÃ¼ltiges Passwort"
 
 #: src/command.c:353 src/command.c:496 src/command.c:718 src/command.c:735
 #: src/command.c:774 src/command.c:781 src/command.c:824 src/command.c:859
 #: src/command.c:932 src/command.c:941 src/command.c:1106 src/command.c:1214
 #: src/command.c:1462
 msgid "Couldn't found regulare parameters."
-msgstr "Konnte keine gültigen Parameter finden."
+msgstr "Konnte keine gÃ¼ltigen Parameter finden."
 
 #: src/command.c:367 src/command.c:374 src/command.c:407 src/command.c:435
 #: src/command.c:442 src/command.c:459 src/command.c:588 src/command.c:636
 #: src/command.c:712 src/command.c:769 src/command.c:818 src/command.c:853
 #: src/command.c:918 src/command.c:1104 src/command.c:1382
 msgid "This command requieres a channel name."
-msgstr "Dieses Kommando benötigt einen Channelname."
+msgstr "Dieses Kommando benÃ¶tigt einen Channelname."
 
 #: src/command.c:383
 #, c-format
 msgid "The channel %s is already on the channel list."
-msgstr "Der Channel %s ist schon zur Liste hinzugefügt."
+msgstr "Der Channel %s ist schon zur Liste hinzugefÃ¼gt."
 
 #: src/command.c:385
 #, c-format
 msgid "Join and add the channnel %s"
-msgstr "Den Channel %s hinzugefügt und beigetretten"
+msgstr "Den Channel %s hinzugefÃ¼gt und beigetretten"
 
 #: src/command.c:392
 #, c-format
 msgid "The channel %s is added to the channel list"
-msgstr "Der Channel %s wurde zu Liste hinzugefügt."
+msgstr "Der Channel %s wurde zu Liste hinzugefÃ¼gt."
 
 #: src/command.c:396 src/command.c:451
 #, c-format
@@ -310,7 +310,7 @@ msgstr "Der Bot startet neu."
 #: src/command.c:499
 #, c-format
 msgid "The Nickname %s is invalid."
-msgstr "Der Nickname %s ist ungültig."
+msgstr "Der Nickname %s ist ungÃ¼ltig."
 
 #: src/command.c:503
 #, c-format
@@ -328,7 +328,7 @@ msgstr "Channelliste:"
 #: src/command.c:540
 #, c-format
 msgid "...for channel %s"
-msgstr "...für den Channel %s"
+msgstr "...fÃ¼r den Channel %s"
 
 #: src/command.c:548
 #, c-format
@@ -338,7 +338,7 @@ msgstr "Thema: %s"
 #: src/command.c:552
 #, c-format
 msgid "Greeting: %s"
-msgstr "Begrüssung: %s"
+msgstr "BegrÃ¼ssung: %s"
 
 #: src/command.c:567
 msgid "End of the channel list."
@@ -347,22 +347,22 @@ msgstr "Ende der Channelliste"
 #: src/command.c:590
 #, c-format
 msgid "Greeting seting for %s"
-msgstr "Begrüssung gesetzt für den Channel %s"
+msgstr "BegrÃ¼ssung gesetzt fÃ¼r den Channel %s"
 
 #: src/command.c:611
 #, c-format
 msgid "The greeting of the channel %s is removed"
-msgstr "Die Begrüssung wurde vom Channel %s entfernt."
+msgstr "Die BegrÃ¼ssung wurde vom Channel %s entfernt."
 
 #: src/command.c:613
 #, c-format
 msgid "The new greeting of the channel %s is set"
-msgstr "Die neue Begrüssung wurde für den Channel %s gesetzt."
+msgstr "Die neue BegrÃ¼ssung wurde fÃ¼r den Channel %s gesetzt."
 
 #: src/command.c:638
 #, c-format
 msgid "Topic seting for %s"
-msgstr "Thema für den Channel %s gesetzt "
+msgstr "Thema fÃ¼r den Channel %s gesetzt "
 
 #: src/command.c:664
 #, c-format
@@ -372,7 +372,7 @@ msgstr "Das Thema wurde vom Channel %s entfernt."
 #: src/command.c:666
 #, c-format
 msgid "The new topic of the channel %s is set"
-msgstr "Das neue Thema für den Channel %s wurde gesetzt"
+msgstr "Das neue Thema fÃ¼r den Channel %s wurde gesetzt"
 
 #: src/command.c:676 src/command.c:926
 msgid "This channel isn't in the channel list."
@@ -381,7 +381,7 @@ msgstr "Dieser Channel ist nicht in der Liste"
 #: src/command.c:691
 #, c-format
 msgid "Greeting for %s"
-msgstr "Begrüssung für den Channel %s"
+msgstr "BegrÃ¼ssung fÃ¼r den Channel %s"
 
 #: src/command.c:787
 msgid "Can't ban myself"
@@ -390,7 +390,7 @@ msgstr "Kann mich nicht selbst bannen."
 #: src/command.c:833
 #, c-format
 msgid "The ban %s is removed by the bot from the channel %s"
-msgstr "Der Ban %s wurde durch den Bot für den Channel %s entfernt."
+msgstr "Der Ban %s wurde durch den Bot fÃ¼r den Channel %s entfernt."
 
 #: src/command.c:871
 msgid "Can't kick myself"
@@ -406,7 +406,7 @@ msgstr "Konnte dein Konto nicht finden."
 
 #: src/command.c:937
 msgid "Modify user mod"
-msgstr "Verändere die Kontomodies"
+msgstr "VerÃ¤ndere die Kontomodies"
 
 #: src/command.c:955
 #, c-format
@@ -415,7 +415,7 @@ msgstr "Konnte das Konto %s nicht finden."
 
 #: src/command.c:958
 msgid "You can't modify yourself"
-msgstr "Du kannst dich nicht selbst ändern."
+msgstr "Du kannst dich nicht selbst Ã¤ndern."
 
 #: src/command.c:974 src/command.c:999
 msgid "You're not a bot master."
@@ -424,17 +424,17 @@ msgstr "Du bist kein Master."
 #: src/command.c:982
 #, c-format
 msgid "Modify account %s in the channel %s"
-msgstr "Verändere das Konto %s im Channel %s"
+msgstr "VerÃ¤ndere das Konto %s im Channel %s"
 
 #: src/command.c:1005
 #, c-format
 msgid "The mode %c is invalid."
-msgstr "Der Mode %c ist ungültig."
+msgstr "Der Mode %c ist ungÃ¼ltig."
 
 #: src/command.c:1012
 #, c-format
 msgid "Found account modes %s"
-msgstr "Die Modies für das Konto %s gefunden."
+msgstr "Die Modies fÃ¼r das Konto %s gefunden."
 
 #: src/command.c:1040
 msgid "Set new account modes"
@@ -446,31 +446,31 @@ msgstr "Entferne die Modies des Konto"
 
 #: src/command.c:1055
 msgid "Modify the current account modes"
-msgstr "Verändere die Modi des aktuellen Kontos."
+msgstr "VerÃ¤ndere die Modi des aktuellen Kontos."
 
 #: src/command.c:1085
 #, c-format
 msgid "The user mode of the account %s is changed."
-msgstr "Die Benutzermodi wurden für das Konto %s geändert."
+msgstr "Die Benutzermodi wurden fÃ¼r das Konto %s geÃ¤ndert."
 
 #: src/command.c:1115
 #, c-format
 msgid "Found the new channel modes \"%s\" for the channel %s."
-msgstr "Neue Channelmodi \"%s\" für den Channel %s gefunden."
+msgstr "Neue Channelmodi \"%s\" fÃ¼r den Channel %s gefunden."
 
 #: src/command.c:1179
 #, c-format
 msgid "Write the new channel modes \"%s\" for the channel %s."
-msgstr "Schreibe neue Channelmodi \"%s\" für den Channel %s."
+msgstr "Schreibe neue Channelmodi \"%s\" fÃ¼r den Channel %s."
 
 #: src/command.c:1188
 #, c-format
 msgid "Set the new channel modes for the channel %s"
-msgstr "Setzte die neuen Channelmodi für den Channel %s"
+msgstr "Setzte die neuen Channelmodi fÃ¼r den Channel %s"
 
 #: src/command.c:1242
 msgid "The account is removed"
-msgstr "Das Konto wurde gelöscht."
+msgstr "Das Konto wurde gelÃ¶scht."
 
 #: src/command.c:1243
 #, c-format
@@ -488,7 +488,7 @@ msgstr "Kontoliste:"
 
 #: src/command.c:1276
 msgid "Create the accountlist for a master"
-msgstr "Erzeuge eine Kontoliste für einen Master"
+msgstr "Erzeuge eine Kontoliste fÃ¼r einen Master"
 
 #: src/command.c:1376 src/command.c:1445
 msgid "End of the account list."
@@ -496,7 +496,7 @@ msgstr "Ende der Kontoliste."
 
 #: src/command.c:1379
 msgid "Create the accountlist for a owner"
-msgstr "Erzeuge eine Kontoliste für einen Owner"
+msgstr "Erzeuge eine Kontoliste fÃ¼r einen Owner"
 
 #: src/command.c:1487
 msgid "Can't invite myself."
@@ -511,7 +511,7 @@ msgstr "Der Bot hat den Benutzer %s in den Channel %s eingeladen."
 #, c-format
 msgid "The bot need a channel parameter for inviting of the user %s"
 msgstr ""
-"Der Bot benötigt einen Channel als Parameter zum einladen des Benutzers %s."
+"Der Bot benÃ¶tigt einen Channel als Parameter zum einladen des Benutzers %s."
 
 #: src/dbaccess.c:70
 msgid "Initialization of the database"
@@ -520,17 +520,17 @@ msgstr "Initialisierung der Datenbank"
 #: src/dbaccess.c:78
 #, c-format
 msgid "Couldn't create the directory %s for the database - %s"
-msgstr "Konnte das Verzeichnis %s für die Datenbank nicht anlegen. - %s"
+msgstr "Konnte das Verzeichnis %s fÃ¼r die Datenbank nicht anlegen. - %s"
 
 #: src/dbaccess.c:81
 #, c-format
 msgid "Create the directory %s for the database."
-msgstr "Lege das Verzeichnis %s für die Datenbank an."
+msgstr "Lege das Verzeichnis %s fÃ¼r die Datenbank an."
 
 #: src/dbaccess.c:96
 #, c-format
 msgid "Couldn't open the databases %s - %s"
-msgstr "Könnte die Datenbank %s nicht öffnen. - %s"
+msgstr "KÃ¶nnte die Datenbank %s nicht Ã¶ffnen. - %s"
 
 #: src/dbaccess.c:118
 msgid "Database is closed"
@@ -544,21 +544,21 @@ msgstr "Unbekannte Datenbank ID %d"
 #: src/handles.c:88
 #, c-format
 msgid "Change the netmask \"%s\" to \"%s\""
-msgstr "Änderung der Netzmaske \"%s\" zu \"%s\""
+msgstr "Ã„nderung der Netzmaske \"%s\" zu \"%s\""
 
 #: src/handles.c:124 src/handles.c:263
 msgid "needs operator access rights."
-msgstr "benötigt Operatorrechte."
+msgstr "benÃ¶tigt Operatorrechte."
 
 #: src/handles.c:166
 #, c-format
 msgid "Set the account modes for the account %s with nickname %s"
-msgstr "Setze die Modi für das Konto %s des Benutzers %s."
+msgstr "Setze die Modi fÃ¼r das Konto %s des Benutzers %s."
 
 #: src/handles.c:252
 #, c-format
 msgid "Invalid server message \"%s\""
-msgstr "Ungültige Server Nachricht \"%s\""
+msgstr "UngÃ¼ltige Server Nachricht \"%s\""
 
 #: src/handles.c:257
 msgid "Bot get a new account mode"
@@ -566,21 +566,21 @@ msgstr "Bot hat neuen Modus erhalten."
 
 #: src/handles.c:267
 msgid "Added callback routine for the reset of the account modes"
-msgstr "Callbackroutine für das Zurücksetzen der Modi eingefügt."
+msgstr "Callbackroutine fÃ¼r das ZurÃ¼cksetzen der Modi eingefÃ¼gt."
 
 #: src/handles.c:292
 msgid "Ban reset not implemented jet"
-msgstr "Zurücksetzen von Bans ist im Moment noch nicht implementiert"
+msgstr "ZurÃ¼cksetzen von Bans ist im Moment noch nicht implementiert"
 
 #: src/handles.c:303
 #, c-format
 msgid "No mode entries found in \"%s\""
-msgstr "Keine Modeeinträge in \"%s\" gefunden"
+msgstr "Keine ModeeintrÃ¤ge in \"%s\" gefunden"
 
 #: src/handles.c:338
 #, c-format
 msgid "Reset the topic in the channel %s"
-msgstr "Zurücksetzen des Thema für den Channel %s"
+msgstr "ZurÃ¼cksetzen des Thema fÃ¼r den Channel %s"
 
 #: src/handles.c:363
 #, c-format
@@ -599,7 +599,7 @@ msgstr "Initialisiere den Channel %s."
 #: src/handles.c:485
 #, c-format
 msgid "Look for a callback zombie routine of the user %s"
-msgstr "Suche nach Zombies in der Callbackroutine für den Benutzer %s"
+msgstr "Suche nach Zombies in der Callbackroutine fÃ¼r den Benutzer %s"
 
 #: src/handles.c:496
 #, c-format
@@ -618,12 +618,12 @@ msgstr "Debug-Level-Option gefunden"
 #: src/parameter.c:282
 #, c-format
 msgid "\"%s\" need a parameter value.\n"
-msgstr "\"%s\" benötigt einen Parameterwert.\n"
+msgstr "\"%s\" benÃ¶tigt einen Parameterwert.\n"
 
 #: src/ircbot.c:222
 #, c-format
 msgid "The log level %i is invalid.\n"
-msgstr "Das Log-Level %i ist ungültig.\n"
+msgstr "Das Log-Level %i ist ungÃ¼ltig.\n"
 
 #: src/ircbot.c:304
 #, c-format
@@ -662,7 +662,7 @@ msgstr "Realname %s"
 #: src/ircbot.c:324
 #, c-format
 msgid "Execute as %s.%s"
-msgstr "Ausführen als %s.%s"
+msgstr "AusfÃ¼hren als %s.%s"
 
 #: src/ircbot.c:325
 #, c-format
@@ -682,27 +682,27 @@ msgstr "Datenbankpfad %s"
 #: src/ircbot.c:328
 #, c-format
 msgid "Ping timeout %ds"
-msgstr "Zeitüberschreitung %ds"
+msgstr "ZeitÃ¼berschreitung %ds"
 
 #: src/ircbot.c:329
 #, c-format
 msgid "Fast sending delay %dms"
-msgstr "Verzögerung für das schnelle Senden %dms"
+msgstr "VerzÃ¶gerung fÃ¼r das schnelle Senden %dms"
 
 #: src/ircbot.c:330
 #, c-format
 msgid "Slow sending delay %dms"
-msgstr "Verzögerung für das langsame Senden %dms"
+msgstr "VerzÃ¶gerung fÃ¼r das langsame Senden %dms"
 
 #: src/ircbot.c:331
 #, c-format
 msgid "Fast sending limit %d"
-msgstr "Limit für das schnelle Senden %dZeichen/min"
+msgstr "Limit fÃ¼r das schnelle Senden %dZeichen/min"
 
 #: src/ircbot.c:332
 #, c-format
 msgid "Startup initialization delay %ds"
-msgstr "Verzögerung für die Anfangsinitialisierung %ds"
+msgstr "VerzÃ¶gerung fÃ¼r die Anfangsinitialisierung %ds"
 
 #: src/ircbot.c:333
 #, c-format
@@ -729,7 +729,7 @@ msgstr "Starten..."
 
 #: src/ircbot.c:374
 msgid "Running..."
-msgstr "Läuft..."
+msgstr "LÃ¤uft..."
 
 #: src/ircbot.c:439 src/ircbot.c:441 src/parser.c:128
 #, c-format
@@ -791,7 +791,7 @@ msgstr ""
 #: src/messages.c:38
 #, c-format
 msgid "\t-a days\t\tSet the time in days for the automatic logoff.\n"
-msgstr "\t-a Tage\t\tSetzt die Zeit in Tage für das automatische Abmelden.\n"
+msgstr "\t-a Tage\t\tSetzt die Zeit in Tage fÃ¼r das automatische Abmelden.\n"
 
 #: src/messages.c:39
 #, c-format
@@ -802,7 +802,7 @@ msgstr "\t-b Name\t\tSetzt den Namen des Bots.\n"
 #, c-format
 msgid "\t-c sec\t\tSet the ping timeout of the network connection.\n"
 msgstr ""
-"\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
+"\t-c Sek\t\tSetzt das Pingtimout in Sekunden fÃ¼r die Netzwerkverbindung.\n"
 
 #: src/messages.c:41
 #, c-format
@@ -818,7 +818,7 @@ msgstr "\t-L Level\tSetzt das Ausgabelevel (0-7)\n"
 #, c-format
 msgid "\t-e ms\t\tSet the delay time in millisecond for the slow sending.\n"
 msgstr ""
-"\t-e ms\t\tSetzt die Verzögerung in Millisekunden für das verlangsamte "
+"\t-e ms\t\tSetzt die VerzÃ¶gerung in Millisekunden fÃ¼r das verlangsamte "
 "Senden.\n"
 
 #: src/messages.c:44
@@ -830,7 +830,7 @@ msgstr "\t-f Datei\tSetzt den Pfad zu Konfigurationsdatei.\n"
 #, c-format
 msgid "\t-g group\tSet the group under wich the bot run (only root).\n"
 msgstr ""
-"\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgeführt wird. (Nur "
+"\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgefÃ¼hrt wird. (Nur "
 "Root).\n"
 
 #: src/messages.c:46
@@ -842,7 +842,7 @@ msgstr "\t-h\t\tGibt diese Hilfe aus.\n"
 #, c-format
 msgid "\t-i sec\t\tSet the delay of the channel initialization.\n"
 msgstr ""
-"\t-i Sek\t\tSetzt die Verzögerung in Sekunden für das Einrichten der "
+"\t-i Sek\t\tSetzt die VerzÃ¶gerung in Sekunden fÃ¼r das Einrichten der "
 "Channels.\n"
 
 #: src/messages.c:48
@@ -856,7 +856,7 @@ msgstr ""
 msgid ""
 "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
 msgstr ""
-"\t-l Char/min\tSetzt das Limit in Zeichen je Minute für das beschleunigte "
+"\t-l Char/min\tSetzt das Limit in Zeichen je Minute fÃ¼r das beschleunigte "
 "Senden.\n"
 
 #: src/messages.c:50
@@ -868,7 +868,7 @@ msgstr "\t-m\t\tStartet den Dialog zum Anlegen eines neuen Masters.\n"
 #, c-format
 msgid "\t-n ms\t\tSet the delay time in millisecond for the fast sending.\n"
 msgstr ""
-"\t-n ms\t\tSetzt die Verzögerung in Millisekunden für das beschleunigte "
+"\t-n ms\t\tSetzt die VerzÃ¶gerung in Millisekunden fÃ¼r das beschleunigte "
 "Senden\n"
 
 #: src/messages.c:52
@@ -879,7 +879,7 @@ msgstr "\t-p Port\t\tSetzt die Portnummer des IRC-Servers.\n"
 #: src/messages.c:53
 #, c-format
 msgid "\t-r string\tSet the output for a request of the real name.\n"
-msgstr "\t-r String\tSetzt die Zeichenkette des Real Name Felds für das IRC.\n"
+msgstr "\t-r String\tSetzt die Zeichenkette des Real Name Felds fÃ¼r das IRC.\n"
 
 #: src/messages.c:54
 #, c-format
@@ -914,7 +914,7 @@ msgstr "Versucht mit %s zu verbinden"
 #: src/network.c:95
 #, c-format
 msgid "Couldn't resolve the hostname %s."
-msgstr "Könnte Hostname %s nicht auflösen."
+msgstr "KÃ¶nnte Hostname %s nicht auflÃ¶sen."
 
 #: src/network.c:104
 msgid "Couldn't found the tcp protocol."
@@ -928,7 +928,7 @@ msgstr "Konnte keinen TCP-Socket erzeugen. - %s"
 #: src/network.c:118
 #, c-format
 msgid "Couldn't connect to %s:%s - %s"
-msgstr "Könnte keine Verbindung zu %s:%s aufbauen. - %s"
+msgstr "KÃ¶nnte keine Verbindung zu %s:%s aufbauen. - %s"
 
 #: src/network.c:121
 #, c-format
@@ -946,16 +946,16 @@ msgstr "Senden(%d/%d): \"%s\""
 
 #: src/network.c:173
 msgid "Can't receive a line."
-msgstr "Könnte keine Zeile empfangen."
+msgstr "KÃ¶nnte keine Zeile empfangen."
 
 #: src/network.c:178
 msgid "Receiving timeout"
-msgstr "Zeitüberschreitung beim Empfang"
+msgstr "ZeitÃ¼berschreitung beim Empfang"
 
 #: src/network.c:279
 #, c-format
 msgid "Couldn't set the nickname %s."
-msgstr "Könnte Hostname %s nicht auflösen."
+msgstr "KÃ¶nnte Hostname %s nicht auflÃ¶sen."
 
 #: src/parameter.c:52
 msgid "Command line parameters found and read"
@@ -964,15 +964,15 @@ msgstr "Kommandozeilenparameter gefunden und werden gelesen."
 #: src/parameter.c:56
 #, c-format
 msgid "Check option \"%s\""
-msgstr "Überprüfe Option %s"
+msgstr "ÃœberprÃ¼fe Option %s"
 
 #: src/parameter.c:68
 msgid "The hostname is irregular.\n"
-msgstr "Der Servername ist ungültig.\n"
+msgstr "Der Servername ist ungÃ¼ltig.\n"
 
 #: src/parameter.c:86
 msgid "The botname is irregular.\n"
-msgstr "Der Botname ist ungültig.\n"
+msgstr "Der Botname ist ungÃ¼ltig.\n"
 
 #: src/parameter.c:140
 #, c-format
@@ -981,31 +981,31 @@ msgstr "Die Portnummer %i ist ausserhalb des Bereichs.\n"
 
 #: src/parameter.c:161
 msgid "The thread limit is out of range.\n"
-msgstr "Das Limit für die Threads ist ungültig.\n"
+msgstr "Das Limit fÃ¼r die Threads ist ungÃ¼ltig.\n"
 
 #: src/parameter.c:178
 msgid "The automatic logoff time is invalid.\n"
-msgstr "Die automatische Abmeldezeit ist ungültig.\n"
+msgstr "Die automatische Abmeldezeit ist ungÃ¼ltig.\n"
 
 #: src/parameter.c:195 src/parameter.c:212
 msgid "The send delay time is invalid.\n"
-msgstr "Die Zeitverzögerung für das Senden ist ungültig.\n"
+msgstr "Die ZeitverzÃ¶gerung fÃ¼r das Senden ist ungÃ¼ltig.\n"
 
 #: src/parameter.c:228
 msgid "The limit for sending with the fast send delay is invalid.\n"
-msgstr "Das Limit für das schnelle Senden ist ungültig.\n"
+msgstr "Das Limit fÃ¼r das schnelle Senden ist ungÃ¼ltig.\n"
 
 #: src/parameter.c:244
 msgid "The delay of the startup initialization is invalid.\n"
-msgstr "Die Verzögerung für die Startinitialisierung ist ungültig.\n"
+msgstr "Die VerzÃ¶gerung fÃ¼r die Startinitialisierung ist ungÃ¼ltig.\n"
 
 #: src/parameter.c:261
 msgid "The account living time is invalid.\n"
-msgstr "Die Lebenszeit eines Kontos ist ungültig.\n"
+msgstr "Die Lebenszeit eines Kontos ist ungÃ¼ltig.\n"
 
 #: src/parameter.c:290
 msgid "The ping timeout is invalid.\n"
-msgstr "Das Pingtimeout ist ungültig.\n"
+msgstr "Das Pingtimeout ist ungÃ¼ltig.\n"
 
 #: src/parameter.c:301
 #, c-format
@@ -1015,12 +1015,12 @@ msgstr "Unbekannte Option \"%s\"\n"
 #: src/parameter.c:302 src/parameter.c:309
 #, c-format
 msgid "Type %s -h for more help.\n"
-msgstr "Tippe %s -h für mehr Hilfe ein.\n"
+msgstr "Tippe %s -h fÃ¼r mehr Hilfe ein.\n"
 
 #: src/parameter.c:308
 #, c-format
 msgid "Invalid option \"%s\"\n"
-msgstr "Ungültige Option \"%s\"\n"
+msgstr "UngÃ¼ltige Option \"%s\"\n"
 
 #: src/parameter.c:322
 #, c-format
@@ -1056,7 +1056,7 @@ msgstr ""
 
 #: src/parameter.c:362
 msgid "Typing error... passwords not equal\n"
-msgstr "Schreibfehler...Passwörter ist nicht identisch.\n"
+msgstr "Schreibfehler...PasswÃ¶rter ist nicht identisch.\n"
 
 #: src/parameter.c:373
 #, c-format
@@ -1080,7 +1080,7 @@ msgstr "CTCP Kommando %s gefunden"
 #: src/parser.c:166
 #, c-format
 msgid "Execution thread is running (pid%d)"
-msgstr "Ausführungs Thread läuft (PID%d)"
+msgstr "AusfÃ¼hrungs Thread lÃ¤uft (PID%d)"
 
 #: src/parser.c:201
 #, c-format
@@ -1093,12 +1093,12 @@ msgstr "Zugriff verweigert."
 
 #: src/parser.c:217
 msgid "Execution thread is stopped"
-msgstr "Ausführungsthread wurde gestoppt."
+msgstr "AusfÃ¼hrungsthread wurde gestoppt."
 
 #: src/parser.c:256
 #, c-format
 msgid "Access status for the userlevel %i and the command id %i is %i"
-msgstr "Zugriffsstatus für das Benutzerlevel %i und der Kommando ID %i ist %i"
+msgstr "Zugriffsstatus fÃ¼r das Benutzerlevel %i und der Kommando ID %i ist %i"
 
 #: src/queue.c:178 src/queue.c:268
 msgid "Queue is empty"
@@ -1107,7 +1107,7 @@ msgstr "Schlange ist leer."
 #: src/timing.c:56
 #, c-format
 msgid "The timing thread is running (pid%d)"
-msgstr "Der Thread für die  Zeitsteuerung läuft (PID%d)"
+msgstr "Der Thread fÃ¼r die  Zeitsteuerung lÃ¤uft (PID%d)"
 
 #: src/timing.c:70
 msgid "Remove the dead logins"
@@ -1119,7 +1119,7 @@ msgstr "Entfernt die toten Konten."
 
 #: src/timing.c:100
 msgid "The timing thread is stopped"
-msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
+msgstr "Der Thread fÃ¼r die  Zeitsteuerung ist gestoppt."
 
 #~ msgid "Reset the channelmodes of the channel %s"
-#~ msgstr "Zurücksetzen der Modi des Channels %s"
+#~ msgstr "ZurÃ¼cksetzen der Modi des Channels %s"

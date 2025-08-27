@@ -1,0 +1,13 @@
+#objects
+*.o
+*~
+*/.deps/
+
+# Autotools-Kram
+/autom4te.cache/
+/config.log
+/config.status
+/libtool
+/ltmain.sh
+Makefile.in
+config.h

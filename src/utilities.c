@@ -45,33 +45,24 @@ static boolean bHideLogOnScreen=false;
 
 /* #############################################################################  */
 void trim(char* pStr) {
-    boolean bIsAlpha;
-    int iLineLength,i,j;
+    boolean bIsAlpha = false;
+    int iLineLength = strlen(pStr);
+    int i, j = 0;
 
-    /* remove leading space
-       remove multispace
-       remove newline
-       remove carge return
-       remove tabs */
-    bIsAlpha=false;
-    j=0;
-    iLineLength=strlen(pStr);
-    for (i=0;i<=iLineLength;i++) {
-        if ((pStr[i]==' ') && bIsAlpha) {
-            pStr[j]=pStr[i];
-            bIsAlpha=false;
-            j++;
-        } else if ((pStr[i]!='\n') && (pStr[i]!='\r') && (pStr[i]!=' ') && (pStr[i]!='\t')) {
-            pStr[j]=pStr[i];
-            bIsAlpha=true;
-            j++;
+    for (i = 0; i < iLineLength; i++) {                 // <  statt <=  (wir kopieren NICHT das '\0')
+        if ((pStr[i] == ' ') && bIsAlpha) {
+            pStr[j++] = ' ';
+            bIsAlpha = false;
+        } else if ((pStr[i] != '\n') && (pStr[i] != '\r') && (pStr[i] != ' ') && (pStr[i] != '\t')) {
+            pStr[j++] = pStr[i];
+            bIsAlpha = true;
         }
     }
 
-    /* remove the folling space */
-    if (pStr[--j]==' ') {
-        pStr[j]='\0';
-    }
+    // trailing space ggf. entfernen
+    if (j > 0 && pStr[j - 1] == ' ')
+        j--;
+    pStr[j] = '\0';
 }
 /* #############################################################################  */
 void clearspace(char *pStr) {
