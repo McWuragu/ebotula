@@ -1,3 +1,9 @@
+ebotula (0.1.19-1) UNRELEASED; urgency=medium
+
+  * Switch to debhelper-compat 13; add docbook manpage build.
+
+ -- Steffen Laube <slaube@mcwuragu.de>  Wed, 27 Aug 2025 14:13:33 +0200
+
 ebotula (0.1.18-1) unstable; urgency=low
 
   * CVS release.

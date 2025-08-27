@@ -11,7 +11,7 @@ topic and modes. Also the modes of the user are set and saved by the bot.
 There are two ways to set the options for the bot:
 Either you pass the options via command line or you use the
 configuration file (standard is @sysconfdir@/@PACKAGE@.conf, you can alter this by
-the paramter \-f). Parameters given in the command line are prior to
+the parameter \-f). Parameters given in the command line are prior to
 those in the configuration file.
 .TP 
 \fB\-a\fP days
@@ -36,7 +36,7 @@ Sets the delay time for the slow sending
 Sets a custom configuration file
 .TP 
 \fB\-g\fP group
-Sets the group under wich the bot run (only root).
+Sets the group under which the bot run (only root).
 (See also -u)
 .TP 
 \fB\-h\fP
@@ -76,7 +76,7 @@ Sets a string for the realname field of the bot
 Sets the irc hostname the bot connects to
 .TP 
 \fB\-t\fP number
-Sets the ammount of parallel working command threads
+Sets the amount of parallel working command threads
 .TP
 \fB\-u\fb user
 Sets the user under which the bot run (root only).
@@ -122,7 +122,7 @@ Sends a message to all channels. Similar to SAY, but message is shown in all
 channels the bot has joined.
 .TP
 \fB!ban\fP [nickname]
-Bans a user from the channnel. Ban means the user can't join the channel
+Bans a user from the channel. Ban means the user can't join the channel
 until he is debanned or changes his nick.
 .TP
 \fB!chanmode\fP <#channel> [modes]
@@ -208,7 +208,7 @@ e.g.: /msg @PACKAGE@ !pass foobar
 \fB!restart\fP
 shuts the bot down and restarts it again
 
-Usefull if configuration is changed. By restarting config is read again.
+Useful if configuration is changed. By restarting config is read again.
 .TP 
 \fB!rmchannel\fP <#channel>
 Let the bot part and remove a old channel. The bot leaves the given channel

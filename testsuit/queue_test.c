@@ -21,6 +21,7 @@
  * #############################################################
  */
 
+#include <stdlib.h>
 #include <unistd.h>
 #include "queue_test.h"
 
@@ -32,6 +33,13 @@ int clean_queue(void) {
 	return 0;
 }
 
+/* Hilfsfunktion für Testdaten */
+static QueueData make_qd(const void* src, size_t n) {
+    QueueData qd;
+    qd.t_size = n;
+    qd.data   = (void*)src; /* Achtung: pushQueue kopiert intern! */
+    return qd;
+}
 
 void test_initQueue(void) {
 	CU_ASSERT_PTR_NOT_NULL(initQueue());
@@ -211,4 +219,40 @@ void test_getNextitrQueue(void) {
     CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(Queue));
 }
 
+/* FIFO-Ordnung: A kommt vor B raus */
+void test_fifo_order(void) {
+    PQueue q = initQueue();
+    const char A[] = "A";
+    const char B[] = "B";
+    CU_ASSERT_EQUAL(pushQueue(q, make_qd(A, sizeof A)), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, make_qd(B, sizeof B)), QUEUE_SUCCESS);
 
+    QueueData* p1 = popQueue(q);
+    QueueData* p2 = popQueue(q);
+
+    CU_ASSERT_PTR_NOT_NULL(p1);
+    CU_ASSERT_PTR_NOT_NULL(p2);
+    CU_ASSERT_STRING_EQUAL((char*)p1->data, "A");
+    CU_ASSERT_STRING_EQUAL((char*)p2->data, "B");
+
+    free(p1->data); free(p1);
+    free(p2->data); free(p2);
+    CU_ASSERT_TRUE(isemptyQueue(q));
+}
+
+/* Datenkopie-Integrität: Original nach push ändern darf Pop nicht beeinflussen */
+void test_data_integrity_copy(void) {
+    PQueue q = initQueue();
+    char buf[] = "hallo";
+    QueueData qd = make_qd(buf, sizeof buf);
+    CU_ASSERT_EQUAL(pushQueue(q, qd), QUEUE_SUCCESS);
+
+    /* Original mutieren */
+    buf[0] = 'x';
+
+    QueueData* out = popQueue(q);
+    CU_ASSERT_PTR_NOT_NULL(out);
+    CU_ASSERT_STRING_EQUAL((char*)out->data, "hallo"); /* unverändert */
+
+    free(out->data); free(out);
+}

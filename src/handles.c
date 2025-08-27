@@ -409,7 +409,7 @@ static void channelInit(char *pChannel) {
         free (sChannelData.sModes.pKeyword);
         free (sChannelData.sModes.pLimit);
 	
-        action(pChannel,_("has initialized this channnel."));
+        action(pChannel,_("has initialized this channel."));
         logger(LOG_INFO,_("Initialize the channel %s"), pChannel);
     }
 }
