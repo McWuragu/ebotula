@@ -198,7 +198,7 @@ void *CommandExecutionThread(void *argv) {
                     sMsgItem.bInteractiveMode=CmdHandleField[pMsg->identify].bIsCommand;
                     CmdHandleField[pMsg->identify].CommandHandler(&sMsgItem);
                 }else{
-                    logger(LOG_CRIT,_("Unkown command id %d"),pMsg->identify);
+                    logger(LOG_CRIT,_("Unknown command id %d"),pMsg->identify);
                 }
             } else {
                 notice(sMsgItem.pCallingNick,_("Access denied"));
