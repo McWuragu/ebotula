@@ -85,7 +85,7 @@ jobs:
         run: |
           set -eux
           # Dein Projekt hat ein make deb-Target. Falls es keins gäbe, könnte man debuild -us -uc fahren.
-          make deb
+          make binary
 
       - name: Sammle Artefakte
         run: |
