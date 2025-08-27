@@ -1,24 +1,28 @@
 Source: ebotula
 Section: net
 Priority: optional
-Maintainer: Uwe Strempel <u.strempel@gmx.de>
-Build-Depends: debhelper (>= 4.0.0), libgdbm3 (>= 1.7.0)
-Standards-Version: 3.6.0
+Maintainer: Steffen Laube <laube.steffen@gmx.de>
+Build-Depends: debhelper-compat (= 13),
+               dh-autoreconf | dh-sequence-autoreconf,
+               pkg-config,
+               docbook-to-man | docbook-utils
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://github.com/McWuragu/ebotula
 
 Package: ebotula
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Ebotula is an IRC-bot taking charge of basic tasks.
- Ebotula is an IRC-bot taking charge of basic tasks. It can be used to
- manage one or more channels. Management includes:
-  	- automatic setting and saving of user permissions after login
- 	- setting and saving of channel modes
- 	- setting and saving of channel topic
- 	- setting and displaying of channel greeting
- 	- setting and removing of ban masks
- 	- creating of user accounts
- 	- joining/parting of/from channels
- 	- broadcast messages without IRC operator rights
- 	- displaying of user lists
- 	- stopping the bot
- 	- restarting the bot
+Description: IRC bot for basic channel management
+ Ebotula is an IRC bot designed to automate essential channel tasks,
+ including:
+  * setting and saving user permissions after login
+  * managing and persisting channel modes and topics
+  * displaying custom channel greetings
+  * adding and removing ban masks
+  * creating and handling user accounts
+  * joining and parting channels automatically
+  * broadcasting messages without operator rights
+  * listing users currently in a channel
+  * stopping and restarting the bot
+
