@@ -29,8 +29,8 @@
 #ifndef TESTSUIT_INCLUDE_QUEUE_TEST_H_
 #define TESTSUIT_INCLUDE_QUEUE_TEST_H_
 
-int init_queue(void);
-int clean_queue(void);
+//int init_queue(void);
+//int clean_queue(void);
 
 void test_initQueue(void);
 void test_isemptyQueue(void);
@@ -46,8 +46,9 @@ void test_flushQueue_flush_not_empty_queue(void);
 void test_pushQueue(void);
 void test_deleteQueue(void);
 void test_getNextitrQueue(void);
+void test_fifo_order(void);
 
-#define NUMBER_OF_QUEUE_TESTS	14
+#define NUMBER_OF_QUEUE_TESTS	15
 
 static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_initQueue,						"initQueue(): testing the initalisation"},
@@ -63,7 +64,8 @@ static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_flushQueue_flush_empty_queue,		"flushQueue(): testing of flushing  of a empty queue"},
 		{test_flushQueue_flush_not_empty_queue,	"flushQueue(): testing of flushing  of a not empty queue"},
 		{test_deleteQueue,						"deleteQueue(): testing of deleting of a non empty queue"},
-		{test_getNextitrQueue,					"getnextitrQueue(): testing  of getting the  nex iterator of the Queue"}
+		{test_getNextitrQueue,					"getnextitrQueue(): testing  of getting the  nex iterator of the Queue"},
+		{test_fifo_order,						"general test: validate the  fifo order"}
 };
 
 #endif /* TESTSUIT_INCLUDE_QUEUE_TEST_H_ */
