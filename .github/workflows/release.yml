@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'            # z.B. v1.0.0 / v2.3.4
   workflow_dispatch:     # optional: manueller Start
+    inputs:
+      dry_run:
+        description: "Nur bauen, kein Release erstellen"
+        required: false
+        default: "true"
 
 permissions:
   contents: write        # nötig für GitHub Release
