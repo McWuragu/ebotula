@@ -1,0 +1,112 @@
+name: Release (tagged)
+
+on:
+  push:
+    tags:
+      - 'v*'            # z.B. v1.0.0 / v2.3.4
+  workflow_dispatch:     # optional: manueller Start
+
+permissions:
+  contents: write        # nötig für GitHub Release
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    env:
+      REPO: ${{ github.repository }}
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DESTDIR: ${{ github.workspace }}/install
+
+    steps:
+      # Checkout (wie in deiner CI – du nutzt Self-Checkout)
+      - name: Checkout via git
+        run: |
+          set -euxo pipefail
+          git init .
+          git config user.email "actions@users.noreply.github.com"
+          git config user.name  "github-actions"
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+          git fetch --tags --depth=1 origin ${{ github.ref_name }}
+          # Checkoute exakt den getaggten Commit
+          git checkout -B release "${{ github.sha }}"
+          git submodule update --init --recursive || true
+
+      - name: Install build & packaging deps
+        run: |
+          set -eux
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential gcc make \
+            autoconf automake libtool pkg-config \
+            gettext autopoint \
+            libcunit1 libcunit1-dev \
+            libgdbm-dev libgdbm-compat-dev \
+            # Debian-Package-Tools:
+            debhelper dpkg-dev fakeroot devscripts
+
+      - name: Bootstrap (gettextize + autoreconf)
+        run: |
+          set -euxo pipefail
+          mkdir -p m4
+          if grep -q 'AM_GNU_GETTEXT' configure.ac; then
+            test -d po || gettextize --force --copy --no-changelog
+          fi
+          autoreconf --install --force --verbose
+
+      - name: Configure
+        run: ./configure
+
+      - name: Build
+        run: make -j"$(nproc)"
+
+      - name: Test (make check falls vorhanden)
+        run: |
+          set -eux
+          if make -q check >/dev/null 2>&1; then
+            make check
+          else
+            echo "make check nicht definiert – überspringe Tests im Release."
+          fi
+
+      # ---- ARTIFACTS BAUEN ----
+      - name: Build tarball (make dist)
+        run: make dist
+
+      - name: Build deb (make deb)
+        run: |
+          set -eux
+          # Dein Projekt hat ein make deb-Target. Falls es keins gäbe, könnte man debuild -us -uc fahren.
+          make deb
+
+      - name: Sammle Artefakte
+        run: |
+          set -eux
+          mkdir -p release
+          # typische dist-Outputs einsammeln
+          # Tarballs: Projektname-*.tar.gz liegt meist im Top-Level
+          find . -maxdepth 2 -type f -name "*.tar.gz" -print -exec mv -t release {} +
+          # Debian-Pakete (häufig im parent- oder ./build/ Verzeichnis)
+          find . -maxdepth 3 -type f \( -name "*.deb" -o -name "*.ddeb" -o -name "*.changes" -o -name "*.buildinfo" \) -print -exec mv -t release {} + || true
+          ls -al release
+
+      - name: Upload CI artifacts (behalten für Debug/Download)
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ github.ref_name }}
+          path: release/*
+
+      - name: Create GitHub Release & upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}  # v1.2.3-beta -> prerelease
+          files: |
+            release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
