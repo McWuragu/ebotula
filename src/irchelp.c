@@ -199,7 +199,7 @@ static IrcHelp_t   sIrcHelp[CMD_COUNT]={
             "he is debanned or changes his nick.",
             NULL
         },
-        "bans a user from the channnel",
+        "bans a user from the channel",
         "!ban <#channel> [Nickname]"
     },{
         CMD_DEBAN,
@@ -213,7 +213,7 @@ static IrcHelp_t   sIrcHelp[CMD_COUNT]={
     },{
         CMD_RESTART,
         {
-            "Usefull if configuration is changed. By restarting config is read again.",
+            "Useful if configuration is changed. By restarting config is read again.",
             NULL
         },
         "stops and restarts the bot.",
@@ -245,7 +245,7 @@ static IrcHelp_t   sIrcHelp[CMD_COUNT]={
     },{
         CMD_DIE,
         {
-            "The bot is stoped but unlike RESTART, DIE doesn't start",
+            "The bot is stopped but unlike RESTART, DIE doesn't start",
             "the bot again.",
             NULL
         },
