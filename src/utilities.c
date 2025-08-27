@@ -354,7 +354,7 @@ int logger(int priority, char *format, ...)
         fprintf(stderr,"%s\n",buf); 
     } else {
         #ifdef HAVE_SYSLOG
-        syslog(priority,buf);
+        syslog(priority,"%s",buf);
         #endif
     }
 #else   
