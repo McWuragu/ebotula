@@ -46,8 +46,10 @@ void test_flushQueue_flush_not_empty_queue(void);
 void test_pushQueue(void);
 void test_deleteQueue(void);
 void test_getNextitrQueue(void);
+void test_fifo_order(void);
+void test_data_integrity_copy(void);
 
-#define NUMBER_OF_QUEUE_TESTS	14
+#define NUMBER_OF_QUEUE_TESTS	16
 
 static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_initQueue,						"initQueue(): testing the initalisation"},
@@ -63,7 +65,9 @@ static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_flushQueue_flush_empty_queue,		"flushQueue(): testing of flushing  of a empty queue"},
 		{test_flushQueue_flush_not_empty_queue,	"flushQueue(): testing of flushing  of a not empty queue"},
 		{test_deleteQueue,						"deleteQueue(): testing of deleting of a non empty queue"},
-		{test_getNextitrQueue,					"getnextitrQueue(): testing  of getting the  nex iterator of the Queue"}
+		{test_getNextitrQueue,					"getnextitrQueue(): testing  of getting the  nex iterator of the Queue"},
+		{test_fifo_order,						"general test: validate the fifo order"},
+		{test_data_integrity_copy,				"general test: intergrity of the copy"}
 };
 
 #endif /* TESTSUIT_INCLUDE_QUEUE_TEST_H_ */

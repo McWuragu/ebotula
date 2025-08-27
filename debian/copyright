@@ -1,11 +1,22 @@
-This package was debianized by Uwe Strempel <u.strempel@gmx.de>.
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: ebotula
+Source: https://github.com/McWuragu/ebotula
 
-Upstream Author(s): Steffen Laube <Laube.Steffen@gmx.de>, Uwe Strempel <u.strempel@gmx.de>
+Files: *
+Copyright: 2001-2025 Steffen Laube <laube.steffen@gmx.de>
+           2001-2025 Uwe Strempel <u.strempel@gmx.de>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ On Debian systems, the complete text of the GNU General Public License
+ version 2 can be found in “/usr/share/common-licenses/GPL-2”.
 
-Copyright:
+Files: debian/*
+Copyright: 2025 Steffen Laube <laube.steffen@gmx.de>
+           2001-2025 Uwe Strempel <u.strempel@gmx.de>
+License: GPL-2+
+ Same as above.
 
-This software is copyright (c) by Steffen Laube
-You are free to distribute this software under the terms of
-the GNU General Public License.
-On Debian GNU/Linux systems, the complete text of the GNU General
-Public License can be found in /usr/share/common-licenses/GPL file.

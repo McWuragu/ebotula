@@ -1,14 +1,14 @@
 ebotula - IRC Verwaltungsbot
 ----------------------------
 
-Ebotula ist ein IRC-Bot, der grundlegende Aufgaben übernimmt. Er kann
+Ebotula ist ein IRC-Bot, der grundlegende Aufgaben Ã¼bernimmt. Er kann
 eingesetzt werden, um einen oder mehrere Channel  zu verwalten. Diese
 Verwaltung umfasst:
 
 	- automatisches Setzen und Sichern von Userrechten nach Login
 	- Setzen und Sichern der Channelrechte
 	- Setzen und Sichern der Topic eines Channels
-	- Setzen und Anzeigen einer Begrüssung
+	- Setzen und Anzeigen einer BegrÃ¼ssung
 	- Setzen und Lschen von Banmasken
 	- Anlegen von Useraccounts
 	- Join und Part von Channels
@@ -17,30 +17,30 @@ Verwaltung umfasst:
 	- Stoppen des Bots
 	- Neustart des Bots
 
-Des Weiteren ist der Bot  mit einer Onlinehilfe ausgestattet. Sie enthält eine
+Des Weiteren ist der Bot  mit einer Onlinehilfe ausgestattet. Sie enthÃ¤lt eine
 Liste aller Kommandos des Bots und biete auch eine detailierte Beschreibung.
-Es können aber nur Inforamtionen abgerufen werden, die für das aktuelle 
+Es kÃ¶nnen aber nur Inforamtionen abgerufen werden, die fÃ¼r das aktuelle 
 Zugriffslevel bestimmt sind.
 
 Der Bot sichert seine Daten, wie z.b. Channeltopic und  Userrechten,  in
 seperaten Dateien und rekonstruiert die Daten aus diesen  nach einem Neustart.
 Der Loginstatus wird ebenfalls  in diesen Dateien erfasst und beim Neustart
-zurückgesetzt. Wären dem Betriebt  geschieht das Ausloggen von Zombielogins
-automatisch. Auch werden Accounts die länger nicht  benutzt wurden nach einer
+zurÃ¼ckgesetzt. WÃ¤ren dem Betriebt  geschieht das Ausloggen von Zombielogins
+automatisch. Auch werden Accounts die lÃ¤nger nicht  benutzt wurden nach einer
 eingestellten Zeit entfernt.
 
-Der Bot läuft als Multithreadapplikation und kann somit Kommandos
+Der Bot lÃ¤uft als Multithreadapplikation und kann somit Kommandos
 parallel bearbeiten. Die Anzahl der Threads und somit die der
 parallel verarbeiteten Kommandos ist steuerbar. Damit ist der Bot in der Lage
 mehre Channels gleichzeitig zuverwalten und auf mehre User zureagieren.
 
 Alle Einstellungen und  Konfiguration werden in der Datei ebotula.conf, die
-sich defaultmässig in /usr/local/etc befindet, getätigt. Alle Parameter können
-aber per Kommandozeile überschrieben werden.
+sich defaultmÃ¤ssig in /usr/local/etc befindet, getÃ¤tigt. Alle Parameter kÃ¶nnen
+aber per Kommandozeile Ã¼berschrieben werden.
 
-Für weitere Information und Änderungen sei hier auf die Dateien  NEWS,
+FÃ¼r weitere Information und Ã„nderungen sei hier auf die Dateien  NEWS,
 ChangLog, INSTALL, BUGS und TODO verwiessen. Des Weitern sei drauf
-hingewissen, das der Bot unter GPL steht. Die Licenzebedingungen können in 
+hingewissen, das der Bot unter GPL steht. Die Licenzebedingungen kÃ¶nnen in 
 Copyright nachgelesen werden.
 
 Es wurde versucht den Bot IRC-konform nach RFC 1459, 2810, 2811 und 2812

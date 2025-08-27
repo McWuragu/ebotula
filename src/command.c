@@ -364,14 +364,14 @@ void addChannel(MsgItem_t *pMsg) {
     char *channelmod;
 
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
         return;
     }
 
     /* check that the command channel and  access channel are diffrence	*/
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
          if (strcmp(pMsg->pAccessChannel,pCmdChannel)==0) {
-			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+			sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
 			return;
 		}
 		free(pCmdChannel);
@@ -382,7 +382,7 @@ void addChannel(MsgItem_t *pMsg) {
 	if (exist_db(CHANNEL_DB,pMsg->pAccessChannel)) {
 		sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s is already on the channel list."),pMsg->pAccessChannel);
 	} else {
-    	logger(LOG_DEBUG,_("Join and add the channnel %s"),pMsg->pAccessChannel);
+    	logger(LOG_DEBUG,_("Join and add the channel %s"),pMsg->pAccessChannel);
 		/* add channel */
 		channelmod=(char *)malloc(3*sizeof(char));
 		strcpy(channelmod,"\t\t");
@@ -404,11 +404,11 @@ void rmChannel(MsgItem_t *pMsg){
     
     /* check channel parameter */
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
         return;
     }
     
-    logger(LOG_DEBUG,_("Part and  try to remove the channnel %s"),pMsg->pAccessChannel);
+    logger(LOG_DEBUG,_("Part and  try to remove the channel %s"),pMsg->pAccessChannel);
 
 
     /* checking of channel exists */
@@ -432,14 +432,14 @@ void joinChannel(MsgItem_t *pMsg) {
     char *pCmdChannel;
     
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
         return;
     }
 
     if ((pCmdChannel=getChannel(pMsg->pRawLine))) {
         /* compare the current channel and  the channel for joining */
         if (strcmp(pMsg->pAccessChannel,pCmdChannel)==0) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
 			return;
 		}
 		free(pCmdChannel);
@@ -456,7 +456,7 @@ void joinChannel(MsgItem_t *pMsg) {
 void partChannel(MsgItem_t *pMsg) {
 
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
     } else {
         logger(LOG_DEBUG,_("Part the channel %s"),pMsg->pAccessChannel);
 
@@ -585,7 +585,7 @@ void setGreeting(MsgItem_t *pMsg) {
     ChannelData_t sChannelData;
 
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
     } else {
         logger(LOG_DEBUG,_("Greeting seting for %s"),pMsg->pAccessChannel);
         
@@ -633,7 +633,7 @@ void setTopic(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
     } else if ((pChannelSet=get_db(CHANNEL_DB,pMsg->pAccessChannel))) {
         logger(LOG_DEBUG,_("Topic seting for %s"),pMsg->pAccessChannel);
 	    
@@ -709,7 +709,7 @@ void say(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
         return;
     }
 
@@ -766,7 +766,7 @@ void banuser(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
         return;
     }
 
@@ -815,7 +815,7 @@ void debanuser(MsgItem_t *pMsg) {
 
     
     if (!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
         return;
     }
 
@@ -850,7 +850,7 @@ void kickuser(MsgItem_t *pMsg) {
 /*    char *pTmpBotName;*/
 
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
         return;
     }
 
@@ -915,7 +915,7 @@ void accountmode(MsgItem_t *pMsg){
     char mod[3];
 
     if(!pMsg->pAccessChannel){
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
         return;
     }
     
@@ -952,7 +952,7 @@ void accountmode(MsgItem_t *pMsg){
 
     	/* check login in the user db */
 	    if (!(exist_db(USER_DB,pLogin))) {
-	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Coudn't found the account %s."),pLogin);
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn.t found the account %s."),pLogin);
         	return;
     	} else if (strcmp(pLogin,accesslogin)==0) {
         	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You can't modify yourself"));
@@ -1101,7 +1101,7 @@ void chanmode(MsgItem_t *pMsg) {
 
 
     if (!pMsg->pAccessChannel) {
-        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
     } else if(!(pParameters=getParameters(pMsg->pRawLine))) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't found regulare parameters."));
     } else {
@@ -1379,7 +1379,7 @@ void accountlist(MsgItem_t *pMsg){
         logger(LOG_DEBUG,_("Create the accountlist for a owner"));
 
         if (!pMsg->pAccessChannel) {
-            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requieres a channel name."));
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("This command requires a channel name."));
             return;
         }
         
