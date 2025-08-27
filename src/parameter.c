@@ -298,7 +298,7 @@ boolean CommandLineParser(int argc,char *const argv[]) {
                 i++;
                 break;
             default:
-                logger(LOG_ERR,_("Unkown option \"%s\"\n"),argv[i]);
+                logger(LOG_ERR,_("Unknown option \"%s\"\n"),argv[i]);
                 logger(LOG_ERR,_("Type %s -h for more help.\n"),PACKAGE);
                 errno=EINVAL;
                 return false;
