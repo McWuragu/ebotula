@@ -29,8 +29,8 @@
 #ifndef TESTSUIT_INCLUDE_QUEUE_TEST_H_
 #define TESTSUIT_INCLUDE_QUEUE_TEST_H_
 
-//int init_queue(void);
-//int clean_queue(void);
+int init_queue(void);
+int clean_queue(void);
 
 void test_initQueue(void);
 void test_isemptyQueue(void);
