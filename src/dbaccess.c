@@ -122,7 +122,7 @@ void closeDatabase(void) {
 static GDBM_FILE get_dbf(int db) {
     
     if (db>=MAX_DB || db <0) {
-        logger(LOG_DEBUG,_("Unkown database id %d"),db);
+        logger(LOG_DEBUG,_("Unknown database id %d"),db);
         return 0;
     } else {
         return dbf[db];
