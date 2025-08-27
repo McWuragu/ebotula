@@ -105,6 +105,7 @@ jobs:
           path: release/*
 
       - name: Create GitHub Release & upload assets
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') && inputs.dry_run != 'true' }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
