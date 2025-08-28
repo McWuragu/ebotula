@@ -78,7 +78,7 @@ Sets the irc hostname the bot connects to
 \fB\-t\fP number
 Sets the amount of parallel working command threads
 .TP
-\fB\-u\fb user
+\fB\-u\fB user
 Sets the user under which the bot run (root only).
 (See also -g)
 .TP 

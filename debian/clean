@@ -1,0 +1,11 @@
+po/*.gmo
+autom4te.cache/
+config.log
+config.status
+Makefile
+src/include/config.h
+src/include/stamp-h1
+doc/ebotula.1
+doc/ebotula.conf.5
+doc/ebotula_db.1
+

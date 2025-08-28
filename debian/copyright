@@ -2,6 +2,12 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: ebotula
 Source: https://github.com/McWuragu/ebotula
 
+# Dateien, die wir beim Repack aus dem orig entfernen
+Files-Excluded:
+ po/*.gmo
+ ebotula-*.tar.gz
+
+# Standard für alle Quelltexte
 Files: *
 Copyright: 2001-2025 Steffen Laube <laube.steffen@gmx.de>
            2001-2025 Uwe Strempel <u.strempel@gmx.de>
@@ -14,8 +20,19 @@ License: GPL-2+
  On Debian systems, the complete text of the GNU General Public License
  version 2 can be found in “/usr/share/common-licenses/GPL-2”.
 
+# Speziell für die RFCs, die oft als "non-free" markiert sind
+Files: developer_guide/rfc/*
+Copyright: IETF Trust (RFCs, 2000–2005, je nach Dokument)
+License: other
+ These RFC documents are published by the IETF and may be freely
+ distributed, but they are not under a DFSG-free license.
+ .
+ They must not be included in Debian main. If you keep them, the package
+ must go to non-free. Consider moving them out or excluding them.
+
+# Debian-spezifische Packaging-Dateien
 Files: debian/*
-Copyright: 2025 Steffen Laube <laube.steffen@gmx.de>
+Copyright: 2025 Steffen Laube <slaube@mcwuragu.de>
            2001-2025 Uwe Strempel <u.strempel@gmx.de>
 License: GPL-2+
  Same as above.
