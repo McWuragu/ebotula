@@ -51,6 +51,7 @@ jobs:
             libcunit1 libcunit1-dev \
             libgdbm-dev libgdbm-compat-dev \
             debhelper dpkg-dev fakeroot devscripts dh-make \
+            docbook-utils \
             lintian
 
 
