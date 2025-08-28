@@ -1,5 +1,3 @@
-*~
-/autom4te.cache/
 # Autotools-Kram
 config.h
 /config.log
@@ -8,7 +6,10 @@ config.h
 /libtool
 /ltmain.sh
 Makefile.in
-*.o
-#objects
 po/*.gmo
+/autom4te.cache/
+
+#objects
+*~
+*.o
 *.tar.gz
