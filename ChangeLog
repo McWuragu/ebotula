@@ -1,6 +1,11 @@
 ebotula-0.1.19
 --------------------
 - removed warnings from the run of automake
+- updated Debian package to meet current lintian requirements
+- changed the bug tracking URL
+- minor bug fixes
+- extended configure checks: gdbm.h, libgdbm-dev, crypt and xcrypt are now properly detected
+- added initial unit tests (quality assurance)
    
 ebotula-0.1.18
 --------------------
