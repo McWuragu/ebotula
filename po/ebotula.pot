@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ebotula 0.1.19\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
-"POT-Creation-Date: 2025-08-27 13:32+0200\n"
+"POT-Creation-Date: 2025-08-27 20:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -240,7 +240,7 @@ msgstr ""
 #: src/command.c:442 src/command.c:459 src/command.c:588 src/command.c:636
 #: src/command.c:712 src/command.c:769 src/command.c:818 src/command.c:853
 #: src/command.c:918 src/command.c:1104 src/command.c:1382
-msgid "This command requieres a channel name."
+msgid "This command requires a channel name."
 msgstr ""
 
 #: src/command.c:383
@@ -250,7 +250,7 @@ msgstr ""
 
 #: src/command.c:385
 #, c-format
-msgid "Join and add the channnel %s"
+msgid "Join and add the channel %s"
 msgstr ""
 
 #: src/command.c:392
@@ -265,7 +265,7 @@ msgstr ""
 
 #: src/command.c:411
 #, c-format
-msgid "Part and  try to remove the channnel %s"
+msgid "Part and  try to remove the channel %s"
 msgstr ""
 
 #: src/command.c:416 src/command.c:621 src/command.c:1198
@@ -404,7 +404,7 @@ msgstr ""
 
 #: src/command.c:955
 #, c-format
-msgid "Coudn't found the account %s."
+msgid "Couldn.t found the account %s."
 msgstr ""
 
 #: src/command.c:958
@@ -531,7 +531,7 @@ msgstr ""
 
 #: src/dbaccess.c:125
 #, c-format
-msgid "Unkown database id %d"
+msgid "Unknown database id %d"
 msgstr ""
 
 #: src/handles.c:88
@@ -581,7 +581,7 @@ msgid "Rejoin the channel %s"
 msgstr ""
 
 #: src/handles.c:412
-msgid "has initialized this channnel."
+msgid "has initialized this channel."
 msgstr ""
 
 #: src/handles.c:413
@@ -793,7 +793,7 @@ msgstr ""
 
 #: src/messages.c:41
 #, c-format
-msgid "\t-d path\t\tSet the path of the database direcotry\n"
+msgid "\t-d path\t\tSet the path of the database directory\n"
 msgstr ""
 
 #: src/messages.c:42
@@ -813,7 +813,7 @@ msgstr ""
 
 #: src/messages.c:45
 #, c-format
-msgid "\t-g group\tSet the group under wich the bot run (only root).\n"
+msgid "\t-g group\tSet the group under which the bot run (only root).\n"
 msgstr ""
 
 #: src/messages.c:46
@@ -984,7 +984,7 @@ msgstr ""
 
 #: src/parameter.c:301
 #, c-format
-msgid "Unkown option \"%s\"\n"
+msgid "Unknown option \"%s\"\n"
 msgstr ""
 
 #: src/parameter.c:302 src/parameter.c:309
@@ -1055,7 +1055,7 @@ msgstr ""
 
 #: src/parser.c:201
 #, c-format
-msgid "Unkown command id %d"
+msgid "Unknown command id %d"
 msgstr ""
 
 #: src/parser.c:204
