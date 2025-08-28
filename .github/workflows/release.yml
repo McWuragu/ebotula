@@ -50,7 +50,8 @@ jobs:
             gettext autopoint \
             libcunit1 libcunit1-dev \
             libgdbm-dev libgdbm-compat-dev \
-            debhelper dpkg-dev fakeroot devscripts dh-make
+            debhelper dpkg-dev fakeroot devscripts dh-make \
+            lintian
 
 
       - name: Bootstrap (gettextize + autoreconf)
@@ -81,11 +82,14 @@ jobs:
       - name: Build tarball (make dist)
         run: make dist
 
-      - name: Build deb (make deb)
+      - name: Build deb
         run: |
-          set -eux
-          # Dein Projekt hat ein make deb-Target. Falls es keins gäbe, könnte man debuild -us -uc fahren.
-          make binary
+          set -eux          
+          dpkg-buildpackage -us -uc -b
+
+      - name: Run lintian
+        run: |
+          lintian -IE --pedantic ../*.changes
 
       - name: Sammle Artefakte
         run: |
