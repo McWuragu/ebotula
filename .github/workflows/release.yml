@@ -96,11 +96,18 @@ jobs:
         run: |
           set -eux
           mkdir -p release
+
           # typische dist-Outputs einsammeln
+          
           # Tarballs: Projektname-*.tar.gz liegt meist im Top-Level
           find . -maxdepth 2 -type f -name "*.tar.gz" -print -exec mv -t release {} +
+          
           # Debian-Pakete (häufig im parent- oder ./build/ Verzeichnis)
-          find . -maxdepth 3 -type f \( -name "*.deb" -o -name "*.ddeb" -o -name "*.changes" -o -name "*.buildinfo" \) -print -exec mv -t release {} + || true
+          for base in . ..; do
+            find "$base" -maxdepth 2 -type f \( -name "*.deb" -o -name "*.ddeb" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.dsc" -o -name "*.debian.tar.*" -o -name "*.orig.tar.*" \) \
+              -print -exec cp -t release {} + || true
+          done
+
           ls -al release
 
       - name: Upload CI artifacts (behalten für Debug/Download)
