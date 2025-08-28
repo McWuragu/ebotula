@@ -49,7 +49,7 @@ jobs:
             gettext autopoint \
             libcunit1 libcunit1-dev \
             libgdbm-dev libgdbm-compat-dev \
-            libxcrypt-dev
+            libcrypt-dev
 
       - name: Bootstrap (gettextize + autoreconf)
         run: |
