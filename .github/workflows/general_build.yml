@@ -1,4 +1,4 @@
-name: Build & CUnit on master
+name: Build & CUnit Test
 
 on:
   pull_request:
