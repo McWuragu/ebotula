@@ -2,13 +2,13 @@ name: Build & CUnit Test
 
 on:
   pull_request:
-    branches: [ master ]      
+    branches: [ master ]
   push:
     branches: [ master ]
-  workflow_dispatch: {}            # manueller Start (nur für Nutzer mit Write-Rechten)
+  workflow_dispatch: {}
 
 permissions:
-  contents: write                  # nur nötig, falls wir später Logs in einen Branch schieben
+  contents: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -17,96 +17,101 @@ concurrency:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     env:
       REPO: ${{ github.repository }}
       TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DESTDIR: ${{ github.workspace }}/install
 
     steps:
-      # 🔽 Self-Checkout ohne actions/checkout
-      - name: Checkout via git
+      - name: Checkout via git (korrekt für push & PR)
         run: |
           set -euxo pipefail
           git init .
           git config user.email "actions@users.noreply.github.com"
           git config user.name  "github-actions"
           git remote add origin "https://x-access-token:${TOKEN}@github.com/${REPO}.git"
-          # master referenz holen
-          git fetch --depth=1 origin master
-          git checkout -B master FETCH_HEAD
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --depth=1 origin +refs/pull/${{ github.event.pull_request.number }}/merge:pr-merge
+            git checkout pr-merge
+          else
+            git fetch --depth=1 origin "${{ github.ref }}"
+            git checkout FETCH_HEAD
+          fi
           git submodule update --init --recursive || true
 
-      - name: Install build deps + gettext + CUnit + gdbm
+      - name: Install build deps + gettext + CUnit + gdbm + xcrypt
         run: |
-          set -eux
+          set -euo pipefail
           sudo apt-get update
           sudo apt-get install -y \
             build-essential gcc make \
             autoconf automake libtool pkg-config \
             gettext autopoint \
             libcunit1 libcunit1-dev \
-            libgdbm-dev libgdbm-compat-dev
-      
+            libgdbm-dev libgdbm-compat-dev \
+            libxcrypt-dev
+
       - name: Bootstrap (gettextize + autoreconf)
         run: |
-          set -euxo pipefail
+          set -euo pipefail
           mkdir -p m4
           if grep -q 'AM_GNU_GETTEXT' configure.ac; then
             test -d po || gettextize --force --copy --no-changelog
           fi
           autoreconf --install --force --verbose
 
-
-
-      # 🛠️ Configure
       - name: Configure
         run: |
-          set -e
+          set -euo pipefail
           ./configure
 
-      # 🔧 Build
       - name: Build
         run: |
+          set -euo pipefail
           make -j"$(nproc)"
 
-      # ✅ CUnit-Tests — schlägt fehl, wenn Tests fehlschlagen
       - name: Run CUnit tests
         run: |
-          set -e
-          # Erstmal "make check" – falls im Autotools-Setup verdrahtet
-          if make -q check >/dev/null 2>&1; then
-            echo "Running 'make check'..."
-            make check
+          set -euo pipefail
+          if grep -qE '^[[:space:]]*check:' Makefile Makefile.in Makefile.am 2>/dev/null; then
+            make check || { 
+              echo "---- test-suite.log ----"
+              find . -name test-suite.log -maxdepth 3 -print -exec sed -n '1,200p' {} \; || true
+              exit 1
+            }
           else
             echo "'make check' nicht definiert – suche Test-Binaries…"
-            # Fallback: bekannte Pfade/Dateien probieren
             ran=0
-            if [ -x ./testsuit/testsuit ]; then
-              echo "Starte ./testsuit/testsuit"
-              ./testsuit/testsuit
-              ran=1
-            fi
-            # Findet Dateien mit test_ oder *_tests ausführbar
+            if [ -x ./testsuit/testsuit ]; then ./testsuit/testsuit && ran=1; fi
             mapfile -t bins < <(find . -type f \( -name "test_*" -o -name "*_tests" \) -perm -111 | sort || true)
-            if [ "${#bins[@]}" -gt 0 ]; then
-              for b in "${bins[@]}"; do
-                echo "Starte $b"
-                "$b"
-                ran=1
-              done
-            fi
-            if [ "$ran" -eq 0 ]; then
-              echo "Keine Testbefehle gefunden. Brich ab, weil Tests gefordert sind."
-              exit 2
-            fi
+            if [ "${#bins[@]}" -gt 0 ]; then for b in "${bins[@]}"; do "$b"; ran=1; done; fi
+            if [ "$ran" -eq 0 ]; then echo "Keine Tests gefunden → Abbruch."; exit 2; fi
           fi
 
-      # 🧪 Optional: distcheck (falls du den Check mitprüfen willst; sonst auskommentieren)
-      - name: make distcheck
-        run: make distcheck
+      - name: make distcheck (nur auf push)
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          set -euo pipefail
+          make distcheck || {
+            echo "---- config.log ----"
+            find . -name config.log -maxdepth 3 -print -exec sed -n '1,200p' {} \; || true
+            exit 1
+          }
 
-      # 📦 Optional: Installationsprobe (nur zum Verifizieren)
       - name: make install (DESTDIR)
-        run: make install DESTDIR="$DESTDIR"
+        run: |
+          set -euo pipefail
+          make install DESTDIR="$DESTDIR"
 
+      - name: Summarize key logs (on failure)
+        if: ${{ failure() }}
+        run: |
+          {
+            echo "## Build/Test summary"
+            echo ""
+            echo "### config.log (snippet)"
+            find . -name config.log -maxdepth 3 -print -exec sed -n '1,120p' {} \; || true
+            echo ""
+            echo "### test-suite.log (snippet)"
+            find . -name test-suite.log -maxdepth 3 -print -exec sed -n '1,200p' {} \; || true
+          } >> "$GITHUB_STEP_SUMMARY"
