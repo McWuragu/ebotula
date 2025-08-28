@@ -23,7 +23,7 @@ jobs:
       DESTDIR: ${{ github.workspace }}/install
 
     steps:
-      - name: Checkout via git (korrekt für push & PR)
+      - name: Checkout via git
         run: |
           set -euxo pipefail
           git init .
@@ -39,7 +39,7 @@ jobs:
           fi
           git submodule update --init --recursive || true
 
-      - name: Install build deps + gettext + CUnit + gdbm + xcrypt
+      - name: Install build deps + gettext + CUnit + gdbm + crypt
         run: |
           set -euo pipefail
           sudo apt-get update
@@ -88,7 +88,7 @@ jobs:
             if [ "$ran" -eq 0 ]; then echo "Keine Tests gefunden → Abbruch."; exit 2; fi
           fi
 
-      - name: make distcheck (nur auf push)
+      - name: make distcheck (push only)
         if: ${{ github.event_name == 'push' }}
         run: |
           set -euo pipefail
