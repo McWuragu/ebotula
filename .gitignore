@@ -1,13 +1,14 @@
-#objects
-*.o
 *~
-*/.deps/
-
-# Autotools-Kram
 /autom4te.cache/
+# Autotools-Kram
+config.h
 /config.log
 /config.status
+*/.deps/
 /libtool
 /ltmain.sh
 Makefile.in
-config.h
+*.o
+#objects
+po/*.gmo
+*.tar.gz
