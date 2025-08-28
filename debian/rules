@@ -20,6 +20,10 @@ override_dh_auto_install:
 	  mv debian/ebotula/var/ebotula debian/ebotula/var/lib/ebotula; \
 	fi
 
+override_dh_installchangelogs:
+	dh_installchangelogs -k ChangeLog
+
+
 # Optional: wenn du NICHT auto-starten willst, entkommentieren:
 # override_dh_installsystemd:
 # 	dh_installsystemd --no-start
