@@ -1133,6 +1133,7 @@ void chanmode(MsgItem_t *pMsg) {
     	                } else if (sNewMode.pModeStr[i]=='l' && sNewMode.pLimit) {
         	                if (sChannelData.sModes.pLimit) {
                                 free(sChannelData.sModes.pLimit);
+                                sChannelData.sModes.pLimit = NULL;
                             }
     
             	            sChannelData.sModes.pLimit=(char*)malloc((strlen(sNewMode.pLimit)+1)*sizeof(char));
@@ -1157,9 +1158,8 @@ void chanmode(MsgItem_t *pMsg) {
     	                } else if (sChannelData.sModes.pModeStr[i]=='l') {
         	                if (sChannelData.sModes.pLimit) {
                                 free(sChannelData.sModes.pLimit);
+                                sChannelData.sModes.pLimit = NULL;
                             }
-                            
-                            sChannelData.sModes.pLimit=NULL;
             	        }
                 	}
     

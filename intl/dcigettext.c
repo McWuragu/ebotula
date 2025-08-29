@@ -646,7 +646,9 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 
 	  for (;;)
 	    {
-	      resolved_dirname = (char *) alloca (path_max + dirname_len);
+	      resolved_dirname = (char *) malloc (path_max + dirname_len);
+	      if (resolved_dirname == NULL)
+	        goto return_untranslated;
 	      ADD_BLOCK (block_list, tmp_dirname);
 
 	      __set_errno (0);
@@ -654,6 +656,8 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 	      if (ret != NULL || errno != ERANGE)
 		break;
 
+	      free(resolved_dirname);
+	      resolved_dirname = NULL;
 	      path_max += path_max / 2;
 	      path_max += PATH_INCR;
 	    }
@@ -661,10 +665,13 @@ DCIGETTEXT (const char *domainname, const char *msgid1, const char *msgid2,
 	  if (ret == NULL)
 	    /* We cannot get the current working directory.  Don't signal an
 	       error but simply return the default string.  */
+	    free(resolved_dirname);
 	    goto return_untranslated;
 
 	  stpcpy (stpcpy (strchr (resolved_dirname, '\0'), "/"), dirname);
 	  dirname = resolved_dirname;
+	  /* dirname will be used only within this branch, so it is safe to free after. */
+	  /* If dirname is used elsewhere, move the free(resolved_dirname) appropriately. */
 	}
 #ifndef IN_LIBGLOCALE
     }
