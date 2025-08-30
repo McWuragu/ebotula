@@ -43,13 +43,18 @@ char *strtolower(const char* sIn)
 
 int main(int argc,char *argv[])
 {
-	if (argc<3)
+	if (argc<4)
 	{
 		usage(argv[0]);
 		exit(2);
 	}
 	char *sDBFileName=argv[2];
 	char *sCmd=strtolower(argv[3]);
+	if (sCmd==NULL) 
+	{
+		fprintf(stderr,"Error: internal error. command \"%s\"\n",argv[3]);
+		exit(2);
+	}
 	Cmd_t *pCmds=g_cmds;
 	int nType=UNKNOWN;
 	for(;pCmds->sCmdName!=NULL;pCmds++)
@@ -60,7 +65,9 @@ int main(int argc,char *argv[])
 			break;
 		}
 	}
+	
 	free(sCmd);
+
 	if (nType==UNKNOWN)
 	{
 		fprintf(stderr,"Error: Unknown command \"%s\"\n",argv[3]);
