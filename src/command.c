@@ -168,6 +168,9 @@ void hello(MsgItem_t *pMsg) {
         return;
     }
 
+    /* storage the  user list before added a new one*/
+    pList=list_db(USER_DB);
+
     if (add_db(USER_DB,pMsg->pCallingNick,"")) {
         
         /* autoidentify after create an new account */
@@ -181,8 +184,7 @@ void hello(MsgItem_t *pMsg) {
 	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The account %s is already exists."),pMsg->pCallingNick);
 	} 
 
-    /* Todo: the  first intialise user is the first master*/
-    pList=list_db(USER_DB);
+    /* the  first intialise user is the first master*/    
     if (isemptyQueue(pList)){
         boolean bResult;
         if (!exist_db(ACCESS_DB,pMsg->pCallingNick)){
