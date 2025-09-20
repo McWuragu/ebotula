@@ -160,6 +160,7 @@ void help(MsgItem_t *pMsg) {
    Bot comand: !hello
    ######################################################################### */
 void hello(MsgItem_t *pMsg) {
+    PQueue pList;
     logger(LOG_DEBUG,_("Try to create an new account for %s"),pMsg->pCallingNick);
 
     if (pMsg->UserLevel>LoggedLevel) {
@@ -179,6 +180,24 @@ void hello(MsgItem_t *pMsg) {
     } else {
 	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The account %s is already exists."),pMsg->pCallingNick);
 	} 
+
+    /* Todo: the  first intialise user is the first master*/
+    pList=list_db(USER_DB);
+    if (isemptyQueue(pList)){
+        boolean bResult;
+        if (!exist_db(ACCESS_DB,pMsg->pCallingNick)){
+            bResult=add_db(ACCESS_DB,pMsg->pCallingNick,"m");
+        } else {
+            bResult=replace_db(ACCESS_DB,pMsg->pCallingNick,"m");
+        }
+        
+        if (bResult)
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The account %s is now the botmaster."),pMsg->pCallingNick);
+        else
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The initialization of the account %s as the botmaster failed."),pMsg->pCallingNick);
+    } else {
+        deleteQueue(pList);
+    }
 
 }
 /* #########################################################################
