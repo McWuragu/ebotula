@@ -328,33 +328,33 @@ int convertVerboseToLogLevel(const int nVerbose) {
 int logger(int priority, char *format, ...)
 {
     extern ConfigSetup_t sSetup;
-	char buf[1<<12];
-	struct timespec stamp; 
-    struct tm *td; 
-    va_list az;
 	
     if (priority>sSetup.nLogLevel) { return 0;}
+    
+    va_list az;
+    va_start(az,format);
 
-	/**/
-	va_start(az,format);
-	/* put message in to data*/
-	vsprintf(buf,format,az);
 #ifdef NDEBUG
 
     if (!bHideLogOnScreen) {
-        fprintf(stderr,"%s\n",buf); 
+        vfprintf(stderr,format,az); 
+	fputc('\n', stderr);
     } else {
         #ifdef HAVE_SYSLOG
-        syslog(priority,"%s",buf);
+        vsyslog(priority,format,az);
         #endif
     }
 #else   
+    struct timespec stamp; 
     clock_gettime(CLOCK_REALTIME,&stamp);
-    td=localtime(&stamp.tv_sec);
-    fprintf(stderr,"%02d:%02d:%02d.%03d %s\n",(int)td->tm_hour,(int)td->tm_min,(int)td->tm_sec,(int)(stamp.tv_nsec/1000000),buf); 
+    struct tm *td=localtime(&stamp.tv_sec);
+    
+    fprintf(stderr,"%02d:%02d:%02d.%03d ",(int)td->tm_hour,(int)td->tm_min,(int)td->tm_sec,(int)(stamp.tv_nsec/1000000)); 
+    vfprintf(stderr,format,az);
+    fputc('\n',stderr);
 #endif
 	/**/
-	va_end(az);
-	return 0;
+   va_end(az);
+   return 0;
 }
 
