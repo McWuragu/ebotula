@@ -1,25 +1,24 @@
-# translation of de.po to French
+# translation of fr.po to French
 # French translations for ebotula package
 # French messages for ebotula.
 # Copyright (C) 2004 Steffen Laube
 # This file is distributed under the same license as the ebotula package.
-# Steffen Laube <Laube.Steffen@gmx.de>, 2004, 2005.
-# Martin Neumann <mneumann@localhost.localdomain>, 2005.
+# Steffen Laube <laube.steffen@gmx.de>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
 "POT-Creation-Date: 2025-08-27 13:32+0200\n"
-"PO-Revision-Date: 2025-09-20 11:21+0200\n"
-"Last-Translator: Gemini <ai-translator@google.com>\n"
-"Language-Team: Français <fr@li.org>\n"
-"Language: fr\n"
+"PO-Revision-Date: 2025-10-25 23:55+0200\n"
+"Last-Translator: Steffen Laube <laube.steffen@gmx.de>\n"
+"Language-Team: German - Germany <laube.steffen@gmx.de>\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: KBabel 1.0.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Gtranslator 42.0\n"
 
 #: src/account.c:98
 #, c-format
@@ -193,8 +192,9 @@ msgstr "Vous êtes maintenant identifié."
 msgid "The account %s is already exists."
 msgstr "Le compte %s existe déjà."
 
-#: src/command.c:193
+#: src/command.c:195 src/command.c:197
 #, c-format
+#| msgid "Initialization of the database"
 msgid "Check the  password for the account %s"
 msgstr "Vérification du mot de passe pour le compte %s"
 
@@ -563,7 +563,8 @@ msgstr "Le bot a reçu un nouveau mode de compte."
 
 #: src/handles.c:267
 msgid "Added callback routine for the reset of the account modes"
-msgstr "Routine de rappel ajoutée pour la réinitialisation des modes de compte."
+msgstr ""
+"Routine de rappel ajoutée pour la réinitialisation des modes de compte."
 
 #: src/handles.c:292
 msgid "Ban reset not implemented jet"
@@ -755,7 +756,6 @@ msgstr "Nom de pseudonyme non valide. Pointeur nul."
 
 #: src/irc.c:189 src/irc.c:212 src/irc.c:347 src/irc.c:374 src/irc.c:405
 #: src/irc.c:430 src/irc.c:456
-#, fuzzy
 msgid "Invalid channel. Null pointer."
 msgstr "Salon non valide. Pointeur nul."
 
@@ -788,7 +788,8 @@ msgstr ""
 #: src/messages.c:38
 #, c-format
 msgid "\t-a days\t\tSet the time in days for the automatic logoff.\n"
-msgstr "\t-a jours\t\tDéfinit le temps en jours pour la déconnexion automatique.\n"
+msgstr ""
+"\t-a jours\t\tDéfinit le temps en jours pour la déconnexion automatique.\n"
 
 #: src/messages.c:39
 #, c-format
@@ -798,7 +799,8 @@ msgstr "\t-b nom\t\tDéfinit le nom du bot.\n"
 #: src/messages.c:40
 #, c-format
 msgid "\t-c sec\t\tSet the ping timeout of the network connection.\n"
-msgstr "\t-c sec\t\tDéfinit le délai d'expiration du ping de la connexion réseau.\n"
+msgstr ""
+"\t-c sec\t\tDéfinit le délai d'expiration du ping de la connexion réseau.\n"
 
 #: src/messages.c:41
 #, c-format
@@ -813,7 +815,8 @@ msgstr "\t-L Niveau\tDéfinit le niveau de journalisation (0-3)\n"
 #: src/messages.c:43
 #, c-format
 msgid "\t-e ms\t\tSet the delay time in millisecond for the slow sending.\n"
-msgstr "\t-e ms\t\tDéfinit le temps de délai en millisecondes pour l'envoi lent.\n"
+msgstr ""
+"\t-e ms\t\tDéfinit le temps de délai en millisecondes pour l'envoi lent.\n"
 
 #: src/messages.c:44
 #, c-format
@@ -823,7 +826,9 @@ msgstr "\t-f fichier\tDéfinit le fichier de configuration.\n"
 #: src/messages.c:45
 #, c-format
 msgid "\t-g group\tSet the group under wich the bot run (only root).\n"
-msgstr "\t-g groupe\tDéfinit le groupe sous lequel le bot s'exécute (root uniquement).\n"
+msgstr ""
+"\t-g groupe\tDéfinit le groupe sous lequel le bot s'exécute (root "
+"uniquement).\n"
 
 #: src/messages.c:46
 #, c-format
@@ -844,7 +849,9 @@ msgstr "\t-k jours\t\tDéfinit la durée de vie du compte en jours.\n"
 #, c-format
 msgid ""
 "\t-l char/min\tSet the charakter limit for the first sending delay level.\n"
-msgstr "\t-l char/min\tDéfinit la limite de caractères pour le premier niveau de délai d'envoi.\n"
+msgstr ""
+"\t-l char/min\tDéfinit la limite de caractères pour le premier niveau de "
+"délai d'envoi.\n"
 
 #: src/messages.c:50
 #, c-format
@@ -854,7 +861,8 @@ msgstr "\t-m\t\tDémarre le dialogue pour la création d'un nouveau botmaster.\n
 #: src/messages.c:51
 #, c-format
 msgid "\t-n ms\t\tSet the delay time in millisecond for the fast sending.\n"
-msgstr "\t-n ms\t\tDéfinit le temps de délai en millisecondes pour l'envoi rapide.\n"
+msgstr ""
+"\t-n ms\t\tDéfinit le temps de délai en millisecondes pour l'envoi rapide.\n"
 
 #: src/messages.c:52
 #, c-format
@@ -864,7 +872,8 @@ msgstr "\t-p port\t\tDéfinit le numéro de port du serveur IRC.\n"
 #: src/messages.c:53
 #, c-format
 msgid "\t-r string\tSet the output for a request of the real name.\n"
-msgstr "\t-r chaîne\t\tDéfinit la chaîne de sortie pour une demande du nom réel.\n"
+msgstr ""
+"\t-r chaîne\t\tDéfinit la chaîne de sortie pour une demande du nom réel.\n"
 
 #: src/messages.c:54
 #, c-format
@@ -879,7 +888,9 @@ msgstr "\t-t nombre\tDéfinit le nombre de threads à créer.\n"
 #: src/messages.c:56
 #, c-format
 msgid "\t-u user\t\tSet the user under which the bot run (root only).\n"
-msgstr "\t-u utilisateur\tDéfinit l'utilisateur sous lequel le bot s'exécute (root uniquement).\n"
+msgstr ""
+"\t-u utilisateur\tDéfinit l'utilisateur sous lequel le bot s'exécute (root "
+"uniquement).\n"
 
 #: src/messages.c:57
 #, c-format
@@ -1082,7 +1093,9 @@ msgstr "Le thread d'exécution est arrêté."
 #: src/parser.c:256
 #, c-format
 msgid "Access status for the userlevel %i and the command id %i is %i"
-msgstr "Le statut d'accès pour le niveau d'utilisateur %i et l'ID de commande %i est %i"
+msgstr ""
+"Le statut d'accès pour le niveau d'utilisateur %i et l'ID de commande %i est "
+"%i"
 
 #: src/queue.c:178 src/queue.c:268
 msgid "Queue is empty"
