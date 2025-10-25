@@ -1,5 +1,3 @@
-# translation of de.po to
-# translation of de.po to
 # translation of de.po to Deutsch
 # German translations for ebotula package
 # German messages for ebotula.
@@ -13,15 +11,15 @@ msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
 "POT-Creation-Date: 2025-09-20 11:08+0200\n"
-"PO-Revision-Date: 2005-06-29 14:13+0200\n"
-"Last-Translator: Steffen Laube <Laube.Steffen@gmx.de>\n"
+"PO-Revision-Date: 2025-10-25 23:46+0200\n"
+"Last-Translator: Steffen Laube <laube.steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: KBabel 1.0.2\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: src/account.c:98
 #, c-format
@@ -122,11 +120,11 @@ msgstr "Konnte diesen Benutzer nicht herauswerfen."
 #: src/irc.c:359 src/irc.c:390 src/irc.c:416 src/irc.c:441 src/irc.c:471
 #: src/irc.c:491 src/queue.c:43 src/queue.c:95 src/queue.c:124
 msgid "Couldn't allocate memory!"
-msgstr "Konnte keinen Speicher anfordern."
+msgstr "Konnte keinen Speicher anfordern!"
 
 #: src/callbacklist.c:193
 msgid "List is empty!"
-msgstr "Liste ist leer."
+msgstr "Liste ist leer!"
 
 #: src/callbacklist.c:249
 msgid "Callback list empty list."
@@ -196,14 +194,12 @@ msgid "The account %s is already exists."
 msgstr "Das Konto %s existiert schon."
 
 #: src/command.c:195
-#, fuzzy, c-format
-#| msgid "The account %s is removed"
+#, c-format
 msgid "The account %s is now the botmaster."
 msgstr "Das Konto %s ist nun der Botmaster."
 
 #: src/command.c:197
-#, fuzzy, c-format
-#| msgid "Initialization of the database"
+#, c-format
 msgid "The initialization of the account %s as the botmaster failed."
 msgstr "Initialisierung des Konto %s als Botmaster schlugfehl."
 
@@ -258,21 +254,18 @@ msgstr "Konnte keine gültigen Parameter finden."
 #: src/command.c:461 src/command.c:478 src/command.c:607 src/command.c:655
 #: src/command.c:731 src/command.c:788 src/command.c:837 src/command.c:872
 #: src/command.c:937 src/command.c:1123 src/command.c:1401
-#, fuzzy
-#| msgid "This command requieres a channel name."
 msgid "This command requires a channel name."
-msgstr "Dieses Kommando benötigt einen Channelname."
+msgstr "Dieses Kommando benötigt einen Kanalname."
 
 #: src/command.c:402
 #, c-format
 msgid "The channel %s is already on the channel list."
-msgstr "Der Channel %s ist schon zur Liste hinzugefügt."
+msgstr "Der Kanal %s ist schon zur Liste hinzugefügt."
 
 #: src/command.c:404
-#, fuzzy, c-format
-#| msgid "Join and add the channnel %s"
+#, c-format
 msgid "Join and add the channel %s"
-msgstr "Den Channel %s hinzugefügt und beigetretten"
+msgstr "Den Kanal %s hinzugefügt und beigetreten"
 
 #: src/command.c:411
 #, c-format
@@ -285,10 +278,9 @@ msgid "The bot is joined the channel %s."
 msgstr "Der Bot ist dem Channel %s beigetreten."
 
 #: src/command.c:430
-#, fuzzy, c-format
-#| msgid "Part and  try to remove the channnel %s"
+#, c-format
 msgid "Part and  try to remove the channel %s"
-msgstr "Der Channel %s wird verlassen und versucht zu entfernen."
+msgstr "Der Kanal %s wird verlassen und versucht zu entfernen."
 
 #: src/command.c:435 src/command.c:640 src/command.c:1217
 #, c-format
@@ -425,8 +417,7 @@ msgid "Modify user mod"
 msgstr "Verändere die Kontomodies"
 
 #: src/command.c:974
-#, fuzzy, c-format
-#| msgid "Coudn't found the account %s."
+#, c-format
 msgid "Couldn.t found the account %s."
 msgstr "Konnte das Konto %s nicht finden."
 
@@ -554,8 +545,7 @@ msgid "Database is closed"
 msgstr "Datenbank ist geschlossen."
 
 #: src/dbaccess.c:125
-#, fuzzy, c-format
-#| msgid "Unkown database id %d"
+#, c-format
 msgid "Unknown database id %d"
 msgstr "Unbekannte Datenbank ID %d"
 
@@ -606,10 +596,8 @@ msgid "Rejoin the channel %s"
 msgstr "Wiederbeitretten des Channels %s"
 
 #: src/handles.c:412
-#, fuzzy
-#| msgid "has initialized this channnel."
 msgid "has initialized this channel."
-msgstr "hat den Channel initialisiert."
+msgstr "hat den Kanal initialisiert."
 
 #: src/handles.c:413
 #, c-format
@@ -762,33 +750,32 @@ msgstr "Der Bot stoppt."
 
 #: src/irc.c:79 src/irc.c:113 src/irc.c:268
 msgid "Invalid target. Null pointer."
-msgstr ""
+msgstr "Ungültiges Ziel. NULL Zeiger."
 
 #: src/irc.c:86 src/irc.c:352 src/irc.c:384
 msgid "Invalid message. Null pointer."
-msgstr ""
+msgstr "Ungültige Nachricht. NULL Zeiger"
 
 #: src/irc.c:118 src/irc.c:146
 msgid "Invalid msg str. Null pointer."
-msgstr ""
+msgstr "Ungültiger msg str. NULL Zeiger"
 
 #: src/irc.c:141 src/irc.c:292 src/irc.c:324 src/irc.c:379 src/irc.c:485
 msgid "Invalid nick name. Null pointer."
-msgstr ""
+msgstr "Ungültiger Spitzname. NULL Zeiger"
 
 #: src/irc.c:189 src/irc.c:212 src/irc.c:347 src/irc.c:374 src/irc.c:405
 #: src/irc.c:430 src/irc.c:456
-#, fuzzy
 msgid "Invalid channel. Null pointer."
-msgstr "Erzeuge Channelliste"
+msgstr "Ungültiger Kanal, NULL Zeiger."
 
 #: src/irc.c:410 src/irc.c:435
 msgid "Invalid mask. Null pointer."
-msgstr ""
+msgstr "Ungültige Maske, NULL Zeiger"
 
 #: src/irc.c:461
 msgid "Invalid mod. Null pointer."
-msgstr ""
+msgstr "Ungültiger Modus, NULL Zeiger"
 
 #: src/messages.c:36
 #, c-format
@@ -825,8 +812,7 @@ msgstr ""
 "\t-c Sek\t\tSetzt das Pingtimout in Sekunden für die Netzwerkverbindung.\n"
 
 #: src/messages.c:41
-#, fuzzy, c-format
-#| msgid "\t-d path\t\tSet the path of the database direcotry\n"
+#, c-format
 msgid "\t-d path\t\tSet the path of the database directory\n"
 msgstr "\t-d Pfad\t\tSetzt den Pfad zur Datenbank.\n"
 
@@ -848,8 +834,7 @@ msgid "\t-f file\t\tSet the config file.\n"
 msgstr "\t-f Datei\tSetzt den Pfad zu Konfigurationsdatei.\n"
 
 #: src/messages.c:45
-#, fuzzy, c-format
-#| msgid "\t-g group\tSet the group under wich the bot run (only root).\n"
+#, c-format
 msgid "\t-g group\tSet the group under which the bot run (only root).\n"
 msgstr ""
 "\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgeführt wird. (Nur "
@@ -901,8 +886,7 @@ msgstr "\t-p Port\t\tSetzt die Portnummer des IRC-Servers.\n"
 #: src/messages.c:53
 #, c-format
 msgid "\t-r string\tSet the output for a request of the real name.\n"
-msgstr ""
-"\t-r String\tSetzt die Zeichenkette des Real Name Felds für das IRC.\n"
+msgstr "\t-r String\tSetzt die Zeichenkette des Real Name Felds für das IRC.\n"
 
 #: src/messages.c:54
 #, c-format
@@ -1031,8 +1015,7 @@ msgid "The ping timeout is invalid.\n"
 msgstr "Das Pingtimeout ist ungültig.\n"
 
 #: src/parameter.c:301
-#, fuzzy, c-format
-#| msgid "Unkown option \"%s\"\n"
+#, c-format
 msgid "Unknown option \"%s\"\n"
 msgstr "Unbekannte Option \"%s\"\n"
 
@@ -1107,10 +1090,9 @@ msgid "Execution thread is running (pid%d)"
 msgstr "Ausführungs Thread läuft (PID%d)"
 
 #: src/parser.c:201
-#, fuzzy, c-format
-#| msgid "Unkown command id %d"
+#, c-format
 msgid "Unknown command id %d"
-msgstr "Unbekannte Datenbank ID %d"
+msgstr "Unbekannte Kommando ID %d"
 
 #: src/parser.c:204
 msgid "Access denied"
