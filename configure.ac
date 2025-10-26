@@ -126,8 +126,8 @@ _sysconfdir="$_sysconfdir/ebotula"
 _databasedir=`eval echo $localstatedir`
 _databasedir="$_databasedir/ebotula"
 
-_localebasedir=`eval echo $datadir`
-_localebasedir="$_localebasedir/locale"
+_localebasedir=`eval echo $localedir`
+_localebasedir=`eval echo $_localebasedir`
 
 AC_DEFINE_UNQUOTED(CONFDIR,"$_sysconfdir", Define the default path to the configuration file)
 AC_DEFINE_UNQUOTED(DATABASEDIR,"$_databasedir", Define the default path to the database files)
