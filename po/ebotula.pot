@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ebotula 0.1.19\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
-"POT-Creation-Date: 2025-08-27 20:32+0200\n"
+"POT-Creation-Date: 2025-09-20 11:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,7 +110,7 @@ msgstr ""
 msgid "Couldn't kick this user"
 msgstr ""
 
-#: src/callbacklist.c:95 src/callbacklist.c:148 src/command.c:1476 src/irc.c:61
+#: src/callbacklist.c:95 src/callbacklist.c:148 src/command.c:1495 src/irc.c:61
 #: src/irc.c:94 src/irc.c:125 src/irc.c:153 src/irc.c:196 src/irc.c:219
 #: src/irc.c:241 src/irc.c:251 src/irc.c:275 src/irc.c:306 src/irc.c:331
 #: src/irc.c:359 src/irc.c:390 src/irc.c:416 src/irc.c:441 src/irc.c:471
@@ -162,346 +162,356 @@ msgstr ""
 msgid "No help found for the command %s."
 msgstr ""
 
-#: src/command.c:163
+#: src/command.c:164
 #, c-format
 msgid "Try to create an new account for %s"
 msgstr ""
 
-#: src/command.c:166 src/command.c:356
+#: src/command.c:167 src/command.c:375
 msgid "You're already identified."
 msgstr ""
 
-#: src/command.c:175
+#: src/command.c:176
 msgid "Nice to meet you."
 msgstr ""
 
-#: src/command.c:176
+#: src/command.c:177
 #, c-format
 msgid "Your account is %s."
 msgstr ""
 
-#: src/command.c:177 src/command.c:317
+#: src/command.c:178 src/command.c:336
 msgid "You're now identified."
 msgstr ""
 
-#: src/command.c:180
+#: src/command.c:181
 #, c-format
 msgid "The account %s is already exists."
 msgstr ""
 
-#: src/command.c:193
+#: src/command.c:195
+#, c-format
+msgid "The account %s is now the botmaster."
+msgstr ""
+
+#: src/command.c:197
+#, c-format
+msgid "The initialization of the account %s as the botmaster failed."
+msgstr ""
+
+#: src/command.c:212
 #, c-format
 msgid "Check the  password for the account %s"
 msgstr ""
 
-#: src/command.c:201 src/command.c:296
+#: src/command.c:220 src/command.c:315
 msgid "You've set a empty password."
 msgstr ""
 
-#: src/command.c:206
+#: src/command.c:225
 msgid "Password is changed."
 msgstr ""
 
-#: src/command.c:259
+#: src/command.c:278
 msgid "You're now logged off."
 msgstr ""
 
-#: src/command.c:284
+#: src/command.c:303
 #, c-format
 msgid "try to identify %s"
 msgstr ""
 
-#: src/command.c:311
+#: src/command.c:330
 #, c-format
 msgid "Look for the account %s"
 msgstr ""
 
-#: src/command.c:315
+#: src/command.c:334
 #, c-format
 msgid "User %s found"
 msgstr ""
 
-#: src/command.c:325
+#: src/command.c:344
 msgid "Reconstruct the access rights for the channels"
 msgstr ""
 
-#: src/command.c:347
+#: src/command.c:366
 msgid "Invalid password"
 msgstr ""
 
-#: src/command.c:353 src/command.c:496 src/command.c:718 src/command.c:735
-#: src/command.c:774 src/command.c:781 src/command.c:824 src/command.c:859
-#: src/command.c:932 src/command.c:941 src/command.c:1106 src/command.c:1214
-#: src/command.c:1462
+#: src/command.c:372 src/command.c:515 src/command.c:737 src/command.c:754
+#: src/command.c:793 src/command.c:800 src/command.c:843 src/command.c:878
+#: src/command.c:951 src/command.c:960 src/command.c:1125 src/command.c:1233
+#: src/command.c:1481
 msgid "Couldn't found regulare parameters."
 msgstr ""
 
-#: src/command.c:367 src/command.c:374 src/command.c:407 src/command.c:435
-#: src/command.c:442 src/command.c:459 src/command.c:588 src/command.c:636
-#: src/command.c:712 src/command.c:769 src/command.c:818 src/command.c:853
-#: src/command.c:918 src/command.c:1104 src/command.c:1382
+#: src/command.c:386 src/command.c:393 src/command.c:426 src/command.c:454
+#: src/command.c:461 src/command.c:478 src/command.c:607 src/command.c:655
+#: src/command.c:731 src/command.c:788 src/command.c:837 src/command.c:872
+#: src/command.c:937 src/command.c:1123 src/command.c:1401
 msgid "This command requires a channel name."
 msgstr ""
 
-#: src/command.c:383
+#: src/command.c:402
 #, c-format
 msgid "The channel %s is already on the channel list."
 msgstr ""
 
-#: src/command.c:385
+#: src/command.c:404
 #, c-format
 msgid "Join and add the channel %s"
 msgstr ""
 
-#: src/command.c:392
+#: src/command.c:411
 #, c-format
 msgid "The channel %s is added to the channel list"
 msgstr ""
 
-#: src/command.c:396 src/command.c:451
+#: src/command.c:415 src/command.c:470
 #, c-format
 msgid "The bot is joined the channel %s."
 msgstr ""
 
-#: src/command.c:411
+#: src/command.c:430
 #, c-format
 msgid "Part and  try to remove the channel %s"
 msgstr ""
 
-#: src/command.c:416 src/command.c:621 src/command.c:1198
+#: src/command.c:435 src/command.c:640 src/command.c:1217
 #, c-format
 msgid "The channel %s isn't in the channel list."
 msgstr ""
 
-#: src/command.c:418
+#: src/command.c:437
 #, c-format
 msgid "The channel %s is removed from the channel list."
 msgstr ""
 
-#: src/command.c:425 src/command.c:465
+#: src/command.c:444 src/command.c:484
 #, c-format
 msgid "The bot has left the channel %s."
 msgstr ""
 
-#: src/command.c:447
+#: src/command.c:466
 #, c-format
 msgid "Join the channel %s"
 msgstr ""
 
-#: src/command.c:461
+#: src/command.c:480
 #, c-format
 msgid "Part the channel %s"
 msgstr ""
 
-#: src/command.c:472
+#: src/command.c:491
 msgid "The bot is going down."
 msgstr ""
 
-#: src/command.c:480
+#: src/command.c:499
 msgid "The bot is going to restart."
 msgstr ""
 
-#: src/command.c:499
+#: src/command.c:518
 #, c-format
 msgid "The Nickname %s is invalid."
 msgstr ""
 
-#: src/command.c:503
+#: src/command.c:522
 #, c-format
 msgid "The bot tries to change the nickname to %s."
 msgstr ""
 
-#: src/command.c:524
+#: src/command.c:543
 msgid "Build channel list."
 msgstr ""
 
-#: src/command.c:527
+#: src/command.c:546
 msgid "Channel list:"
 msgstr ""
 
-#: src/command.c:540
+#: src/command.c:559
 #, c-format
 msgid "...for channel %s"
 msgstr ""
 
-#: src/command.c:548
+#: src/command.c:567
 #, c-format
 msgid "Topic: %s"
 msgstr ""
 
-#: src/command.c:552
+#: src/command.c:571
 #, c-format
 msgid "Greeting: %s"
 msgstr ""
 
-#: src/command.c:567
+#: src/command.c:586
 msgid "End of the channel list."
 msgstr ""
 
-#: src/command.c:590
+#: src/command.c:609
 #, c-format
 msgid "Greeting seting for %s"
 msgstr ""
 
-#: src/command.c:611
+#: src/command.c:630
 #, c-format
 msgid "The greeting of the channel %s is removed"
 msgstr ""
 
-#: src/command.c:613
+#: src/command.c:632
 #, c-format
 msgid "The new greeting of the channel %s is set"
 msgstr ""
 
-#: src/command.c:638
+#: src/command.c:657
 #, c-format
 msgid "Topic seting for %s"
 msgstr ""
 
-#: src/command.c:664
+#: src/command.c:683
 #, c-format
 msgid "The topic of the channel %s is removed"
 msgstr ""
 
-#: src/command.c:666
+#: src/command.c:685
 #, c-format
 msgid "The new topic of the channel %s is set"
 msgstr ""
 
-#: src/command.c:676 src/command.c:926
+#: src/command.c:695 src/command.c:945
 msgid "This channel isn't in the channel list."
 msgstr ""
 
-#: src/command.c:691
+#: src/command.c:710
 #, c-format
 msgid "Greeting for %s"
 msgstr ""
 
-#: src/command.c:787
+#: src/command.c:806
 msgid "Can't ban myself"
 msgstr ""
 
-#: src/command.c:833
+#: src/command.c:852
 #, c-format
 msgid "The ban %s is removed by the bot from the channel %s"
 msgstr ""
 
-#: src/command.c:871
+#: src/command.c:890
 msgid "Can't kick myself"
 msgstr ""
 
-#: src/command.c:878
+#: src/command.c:897
 msgid "You are kicked from the bot."
 msgstr ""
 
-#: src/command.c:883
+#: src/command.c:902
 msgid "Couldn't found you account."
 msgstr ""
 
-#: src/command.c:937
+#: src/command.c:956
 msgid "Modify user mod"
 msgstr ""
 
-#: src/command.c:955
+#: src/command.c:974
 #, c-format
 msgid "Couldn.t found the account %s."
 msgstr ""
 
-#: src/command.c:958
+#: src/command.c:977
 msgid "You can't modify yourself"
 msgstr ""
 
-#: src/command.c:974 src/command.c:999
+#: src/command.c:993 src/command.c:1018
 msgid "You're not a bot master."
 msgstr ""
 
-#: src/command.c:982
+#: src/command.c:1001
 #, c-format
 msgid "Modify account %s in the channel %s"
 msgstr ""
 
-#: src/command.c:1005
+#: src/command.c:1024
 #, c-format
 msgid "The mode %c is invalid."
 msgstr ""
 
-#: src/command.c:1012
+#: src/command.c:1031
 #, c-format
 msgid "Found account modes %s"
 msgstr ""
 
-#: src/command.c:1040
+#: src/command.c:1059
 msgid "Set new account modes"
 msgstr ""
 
-#: src/command.c:1046
+#: src/command.c:1065
 msgid "Remove new account modes"
 msgstr ""
 
-#: src/command.c:1055
+#: src/command.c:1074
 msgid "Modify the current account modes"
 msgstr ""
 
-#: src/command.c:1085
+#: src/command.c:1104
 #, c-format
 msgid "The user mode of the account %s is changed."
 msgstr ""
 
-#: src/command.c:1115
+#: src/command.c:1134
 #, c-format
 msgid "Found the new channel modes \"%s\" for the channel %s."
 msgstr ""
 
-#: src/command.c:1179
+#: src/command.c:1198
 #, c-format
 msgid "Write the new channel modes \"%s\" for the channel %s."
 msgstr ""
 
-#: src/command.c:1188
+#: src/command.c:1207
 #, c-format
 msgid "Set the new channel modes for the channel %s"
 msgstr ""
 
-#: src/command.c:1242
+#: src/command.c:1261
 msgid "The account is removed"
 msgstr ""
 
-#: src/command.c:1243
+#: src/command.c:1262
 #, c-format
 msgid "Remove %s from the user list"
 msgstr ""
 
-#: src/command.c:1245
+#: src/command.c:1264
 #, c-format
 msgid "Couldn't fount the account %s."
 msgstr ""
 
-#: src/command.c:1274 src/command.c:1386
+#: src/command.c:1293 src/command.c:1405
 msgid "Account list:"
 msgstr ""
 
-#: src/command.c:1276
+#: src/command.c:1295
 msgid "Create the accountlist for a master"
 msgstr ""
 
-#: src/command.c:1376 src/command.c:1445
+#: src/command.c:1395 src/command.c:1464
 msgid "End of the account list."
 msgstr ""
 
-#: src/command.c:1379
+#: src/command.c:1398
 msgid "Create the accountlist for a owner"
 msgstr ""
 
-#: src/command.c:1487
+#: src/command.c:1506
 msgid "Can't invite myself."
 msgstr ""
 
-#: src/command.c:1493
+#: src/command.c:1512
 #, c-format
 msgid "The bot has invite the user %s to the channel %s."
 msgstr ""
 
-#: src/command.c:1495
+#: src/command.c:1514
 #, c-format
 msgid "The bot need a channel parameter for inviting of the user %s"
 msgstr ""

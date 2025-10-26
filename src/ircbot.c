@@ -29,6 +29,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include <locale.h>
+#include <langinfo.h>
 
 #include <pwd.h>
 #include <grp.h>
@@ -90,8 +91,8 @@ int main(int argc,char * const argv[]) {
     /* nls support */
     setlocale(LC_ALL, "");
     bindtextdomain(PACKAGE,PACKAGE_LOCALE_DIR);
+    bind_textdomain_codeset(PACKAGE,"UTF-8"); /* TODO: make it configurable */
     textdomain(PACKAGE);
- 
 
     do {
         nRet=AppMain(argc,argv);
