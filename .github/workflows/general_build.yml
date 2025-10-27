@@ -69,7 +69,70 @@ jobs:
         run: |
           set -euo pipefail
           make -j"$(nproc)"
+          
+      - name: Lint gettext translations (.po/.pot)
+        run: |
+          set -euo pipefail
+          if [ ! -d po ]; then
+            echo "Kein po/-Verzeichnis gefunden – Übersetzungs-Checks übersprungen."
+            exit 0
+          fi
 
+          # Finde ggf. eine POT-Datei als Referenz
+          mapfile -t pots < <(find po -maxdepth 1 -type f -name '*.pot' | sort || true)
+          pot="${pots[0]:-}"
+
+          rc=0
+          found_po=0
+
+          while IFS= read -r -d '' po; do
+            found_po=1
+            echo "::group::Prüfe ${po}"
+
+            # 1) formale Validierung (inkl. %-Formatstrings)
+            if ! msgfmt -c --check-format -o /dev/null "$po"; then
+              echo "msgfmt: Fehler in ${po}"
+              rc=1
+            fi
+
+            # 2) unübersetzte / fuzzy Einträge zählen
+            untranslated_count="$(msgattrib --untranslated --no-obsolete --no-location --no-wrap "$po" | grep -c '^msgid ' || true)"
+            fuzzy_count="$(msgattrib --only-fuzzy --no-obsolete --no-location --no-wrap "$po" | grep -c '^msgid ' || true)"
+            echo "Unübersetzt: ${untranslated_count}  |  Fuzzy: ${fuzzy_count}"
+
+            if [ "${untranslated_count}" -gt 0 ] || [ "${fuzzy_count}" -gt 0 ]; then
+              echo "❌ ${po} enthält unübersetzte und/oder fuzzy Einträge."
+              rc=1
+            fi
+
+            # 3) Konsistenz gegen POT (falls vorhanden)
+            if [ -n "$pot" ]; then
+              if ! msgcmp --use-fuzzy --use-untranslated "$po" "$pot"; then
+                echo "msgcmp: ${po} weicht von ${pot} ab (fehlende/abweichende Nachrichten)."
+                rc=1
+              fi
+            else
+              echo "Hinweis: Keine POT-Datei gefunden – msgcmp-Sync-Check übersprungen."
+            fi
+
+            echo "::endgroup::"
+          done < <(find po -type f -name '*.po' -print0)
+
+          if [ "$found_po" -eq 0 ]; then
+            echo "Keine .po-Dateien gefunden – Übersetzungs-Checks übersprungen."
+            exit 0
+          fi
+
+          if [ "$rc" -ne 0 ]; then
+            {
+              echo "## Gettext-Checks fehlgeschlagen"
+              echo ""
+              echo "- Mindestens eine .po-Datei hatte Fehler, unübersetzte oder fuzzy Einträge oder weicht von der POT ab."
+              echo "- Tipp: »msgattrib --untranslated <file.po>« bzw. »msgattrib --only-fuzzy <file.po>« lokal prüfen."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 3
+          fi
+          
       - name: Run CUnit tests
         run: |
           set -euo pipefail
