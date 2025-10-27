@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
-"POT-Creation-Date: 2025-10-27 13:05+0100\n"
+"POT-Creation-Date: 2025-10-27 13:53+0100\n"
 "PO-Revision-Date: 2025-10-25 23:46+0200\n"
 "Last-Translator: Steffen Laube <laube.steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
@@ -418,7 +418,8 @@ msgstr "Verändere die Kontomodies"
 
 #: src/command.c:976
 #, c-format
-msgid "Couldn.t found the account %s."
+#| msgid "Couldn.t found the account %s."
+msgid "Couldn't find the account %s."
 msgstr "Konnte das Konto %s nicht finden."
 
 #: src/command.c:979

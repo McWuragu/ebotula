@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
-"POT-Creation-Date: 2025-10-27 13:05+0100\n"
+"POT-Creation-Date: 2025-10-27 13:53+0100\n"
 "PO-Revision-Date: 2025-10-25 23:55+0200\n"
 "Last-Translator: Steffen Laube <laube.steffen@gmx.de>\n"
 "Language-Team: German - Germany <laube.steffen@gmx.de>\n"
@@ -193,14 +193,14 @@ msgid "The account %s is already exists."
 msgstr "Le compte %s existe déjà."
 
 #: src/command.c:197
-#, fuzzy, c-format
+#, c-format
 msgid "The account %s is now the botmaster."
-msgstr "Le compte %s a été supprimé."
+msgstr "Le compte %s est maintenant le maître du bot."
 
 #: src/command.c:199
-#, fuzzy, c-format
+#, c-format
 msgid "The initialization of the account %s as the botmaster failed."
-msgstr "Initialisation de la base de données"
+msgstr "L'initialisation du compte %s comme maître du bot a échoué."
 
 #: src/command.c:214
 #, c-format
@@ -253,7 +253,6 @@ msgstr "Impossible de trouver des paramètres valides."
 #: src/command.c:463 src/command.c:480 src/command.c:609 src/command.c:657
 #: src/command.c:733 src/command.c:790 src/command.c:839 src/command.c:874
 #: src/command.c:939 src/command.c:1125 src/command.c:1403
-#, fuzzy
 msgid "This command requires a channel name."
 msgstr "Cette commande requiert un nom de salon."
 
@@ -263,7 +262,7 @@ msgid "The channel %s is already on the channel list."
 msgstr "Le salon %s est déjà sur la liste des salons."
 
 #: src/command.c:406
-#, fuzzy, c-format
+#, c-format
 msgid "Join and add the channel %s"
 msgstr "Rejoindre et ajouter le salon %s"
 
@@ -278,7 +277,7 @@ msgid "The bot is joined the channel %s."
 msgstr "Le bot a rejoint le salon %s."
 
 #: src/command.c:432
-#, fuzzy, c-format
+#, c-format
 msgid "Part and  try to remove the channel %s"
 msgstr "Quitte et tente de supprimer le salon %s"
 
@@ -417,8 +416,8 @@ msgid "Modify user mod"
 msgstr "Modifier les modes de l'utilisateur"
 
 #: src/command.c:976
-#, fuzzy, c-format
-msgid "Couldn.t found the account %s."
+#, c-format
+msgid "Couldn't find the account %s."
 msgstr "Impossible de trouver le compte %s."
 
 #: src/command.c:979
@@ -544,7 +543,7 @@ msgid "Database is closed"
 msgstr "La base de données est fermée."
 
 #: src/dbaccess.c:125
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown database id %d"
 msgstr "ID de base de données inconnue %d"
 
@@ -596,7 +595,6 @@ msgid "Rejoin the channel %s"
 msgstr "Rejoindre le salon %s"
 
 #: src/handles.c:412
-#, fuzzy
 msgid "has initialized this channel."
 msgstr "a initialisé ce salon."
 
@@ -814,7 +812,7 @@ msgstr ""
 "\t-c sec\t\tDéfinit le délai d'expiration du ping de la connexion réseau.\n"
 
 #: src/messages.c:41
-#, fuzzy, c-format
+#, c-format
 msgid "\t-d path\t\tSet the path of the database directory\n"
 msgstr "\t-d chemin\t\tDéfinit le chemin du répertoire de la base de données\n"
 
@@ -835,7 +833,7 @@ msgid "\t-f file\t\tSet the config file.\n"
 msgstr "\t-f fichier\tDéfinit le fichier de configuration.\n"
 
 #: src/messages.c:45
-#, fuzzy, c-format
+#, c-format
 msgid "\t-g group\tSet the group under which the bot runs (only root).\n"
 msgstr ""
 "\t-g groupe\tDéfinit le groupe sous lequel le bot s'exécute (root "
@@ -1014,7 +1012,7 @@ msgid "The ping timeout is invalid.\n"
 msgstr "Le délai d'expiration du ping est non valide.\n"
 
 #: src/parameter.c:301
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown option \"%s\"\n"
 msgstr "Option inconnue \"%s\"\n"
 
@@ -1089,7 +1087,7 @@ msgid "Execution thread is running (pid%d)"
 msgstr "Le thread d'exécution est en cours (pid%d)"
 
 #: src/parser.c:201
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown command id %d"
 msgstr "ID de commande inconnue %d"
 
