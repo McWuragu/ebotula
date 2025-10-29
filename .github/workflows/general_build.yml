@@ -87,7 +87,7 @@ jobs:
 
           while IFS= read -r -d '' po; do
             found_po=1
-            echo "::group::Prüfe ${po}"
+            echo "::group::Checking ${po}"
 
             # 1) formale Validierung (inkl. %-Formatstrings)
             if ! msgfmt -c --check-format -o /dev/null "$po"; then
