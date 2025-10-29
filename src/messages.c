@@ -42,7 +42,7 @@ void printCmdLineHelp() {
         printf(_("\t-L Level\tSet the logging level (0-3)\n"));
 		printf(_("\t-e ms\t\tSet the delay time in millisecond for the slow sending.\n"));
        	printf(_("\t-f file\t\tSet the config file.\n"));
-	    printf(_("\t-g group\tSet the group under which the bot run (only root).\n"));
+	    printf(_("\t-g group\tSet the group under which the bot runs (only root).\n"));
         printf(_("\t-h\t\tPrint this help information.\n"));
 		printf(_("\t-i sec\t\tSet the delay of the channel initialization.\n"));
         printf(_("\t-k days\t\tSet the account live time in days.\n"));

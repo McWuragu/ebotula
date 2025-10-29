@@ -973,7 +973,7 @@ void accountmode(MsgItem_t *pMsg){
 
     	/* check login in the user db */
 	    if (!(exist_db(USER_DB,pLogin))) {
-	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn.t found the account %s."),pLogin);
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't find the account %s."),pLogin);
         	return;
     	} else if (strcmp(pLogin,accesslogin)==0) {
         	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You can't modify yourself"));
