@@ -414,7 +414,7 @@ msgstr ""
 
 #: src/command.c:976
 #, c-format
-msgid "Couldn.t found the account %s."
+msgid "Couldn't find the account %s."
 msgstr ""
 
 #: src/command.c:979
@@ -823,7 +823,7 @@ msgstr ""
 
 #: src/messages.c:45
 #, c-format
-msgid "\t-g group\tSet the group under which the bot run (only root).\n"
+msgid "\t-g group\tSet the group under which the bot runs (only root).\n"
 msgstr ""
 
 #: src/messages.c:46

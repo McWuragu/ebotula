@@ -835,7 +835,7 @@ msgstr "\t-f Datei\tSetzt den Pfad zu Konfigurationsdatei.\n"
 
 #: src/messages.c:45
 #, c-format
-msgid "\t-g group\tSet the group under which the bot run (only root).\n"
+msgid "\t-g group\tSet the group under which the bot runs (only root).\n"
 msgstr ""
 "\t-g Gruppe\tSetzt die Gruppe, unter der der Bot ausgeführt wird. (Nur "
 "Root).\n"
