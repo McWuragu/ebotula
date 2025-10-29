@@ -74,7 +74,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ ! -d po ]; then
-            echo "Kein po/-Verzeichnis gefunden – Übersetzungs-Checks übersprungen."
+            echo "No po/ directory found – translation checks skipped."
             exit 0
           fi
 
@@ -101,34 +101,34 @@ jobs:
             echo "Unübersetzt: ${untranslated_count}  |  Fuzzy: ${fuzzy_count}"
 
             if [ "${untranslated_count}" -gt 0 ] || [ "${fuzzy_count}" -gt 0 ]; then
-              echo "❌ ${po} enthält unübersetzte und/oder fuzzy Einträge."
+              echo "❌ ${po} contains untranslated and/or fuzzy entries."
               rc=1
             fi
 
             # 3) Konsistenz gegen POT (falls vorhanden)
             if [ -n "$pot" ]; then
               if ! msgcmp --use-fuzzy --use-untranslated "$po" "$pot"; then
-                echo "msgcmp: ${po} weicht von ${pot} ab (fehlende/abweichende Nachrichten)."
+                echo "msgcmp: ${po} differs from ${pot} (missing or mismatched messages)."
                 rc=1
               fi
             else
-              echo "Hinweis: Keine POT-Datei gefunden – msgcmp-Sync-Check übersprungen."
+              echo "Note: No POT file found – msgcmp sync check skipped."
             fi
 
             echo "::endgroup::"
           done < <(find po -type f -name '*.po' -print0)
 
           if [ "$found_po" -eq 0 ]; then
-            echo "Keine .po-Dateien gefunden – Übersetzungs-Checks übersprungen."
+            echo "Note: No POT file found – msgcmp sync check skipped."
             exit 0
           fi
 
           if [ "$rc" -ne 0 ]; then
             {
-              echo "## Gettext-Checks fehlgeschlagen"
+              echo "## Gettext checks failed"
               echo ""
-              echo "- Mindestens eine .po-Datei hatte Fehler, unübersetzte oder fuzzy Einträge oder weicht von der POT ab."
-              echo "- Tipp: »msgattrib --untranslated <file.po>« bzw. »msgattrib --only-fuzzy <file.po>« lokal prüfen."
+              echo "- At least one .po file had errors, untranslated or fuzzy entries, or differs from the POT."
+              echo "- Tip: Check locally with »msgattrib --untranslated <file.po>« or »msgattrib --only-fuzzy <file.po>«."
             } >> "$GITHUB_STEP_SUMMARY"
             exit 3
           fi
