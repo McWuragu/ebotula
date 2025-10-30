@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ebotula 0.1.19\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
-"POT-Creation-Date: 2025-10-27 16:49+0100\n"
-"PO-Revision-Date: 2025-10-27 00:19+0100\n"
-"Last-Translator: Gemini Flash2.5\n"
+"POT-Creation-Date: 2025-10-27 17:30+0100\n"
+"PO-Revision-Date: 2025-10-27 17:35+0100\n"
+"Last-Translator: Steffen Laube <laube.steffen@gmx.de>\n"
 "Language-Team: Italian <your.team@example.com>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: src/account.c:98
 #, c-format
@@ -200,8 +201,7 @@ msgid "The initialization of the account %s as the botmaster failed."
 msgstr "L'inizializzazione dell'account %s come botmaster è fallita."
 
 #: src/command.c:214
-#, fuzzy, c-format
-#| msgid "Check the  password for the account %s"
+#, c-format
 msgid "Check the  password for the account %s"
 msgstr "Controlla la password per l'account %s"
 
@@ -275,8 +275,7 @@ msgid "The bot is joined the channel %s."
 msgstr "Il bot si è unito al canale %s."
 
 #: src/command.c:432
-#, fuzzy, c-format
-#| msgid "Part and  try to remove the channel %s"
+#, c-format
 msgid "Part and  try to remove the channel %s"
 msgstr "Lascia e tenta di rimuovere il canale %s"
 
@@ -416,7 +415,7 @@ msgstr "Modifica modalità utente"
 
 #: src/command.c:976
 #, c-format
-msgid "Couldn.t found the account %s."
+msgid "Couldn't find the account %s."
 msgstr "Impossibile trovare l'account %s."
 
 #: src/command.c:979
@@ -830,8 +829,9 @@ msgid "\t-f file\t\tSet the config file.\n"
 msgstr "\t-f file\t\tImposta il file di configurazione.\n"
 
 #: src/messages.c:45
-#, c-format
-msgid "\t-g group\tSet the group under which the bot run (only root).\n"
+#, fuzzy, c-format
+#| msgid "\t-g group\tSet the group under which the bot run (only root).\n"
+msgid "\t-g group\tSet the group under which the bot runs (only root).\n"
 msgstr "\t-g gruppo\tImposta il gruppo con cui eseguire il bot (solo root).\n"
 
 #: src/messages.c:46
@@ -885,8 +885,7 @@ msgid "\t-s server\tSet the irc server name.\n"
 msgstr "\t-s server\tImposta il nome del server irc.\n"
 
 #: src/messages.c:55
-#, fuzzy, c-format
-#| msgid "\t-t count\tSet the number of created  threads.\n"
+#, c-format
 msgid "\t-t count\tSet the number of created  threads.\n"
 msgstr "\t-t conteggio\tImposta il numero di thread creati.\n"
 
@@ -1118,3 +1117,7 @@ msgstr "Rimuovere gli account inattivi"
 #: src/timing.c:100
 msgid "The timing thread is stopped"
 msgstr "Il thread di temporizzazione è stato arrestato"
+
+#, c-format
+#~ msgid "Couldn.t found the account %s."
+#~ msgstr "Impossibile trovare l'account %s."
