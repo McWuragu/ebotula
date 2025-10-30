@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: ebotula 0.1.19\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
 "POT-Creation-Date: 2025-10-27 17:30+0100\n"
-"PO-Revision-Date: 2025-10-27 17:35+0100\n"
+"PO-Revision-Date: 2025-10-30 14:34+0100\n"
 "Last-Translator: Steffen Laube <laube.steffen@gmx.de>\n"
 "Language-Team: Italian <your.team@example.com>\n"
 "Language: it\n"
@@ -829,10 +829,11 @@ msgid "\t-f file\t\tSet the config file.\n"
 msgstr "\t-f file\t\tImposta il file di configurazione.\n"
 
 #: src/messages.c:45
-#, fuzzy, c-format
-#| msgid "\t-g group\tSet the group under which the bot run (only root).\n"
+#, c-format
 msgid "\t-g group\tSet the group under which the bot runs (only root).\n"
-msgstr "\t-g gruppo\tImposta il gruppo con cui eseguire il bot (solo root).\n"
+msgstr ""
+"\\t-g gruppo\\tImposta il gruppo con cui viene eseguito il bot (solo per "
+"root).\\n\n"
 
 #: src/messages.c:46
 #, c-format
