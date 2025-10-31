@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
-"POT-Creation-Date: 2025-10-27 13:53+0100\n"
-"PO-Revision-Date: 2025-10-25 23:46+0200\n"
+"POT-Creation-Date: 2025-10-27 17:30+0100\n"
+"PO-Revision-Date: 2025-10-27 16:52+0100\n"
 "Last-Translator: Steffen Laube <laube.steffen@gmx.de>\n"
 "Language-Team: Deutsch <de@li.org>\n"
 "Language: de\n"
@@ -418,9 +418,8 @@ msgstr "Verändere die Kontomodies"
 
 #: src/command.c:976
 #, c-format
-#| msgid "Couldn.t found the account %s."
 msgid "Couldn't find the account %s."
-msgstr "Konnte das Konto %s nicht finden."
+msgstr "Konnte das Konto %s nicht auf Master setzen."
 
 #: src/command.c:979
 msgid "You can't modify yourself"
@@ -1128,6 +1127,10 @@ msgstr "Entfernt die toten Konten."
 #: src/timing.c:100
 msgid "The timing thread is stopped"
 msgstr "Der Thread für die  Zeitsteuerung ist gestoppt."
+
+#, c-format
+#~ msgid "Couldn.t found the account %s."
+#~ msgstr "Konnte das Konto %s nicht finden."
 
 #~ msgid "Reset the channelmodes of the channel %s"
 #~ msgstr "Zurücksetzen der Modi des Channels %s"

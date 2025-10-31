@@ -9,16 +9,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: Laube.Steffe@gmx.de\n"
-"POT-Creation-Date: 2025-10-27 13:53+0100\n"
-"PO-Revision-Date: 2025-10-25 23:55+0200\n"
+"POT-Creation-Date: 2025-10-27 17:30+0100\n"
+"PO-Revision-Date: 2025-10-27 17:39+0100\n"
 "Last-Translator: Steffen Laube <laube.steffen@gmx.de>\n"
 "Language-Team: German - Germany <laube.steffen@gmx.de>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"X-Generator: Gtranslator 42.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: src/account.c:98
 #, c-format
@@ -1126,6 +1126,11 @@ msgstr "Supprimer les comptes morts."
 #: src/timing.c:100
 msgid "The timing thread is stopped"
 msgstr "Le thread de temporisation est arrêté."
+
+#, fuzzy, c-format
+#~| msgid "Coudn't found the account %s."
+#~ msgid "Couldn.t found the account %s."
+#~ msgstr "Impossible de trouver le compte %s."
 
 #~ msgid "Reset the channelmodes of the channel %s"
 #~ msgstr "Réinitialiser les modes du salon %s"
