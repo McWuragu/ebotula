@@ -6,7 +6,9 @@ ebotula-0.1.19
 - minor bug fixes
 - extended configure checks: gdbm.h, libgdbm-dev, crypt and xcrypt are now properly detected
 - added initial unit tests (quality assurance)
-   
+- added support for french,  spanish and  italy
+- added the initalisation of the first master account by command !hello
+
 ebotula-0.1.18
 --------------------
 - fixed the restart as root bug (bug 28)
