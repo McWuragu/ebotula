@@ -13,3 +13,5 @@ po/*.gmo
 *~
 *.o
 *.tar.gz
+po/*.gmo
+po/stamp-po

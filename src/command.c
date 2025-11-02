@@ -160,12 +160,16 @@ void help(MsgItem_t *pMsg) {
    Bot comand: !hello
    ######################################################################### */
 void hello(MsgItem_t *pMsg) {
+    PQueue pList;
     logger(LOG_DEBUG,_("Try to create an new account for %s"),pMsg->pCallingNick);
 
     if (pMsg->UserLevel>LoggedLevel) {
         sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You're already identified."));
         return;
     }
+
+    /* storage the  user list before added a new one*/
+    pList=list_db(USER_DB);
 
     if (add_db(USER_DB,pMsg->pCallingNick,"")) {
         
@@ -179,6 +183,23 @@ void hello(MsgItem_t *pMsg) {
     } else {
 	    sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The account %s is already exists."),pMsg->pCallingNick);
 	} 
+
+    /* the  first intialise user is the first master*/    
+    if (isemptyQueue(pList)){
+        boolean bResult;
+        if (!exist_db(ACCESS_DB,pMsg->pCallingNick)){
+            bResult=add_db(ACCESS_DB,pMsg->pCallingNick,"m");
+        } else {
+            bResult=replace_db(ACCESS_DB,pMsg->pCallingNick,"m");
+        }
+        
+        if (bResult)
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The account %s is now the botmaster."),pMsg->pCallingNick);
+        else
+            sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The initialization of the account %s as the botmaster failed."),pMsg->pCallingNick);
+    } else {
+        deleteQueue(pList);
+    }
 
 }
 /* #########################################################################
@@ -952,7 +973,7 @@ void accountmode(MsgItem_t *pMsg){
 
     	/* check login in the user db */
 	    if (!(exist_db(USER_DB,pLogin))) {
-	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn.t found the account %s."),pLogin);
+	        sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("Couldn't find the account %s."),pLogin);
         	return;
     	} else if (strcmp(pLogin,accesslogin)==0) {
         	sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("You can't modify yourself"));
