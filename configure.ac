@@ -14,7 +14,7 @@ dnl to build the configure script
 dnl *************************************************************
 
 AC_PREREQ([2.71])
-AC_INIT([ebotula],[0.1.19],[Laube.Steffe@gmx.de])
+AC_INIT([ebotula],[0.1.20],[Laube.Steffe@gmx.de])
 AM_INIT_AUTOMAKE
 
 AC_USE_SYSTEM_EXTENSIONS
