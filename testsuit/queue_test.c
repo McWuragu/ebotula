@@ -120,6 +120,10 @@ void test_flushQueue_flush_empty_queue(void) {
 	CU_ASSERT_TRUE(isemptyQueue(Queue));
 }
 
+void test_flushQueue_null(void) {
+	CU_ASSERT_EQUAL(flushQueue(NULL), QUEUE_NULL_POINTER_AS_IN_PARAMETER);
+}
+
 void test_flushQueue_flush_not_empty_queue(void) {
 	PQueue Queue;
 	QueueData testItem;
@@ -254,5 +258,36 @@ void test_data_integrity_copy(void) {
     CU_ASSERT_PTR_NOT_NULL(out);
     CU_ASSERT_STRING_EQUAL((char*)out->data, "hallo"); /* unverändert */
 
-    free(out->data); free(out);
+	free(out->data); free(out);
+}
+
+void test_getNextitrQueue_complete_iteration(void) {
+	PQueue q = initQueue();
+	const char A[] = "A";
+	const char B[] = "B";
+
+	CU_ASSERT_EQUAL(pushQueue(q, make_qd(A, sizeof A)), QUEUE_SUCCESS);
+	CU_ASSERT_EQUAL(pushQueue(q, make_qd(B, sizeof B)), QUEUE_SUCCESS);
+
+	QueueData* i1 = getNextitrQueue(q);
+	QueueData* i2 = getNextitrQueue(q);
+	QueueData* i3 = getNextitrQueue(q);
+
+	CU_ASSERT_PTR_NOT_NULL(i1);
+	CU_ASSERT_PTR_NOT_NULL(i2);
+	CU_ASSERT_PTR_NULL(i3);
+
+	if (i1 && i2) {
+		CU_ASSERT_NOT_EQUAL(strcmp((char*)i1->data, (char*)i2->data), 0);
+		CU_ASSERT_TRUE(
+			(strcmp((char*)i1->data, "A") == 0) ||
+			(strcmp((char*)i1->data, "B") == 0)
+		);
+		CU_ASSERT_TRUE(
+			(strcmp((char*)i2->data, "A") == 0) ||
+			(strcmp((char*)i2->data, "B") == 0)
+		);
+	}
+
+	CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
 }

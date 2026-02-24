@@ -71,6 +71,13 @@ void testTrim_newline (void) {
 	CU_ASSERT_STRING_EQUAL(pTestStr,"hallo");
 }
 
+void testTrim_only_newlines(void) {
+	char pTestStr[] = "\n\r\n";
+
+	trim(pTestStr);
+	CU_ASSERT_STRING_EQUAL(pTestStr,"");
+}
+
 void testTrim_only_whitespace(void){
     char pTestStr[] = " \t \n\r  ";
     trim(pTestStr);
@@ -97,6 +104,10 @@ void testStrToLower_empty(void) {
     CU_ASSERT_STRING_EQUAL(r, "");
     CU_ASSERT_PTR_NOT_EQUAL(r, in);
     free(r);
+}
+
+void testStrToLower_null(void) {
+	CU_ASSERT_PTR_NULL(StrToLower(NULL));
 }
 
 void testStrToLower_UpToLow(void) {
@@ -227,6 +238,13 @@ void testclearspace_space_quotes_mix(void) {
 
 	
 	CU_ASSERT_STRING_EQUAL(pTestStr,"Hallo Teststring moreTeststringandmore");
+}
+
+void testclearspace_unbalanced_quote(void) {
+	char pTestStr[]="\"hello world";
+
+	clearspace(pTestStr);
+	CU_ASSERT_STRING_EQUAL(pTestStr,"hello world");
 }
 
 void testNickStringCheck_valid(void) {
