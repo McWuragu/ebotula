@@ -10,6 +10,7 @@ testsuit_SOURCES = \
 	testsuit.c \
 	utilities_test.c \
 	queue_test.c \
+	extract_test.c \
 	../src/utilities.c \
 	../src/queue.c \
 	../src/extract.c
@@ -19,6 +20,7 @@ noinst_HEADERS =  \
 	include/testsuit.h \
 	include/utilities_test.h \
 	include/queue_test.h \
+	include/extract_test.h \
 	../src/include/utilities.h \
 	../src/include/queue.h \
 	../src/include/extract.h

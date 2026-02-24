@@ -24,6 +24,7 @@
 #include "testsuit.h"
 #include "utilities_test.h"
 #include "queue_test.h"
+#include "extract_test.h"
 
 
 int main () {
@@ -63,6 +64,21 @@ int main () {
     	  		CU_cleanup_registry();
       			return CU_get_error();
 	   	}
+	}
+
+
+	/* add a suite to the registry */
+	pSuite = CU_add_suite("Extract", init_extract, clean_extract);
+	if (NULL == pSuite) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	for (nIndex=0; nIndex<NUMBER_OF_EXTRACT_TESTS; nIndex++ ) {
+		if (NULL == CU_add_test(pSuite, pstrExtractTestSet[nIndex].pDesc, pstrExtractTestSet[nIndex].TestFkt)){
+			CU_cleanup_registry();
+			return CU_get_error();
+		}
 	}
 
    	/* Run all tests using the CUnit Basic interface */
