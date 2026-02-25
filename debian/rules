@@ -6,12 +6,18 @@ export DEB_CFLAGS_MAINT_APPEND = -Wno-date-time -g
 	dh $@ --with autoreconf
 
 override_dh_auto_configure:
-	dh_auto_configure -- --prefix=/usr --mandir=/usr/share/man --localstatedir=/var/lib DFLAGS=
+	dh_auto_configure -- --prefix=/usr --mandir=/usr/share/man --localstatedir=/var/lib --disable-testsuit DFLAGS=
+
+ifneq ($(filter nocheck,$(DEB_BUILD_OPTIONS)),)
+override_dh_auto_test:
+	@echo "Skipping tests due to DEB_BUILD_OPTIONS=nocheck"
+else
+override_dh_auto_test:
+	dh_auto_test -- VERBOSE=1
+endif
 
 override_dh_auto_install:
 	dh_auto_install -- DFLAGS=
-	# Testsuite nicht ausliefern
-	rm -f debian/ebotula/usr/bin/testsuit
 	# Altlasten-Verzeichnisse entfernen
 	rm -rf debian/ebotula/usr/man debian/ebotula/usr/sbin
 	# FHS: var/ebotula -> var/lib/ebotula
@@ -27,4 +33,3 @@ override_dh_installchangelogs:
 # Optional: wenn du NICHT auto-starten willst, entkommentieren:
 # override_dh_installsystemd:
 # 	dh_installsystemd --no-start
-

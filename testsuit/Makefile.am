@@ -1,4 +1,3 @@
-bin_PROGRAMS = testsuit
 check_PROGRAMS = testsuit
 TESTS = testsuit
 AUTOMAKE_OPTIONS = subdir-objects
