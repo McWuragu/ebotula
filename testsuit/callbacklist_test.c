@@ -74,18 +74,31 @@ void test_callbacklist_push_and_search_head(void) {
     }
 }
 
-void test_callbacklist_insert_prev_updates_head(void) {
-    CallbackItem_t *b = make_item("Beta");
+void test_callbacklist_insert_prev_before_tail(void) {
     CallbackItem_t *a = make_item("Alpha");
+    CallbackItem_t *c = make_item("Charlie");
+    CallbackItem_t *b = make_item("Beta");
 
-    CU_ASSERT_PTR_NOT_NULL_FATAL(b);
     CU_ASSERT_PTR_NOT_NULL_FATAL(a);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(c);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(b);
 
-    CU_ASSERT_EQUAL(pushCallbackDList(&sList, b), 0);
-    CU_ASSERT_EQUAL(insert_prev_CallbackDList(&sList, getHeadCallbackDList(&sList), a), 0);
-    CU_ASSERT_EQUAL(getSizeCallbackDList(&sList), 2);
+    CU_ASSERT_EQUAL(pushCallbackDList(&sList, a), 0);
+    CU_ASSERT_EQUAL(pushCallbackDList(&sList, c), 0);
+
+    CU_ASSERT_EQUAL(insert_prev_CallbackDList(&sList, getTailCallbackDList(&sList), b), 0);
+    CU_ASSERT_EQUAL(getSizeCallbackDList(&sList), 3);
+
     CU_ASSERT_PTR_NOT_NULL(getHeadCallbackDList(&sList));
+    CU_ASSERT_PTR_NOT_NULL(getTailCallbackDList(&sList));
     CU_ASSERT_STRING_EQUAL(getDataCallbackDList(getHeadCallbackDList(&sList))->nickname, "Alpha");
+    CU_ASSERT_STRING_EQUAL(getDataCallbackDList(getTailCallbackDList(&sList))->nickname, "Charlie");
+
+    CallbackDListItem *mid = getNextCallbackDList(getHeadCallbackDList(&sList));
+    CU_ASSERT_PTR_NOT_NULL(mid);
+    if (mid) {
+        CU_ASSERT_STRING_EQUAL(getDataCallbackDList(mid)->nickname, "Beta");
+    }
 }
 
 void test_callbacklist_remove_tail(void) {
