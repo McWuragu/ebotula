@@ -37,11 +37,13 @@ void testTrim_no_space(void);
 void testTrim_leading_space(void);
 void testTrim_multi_leading_space(void);
 void testTrim_newline(void);
+void testTrim_only_newlines(void);
 void testTrim_only_whitespace(void);
 void testTrim_idempotent(void);
 void testTrim_sentence(void);
 
 void testStrToLower_empty(void);
+void testStrToLower_null(void);
 void testStrToLower_UpToLow(void);
 void testStrToLower_LowToLow(void);
 void testStrToLower_ascii_basic(void);
@@ -56,6 +58,7 @@ void testclearspace_space_between(void);
 void testclearspace_multi_space_between(void);
 void testclearspace_space_quote_between(void);
 void testclearspace_space_quotes_mix(void);
+void testclearspace_unbalanced_quote(void);
 void testclearspace_space_only(void);
 void testclearspace_space_only_and_quotes(void);
 
@@ -70,7 +73,7 @@ void testStrToChannelData(void);
 
 void testChannel_roundtrip(void);
 
-#define NUMBER_OF_UTILITIES_TESTS	31
+#define NUMBER_OF_UTILITIES_TESTS	34
 
 /* collection of all test für the utilities function */
 static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= { 
@@ -79,10 +82,12 @@ static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= {
 	{testTrim_leading_space,					"Trim(): leading space"},
 	{testTrim_multi_leading_space,				"Trim(): multi leading space"},
 	{testTrim_newline,							"Trim(): newline and carage return"}, 
+	{testTrim_only_newlines,					"Trim(): only newline and carriage return"},
 	{testTrim_only_whitespace, 					"Trim(): only whitespace"},
 	{testTrim_idempotent,						"Trim(): idempotent"},
 	{testTrim_sentence,							"Trim(): sentence"},
 	{testStrToLower_empty,						"StrToLower(): empty string"},
+	{testStrToLower_null,						"StrToLower(): null pointer"},
 	{testStrToLower_UpToLow,					"StrToLower(): full upper to lower"},
 	{testStrToLower_LowToLow,					"StrToLower(): full lower to lower"},
 	{testStrToLower_ascii_basic,				"StrToLower(): ascii basic string"},
@@ -96,6 +101,7 @@ static strTestDesc_t pstrUtilitiesTestSet[NUMBER_OF_UTILITIES_TESTS]= {
 	{testclearspace_multi_space_between,		"clearspace(): Mutlispace between"},
 	{testclearspace_space_quote_between,		"clearspace(): quoted spaces"},
 	{testclearspace_space_quotes_mix,			"clearspace(): mx of quotes and none quotes"},
+	{testclearspace_unbalanced_quote,			"clearspace(): unbalanced quotes"},
 	{testclearspace_space_only,					"clearspace(): string with only spaces"},
 	{testclearspace_space_only_and_quotes,		"clearspace(): Space with and without quotes"},
 	{testNickStringCheck_valid,					"NickStringCheck(): valid nick string"},
