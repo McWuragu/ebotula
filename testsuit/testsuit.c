@@ -25,6 +25,7 @@
 #include "utilities_test.h"
 #include "queue_test.h"
 #include "extract_test.h"
+#include "callbacklist_test.h"
 
 
 int main () {
@@ -76,6 +77,20 @@ int main () {
 
 	for (nIndex=0; nIndex<NUMBER_OF_EXTRACT_TESTS; nIndex++ ) {
 		if (NULL == CU_add_test(pSuite, pstrExtractTestSet[nIndex].pDesc, pstrExtractTestSet[nIndex].TestFkt)){
+			CU_cleanup_registry();
+			return CU_get_error();
+		}
+	}
+
+	/* add a suite to the registry */
+	pSuite = CU_add_suite("CallbackList", init_callbacklist, clean_callbacklist);
+	if (NULL == pSuite) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	for (nIndex=0; nIndex<NUMBER_OF_CALLBACKLIST_TESTS; nIndex++ ) {
+		if (NULL == CU_add_test(pSuite, pstrCallbackListTestSet[nIndex].pDesc, pstrCallbackListTestSet[nIndex].TestFkt)){
 			CU_cleanup_registry();
 			return CU_get_error();
 		}

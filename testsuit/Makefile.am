@@ -10,9 +10,11 @@ testsuit_SOURCES = \
 	utilities_test.c \
 	queue_test.c \
 	extract_test.c \
+	callbacklist_test.c \
 	../src/utilities.c \
 	../src/queue.c \
-	../src/extract.c
+	../src/extract.c \
+	../src/callbacklist.c
 	 
 
 noinst_HEADERS =  \
@@ -20,13 +22,15 @@ noinst_HEADERS =  \
 	include/utilities_test.h \
 	include/queue_test.h \
 	include/extract_test.h \
+	include/callbacklist_test.h \
 	../src/include/utilities.h \
 	../src/include/queue.h \
-	../src/include/extract.h
+	../src/include/extract.h \
+	../src/include/callbacklist.h \
+	../src/include/callback.h
 	
 
 testsuit_LDADD = $(GDBM_LIB) $(CRYPT_LIB) $(PTHREAD_LIB) $(RT_LIB) $(CUNIT_LIB)
 testsuit_LDFLAGS =$(DFLAGS) $(PFLAGS)
 testsuit_CFLAGS = $(DFLAGS) $(PFLAGS) -I$(top_srcdir)/testsuit/include -I$(top_srcdir)/src/include
-
 
