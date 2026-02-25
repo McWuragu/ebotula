@@ -164,9 +164,9 @@ int insert_prev_CallbackDList(CallbackDList *list, CallbackDListItem *element, C
 		/** insert an item in a not empty list **/
 		new_element->next=element;
 		new_element->prev=element->prev;
-		if (element->next==NULL)
+		if (element->prev==NULL)
 		{
-			list->tail=new_element;
+			list->head=new_element;
 		}
 		else
 		{
