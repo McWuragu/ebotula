@@ -16,6 +16,7 @@ dnl *************************************************************
 AC_PREREQ([2.71])
 AC_INIT([ebotula],[0.1.20],[Laube.Steffe@gmx.de])
 AM_INIT_AUTOMAKE
+AM_MAINTAINER_MODE([disable])
 
 AC_USE_SYSTEM_EXTENSIONS
 
@@ -33,6 +34,13 @@ AM_PROG_CC_C_O
 CFLAGS=`echo $CFLAGS | sed 's/-O4//'`
 CFLAGS=`echo $CFLAGS | sed 's/-g//'`
 
+enable_testsuit=yes
+AC_ARG_ENABLE([testsuit],
+  [AS_HELP_STRING([--disable-testsuit], [do not build and run the CUnit testsuite])],
+  [enable_testsuit="$enableval"],
+  [enable_testsuit=yes])
+AM_CONDITIONAL([BUILD_TESTSUIT], [test "x$enable_testsuit" = "xyes"])
+
 dnl ===========================
 dnl checking library
 dnl ===========================
@@ -49,16 +57,20 @@ AC_ARG_WITH(gdbmlib,
 )
 AC_SUBST(GDBM_LIB)
 
-dnl --- CUnit finden (Linker-Teil) ---
-AC_CHECK_LIB([cunit],[CU_initialize_registry], 
-  [CUNIT_LIB="-lcunit"],
-  [AC_MSG_ERROR([cunit library not found. please install libcunit1-dev])]
-)
+if test "x$enable_testsuit" = "xyes"; then
+  dnl --- CUnit finden (Linker-Teil) ---
+  AC_CHECK_LIB([cunit],[CU_initialize_registry], 
+    [CUNIT_LIB="-lcunit"],
+    [AC_MSG_ERROR([cunit library not found. please install libcunit1-dev or use --disable-testsuit])]
+  )
 
-dnl --- (optional) Header-Check, je nach Distros heißen sie so/so ---
-AC_CHECK_HEADERS([CUnit/CUnit.h], [],
-  [AC_MSG_ERROR([CUnit headers not found. please install libcunit1-dev])]
-)
+  dnl --- (optional) Header-Check, je nach Distros heißen sie so/so ---
+  AC_CHECK_HEADERS([CUnit/CUnit.h], [],
+    [AC_MSG_ERROR([CUnit headers not found. please install libcunit1-dev or use --disable-testsuit])]
+  )
+else
+  CUNIT_LIB=""
+fi
 
 AC_SUBST([CUNIT_LIB])
 
