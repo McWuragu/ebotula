@@ -46,8 +46,12 @@ void test_getFirstPart_split(void);
 void test_getBanmask_valid(void);
 void test_getAnswerMode_notice(void);
 void test_getAnswerMode_privmsg(void);
+void test_getArgument_without_parameter(void);
+void test_getParameters_only_channel(void);
+void test_getFirstPart_without_delimiter(void);
+void test_getAccessChannel_invalid_parameter_channel(void);
 
-#define NUMBER_OF_EXTRACT_TESTS 14
+#define NUMBER_OF_EXTRACT_TESTS 18
 
 static strTestDesc_t pstrExtractTestSet[NUMBER_OF_EXTRACT_TESTS] = {
     {test_getNetmask_valid,                     "getNetmask(): valid netmask"},
@@ -63,7 +67,11 @@ static strTestDesc_t pstrExtractTestSet[NUMBER_OF_EXTRACT_TESTS] = {
     {test_getFirstPart_split,                   "getFirstPart(): split token and rest"},
     {test_getBanmask_valid,                     "getBanmask(): build banmask"},
     {test_getAnswerMode_notice,                 "getAnswerMode(): notice mode for channel"},
-    {test_getAnswerMode_privmsg,                "getAnswerMode(): private message mode"}
+    {test_getAnswerMode_privmsg,                "getAnswerMode(): private message mode"},
+    {test_getArgument_without_parameter,         "getArgument(): command without argument"},
+    {test_getParameters_only_channel,            "getParameters(): only channel parameter"},
+    {test_getFirstPart_without_delimiter,        "getFirstPart(): line without space delimiter"},
+    {test_getAccessChannel_invalid_parameter_channel, "getAccessChannel(): invalid channel in parameter"}
 };
 
 #endif /* TESTSUIT_INCLUDE_EXTRACT_TEST_H_ */
