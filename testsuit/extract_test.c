@@ -162,3 +162,36 @@ void test_getAnswerMode_privmsg(void) {
     const char line[] = ":nick!user@host PRIVMSG :!help";
     CU_ASSERT_EQUAL(getAnswerMode(line), PrvMsgMode);
 }
+
+void test_getArgument_without_parameter(void) {
+    const char line[] = ":nick!user@host PRIVMSG :!help";
+    char *res = getArgument(line);
+
+    CU_ASSERT_PTR_NULL(res);
+}
+
+void test_getParameters_only_channel(void) {
+    const char line[] = ":nick!user@host PRIVMSG :!say #chan";
+    char *res = getParameters(line);
+
+    CU_ASSERT_PTR_NULL(res);
+}
+
+void test_getFirstPart_without_delimiter(void) {
+    const char line[] = "singleword";
+    char *rest = NULL;
+    char *first = getFirstPart(line, &rest);
+
+    CU_ASSERT_PTR_NOT_NULL(first);
+    CU_ASSERT_PTR_NULL(rest);
+    CU_ASSERT_STRING_EQUAL(first, "singleword");
+
+    free(first);
+}
+
+void test_getAccessChannel_invalid_parameter_channel(void) {
+    const char line[] = ":nick!user@host PRIVMSG :!say !chan hello";
+    char *res = getAccessChannel(line);
+
+    CU_ASSERT_PTR_NULL(res);
+}

@@ -291,3 +291,7 @@ void test_getNextitrQueue_complete_iteration(void) {
 
 	CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
 }
+void test_getNextitrQueue_null_input(void) {
+	CU_ASSERT_PTR_NULL(getNextitrQueue(NULL));
+}
+
