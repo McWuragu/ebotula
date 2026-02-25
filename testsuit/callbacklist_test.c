@@ -12,6 +12,12 @@
 #include "callbacklist_test.h"
 
 static CallbackDList sList;
+static void destroy_item(CallbackItem_t *data);
+
+static void reset_list(void) {
+    destroyCallbackDList(&sList);
+    init_extended_CallbackDList(&sList, destroy_item);
+}
 
 static CallbackItem_t *make_item(const char *nick) {
     CallbackItem_t *item = (CallbackItem_t *)malloc(sizeof(CallbackItem_t));
@@ -50,12 +56,14 @@ int clean_callbacklist(void) {
 }
 
 void test_callbacklist_init(void) {
+    reset_list();
     CU_ASSERT_EQUAL(getSizeCallbackDList(&sList), 0);
     CU_ASSERT_PTR_NULL(getHeadCallbackDList(&sList));
     CU_ASSERT_PTR_NULL(getTailCallbackDList(&sList));
 }
 
 void test_callbacklist_push_and_search_head(void) {
+    reset_list();
     CallbackItem_t *a = make_item("Alice");
     CallbackItem_t *b = make_item("Bob");
 
@@ -75,6 +83,7 @@ void test_callbacklist_push_and_search_head(void) {
 }
 
 void test_callbacklist_insert_prev_before_tail(void) {
+    reset_list();
     CallbackItem_t *a = make_item("Alpha");
     CallbackItem_t *c = make_item("Charlie");
     CallbackItem_t *b = make_item("Beta");
@@ -102,6 +111,7 @@ void test_callbacklist_insert_prev_before_tail(void) {
 }
 
 void test_callbacklist_remove_tail(void) {
+    reset_list();
     CallbackItem_t *a = make_item("One");
     CallbackItem_t *b = make_item("Two");
     CallbackItem_t *removed = NULL;
@@ -122,6 +132,7 @@ void test_callbacklist_remove_tail(void) {
 }
 
 void test_callbacklist_search_not_found(void) {
+    reset_list();
     CallbackItem_t *a = make_item("Alice");
 
     CU_ASSERT_PTR_NOT_NULL_FATAL(a);
