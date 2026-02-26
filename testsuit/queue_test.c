@@ -312,7 +312,7 @@ void test_getNextitrQueue_null_input(void) {
 
 
 
-void test_getNextitrQueue_resets_after_end(void) {
+void test_getNextitrQueue_requires_explicit_reset(void) {
     PQueue q = init_queue_or_fail();
     const char A[] = "A";
 
@@ -320,6 +320,10 @@ void test_getNextitrQueue_resets_after_end(void) {
 
     CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(q));
     CU_ASSERT_PTR_NULL(getNextitrQueue(q));
+
+    /* API-Vertrag: Iterator muss explizit zurückgesetzt werden */
+    CU_ASSERT_PTR_NULL(getNextitrQueue(q));
+    SetIterToFirstQueue(q);
     CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(q));
 
     CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
