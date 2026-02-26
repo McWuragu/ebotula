@@ -41,6 +41,18 @@ static QueueData make_qd(const void* src, size_t n) {
     return qd;
 }
 
+static PQueue init_queue_or_fail(void) {
+    PQueue q = initQueue();
+    CU_ASSERT_PTR_NOT_NULL_FATAL(q);
+    return q;
+}
+
+static void free_queue(PQueue q) {
+    if (q) {
+        CU_ASSERT_EQUAL(deleteQueue(q), QUEUE_SUCCESS);
+    }
+}
+
 void test_initQueue(void) {
 	CU_ASSERT_PTR_NOT_NULL(initQueue());
 }
@@ -225,7 +237,7 @@ void test_getNextitrQueue(void) {
 
 /* FIFO-Ordnung: A kommt vor B raus */
 void test_fifo_order(void) {
-    PQueue q = initQueue();
+    PQueue q = init_queue_or_fail();
     const char A[] = "A";
     const char B[] = "B";
     CU_ASSERT_EQUAL(pushQueue(q, make_qd(A, sizeof A)), QUEUE_SUCCESS);
@@ -242,11 +254,12 @@ void test_fifo_order(void) {
     free(p1->data); free(p1);
     free(p2->data); free(p2);
     CU_ASSERT_TRUE(isemptyQueue(q));
+    free_queue(q);
 }
 
 /* Datenkopie-Integrität: Original nach push ändern darf Pop nicht beeinflussen */
 void test_data_integrity_copy(void) {
-    PQueue q = initQueue();
+    PQueue q = init_queue_or_fail();
     char buf[] = "hallo";
     QueueData qd = make_qd(buf, sizeof buf);
     CU_ASSERT_EQUAL(pushQueue(q, qd), QUEUE_SUCCESS);
@@ -259,10 +272,11 @@ void test_data_integrity_copy(void) {
     CU_ASSERT_STRING_EQUAL((char*)out->data, "hallo"); /* unverändert */
 
 	free(out->data); free(out);
+	free_queue(q);
 }
 
 void test_getNextitrQueue_complete_iteration(void) {
-	PQueue q = initQueue();
+	PQueue q = init_queue_or_fail();
 	const char A[] = "A";
 	const char B[] = "B";
 
@@ -290,8 +304,33 @@ void test_getNextitrQueue_complete_iteration(void) {
 	}
 
 	CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+	free_queue(q);
 }
 void test_getNextitrQueue_null_input(void) {
 	CU_ASSERT_PTR_NULL(getNextitrQueue(NULL));
 }
 
+
+
+void test_getNextitrQueue_requires_explicit_reset(void) {
+    PQueue q = init_queue_or_fail();
+    const char A[] = "A";
+
+    CU_ASSERT_EQUAL(pushQueue(q, make_qd(A, sizeof A)), QUEUE_SUCCESS);
+
+    CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(q));
+    CU_ASSERT_PTR_NULL(getNextitrQueue(q));
+
+    /* API-Vertrag: Iterator muss explizit zurückgesetzt werden */
+    CU_ASSERT_PTR_NULL(getNextitrQueue(q));
+    SetIterToFirstQueue(q);
+    CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(q));
+
+    CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+    free_queue(q);
+}
+
+void test_deleteQueue_empty(void) {
+    PQueue q = init_queue_or_fail();
+    free_queue(q);
+}

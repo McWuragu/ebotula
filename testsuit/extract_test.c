@@ -33,6 +33,19 @@ int clean_extract(void) {
     return 0;
 }
 
+static void assert_access_channel(const char *line, const char *expected) {
+    char *res = getAccessChannel(line);
+    if (expected == NULL) {
+        CU_ASSERT_PTR_NULL(res);
+    } else {
+        CU_ASSERT_PTR_NOT_NULL(res);
+        if (res) {
+            CU_ASSERT_STRING_EQUAL(res, expected);
+        }
+    }
+    free(res);
+}
+
 void test_getNetmask_valid(void) {
     const char line[] = ":nick!user@host PRIVMSG #chan :hello";
     char *res = getNetmask(line);
@@ -87,11 +100,7 @@ void test_getChannel_valid(void) {
 
 void test_getAccessChannel_from_parameter(void) {
     const char line[] = ":nick!user@host PRIVMSG :!say #chan hello";
-    char *res = getAccessChannel(line);
-
-    CU_ASSERT_PTR_NOT_NULL(res);
-    CU_ASSERT_STRING_EQUAL(res, "#chan");
-    free(res);
+    assert_access_channel(line, "#chan");
 }
 
 void test_getTopic_getGreeting_getChannelMode(void) {
@@ -191,7 +200,22 @@ void test_getFirstPart_without_delimiter(void) {
 
 void test_getAccessChannel_invalid_parameter_channel(void) {
     const char line[] = ":nick!user@host PRIVMSG :!say !chan hello";
-    char *res = getAccessChannel(line);
+    assert_access_channel(line, NULL);
+}
+
+
+void test_getChannel_without_channel(void) {
+    const char line[] = ":server NOTICE nick :message";
+    char *res = getChannel(line);
 
     CU_ASSERT_PTR_NULL(res);
+}
+
+void test_getParameters_null_input(void) {
+    CU_ASSERT_PTR_NULL(getParameters(NULL));
+}
+
+void test_getAccessChannel_from_direct_text(void) {
+    const char line[] = ":nick!user@host PRIVMSG :#mychan hello";
+    assert_access_channel(line, "#mychan");
 }

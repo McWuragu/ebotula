@@ -20,6 +20,36 @@ If you want to contribute directly to the codebase, follow these steps:
 4. Push your branch to your fork: `git push origin feature-xyz`.
 5. Open a pull request against the `main` branch of the main repository.
 
+### Build and Test Prerequisites
+
+Before running the autotools workflow and CUnit tests, make sure the required
+development dependencies are installed.
+
+#### Debian/Ubuntu
+
+```bash
+sudo apt-get update
+sudo apt-get install -y autoconf automake libtool gettext autopoint \
+  libcunit1 libcunit1-dev pkg-config
+```
+
+Then run:
+
+```bash
+autoreconf -fi
+./configure
+make -j"$(nproc)"
+make check
+```
+
+If you cannot install CUnit in your environment, you can still build the bot
+without the testsuite:
+
+```bash
+./configure --disable-testsuit
+make -j"$(nproc)"
+```
+
 ### Coding Guidelines
 
 Follow the existing coding style and conventions used in the project. If your changes require updates to documentation, please include those updates in your pull request.
