@@ -195,3 +195,24 @@ void test_getAccessChannel_invalid_parameter_channel(void) {
 
     CU_ASSERT_PTR_NULL(res);
 }
+
+
+void test_getChannel_without_channel(void) {
+    const char line[] = ":server NOTICE nick :message";
+    char *res = getChannel(line);
+
+    CU_ASSERT_PTR_NULL(res);
+}
+
+void test_getParameters_null_input(void) {
+    CU_ASSERT_PTR_NULL(getParameters(NULL));
+}
+
+void test_getAccessChannel_from_direct_text(void) {
+    const char line[] = ":nick!user@host PRIVMSG :#mychan hello";
+    char *res = getAccessChannel(line);
+
+    CU_ASSERT_PTR_NOT_NULL(res);
+    CU_ASSERT_STRING_EQUAL(res, "#mychan");
+    free(res);
+}

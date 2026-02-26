@@ -140,3 +140,48 @@ void test_callbacklist_search_not_found(void) {
 
     CU_ASSERT_PTR_NULL(searchNicknameFromHeadCallbackDList(&sList, "Charlie"));
 }
+
+void test_callbacklist_search_from_tail_case_insensitive(void) {
+    reset_list();
+    CallbackItem_t *a = make_item("Alpha");
+    CallbackItem_t *b = make_item("Beta");
+    CallbackItem_t *c = make_item("Gamma");
+
+    CU_ASSERT_PTR_NOT_NULL_FATAL(a);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(b);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(c);
+
+    CU_ASSERT_EQUAL(pushCallbackDList(&sList, a), 0);
+    CU_ASSERT_EQUAL(pushCallbackDList(&sList, b), 0);
+    CU_ASSERT_EQUAL(pushCallbackDList(&sList, c), 0);
+
+    CallbackDListItem *found = searchNicknameFromTailCallbackDList(&sList, "beta");
+    CU_ASSERT_PTR_NOT_NULL(found);
+    if (found) {
+        CU_ASSERT_STRING_EQUAL(getDataCallbackDList(found)->nickname, "Beta");
+    }
+}
+
+void test_callbacklist_remove_head_updates_links(void) {
+    reset_list();
+    CallbackItem_t *a = make_item("First");
+    CallbackItem_t *b = make_item("Second");
+    CallbackItem_t *removed = NULL;
+
+    CU_ASSERT_PTR_NOT_NULL_FATAL(a);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(b);
+
+    CU_ASSERT_EQUAL(pushCallbackDList(&sList, a), 0);
+    CU_ASSERT_EQUAL(pushCallbackDList(&sList, b), 0);
+
+    CU_ASSERT_EQUAL(removeCallbackDList(&sList, getHeadCallbackDList(&sList), &removed), 0);
+    CU_ASSERT_PTR_NOT_NULL(removed);
+    CU_ASSERT_STRING_EQUAL(removed->nickname, "First");
+    CU_ASSERT_EQUAL(getSizeCallbackDList(&sList), 1);
+
+    CU_ASSERT_PTR_NOT_NULL(getHeadCallbackDList(&sList));
+    CU_ASSERT_PTR_EQUAL(getHeadCallbackDList(&sList), getTailCallbackDList(&sList));
+    CU_ASSERT_STRING_EQUAL(getDataCallbackDList(getHeadCallbackDList(&sList))->nickname, "Second");
+
+    destroy_item(removed);
+}

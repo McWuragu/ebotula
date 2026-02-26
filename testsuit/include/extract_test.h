@@ -50,8 +50,11 @@ void test_getArgument_without_parameter(void);
 void test_getParameters_only_channel(void);
 void test_getFirstPart_without_delimiter(void);
 void test_getAccessChannel_invalid_parameter_channel(void);
+void test_getChannel_without_channel(void);
+void test_getParameters_null_input(void);
+void test_getAccessChannel_from_direct_text(void);
 
-#define NUMBER_OF_EXTRACT_TESTS 18
+#define NUMBER_OF_EXTRACT_TESTS 21
 
 static strTestDesc_t pstrExtractTestSet[NUMBER_OF_EXTRACT_TESTS] = {
     {test_getNetmask_valid,                     "getNetmask(): valid netmask"},
@@ -71,7 +74,10 @@ static strTestDesc_t pstrExtractTestSet[NUMBER_OF_EXTRACT_TESTS] = {
     {test_getArgument_without_parameter,         "getArgument(): command without argument"},
     {test_getParameters_only_channel,            "getParameters(): only channel parameter"},
     {test_getFirstPart_without_delimiter,        "getFirstPart(): line without space delimiter"},
-    {test_getAccessChannel_invalid_parameter_channel, "getAccessChannel(): invalid channel in parameter"}
+    {test_getAccessChannel_invalid_parameter_channel, "getAccessChannel(): invalid channel in parameter"},
+    {test_getChannel_without_channel,            "getChannel(): line without channel"},
+    {test_getParameters_null_input,              "getParameters(): null input"},
+    {test_getAccessChannel_from_direct_text,     "getAccessChannel(): channel from direct text"}
 };
 
 #endif /* TESTSUIT_INCLUDE_EXTRACT_TEST_H_ */

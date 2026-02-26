@@ -295,3 +295,23 @@ void test_getNextitrQueue_null_input(void) {
 	CU_ASSERT_PTR_NULL(getNextitrQueue(NULL));
 }
 
+
+
+void test_getNextitrQueue_resets_after_end(void) {
+    PQueue q = initQueue();
+    const char A[] = "A";
+
+    CU_ASSERT_EQUAL(pushQueue(q, make_qd(A, sizeof A)), QUEUE_SUCCESS);
+
+    CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(q));
+    CU_ASSERT_PTR_NULL(getNextitrQueue(q));
+    CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(q));
+
+    CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+}
+
+void test_deleteQueue_empty(void) {
+    PQueue q = initQueue();
+
+    CU_ASSERT_EQUAL(deleteQueue(q), QUEUE_SUCCESS);
+}

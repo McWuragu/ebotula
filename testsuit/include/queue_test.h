@@ -51,8 +51,10 @@ void test_fifo_order(void);
 void test_data_integrity_copy(void);
 void test_getNextitrQueue_complete_iteration(void);
 void test_getNextitrQueue_null_input(void);
+void test_getNextitrQueue_resets_after_end(void);
+void test_deleteQueue_empty(void);
 
-#define NUMBER_OF_QUEUE_TESTS	19
+#define NUMBER_OF_QUEUE_TESTS	21
 
 static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_initQueue,						"initQueue(): testing the initalisation"},
@@ -73,7 +75,9 @@ static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_fifo_order,						"general test: validate the fifo order"},
 		{test_data_integrity_copy,				"general test: intergrity of the copy"},
 		{test_getNextitrQueue_complete_iteration,	"general test: complete iterator pass"},
-		{test_getNextitrQueue_null_input,			"getnextitrQueue(): null queue input"}
+		{test_getNextitrQueue_null_input,			"getnextitrQueue(): null queue input"},
+		{test_getNextitrQueue_resets_after_end,	"getnextitrQueue(): iterator resets after end"},
+		{test_deleteQueue_empty,				"deleteQueue(): deleting empty queue"}
 };
 
 #endif /* TESTSUIT_INCLUDE_QUEUE_TEST_H_ */
