@@ -38,6 +38,12 @@ static CallbackItem_t *make_item(const char *nick) {
     return item;
 }
 
+static void push_item_or_fail(const char *nick) {
+    CallbackItem_t *item = make_item(nick);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(item);
+    CU_ASSERT_EQUAL(pushCallbackDList(&sList, item), 0);
+}
+
 static void destroy_item(CallbackItem_t *data) {
     if (data) {
         free(data->nickname);
@@ -143,17 +149,9 @@ void test_callbacklist_search_not_found(void) {
 
 void test_callbacklist_search_from_tail_case_insensitive(void) {
     reset_list();
-    CallbackItem_t *a = make_item("Alpha");
-    CallbackItem_t *b = make_item("Beta");
-    CallbackItem_t *c = make_item("Gamma");
-
-    CU_ASSERT_PTR_NOT_NULL_FATAL(a);
-    CU_ASSERT_PTR_NOT_NULL_FATAL(b);
-    CU_ASSERT_PTR_NOT_NULL_FATAL(c);
-
-    CU_ASSERT_EQUAL(pushCallbackDList(&sList, a), 0);
-    CU_ASSERT_EQUAL(pushCallbackDList(&sList, b), 0);
-    CU_ASSERT_EQUAL(pushCallbackDList(&sList, c), 0);
+    push_item_or_fail("Alpha");
+    push_item_or_fail("Beta");
+    push_item_or_fail("Gamma");
 
     CallbackDListItem *found = searchNicknameFromTailCallbackDList(&sList, "beta");
     CU_ASSERT_PTR_NOT_NULL(found);
