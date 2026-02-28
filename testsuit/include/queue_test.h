@@ -53,8 +53,10 @@ void test_getNextitrQueue_complete_iteration(void);
 void test_getNextitrQueue_null_input(void);
 void test_getNextitrQueue_requires_explicit_reset(void);
 void test_deleteQueue_empty(void);
+void test_pushQueue_null_queue(void);
+void test_pushQueue_null_data_with_size(void);
 
-#define NUMBER_OF_QUEUE_TESTS	21
+#define NUMBER_OF_QUEUE_TESTS	23
 
 static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_initQueue,						"initQueue(): testing the initalisation"},
@@ -77,7 +79,9 @@ static strTestDesc_t pstrQueueTestSet[NUMBER_OF_QUEUE_TESTS]= {
 		{test_getNextitrQueue_complete_iteration,	"general test: complete iterator pass"},
 		{test_getNextitrQueue_null_input,			"getnextitrQueue(): null queue input"},
 		{test_getNextitrQueue_requires_explicit_reset,	"getnextitrQueue(): explicit reset required"},
-		{test_deleteQueue_empty,				"deleteQueue(): deleting empty queue"}
+		{test_deleteQueue_empty,				"deleteQueue(): deleting empty queue"},
+		{test_pushQueue_null_queue,			"pushQueue(): NULL queue input"},
+		{test_pushQueue_null_data_with_size,		"pushQueue(): reject NULL data with size"}
 };
 
 #endif /* TESTSUIT_INCLUDE_QUEUE_TEST_H_ */

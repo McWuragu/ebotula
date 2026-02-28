@@ -23,22 +23,22 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include "queue_test.h"
 
-int init_queue(void) {
-	return 0;
-}
+int init_queue(void) { return 0; }
+int clean_queue(void) { return 0; }
 
-int clean_queue(void) {
-	return 0;
-}
-
-/* Hilfsfunktion für Testdaten */
 static QueueData make_qd(const void* src, size_t n) {
     QueueData qd;
     qd.t_size = n;
-    qd.data   = (void*)src; /* Achtung: pushQueue kopiert intern! */
+    qd.data   = (void*)src;
     return qd;
+}
+
+static QueueData make_dummy_qd(void) {
+    static const char payload[] = "x";
+    return make_qd(payload, sizeof(payload));
 }
 
 static PQueue init_queue_or_fail(void) {
@@ -54,185 +54,186 @@ static void free_queue(PQueue q) {
 }
 
 void test_initQueue(void) {
-	CU_ASSERT_PTR_NOT_NULL(initQueue());
+    PQueue q = initQueue();
+    CU_ASSERT_PTR_NOT_NULL(q);
+    free_queue(q);
 }
 
 void test_isemptyQueue(void) {
-	PQueue Queue;
-	Queue = initQueue();
-
-	CU_ASSERT_TRUE(isemptyQueue(Queue));
+    PQueue q = init_queue_or_fail();
+    CU_ASSERT_TRUE(isemptyQueue(q));
+    free_queue(q);
 }
 
 void test_isemptyQueue_not(void) {
-	PQueue Queue;
-	Queue = initQueue();
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
 
-	QueueData testItem;
-
-	pushQueue(Queue,testItem);
-
-	CU_ASSERT_FALSE(isemptyQueue(Queue));
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_FALSE(isemptyQueue(q));
+    CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+    free_queue(q);
 }
 
 void test_isemptyQueue_after_push_pop(void) {
-	PQueue Queue;
-	Queue = initQueue();
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
+    QueueData *out;
 
-	QueueData testItem;
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    out = popQueue(q);
+    CU_ASSERT_PTR_NOT_NULL(out);
+    free(out->data);
+    free(out);
 
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-	CU_ASSERT_PTR_NOT_NULL(popQueue(Queue));
-
-	CU_ASSERT_TRUE(isemptyQueue(Queue));
+    CU_ASSERT_TRUE(isemptyQueue(q));
+    free_queue(q);
 }
 
 void test_isemptyQueue_after_push_delete(void) {
-	PQueue Queue;
-	Queue = initQueue();
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
 
-	QueueData testItem;
-
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-	CU_ASSERT_EQUAL(deleteQueue(Queue), QUEUE_SUCCESS);
-
-	CU_ASSERT_TRUE(isemptyQueue(Queue));
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(deleteQueue(q), QUEUE_SUCCESS);
 }
+
 void test_isfullQueue(void) {
-	PQueue Queue;
-	Queue = initQueue();
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
 
-	QueueData testItem;
-
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-
-	CU_ASSERT_TRUE(isfullQueue(Queue));
-
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_TRUE(isfullQueue(q));
+    CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+    free_queue(q);
 }
 
 void test_popQueue_after_push_not_null(void) {
-	PQueue Queue;
-	Queue = initQueue();
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
+    QueueData *out;
 
-	QueueData testItem;
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    out = popQueue(q);
+    CU_ASSERT_PTR_NOT_NULL(out);
 
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-	
-	CU_ASSERT_PTR_NOT_NULL(popQueue(Queue));
+    free(out->data);
+    free(out);
+    free_queue(q);
 }
 
-
 void test_flushQueue_flush_empty_queue(void) {
-	PQueue Queue;
-	Queue = initQueue();
+    PQueue q = init_queue_or_fail();
 
-	CU_ASSERT_EQUAL(flushQueue(Queue), QUEUE_SUCCESS);
-
-	CU_ASSERT_TRUE(isemptyQueue(Queue));
+    CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+    CU_ASSERT_TRUE(isemptyQueue(q));
+    free_queue(q);
 }
 
 void test_flushQueue_null(void) {
-	CU_ASSERT_EQUAL(flushQueue(NULL), QUEUE_NULL_POINTER_AS_IN_PARAMETER);
+    CU_ASSERT_EQUAL(flushQueue(NULL), QUEUE_NULL_POINTER_AS_IN_PARAMETER);
 }
 
 void test_flushQueue_flush_not_empty_queue(void) {
-	PQueue Queue;
-	QueueData testItem;
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
 
-	Queue = initQueue();
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
 
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-	CU_ASSERT_EQUAL(pushQueue(Queue,testItem), QUEUE_SUCCESS);
-
-	CU_ASSERT_EQUAL(flushQueue(Queue), QUEUE_SUCCESS);
-
-	CU_ASSERT_TRUE(isemptyQueue(Queue));
+    CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+    CU_ASSERT_TRUE(isemptyQueue(q));
+    free_queue(q);
 }
 
 void test_pushQueue(void) {
-    PQueue Queue;
-    Queue = initQueue();
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
 
-    QueueData testItem;
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_FALSE(isemptyQueue(q));
 
-    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
-    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
-
-    CU_ASSERT_FALSE(isemptyQueue(Queue));
+    CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+    free_queue(q);
 }
 
 void* pushThreadFunction(void* arg) {
-    PQueue Queue = (PQueue)arg;
+    PQueue q = (PQueue)arg;
+    QueueData testItem = make_dummy_qd();
 
-    // Warte kurz, um sicherzustellen, dass der Hauptthread blockiert ist
     sleep(1);
-
-    QueueData testItem;
-    pushQueue(Queue, testItem);
+    pushQueue(q, testItem);
 
     return NULL;
 }
 
 void test_popQueue_blocking(void) {
-    PQueue Queue;
-    Queue = initQueue();
-
-    // Starte einen Hintergrund-Thread, um ein Element in die Queue zu pushen
+    PQueue q = init_queue_or_fail();
     pthread_t pushThread;
-    pthread_create(&pushThread, NULL, pushThreadFunction, (void*)Queue);
+    QueueData *out;
 
-    // Pop sollte jetzt nicht mehr NULL sein, da der Hintergrund-Thread ein Element hinzugefügt hat
-    CU_ASSERT_PTR_NOT_NULL(popQueue(Queue));
+    pthread_create(&pushThread, NULL, pushThreadFunction, (void*)q);
+    out = popQueue(q);
+    CU_ASSERT_PTR_NOT_NULL(out);
 
-    // Warte auf den Hintergrund-Thread, um Ressourcen freizugeben
     pthread_join(pushThread, NULL);
+    if (out) {
+        free(out->data);
+        free(out);
+    }
+    free_queue(q);
 }
 
 void test_popQueue_multiple_push_pop(void) {
-    PQueue Queue;
-    Queue = initQueue();
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
+    QueueData *out;
 
-    QueueData testItem;
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
 
-    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
-    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
+    out = popQueue(q);
+    CU_ASSERT_PTR_NOT_NULL(out);
+    if (out) {
+        free(out->data);
+        free(out);
+    }
 
-    CU_ASSERT_PTR_NOT_NULL(popQueue(Queue));
-    CU_ASSERT_PTR_NOT_NULL(popQueue(Queue));
+    out = popQueue(q);
+    CU_ASSERT_PTR_NOT_NULL(out);
+    if (out) {
+        free(out->data);
+        free(out);
+    }
 
-    CU_ASSERT_TRUE(isemptyQueue(Queue));
+    CU_ASSERT_TRUE(isemptyQueue(q));
+    free_queue(q);
 }
 
 void test_deleteQueue(void) {
-    PQueue Queue;
-    Queue = initQueue();
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
 
-    QueueData testItem;
-
-    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
-    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
-
-    CU_ASSERT_EQUAL(deleteQueue(Queue), QUEUE_SUCCESS);
-
-    //CU_ASSERT_PTR_NULL(popQueue(Queue));
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(deleteQueue(q), QUEUE_SUCCESS);
 }
 
 void test_getNextitrQueue(void) {
-    PQueue Queue;
-    Queue = initQueue();
+    PQueue q = init_queue_or_fail();
+    QueueData testItem = make_dummy_qd();
 
-    QueueData testItem;
+    CU_ASSERT_PTR_NULL(getNextitrQueue(q));
 
-    CU_ASSERT_PTR_NULL(getNextitrQueue(Queue));
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, testItem), QUEUE_SUCCESS);
 
-    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
-    CU_ASSERT_EQUAL(pushQueue(Queue, testItem), QUEUE_SUCCESS);
-
-    CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(Queue));
+    CU_ASSERT_PTR_NOT_NULL(getNextitrQueue(q));
+    CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+    free_queue(q);
 }
 
 /* FIFO-Ordnung: A kommt vor B raus */
@@ -240,11 +241,15 @@ void test_fifo_order(void) {
     PQueue q = init_queue_or_fail();
     const char A[] = "A";
     const char B[] = "B";
+
+    QueueData* p1;
+    QueueData* p2;
+
     CU_ASSERT_EQUAL(pushQueue(q, make_qd(A, sizeof A)), QUEUE_SUCCESS);
     CU_ASSERT_EQUAL(pushQueue(q, make_qd(B, sizeof B)), QUEUE_SUCCESS);
 
-    QueueData* p1 = popQueue(q);
-    QueueData* p2 = popQueue(q);
+    p1 = popQueue(q);
+    p2 = popQueue(q);
 
     CU_ASSERT_PTR_NOT_NULL(p1);
     CU_ASSERT_PTR_NOT_NULL(p2);
@@ -262,55 +267,59 @@ void test_data_integrity_copy(void) {
     PQueue q = init_queue_or_fail();
     char buf[] = "hallo";
     QueueData qd = make_qd(buf, sizeof buf);
+    QueueData* out;
+
     CU_ASSERT_EQUAL(pushQueue(q, qd), QUEUE_SUCCESS);
 
     /* Original mutieren */
     buf[0] = 'x';
 
-    QueueData* out = popQueue(q);
+    out = popQueue(q);
     CU_ASSERT_PTR_NOT_NULL(out);
-    CU_ASSERT_STRING_EQUAL((char*)out->data, "hallo"); /* unverändert */
+    CU_ASSERT_STRING_EQUAL((char*)out->data, "hallo");
 
-	free(out->data); free(out);
-	free_queue(q);
+    free(out->data); free(out);
+    free_queue(q);
 }
 
 void test_getNextitrQueue_complete_iteration(void) {
-	PQueue q = init_queue_or_fail();
-	const char A[] = "A";
-	const char B[] = "B";
+    PQueue q = init_queue_or_fail();
+    const char A[] = "A";
+    const char B[] = "B";
+    QueueData* i1;
+    QueueData* i2;
+    QueueData* i3;
 
-	CU_ASSERT_EQUAL(pushQueue(q, make_qd(A, sizeof A)), QUEUE_SUCCESS);
-	CU_ASSERT_EQUAL(pushQueue(q, make_qd(B, sizeof B)), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, make_qd(A, sizeof A)), QUEUE_SUCCESS);
+    CU_ASSERT_EQUAL(pushQueue(q, make_qd(B, sizeof B)), QUEUE_SUCCESS);
 
-	QueueData* i1 = getNextitrQueue(q);
-	QueueData* i2 = getNextitrQueue(q);
-	QueueData* i3 = getNextitrQueue(q);
+    i1 = getNextitrQueue(q);
+    i2 = getNextitrQueue(q);
+    i3 = getNextitrQueue(q);
 
-	CU_ASSERT_PTR_NOT_NULL(i1);
-	CU_ASSERT_PTR_NOT_NULL(i2);
-	CU_ASSERT_PTR_NULL(i3);
+    CU_ASSERT_PTR_NOT_NULL(i1);
+    CU_ASSERT_PTR_NOT_NULL(i2);
+    CU_ASSERT_PTR_NULL(i3);
 
-	if (i1 && i2) {
-		CU_ASSERT_NOT_EQUAL(strcmp((char*)i1->data, (char*)i2->data), 0);
-		CU_ASSERT_TRUE(
-			(strcmp((char*)i1->data, "A") == 0) ||
-			(strcmp((char*)i1->data, "B") == 0)
-		);
-		CU_ASSERT_TRUE(
-			(strcmp((char*)i2->data, "A") == 0) ||
-			(strcmp((char*)i2->data, "B") == 0)
-		);
-	}
+    if (i1 && i2) {
+        CU_ASSERT_NOT_EQUAL(strcmp((char*)i1->data, (char*)i2->data), 0);
+        CU_ASSERT_TRUE(
+            (strcmp((char*)i1->data, "A") == 0) ||
+            (strcmp((char*)i1->data, "B") == 0)
+        );
+        CU_ASSERT_TRUE(
+            (strcmp((char*)i2->data, "A") == 0) ||
+            (strcmp((char*)i2->data, "B") == 0)
+        );
+    }
 
-	CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
-	free_queue(q);
+    CU_ASSERT_EQUAL(flushQueue(q), QUEUE_SUCCESS);
+    free_queue(q);
 }
+
 void test_getNextitrQueue_null_input(void) {
-	CU_ASSERT_PTR_NULL(getNextitrQueue(NULL));
+    CU_ASSERT_PTR_NULL(getNextitrQueue(NULL));
 }
-
-
 
 void test_getNextitrQueue_requires_explicit_reset(void) {
     PQueue q = init_queue_or_fail();
@@ -332,5 +341,21 @@ void test_getNextitrQueue_requires_explicit_reset(void) {
 
 void test_deleteQueue_empty(void) {
     PQueue q = init_queue_or_fail();
+    free_queue(q);
+}
+
+void test_pushQueue_null_queue(void) {
+    QueueData qd = make_dummy_qd();
+    CU_ASSERT_EQUAL(pushQueue(NULL, qd), QUEUE_NULL_POINTER_AS_IN_PARAMETER);
+}
+
+void test_pushQueue_null_data_with_size(void) {
+    QueueData qd;
+    PQueue q = init_queue_or_fail();
+
+    qd.data = NULL;
+    qd.t_size = 4;
+
+    CU_ASSERT_EQUAL(pushQueue(q, qd), QUEUE_NULL_POINTER_AS_IN_PARAMETER);
     free_queue(q);
 }
