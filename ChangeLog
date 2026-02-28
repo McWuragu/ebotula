@@ -1,6 +1,12 @@
 ebotula-0.1.20
 --------------------
--...
+- fixed memory handling in chanmode updates for +k/+l parameters
+- fixed crashes caused by invalid argument size checks
+- fixed a potential use-after-free in callback list handling
+- hardened queue internals: added null checks, safer allocations and more robust condition waits
+- expanded CUnit test coverage for queue, extract and callback list subsystems
+- added unit tests for null-pointer and iterator edge cases
+- aligned CI workflows and Debian packaging with optional testsuite execution
 
 ebotula-0.1.19
 --------------------
