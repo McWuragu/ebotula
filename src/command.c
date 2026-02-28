@@ -1143,46 +1143,53 @@ void chanmode(MsgItem_t *pMsg) {
                     	/* set the new flag */
     	                sChannelData.sModes.pModeStr[i]=sNewMode.pModeStr[i];
     	
-        	            /* set keyword and limit */
-            	        if (sNewMode.pModeStr[i]=='k' && sNewMode.pKeyword) {
-                	        if (sChannelData.sModes.pKeyword){
+	            /* set keyword and limit */
+	            if (sNewMode.pModeStr[i]=='k' && sNewMode.pKeyword) {
+                        char *pNewKeyword;
+
+	                pNewKeyword=(char*)malloc((strlen(sNewMode.pKeyword)+1)*sizeof(char));
+	                if (pNewKeyword) {
+                            strcpy(pNewKeyword,sNewMode.pKeyword);
+                            if (sChannelData.sModes.pKeyword) {
                                 free(sChannelData.sModes.pKeyword);
                             }
-    
-                    	    sChannelData.sModes.pKeyword=(char*)malloc((strlen(sNewMode.pKeyword)+1)*sizeof(char));
-                        	strcpy(sChannelData.sModes.pKeyword,sNewMode.pKeyword);
-    	                } else if (sNewMode.pModeStr[i]=='l' && sNewMode.pLimit) {
-        	                if (sChannelData.sModes.pLimit) {
+                            sChannelData.sModes.pKeyword=pNewKeyword;
+                        }
+	                } else if (sNewMode.pModeStr[i]=='l' && sNewMode.pLimit) {
+                        char *pNewLimit;
+
+	                pNewLimit=(char*)malloc((strlen(sNewMode.pLimit)+1)*sizeof(char));
+	                if (pNewLimit) {
+                            strcpy(pNewLimit,sNewMode.pLimit);
+	        	            if (sChannelData.sModes.pLimit) {
                                 free(sChannelData.sModes.pLimit);
-                                sChannelData.sModes.pLimit = NULL;
                             }
-    
-            	            sChannelData.sModes.pLimit=(char*)malloc((strlen(sNewMode.pLimit)+1)*sizeof(char));
-                	        strcpy(sChannelData.sModes.pLimit,sNewMode.pLimit);
-                    	}
-    	            }
+                            sChannelData.sModes.pLimit=pNewLimit;
+                        }
+	                    }
+	            }
     
         	    } else if (sNewMode.pModeStr[MOD_TYPE]=='-') {
             	    /* remove  flags from the pChanneldata */
                 	if (sNewMode.pModeStr[i]!=' ') {
     
-    	                /* remove the  mode flag */
-        	            sChannelData.sModes.pModeStr[i]=' ';
-    
-            	        /* remove keyword and limit */
-                	    if (sChannelData.sModes.pModeStr[i]=='k') {
-                    	    if (sChannelData.sModes.pKeyword){
+	            /* remove keyword and limit */
+	            if (sNewMode.pModeStr[i]=='k') {
+	                    if (sChannelData.sModes.pKeyword){
                                 free(sChannelData.sModes.pKeyword);
                             }
-    
+
                             sChannelData.sModes.pKeyword=NULL;
-    	                } else if (sChannelData.sModes.pModeStr[i]=='l') {
-        	                if (sChannelData.sModes.pLimit) {
+	                } else if (sNewMode.pModeStr[i]=='l') {
+	        	            if (sChannelData.sModes.pLimit) {
                                 free(sChannelData.sModes.pLimit);
                                 sChannelData.sModes.pLimit = NULL;
                             }
-            	        }
-                	}
+	            }
+
+	                /* remove the  mode flag */
+	            sChannelData.sModes.pModeStr[i]=' ';
+	                }
     
     	        }
     
@@ -1215,6 +1222,8 @@ void chanmode(MsgItem_t *pMsg) {
             free(sChannelData.pGreeting);
             free(sChannelData.sModes.pKeyword);
             free(sChannelData.sModes.pLimit);
+            free(sNewMode.pKeyword);
+            free(sNewMode.pLimit);
         } else {
             sendMsg(pMsg->AnswerMode,pMsg->pCallingNick,_("The channel %s isn't in the channel list."),pMsg->pAccessChannel);
         }
@@ -1519,5 +1528,4 @@ void inviteuser(MsgItem_t *pMsg){
     
     free(pInviteNick);
 }
-
 
