@@ -26,6 +26,7 @@
 #include "queue_test.h"
 #include "extract_test.h"
 #include "callbacklist_test.h"
+#include "configparser_test.h"
 
 
 int main () {
@@ -91,6 +92,20 @@ int main () {
 
 	for (nIndex=0; nIndex<NUMBER_OF_CALLBACKLIST_TESTS; nIndex++ ) {
 		if (NULL == CU_add_test(pSuite, pstrCallbackListTestSet[nIndex].pDesc, pstrCallbackListTestSet[nIndex].TestFkt)){
+			CU_cleanup_registry();
+			return CU_get_error();
+		}
+	}
+
+	/* add a suite to the registry */
+	pSuite = CU_add_suite("ConfigParser", init_configparser, clean_configparser);
+	if (NULL == pSuite) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	for (nIndex=0; nIndex<NUMBER_OF_CONFIGPARSER_TESTS; nIndex++ ) {
+		if (NULL == CU_add_test(pSuite, pstrConfigParserTestSet[nIndex].pDesc, pstrConfigParserTestSet[nIndex].TestFkt)){
 			CU_cleanup_registry();
 			return CU_get_error();
 		}
