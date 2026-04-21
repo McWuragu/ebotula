@@ -7,7 +7,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
 #include "parser_pipeline_test.h"
 #include "ircbot.h"
 
@@ -88,11 +87,6 @@ void pong(char *pPong) {
 
 void SendLine(char *pMsg) {(void)pMsg;}
 void notice(char *pNick, char *pMsgStr) {(void)pNick; (void)pMsgStr;}
-int logger(int priority, char *format, ...) {
-    (void)priority;
-    (void)format;
-    return 0;
-}
 UserLevel_t getUserLevel(char *const pChannel, char *const pNetmask) {
     (void)pChannel;
     (void)pNetmask;
