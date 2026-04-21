@@ -27,6 +27,7 @@
 #include "extract_test.h"
 #include "callbacklist_test.h"
 #include "configparser_test.h"
+#include "parser_pipeline_test.h"
 
 
 int main () {
@@ -106,6 +107,20 @@ int main () {
 
 	for (nIndex=0; nIndex<NUMBER_OF_CONFIGPARSER_TESTS; nIndex++ ) {
 		if (NULL == CU_add_test(pSuite, pstrConfigParserTestSet[nIndex].pDesc, pstrConfigParserTestSet[nIndex].TestFkt)){
+			CU_cleanup_registry();
+			return CU_get_error();
+		}
+	}
+
+	/* add a suite to the registry */
+	pSuite = CU_add_suite("ParserPipeline", init_parser_pipeline, clean_parser_pipeline);
+	if (NULL == pSuite) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	for (nIndex=0; nIndex<NUMBER_OF_PARSER_PIPELINE_TESTS; nIndex++ ) {
+		if (NULL == CU_add_test(pSuite, pstrParserPipelineTestSet[nIndex].pDesc, pstrParserPipelineTestSet[nIndex].TestFkt)){
 			CU_cleanup_registry();
 			return CU_get_error();
 		}
